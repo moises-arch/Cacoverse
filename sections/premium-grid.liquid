@@ -625,14 +625,16 @@
     .wd40-sale-link {
        color: #d7182b !important;
        font-weight: 800 !important;
-       background: linear-gradient(90deg, #f24765 0%, #f9a5b8 45%, #ffeef2 100%);
+       background: linear-gradient(90deg, rgba(243, 62, 92, 0.28) 0%, rgba(243, 62, 92, 0.12) 55%, rgba(243, 62, 92, 0.04) 100%);
        padding: 11px 12px;
        border-radius: 12px;
-       border: 1px solid #f58197;
-       box-shadow: 0 3px 8px rgba(215, 24, 43, 0.14);
+       border: 1px solid rgba(243, 62, 92, 0.25);
+       box-shadow: 0 2px 6px rgba(215, 24, 43, 0.12);
        display: flex;
        align-items: center;
        gap: 8px;
+       position: relative;
+       overflow: hidden;
     }
     .wd40-sale-link svg { color: #d7182b; }
     .wd40-cat-header-row.sale-active { border-left-color: #d7182b; }
@@ -706,7 +708,7 @@
     .wd40-sale-badge { 
       background: linear-gradient(120deg, #ff7a92, #d7182b 70%);
       color: #fff;
-      box-shadow: 0 3px 8px rgba(215, 24, 43, 0.15), 0 1px 0 rgba(255, 255, 255, 0.18) inset;
+      box-shadow: 0 2px 6px rgba(215, 24, 43, 0.12), 0 1px 0 rgba(255, 255, 255, 0.18) inset;
       border-radius: 999px;
       display: inline-flex;
       align-items: center;
@@ -1045,7 +1047,7 @@
                    {% if is_sale_link and collection.handle == sale_handle %}{% assign is_sale_active = true %}{% endif %}
                    
                    <div class="wd40-cat-item">
-                     <div class="wd40-cat-header-row {% if is_sale_active %}active{% endif %}" style="display: flex; align-items: center; border-radius: 0 !important;">
+                     <div class="wd40-cat-header-row {% if is_sale_active %}active sale-active{% endif %}" style="display: flex; align-items: center; border-radius: 0 !important;">
                         <a href="{{ sub_link.url }}" class="wd40-cat-link {% if is_sale_link %}wd40-sale-link{% endif %}" style="flex: 1;">
                             {% if is_sale_link %}
                                <div class="wd40-cat-icon" style="display:flex;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg></div>
@@ -1165,7 +1167,7 @@
                {% if is_sale_link and collection.handle == sale_handle %}{% assign is_sale_active = true %}{% endif %}
                
                <div class="wd40-cat-item">
-                 <div class="wd40-cat-header-row {% if is_sale_active %}active{% endif %}" style="display: flex; align-items: center; border-radius: 0 !important;">
+                 <div class="wd40-cat-header-row {% if is_sale_active %}active sale-active{% endif %}" style="display: flex; align-items: center; border-radius: 0 !important;">
                     <a href="{{ sub_link.url }}" class="wd40-cat-link {% if is_sale_link %}wd40-sale-link{% endif %}" style="flex: 1;">
                         {% if is_sale_link %}
                            <div class="wd40-cat-icon" style="display:flex;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg></div>
