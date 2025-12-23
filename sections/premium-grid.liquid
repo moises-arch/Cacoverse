@@ -622,23 +622,19 @@
     }
     .wd40-cat-header-row.active .wd40-cat-link { color: #0056B3; font-weight: 700; }
     
-    /* Special SALE Animation */
-    @keyframes shineRed {
-       0% { background-position: -100%; }
-       100% { background-position: 200%; }
-    }
     .wd40-sale-link {
-       color: #E4002B !important;
+       color: #c11632 !important;
        font-weight: 800 !important;
-       background: linear-gradient(110deg, #E4002B 30%, #ff8a8a 50%, #E4002B 70%);
-       background-size: 200% 100%;
-       -webkit-background-clip: text;
-       -webkit-text-fill-color: transparent;
-       animation: shineRed 3s linear infinite;
+       background: linear-gradient(90deg, #ffe9ee, #ffd6e0);
+       padding: 10px;
+       border-radius: 12px;
+       border: 1px solid #ffbdc9;
+       box-shadow: 0 4px 10px rgba(193, 22, 50, 0.16);
        display: flex;
        align-items: center;
        gap: 8px;
     }
+    .wd40-sale-link svg { color: #c11632; }
 
     .wd40-cat-toggle-btn {
        background: none; border: none; cursor: pointer; padding: 12px; display: flex; align-items: center; justify-content: center; color: #555;
@@ -707,9 +703,9 @@
     .wd40-badge { background: #E4002B; color: #ffffff; padding: 3px 9px; font-size: 11px; font-weight: 700; border-radius: 3px; text-transform: uppercase; }
     .wd40-badge.new-badge { background-color: #0A4A9C; }
     .wd40-sale-badge { 
-      background: radial-gradient(circle at 20% 20%, #ff8da1, #e4002b 45%, #8c0b2b 90%);
+      background: linear-gradient(120deg, #ff7a92, #d7182b 70%);
       color: #fff;
-      box-shadow: 0 10px 25px rgba(228, 0, 43, 0.35), 0 1px 0 rgba(255, 255, 255, 0.18) inset;
+      box-shadow: 0 6px 14px rgba(215, 24, 43, 0.25), 0 1px 0 rgba(255, 255, 255, 0.18) inset;
       border-radius: 999px;
       display: inline-flex;
       align-items: center;
@@ -728,17 +724,17 @@
       pointer-events: none;
     }
     .wd40-badge-icon { width: 12px; height: 12px; display: inline-flex; align-items: center; justify-content: center; }
-    .wd40-badge-text { position: relative; z-index: 1; }
+    .wd40-badge-text { position: relative; z-index: 1; letter-spacing: 0.01em; }
     @keyframes wd40BadgeShine {
       0% { transform: translateX(-40%) rotate(8deg); opacity: 0; }
       40% { opacity: 1; }
       60% { transform: translateX(60%) rotate(8deg); opacity: 1; }
       100% { opacity: 0; transform: translateX(120%) rotate(8deg); }
     }
-    .wd40-price { font-size: 15px; font-weight: 700; color: #222222; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .wd40-price { font-size: 15px; font-weight: 700; color: #222222; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
     .wd40-price-current { color: #111; font-weight: 800; }
-    .wd40-price-compare { color: #9AA0AA; text-decoration: line-through; font-weight: 600; }
-    .wd40-price-subtext { color: #9AA0AA; font-size: 13px; font-weight: 600; }
+    .wd40-price-compare { color: #8f96a3; text-decoration: line-through; font-weight: 700; }
+    .wd40-price-subtext { color: #7c8491; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; }
     .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
     .wd40-card-body { padding: var(--card-padding); display: flex; flex-direction: column; flex: 1; text-align: left; align-items: flex-start; }
     .wd40-title { font-size: 18px; font-weight: 800; margin: 0 0 4px; line-height: 1.1; color: #0056B3; }
