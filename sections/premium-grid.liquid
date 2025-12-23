@@ -622,23 +622,20 @@
     }
     .wd40-cat-header-row.active .wd40-cat-link { color: #0056B3; font-weight: 700; }
     
-    /* Special SALE Animation */
-    @keyframes shineRed {
-       0% { background-position: -100%; }
-       100% { background-position: 200%; }
-    }
     .wd40-sale-link {
-       color: #E4002B !important;
+       color: #d7182b !important;
        font-weight: 800 !important;
-       background: linear-gradient(110deg, #E4002B 30%, #ff8a8a 50%, #E4002B 70%);
-       background-size: 200% 100%;
-       -webkit-background-clip: text;
-       -webkit-text-fill-color: transparent;
-       animation: shineRed 3s linear infinite;
+       background: linear-gradient(90deg, #f24765 0%, #f9a5b8 45%, #ffeef2 100%);
+       padding: 11px 12px;
+       border-radius: 12px;
+       border: 1px solid #f58197;
+       box-shadow: 0 3px 8px rgba(215, 24, 43, 0.14);
        display: flex;
        align-items: center;
        gap: 8px;
     }
+    .wd40-sale-link svg { color: #d7182b; }
+    .wd40-cat-header-row.sale-active { border-left-color: #d7182b; }
 
     .wd40-cat-toggle-btn {
        background: none; border: none; cursor: pointer; padding: 12px; display: flex; align-items: center; justify-content: center; color: #555;
@@ -706,6 +703,40 @@
     .wd40-badges { position: absolute; top: 10px; left: 10px; display: flex; flex-direction: column; gap: 4px; z-index: 5; }
     .wd40-badge { background: #E4002B; color: #ffffff; padding: 3px 9px; font-size: 11px; font-weight: 700; border-radius: 3px; text-transform: uppercase; }
     .wd40-badge.new-badge { background-color: #0A4A9C; }
+    .wd40-sale-badge { 
+      background: linear-gradient(120deg, #ff7a92, #d7182b 70%);
+      color: #fff;
+      box-shadow: 0 3px 8px rgba(215, 24, 43, 0.15), 0 1px 0 rgba(255, 255, 255, 0.18) inset;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      position: relative;
+      overflow: hidden;
+    }
+    .wd40-sale-badge::after {
+      content: '';
+      position: absolute;
+      inset: -60% -40%;
+      background: linear-gradient(120deg, rgba(255,255,255,0) 20%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 80%);
+      transform: rotate(8deg);
+      animation: wd40BadgeShine 3.6s ease-in-out infinite;
+      pointer-events: none;
+    }
+    .wd40-badge-icon { width: 12px; height: 12px; display: inline-flex; align-items: center; justify-content: center; }
+    .wd40-badge-text { position: relative; z-index: 1; letter-spacing: 0.01em; }
+    @keyframes wd40BadgeShine {
+      0% { transform: translateX(-40%) rotate(8deg); opacity: 0; }
+      40% { opacity: 1; }
+      60% { transform: translateX(60%) rotate(8deg); opacity: 1; }
+      100% { opacity: 0; transform: translateX(120%) rotate(8deg); }
+    }
+    .wd40-price { font-size: 15px; font-weight: 700; color: #222222; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+    .wd40-price-current { color: #111; font-weight: 800; }
+    .wd40-price-compare { color: #8f96a3; text-decoration: line-through; font-weight: 700; }
+    .wd40-price-subtext { color: #7c8491; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; }
+    .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
     .wd40-card-body { padding: var(--card-padding); display: flex; flex-direction: column; flex: 1; text-align: left; align-items: flex-start; }
     .wd40-title { font-size: 18px; font-weight: 800; margin: 0 0 4px; line-height: 1.1; color: #0056B3; }
     .wd40-title a { color: inherit; text-decoration: none; }
@@ -716,7 +747,6 @@
     .wd40-subtitle { font-size: 14px; font-weight: 400; color: #4A4A4A; margin-bottom: 6px; line-height: 1.45; }
     .wd40-metafield-subtitle { font-size: 13px; font-weight: 600; color: #111; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
     .wd40-price-row { display: flex; align-items: center; justify-content: flex-start; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; width: 100%; }
-    .wd40-price { font-size: 15px; font-weight: 700; color: #222222; }
     
     .wd40-swatches {
       display: flex; gap: 6px !important;
@@ -1008,25 +1038,30 @@
                  {% for sub_link in link.links %}
                    {% assign is_active = false %}
                    {% if sub_link.active or sub_link.child_active %}{% assign is_active = true %}{% endif %}
+                   {% assign sale_handle = sub_link.url | split: '/' | last | handleize %}
+                   {% assign is_sale_link = false %}
+                   {% if sub_link.title == 'SALE' or sale_handle == 'sale' %}{% assign is_sale_link = true %}{% endif %}
+                   {% assign is_sale_active = is_active %}
+                   {% if is_sale_link and collection.handle == sale_handle %}{% assign is_sale_active = true %}{% endif %}
                    
                    <div class="wd40-cat-item">
-                     <div class="wd40-cat-header-row {% if is_active %}active{% endif %}" style="display: flex; align-items: center; border-radius: 0 !important;">
-                        <a href="{{ sub_link.url }}" class="wd40-cat-link {% if sub_link.title == 'SALE' and is_active == false %}wd40-sale-link{% endif %}" style="flex: 1;">
-                            {% if sub_link.title == 'SALE' and is_active == false %}
+                     <div class="wd40-cat-header-row {% if is_sale_active %}active{% endif %}" style="display: flex; align-items: center; border-radius: 0 !important;">
+                        <a href="{{ sub_link.url }}" class="wd40-cat-link {% if is_sale_link %}wd40-sale-link{% endif %}" style="flex: 1;">
+                            {% if is_sale_link %}
                                <div class="wd40-cat-icon" style="display:flex;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg></div>
                             {% endif %}
                             <span class="wd40-cat-text">{{ sub_link.title }}</span>
                         </a>
                         {% if sub_link.links.size > 0 %}
                           <button type="button" class="wd40-cat-toggle-btn" onclick="event.preventDefault(); event.stopPropagation(); wd40ToggleCategory(this)">
-                            <svg class="chevron-down" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: {% if is_active %}none{% else %}block{% endif %}"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                            <svg class="chevron-up" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: {% if is_active %}block{% else %}none{% endif %}"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                            <svg class="chevron-down" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: {% if is_sale_active %}none{% else %}block{% endif %}"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                            <svg class="chevron-up" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: {% if is_sale_active %}block{% else %}none{% endif %}"><polyline points="18 15 12 9 6 15"></polyline></svg>
                           </button>
                         {% endif %}
                      </div>
                      {% assign has_sub = false %}{% if sub_link.links.size > 0 %}{% assign has_sub = true %}{% endif %}
                      {% if has_sub %}
-                       <div class="wd40-cat-sublist" style="display: {% if is_active %}block{% else %}none{% endif %}">
+                       <div class="wd40-cat-sublist" style="display: {% if is_sale_active %}block{% else %}none{% endif %}">
                          {% for grand_sub_link in sub_link.links %}
                            {% if grand_sub_link.title contains 'All ' %}{% continue %}{% endif %}
                            <a href="{{ grand_sub_link.url }}" class="{% if grand_sub_link.active %}active{% endif %}" style="{% if grand_sub_link.active %}font-weight:700;{% endif %}">{{ grand_sub_link.title }}</a>
@@ -1123,27 +1158,32 @@
              {% for sub_link in link.links %}
                {% assign is_active = false %}
                {% if sub_link.active or sub_link.child_active %}{% assign is_active = true %}{% endif %}
+               {% assign sale_handle = sub_link.url | split: '/' | last | handleize %}
+               {% assign is_sale_link = false %}
+               {% if sub_link.title == 'SALE' or sale_handle == 'sale' %}{% assign is_sale_link = true %}{% endif %}
+               {% assign is_sale_active = is_active %}
+               {% if is_sale_link and collection.handle == sale_handle %}{% assign is_sale_active = true %}{% endif %}
                
                <div class="wd40-cat-item">
-                 <div class="wd40-cat-header-row {% if is_active %}active{% endif %}" style="display: flex; align-items: center; border-radius: 0 !important;">
-                    <a href="{{ sub_link.url }}" class="wd40-cat-link {% if sub_link.title == 'SALE' and is_active == false %}wd40-sale-link{% endif %}" style="flex: 1;">
-                        {% if sub_link.title == 'SALE' and is_active == false %}
+                 <div class="wd40-cat-header-row {% if is_sale_active %}active{% endif %}" style="display: flex; align-items: center; border-radius: 0 !important;">
+                    <a href="{{ sub_link.url }}" class="wd40-cat-link {% if is_sale_link %}wd40-sale-link{% endif %}" style="flex: 1;">
+                        {% if is_sale_link %}
                            <div class="wd40-cat-icon" style="display:flex;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg></div>
-                        {% endif %}
-                        <span class="wd40-cat-text">{{ sub_link.title }}</span>
-                    </a>
-                    {% if sub_link.links.size > 0 %}
-                      <button type="button" class="wd40-cat-toggle-btn" onclick="event.preventDefault(); event.stopPropagation(); wd40ToggleCategory(this)">
-                        <svg class="chevron-down" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: {% if is_active %}none{% else %}block{% endif %}"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                        <svg class="chevron-up" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: {% if is_active %}block{% else %}none{% endif %}"><polyline points="18 15 12 9 6 15"></polyline></svg>
-                      </button>
-                    {% endif %}
-                 </div>
-                 {% assign has_sub = false %}{% if sub_link.links.size > 0 %}{% assign has_sub = true %}{% endif %}
-                 {% if has_sub %}
-                   <div class="wd40-cat-sublist" style="display: {% if is_active %}block{% else %}none{% endif %}">
-                     {% for grand_sub_link in sub_link.links %}
-                       {% if grand_sub_link.title contains 'All ' %}{% continue %}{% endif %}
+                       {% endif %}
+                       <span class="wd40-cat-text">{{ sub_link.title }}</span>
+                   </a>
+                   {% if sub_link.links.size > 0 %}
+                     <button type="button" class="wd40-cat-toggle-btn" onclick="event.preventDefault(); event.stopPropagation(); wd40ToggleCategory(this)">
+                       <svg class="chevron-down" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: {% if is_sale_active %}none{% else %}block{% endif %}"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                       <svg class="chevron-up" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: {% if is_sale_active %}block{% else %}none{% endif %}"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                     </button>
+                   {% endif %}
+                </div>
+                {% assign has_sub = false %}{% if sub_link.links.size > 0 %}{% assign has_sub = true %}{% endif %}
+                {% if has_sub %}
+                  <div class="wd40-cat-sublist" style="display: {% if is_sale_active %}block{% else %}none{% endif %}">
+                    {% for grand_sub_link in sub_link.links %}
+                      {% if grand_sub_link.title contains 'All ' %}{% continue %}{% endif %}
                        <a href="{{ grand_sub_link.url }}" class="{% if grand_sub_link.active %}active{% endif %}" style="{% if grand_sub_link.active %}font-weight:700;{% endif %}">{{ grand_sub_link.title }}</a>
                      {% endfor %}
                    </div>
@@ -1235,13 +1275,17 @@
              </div>
            {% endif %}
            
-           <div class="wd40-card">
+              <div class="wd40-card">
               <div class="wd40-badges">
                 {% if product.tags contains 'bestseller' or product.tags contains 'best-seller' %}<span class="wd40-badge">{{ section.settings.badge_text }}</span>{% endif %}
                 {% if section.settings.show_new_badge and product.tags contains 'new' %}<span class="wd40-badge new-badge">{{ section.settings.new_badge_text }}</span>{% endif %}
                 {% if section.settings.show_discount_badge and product.compare_at_price > product.price %}
                   {% assign discount = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round %}
-                  <span class="wd40-badge">Save up to {{ discount }}%</span>
+                  <span class="wd40-badge wd40-sale-badge" role="text">
+                    <span class="wd40-badge-icon" aria-hidden="true">✦</span>
+                    <span class="wd40-badge-text">Save up to {{ discount }}%</span>
+                    <span class="visually-hidden">Limited-time offer</span>
+                  </span>
                 {% endif %}
               </div>
 
@@ -1294,7 +1338,17 @@
                       {% endif %}
                     {%- when 'price' -%}
                       <div class="wd40-price-row" style="width:100%">
-                        <div class="wd40-price js-product-price">From {{ product.price_min | money }}</div>
+                        {% assign has_compare = false %}
+                        {% if product.compare_at_price > product.price %}{% assign has_compare = true %}{% endif %}
+                        <div class="wd40-price js-product-price">
+                          <span class="wd40-price-current">
+                            {{ product.price | money }}
+                          </span>
+                          {% if has_compare %}
+                            <span class="wd40-price-compare">{{ product.compare_at_price | money }}</span>
+                            <span class="wd40-price-subtext">On Sale</span>
+                          {% endif %}
+                        </div>
                       </div>
                     {%- when 'swatches' -%}
                       {% if section.settings.show_swatches %}
