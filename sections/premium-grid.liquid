@@ -1042,7 +1042,8 @@
                    {% assign is_active = false %}
                    {% if sub_link.active or sub_link.child_active %}{% assign is_active = true %}{% endif %}
                    {% assign sale_handle = sub_link.url | split: '/' | last | handleize %}
-                   {% assign is_sale_link = sub_link.title == 'SALE' or sale_handle == 'sale' %}
+                   {% assign is_sale_link = false %}
+                   {% if sub_link.title == 'SALE' or sale_handle == 'sale' %}{% assign is_sale_link = true %}{% endif %}
                    {% assign is_sale_active = is_active %}
                    {% if is_sale_link and collection.handle == sale_handle %}{% assign is_sale_active = true %}{% endif %}
                    
@@ -1161,7 +1162,8 @@
                {% assign is_active = false %}
                {% if sub_link.active or sub_link.child_active %}{% assign is_active = true %}{% endif %}
                {% assign sale_handle = sub_link.url | split: '/' | last | handleize %}
-               {% assign is_sale_link = sub_link.title == 'SALE' or sale_handle == 'sale' %}
+               {% assign is_sale_link = false %}
+               {% if sub_link.title == 'SALE' or sale_handle == 'sale' %}{% assign is_sale_link = true %}{% endif %}
                {% assign is_sale_active = is_active %}
                {% if is_sale_link and collection.handle == sale_handle %}{% assign is_sale_active = true %}{% endif %}
                
