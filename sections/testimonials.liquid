@@ -1,0 +1,146 @@
+{% style %}
+    #shopify-section-{{ section.id }}{
+      padding-top: {{ section.settings.padding_top_desktop }};
+      padding-bottom: {{ section.settings.padding_bottom_desktop }};
+      background-color: #EBF0F5;
+      position: relative;
+      z-index: 1;
+    }
+
+    #shopify-section-{{ section.id }}:after {
+      content: '';
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 35%;
+      background-color: #fff;
+      bottom: 0;
+      z-index:-1;
+  }
+
+
+    @media( max-width: 767px){
+       #shopify-section-{{ section.id }}{
+        padding-top: {{ section.settings.padding_top_mobile }};
+        padding-bottom: {{ section.settings.padding_bottom_mobile }};
+      }
+    }
+{% endstyle %}
+
+{{ 'testimonials.css' | asset_url | stylesheet_tag }}
+<div class="page-width container-fluid">
+  <div class="testimonials-inner">
+    <div class="row">
+      <div class="col-md-12 text-center ">
+        <h2 class="sh-48 mb-5">{{ section.settings.heading }}</h2>
+      </div>
+    </div>
+
+    <div
+      class="row"
+    >
+      {% for block in section.blocks %}
+        <div class="col-md-4 mb-3">
+          <div class="testimonial d-flex flex-column align-items-center justify-content-center text-center gap-3">
+            <img
+              src="{{ block.settings.image | img_url : 'master' }}"
+              width="{{ block.settings.image.width }}"
+              height="{{ block.settings.image.height }}"
+              loading="lazy"
+              alt="{{ block.settings.image.alt }}"
+              class="img-fluid"
+            >
+            <p>{{ block.settings.description }}</p>
+            <img
+              src="{{ block.settings.testi_image | img_url : 'master' }}"
+              width="{{ block.settings.testi_image.width }}"
+              height="{{ block.settings.testi_image.height }}"
+              loading="lazy"
+              alt="{{ block.settings.testi_image.alt }}"
+              class="img-fluid"
+            >
+            <h5>{{ block.settings.testi_name }}</h5>
+            <p>{{ block.settings.testi_position }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Testimonials",
+  "class": "testimoinals",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "What Our Partners <br> Say About Our Product"
+    },
+    {
+      "type": "text",
+      "id": "padding_top_desktop",
+      "label": "Padding Desktop Top",
+      "default": "80px"
+    },
+     {
+      "type": "text",
+      "id": "padding_bottom_desktop",
+      "label": "Padding Desktop Bottom",
+      "default": "80px"
+    },
+     {
+      "type": "text",
+      "id": "padding_top_mobile",
+      "label": "Padding Mobile Top",
+      "default": "40px"
+    },
+     {
+      "type": "text",
+      "id": "padding_bottom_mobile",
+      "label": "Padding Mobile Bottom",
+      "default": "40px"
+    },
+
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Start Rating",
+        },
+       {
+          "type": "textarea",
+          "id": "description",
+          "label": "Heading",
+        },
+         {
+          "type": "image_picker",
+          "id": "testi_image",
+          "label": "Person Image",
+        },
+         {
+          "type": "text",
+          "id": "testi_name",
+          "label": "Person Name",
+        },
+         {
+          "type": "text",
+          "id": "testi_position",
+          "label": "Person Position",
+        },
+      ]
+    },
+  ],
+  "presets": [
+    {
+      "name": "Testimonials",
+    }
+  ]
+}
+{% endschema %}

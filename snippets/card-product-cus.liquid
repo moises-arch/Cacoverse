@@ -1,0 +1,215 @@
+{% comment %}
+  Renders a product card
+
+  Accepts:
+  - product: {Object} Product Liquid object (optional)
+
+  Usage:
+  {% render 'card-product', show_vendor: section.settings.show_vendor %}
+{% endcomment %}
+
+<div class="card-wraper d-flex flex-column gap-2" data-product-id="{{ product.id }}">
+  <a href="{{ product.url }}">
+    <div class="card-media">
+      <div class="loader" data-product-id="{{ product.id }}"></div>
+      <img
+        src="{{ product.featured_image.src | img_url : '750x' }}"
+        class="img-fluid product-image"
+        loading="lazy"
+        width="{{ product.featured_image.width }}"
+        height="{{ product.featured_image.height }}"
+        alt="{{  product.featured_image.alt }}"
+        data-product-id="{{ product.id }}"
+      >
+    </div>
+  </a>
+  <a href="{{ product.url }}">
+    <div class="descp">
+      <p class="sp-20 d-flex align-items-center justify-content-between">
+        {{ product.title }}
+        <span class="sp-14 sku-text" data-product-id="{{ product.id }}">
+          SKU: {{ product.selected_or_first_available_variant.sku }}
+        </span>
+      </p>
+      <p class="sp-14">{{ product.metafields.custom.sub_title }}</p>
+    </div>
+  </a>
+  {% assign has_color = false %}
+  {% assign has_series = false %}
+
+  {% for option in product.options_with_values %}
+    {% if option.name == 'Color' %}
+      {% assign has_color = true %}
+    {% elsif option.name == 'Series' %}
+      {% assign has_series = true %}
+    {% endif %}
+  {% endfor %}
+
+  <div
+    class="d-flex flex-column gap-2"
+  >
+    {% if has_color %}
+      <div class="colors">
+       
+        <legend class="form__label helmet-color-label"> Helmet Color: </legend>
+        <div class="product-options">
+          {%- for option in product.options_with_values -%}
+            {%- assign option_name_downcase = option.name | downcase | escape | handleize -%}
+            {%- if option_name_downcase == 'color' -%}
+              <div class="option-group">
+                <div class="options {{ option_name_downcase }}-options">
+                  {%- for value in option.values -%}
+                    <label for="color-{{- value | downcase -}}-{{- product.id -}}" class="color-label" data-product-id="{{ product.id }}">
+                      <input
+                        id="color-{{- value | downcase -}}-{{- product.id -}}"
+                        type="radio"
+                        name="color-{{- product.id -}}"
+                        value="{{- value | downcase -}}"
+                        class="color-radio"
+                        data-product-id="{{- product.id -}}"
+                        {% comment %}
+                          {%- if forloop.first -%}
+                            checked
+                          {%- endif -%}
+                        {% endcomment %}
+                      >
+                      {%- assign pcolor = value | downcase | escape | handleize -%}
+                      {%- assign pcolor_code = pcolor -%}
+                      {%- if pcolor == 'carbon-black' -%}
+                        {%- assign pcolor_code = '#0B0B0B' -%}
+                      {%- elsif pcolor == 'black' -%}
+                        {%- assign pcolor_code = '#000000' -%}
+                      {%- elsif pcolor == 'blue' -%}
+                        {%- assign pcolor_code = '#0A5BA6' -%}
+                      {%- elsif pcolor == 'green' -%}
+                        {%- assign pcolor_code = '#34E159' -%}
+                      {%- elsif pcolor == 'orange' -%}
+                        {%- assign pcolor_code = '#ECBC1E' -%}
+                      {%- elsif pcolor == 'gray' or pcolor == 'grey' -%}
+                        {%- assign pcolor_code = '#EFEFEF' -%}
+                      {%- elsif pcolor == 'hi-vis-lime' -%}
+                        {%- assign pcolor_code = '#C7EA46' -%}
+                      {%- endif -%}
+                      <span style="background-color: {{- pcolor_code -}};" class="color-box"></span>
+                      <span class="tick-mark">
+                        <svg width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M4.58543 6.41413L1.75698 3.58573L0.342773 4.99993L4.58543 9.24263L11.6564 2.17153L10.2422 0.757324L4.58543 6.41413Z" fill="white"/>
+                        </svg>
+                      </span>
+                    </label>
+                  {%- endfor -%}
+                </div>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if has_series %}
+      <div class="series product-form__input product-form__input--pill">
+        <legend class="form__label helmet-series-label">Series: </legend>
+        <div class="product-options">
+          {%- for option in product.options_with_values -%}
+            {%- assign option_name_downcase = option.name | downcase | escape | handleize -%}
+            {%- if option_name_downcase == 'series' -%}
+              <div class="option-group">
+                <div class="options {{ option_name_downcase }}-options">
+                  {%- for value in option.values -%}
+                    <input
+                        id="series-{{- value | downcase -}}-{{- product.id -}}"
+                        type="radio"
+                        name="series-{{- product.id -}}"
+                        value="{{- value | downcase -}}"
+                        class=""
+                        data-product-id="{{- product.id -}}"
+                          {%- if forloop.first -%}
+                            checked
+                          {%- endif -%}
+                      >
+                    <label data-product-id="{{ product.id }}" for="series-{{- value | downcase -}}-{{- product.id -}}">
+                      {{ value }}
+                    </label>
+
+                  {%- endfor -%}
+                </div>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    {% endif %}
+    <!-- Pricing -->
+    {% render 'price', product: product, price_class: '', show_compare_at_price: true %}
+
+    <!-- Quantity -->
+    {% comment %}
+      <div
+        id="Quantity-Form-template--18136217092149__main_product_knCpEk"
+        class="product-form__input product-form__quantity"
+      >
+        <label class="quantity__label form__label" for="Quantity-template--18136217092149__main_product_knCpEk">
+          Quantity
+          <span class="quantity__rules-cart hidden">
+            <div class="loading__spinner hidden">
+              <svg xmlns="http://www.w3.org/2000/svg" class="spinner" viewBox="0 0 66 66">
+                <circle stroke-width="6" cx="33" cy="33" r="30" fill="none" class="path"></circle>
+              </svg>
+            </div>
+            <span>(<span class="quantity-cart">0</span> in cart)</span>
+          </span>
+        </label>
+        <div class="price-per-item__container">
+          <quantity-input
+            class="quantity"
+            data-url="/products/safety-helmet"
+            data-section="template--18136217092149__main_product_knCpEk"
+          >
+            <button class="quantity__button disabled" name="minus" type="button">
+              <span class="visually-hidden">Decrease quantity for GH400</span>
+              <span class="svg-wrapper">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" class="icon icon-minus" viewBox="0 0 10 2">
+                  <path fill="currentColor" fill-rule="evenodd" d="M.5 1C.5.7.7.5 1 .5h8a.5.5 0 1 1 0 1H1A.5.5 0 0 1 .5 1" clip-rule="evenodd"></path>
+                </svg>
+              </span>
+            </button>
+            <input
+              class="quantity__input"
+              type="number"
+              name="quantity"
+              id="Quantity-template--18136217092149__main_product_knCpEk"
+              data-cart-quantity="0"
+              data-min="1"
+              min="1"
+              step="1"
+              value="1"
+              form="product-form-template--18136217092149__main_product_knCpEk"
+              data-bound="true"
+            >
+            <button class="quantity__button" name="plus" type="button">
+              <span class="visually-hidden">Increase quantity for GH400</span>
+              <span class="svg-wrapper">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" class="icon icon-plus" viewBox="0 0 10 10">
+                  <path fill="currentColor" fill-rule="evenodd" d="M1 4.51a.5.5 0 0 0 0 1h3.5l.01 3.5a.5.5 0 0 0 1-.01V5.5l3.5-.01a.5.5 0 0 0-.01-1H5.5L5.49.99a.5.5 0 0 0-1 .01v3.5l-3.5.01z" clip-rule="evenodd"></path>
+                </svg>
+              </span>
+            </button>
+          </quantity-input>
+        </div>
+        <div class="quantity__rules caption" id="Quantity-Rules-template--18136217092149__main_product_knCpEk"></div>
+      </div>
+    {% endcomment %}
+
+    <!-- Learn More -->
+    {% comment %}
+      <a class="s-btn" href="{{ product.url }}">
+        <span>Learn More</span>
+      </a>
+    {% endcomment %}
+  </div>
+</div>
+
+
+<script type="application/json" id="variants-data-{{ product.id }}">
+  {{ product.variants | json }}
+</script>

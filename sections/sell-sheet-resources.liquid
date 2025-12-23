@@ -1,0 +1,247 @@
+{% style %}
+  #shopify-section-{{ section.id }}{
+    padding-top: {{ section.settings.padding_top_desktop }};
+    padding-bottom: {{ section.settings.padding_bottom_desktop }};
+  }
+
+  @media( max-width: 767px){
+     #shopify-section-{{ section.id }}{
+      padding-top: {{ section.settings.padding_top_mobile }};
+      padding-bottom: {{ section.settings.padding_bottom_mobile }};
+    }
+  }
+
+
+
+
+
+  
+{% endstyle %}
+
+
+
+
+
+{{ 'download-resources.css' | asset_url | stylesheet_tag }}
+<div class="page-width container-fluid">
+  <div class="row">
+    {% comment %}
+      <div class="col-md-12 col-xl-3">
+        <h2 class="sh-48 mb-4">{{ section.settings.heading }}</h2>
+      </div>
+    {% endcomment %}
+    <div class="col-md-12 col-xl-12">
+      {% comment %} {% paginate collections.all.products by 50 %}
+        <div class="download-resources">
+          <ul class="list-unstyled two-column-list">
+            {% for product in collections.all.products %}
+              {% assign document_links = product.metafields.custom.product_details_download_file_link.value %}
+              {% for document in product.metafields.custom.product_details_download_title.value %}
+                <li>
+                  <span
+                    ><a
+                      class="sp-16"
+                      style="font-weight: 600;"
+                      href="{% if document_links[forloop.index0] != blank %}{{ document_links[forloop.index0] }}{% else %}#{% endif %}"
+                      target="_blank"
+                    >
+                      {{ product.collections.last.title }}
+                      {{ product.title }}
+                      {{ document }}
+                    </a></span
+                  >
+                  <span
+                    ><a
+                      href="{% if document_links[forloop.index0] != blank %}{{ document_links[forloop.index0] }}{% else %}#{% endif %}"
+                      target="_blank"
+                    >
+                      <img
+                        src="{{  'PDF.png' | asset_img_url : 'master' }}"
+                        width="40"
+                        height="40"
+                        alt="pdf icon download"
+                        class="img-fluid"
+                        loading="lazy"
+                      > </a
+                  ></span>
+                </li>
+              {% endfor %}
+            {% endfor %}
+          </ul>
+        </div>
+        {%- if paginate.pages > 1 -%}
+          {% render 'pagination', paginate: paginate, anchor: '' %}
+        {%- endif -%}
+      {% endpaginate %} {% endcomment %}
+         <table id="resourcesTable" class="display">
+      <thead>
+        <tr>
+          <th>Collection</th>
+          <th>Product</th>
+          <th>Document</th>
+          <th>Download</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    </div>
+
+  
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.5/css/dataTables.dataTables.min.css">
+    <script src="https://cdn.datatables.net/2.0.5/js/dataTables.min.js"></script>
+
+    <script>
+      const STOREFRONT_API_URL = '/api/2025-01/graphql.json'; // auto-resolves to your shop
+      const STOREFRONT_API_TOKEN = '2631e95627af35d835781335a498203a'; // replace with your Storefront API token
+
+      // Recursive fetch to load ALL products (250 per page)
+      async function fetchProducts(cursor = null, allProducts = []) {
+        const query = `
+      query getProducts($cursor: String) {
+        products(first: 250, after: $cursor) {
+          edges {
+            cursor
+            node {
+              title
+              handle
+              collections(first: 1) {
+                edges { node { title } }
+              }
+              metafields(identifiers: [
+                { namespace: "custom", key: "product_details_download_file_link" },
+                { namespace: "custom", key: "product_details_download_title" }
+              ]) {
+                key
+                value
+              }
+            }
+          }
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
+        }
+      }
+    `;
+
+        const res = await fetch(STOREFRONT_API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Shopify-Storefront-Access-Token': STOREFRONT_API_TOKEN,
+          },
+          body: JSON.stringify({ query, variables: { cursor } }),
+        });
+
+        const json = await res.json();
+        const edges = json.data.products.edges;
+        const products = edges.map((e) => e.node);
+        allProducts.push(...products);
+
+        if (json.data.products.pageInfo.hasNextPage) {
+          return fetchProducts(json.data.products.pageInfo.endCursor, allProducts);
+        }
+        return allProducts;
+      }
+
+      document.addEventListener('DOMContentLoaded', async () => {
+        const products = await fetchProducts();
+        const rows = [];
+
+        products.forEach((product) => {
+          const collection = product.collections.edges[0]?.node.title || '—';
+          const metafields = product.metafields || [];
+
+          let titles = [];
+          let links = [];
+
+          try {
+            titles = JSON.parse(metafields.find((m) => m.key === 'product_details_download_title')?.value || '[]');
+          } catch (e) {
+            titles = [];
+          }
+
+          try {
+            links = JSON.parse(metafields.find((m) => m.key === 'product_details_download_file_link')?.value || '[]');
+          } catch (e) {
+            links = [];
+          }
+
+          titles.forEach((doc, i) => {
+            const link = links[i] || '#';
+            rows.push([
+              collection,
+              product.title,
+              doc,
+              `<a href="${link}" target="_blank">
+             <img src="{{ 'PDF.png' | asset_img_url: '40x40' }}" width="40" height="40" alt="pdf">
+           </a>`,
+            ]);
+          });
+        });
+
+        // Init DataTable
+        new DataTable('#resourcesTable', {
+          data: rows,
+          columns: [{ title: 'Collection' }, { title: 'Product' }, { title: 'Document' }, { title: 'Download' }],
+          pageLength: 10,
+          lengthMenu: [10, 25, 50, 100],
+          searchable: true,
+        });
+      });
+    </script>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Sell Sheet Resources",
+  "class": "download-resources",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background Image"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Download Resources"
+    },
+    {
+      "type": "text",
+      "id": "padding_top_desktop",
+      "label": "Padding Desktop Top",
+      "default": "80px"
+    },
+    {
+      "type": "text",
+      "id": "padding_bottom_desktop",
+      "label": "Padding Desktop Bottom",
+      "default": "80px"
+    },
+    {
+      "type": "text",
+      "id": "padding_top_mobile",
+      "label": "Padding Mobile Top",
+      "default": "40px"
+    },
+    {
+      "type": "text",
+      "id": "padding_bottom_mobile",
+      "label": "Padding Mobile Bottom",
+      "default": "40px"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sell Sheet Resources"
+    }
+  ]
+}
+{% endschema %}

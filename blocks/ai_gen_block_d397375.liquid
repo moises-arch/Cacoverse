@@ -1,0 +1,516 @@
+{% doc %}
+  @prompt
+    an about this page with this content: U.S. Distribution Division – Miami, Florida
+    
+    Caco America LLC operates as the North American distribution engine of the Caco Abbo Group, strategically headquartered in Miami, Florida — a city globally recognized as the trade and logistics gateway to the Americas. From this hub, the company drives exclusive distribution, nationwide fulfillment, and e-commerce expansion across the United States and Canada, combining traditional B2B supply chain expertise with digital-first commerce strategies.
+    
+    Market Position & Exclusivity
+    
+    As the exclusive distributor for GE PPE, WD-40 Microfiber Towels, and Best Value in the U.S. and Canada, Caco America secures defensible category positions in personal protective equipment, hardware, and consumer goods. These segments not only represent recession-resilient demand but also offer long-term scalability as safety standards, e-commerce penetration, and industrial consumption rise across North America.
+    
+    By holding exclusive rights, the company enjoys pricing power, brand control, and customer loyalty, while limiting competitive encroachment. This exclusivity builds a strategic moat and enables higher-margin operations compared to non-exclusive distribution models.
+    
+    Infrastructure & Operations
+    
+    The backbone of the business is its 10,000 m² warehouse facility, a high-capacity logistics center designed for speed, accuracy, and scalability. This facility underpins:
+    
+    Nationwide Shipping – Rapid fulfillment across the continental U.S. through optimized carrier partnerships and distribution networks.
+    
+    Cross-Border Capability – Infrastructure already in place to serve the Canadian market, enabling bi-national coverage.
+    
+    Multi-Channel Fulfillment – Simultaneous support for bulk B2B shipments and direct-to-consumer e-commerce orders, from pallets to parcels.
+    
+    Operating from Miami provides a strategic logistics advantage, with proximity to major seaports, airports, and intermodal connections. The location stre, multi column structure, U.S. Distribution Division – Miami, Florida
+    
+    Caco America LLC operates as the North American distribution engine of the Caco Abbo Group, strategically headquartered in Miami, Florida — a city globally recognized as the trade and logistics gateway to the Americas. From this hub, the company drives exclusive distribution, nationwide fulfillment, and e-commerce expansion across the United States and Canada, combining traditional B2B supply chain expertise with digital-firs
+
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-about-content-{{ ai_gen_id }} {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: {{ block.settings.section_padding }}px 20px;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-about-content__header-{{ ai_gen_id }} {
+    text-align: {{ block.settings.header_alignment }};
+    margin-bottom: {{ block.settings.header_spacing }}px;
+  }
+
+  .ai-about-content__title-{{ ai_gen_id }} {
+    font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
+    font-size: {{ block.settings.title_size }}px;
+    font-weight: {{ block.settings.title_weight }};
+    color: {{ block.settings.title_color }};
+    margin: 0 0 {{ block.settings.title_spacing }}px;
+    line-height: 1.2;
+  }
+
+  .ai-about-content__subtitle-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subtitle_size }}px;
+    color: {{ block.settings.subtitle_color }};
+    margin: 0;
+    line-height: 1.4;
+    font-weight: 500;
+  }
+
+  .ai-about-content__main-content-{{ ai_gen_id }} {
+    margin-top: {{ block.settings.content_spacing }}px;
+    display: grid;
+    grid-template-columns: {% if block.settings.layout == 'image-left' %}1fr 2fr{% elsif block.settings.layout == 'image-right' %}2fr 1fr{% else %}1fr{% endif %};
+    gap: {{ block.settings.column_gap }}px;
+    align-items: {{ block.settings.vertical_alignment }};
+  }
+
+  .ai-about-content__content-{{ ai_gen_id }} {
+    {% if block.settings.layout == 'image-left' %}
+      order: 2;
+    {% elsif block.settings.layout == 'image-right' %}
+      order: 1;
+    {% endif %}
+  }
+
+  .ai-about-content__image-column-{{ ai_gen_id }} {
+    {% if block.settings.layout == 'image-left' %}
+      order: 1;
+    {% elsif block.settings.layout == 'image-right' %}
+      order: 2;
+    {% endif %}
+  }
+
+  .ai-about-content__text-{{ ai_gen_id }} {
+    font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
+    font-size: {{ block.settings.body_size }}px;
+    color: {{ block.settings.text_color }};
+    line-height: {{ block.settings.line_height }};
+    margin: 0;
+  }
+
+  .ai-about-content__text-{{ ai_gen_id }} p {
+    margin: 00 {{ block.settings.paragraph_spacing }}px;
+  }
+
+  .ai-about-content__text-{{ ai_gen_id }} p:last-child {
+    margin-bottom: 0;
+  }
+
+  .ai-about-content__highlight-{{ ai_gen_id }} {
+    background-color: {{ block.settings.highlight_background }};
+    color: {{ block.settings.highlight_text_color }};
+    padding: 2px 8px;
+    border-radius:4px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .ai-about-content__image-wrapper-{{ ai_gen_id }} {
+    width: 100%;
+    border-radius: {{ block.settings.image_border_radius }}px;
+    overflow: hidden;
+  }
+
+  .ai-about-content__image-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .ai-about-content__image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: {{ block.settings.image_height }}px;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ai-about-content__image-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .ai-about-content__empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px 16px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 4px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  @media screen and (max-width: 768px) {
+    .ai-about-content-{{ ai_gen_id }} {
+      padding: {{ block.settings.section_padding | times: 0.7 }}px 16px;
+    }
+
+    .ai-about-content__title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_size | times: 0.8 }}px;
+    }
+
+    .ai-about-content__subtitle-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subtitle_size | times: 0.9 }}px;
+    }
+
+    .ai-about-content__main-content-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;gap: {{ block.settings.column_gap | times: 0.8 }}px;
+    }
+
+    .ai-about-content__content-{{ ai_gen_id }},
+    .ai-about-content__image-column-{{ ai_gen_id }} {
+      order: unset;
+    }
+
+    {% if block.settings.mobile_image_first %}
+      .ai-about-content__image-column-{{ ai_gen_id }} {
+        order: -1;
+      }
+    {% endif %}
+
+    .ai-about-content__image-placeholder-{{ ai_gen_id }} {
+      height: {{ block.settings.image_height | times: 0.8 }}px;
+    }
+  }
+{% endstyle %}<div class="ai-about-content-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% if block.settings.main_title != blank or block.settings.main_subtitle != blank %}
+    <div class="ai-about-content__header-{{ ai_gen_id }}">
+      {% if block.settings.main_title != blank %}
+        <h1 class="ai-about-content__title-{{ ai_gen_id }}">{{ block.settings.main_title }}</h1>
+      {% endif %}
+      {% if block.settings.main_subtitle != blank %}
+        <div class="ai-about-content__subtitle-{{ ai_gen_id }}">
+          {% if block.settings.highlight_location %}
+            <span class="ai-about-content__highlight-{{ ai_gen_id }}">{{ block.settings.main_subtitle }}</span>
+          {% else %}
+            {{ block.settings.main_subtitle }}
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <div class="ai-about-content__main-content-{{ ai_gen_id }}">
+    {% if block.settings.layout != 'content-only' %}
+      <div class="ai-about-content__image-column-{{ ai_gen_id }}">
+        <div class="ai-about-content__image-wrapper-{{ ai_gen_id }}">
+          {% if block.settings.image %}
+            <img
+              src="{{ block.settings.image | image_url: width: 800 }}"
+              alt="{{ block.settings.image.alt | escape }}"
+              loading="lazy"
+              width="{{ block.settings.image.width }}"
+              height="{{ block.settings.image.height }}"
+              class="ai-about-content__image-{{ ai_gen_id }}"
+            >
+          {% else %}
+            <div class="ai-about-content__image-placeholder-{{ ai_gen_id }}">
+              {{ 'image' | placeholder_svg_tag }}<div class="ai-about-content__empty-state-{{ ai_gen_id }}">
+                Add an image
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}<div class="ai-about-content__content-{{ ai_gen_id }}">
+      {% if block.settings.content != blank %}
+        <div class="ai-about-content__text-{{ ai_gen_id }}">{{ block.settings.content }}</div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "About content",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "main_title",
+      "label": "Main title",
+      "default": "U.S. Distribution Division"
+    },
+    {
+      "type": "text",
+      "id": "main_subtitle",
+      "label": "Subtitle",
+      "default": "Miami, Florida"
+    },
+    {
+      "type": "checkbox",
+      "id": "highlight_location",
+      "label": "Highlight subtitle",
+      "default": true
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Content",
+      "default": "<p>Caco America LLC operates as the North American distribution engine of the Caco Abbo Group, strategically headquartered in Miami, Florida — a city globally recognized as the trade and logistics gateway to the Americas. From this hub, the company drives exclusive distribution, nationwide fulfillment, and e-commerce expansion across the United States and Canada, combining traditional B2B supply chain expertise with digital-first commerce strategies.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "range",
+      "id": "image_height",
+      "min": 200,
+      "max": 500,
+      "step": 20,
+      "unit": "px",
+      "label": "Image height",
+      "default": 300
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        {"value": "content-only", "label": "Content only"},
+        {"value": "image-left", "label": "Image left"},
+        {"value": "image-right", "label": "Image right"}
+      ],
+      "default": "image-right"
+    },
+    {
+      "type": "select",
+      "id": "header_alignment",
+      "label": "Header alignment",
+      "options": [
+        {"value": "left", "label": "Left"},
+        {"value": "center", "label": "Center"},
+        {"value": "right", "label": "Right"}
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "vertical_alignment",
+      "label": "Vertical alignment",
+      "options": [
+        {"value": "start", "label": "Top"},
+        {"value": "center", "label": "Center"},
+        {"value": "end", "label": "Bottom"}
+      ],
+      "default": "start"
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_image_first",
+      "label": "Show image first on mobile",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Column gap",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Section padding",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "barlow_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "barlow_n4"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 28,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Main title size",
+      "default": 36
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Main title weight",
+      "options": [
+        {"value": "400", "label": "Normal"},
+        {"value": "600", "label": "Semi-bold"},
+        {"value": "700", "label": "Bold"}
+      ],
+      "default": "700"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Subtitle size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "body_size",
+      "min": 14,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Body text size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "line_height",
+      "min": 1.2,
+      "max": 2.0,
+      "step": 0.1,
+      "label": "Line height",
+      "default": 1.6
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "header_spacing",
+      "min": 20,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Header bottom spacing",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "title_spacing",
+      "min": 10,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Title bottom spacing",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "paragraph_spacing",
+      "min": 10,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Paragraph spacing",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "content_spacing",
+      "min": 20,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Content top spacing",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Main title",
+      "default": "#222222"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#444444"
+    },
+    {
+      "type": "color",
+      "id": "highlight_background",
+      "label": "Highlight background",
+      "default": "#0a5ba6"
+    },
+    {
+      "type": "color",
+      "id": "highlight_text_color",
+      "label": "Highlight text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Image style"
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Image border radius",
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "About content"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,1030 @@
+{% doc %}
+  @prompt
+    Build a single Shopify section that provides a sticky right-side button which opens a fullscreen modal (appended to document.body, rgba(0,0,0,0.88), very high z-index). The modal must show a cloned + sanitized product comparison table (up to 8 products) with header (image → title link → price) and admin-editable feature rows (e.g., ventilation, sun protection, impact, warranty).
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+
+
+
+{% style %}
+/* ===== CORE (unchanged functional parts kept) ===== */
+.ai-comparison-sticky-button-{{ ai_gen_id }}{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:999;background-color:{{ block.settings.button_bg_color }};color:{{ block.settings.button_text_color }};border:none;padding:{{ block.settings.button_padding_vertical }}px {{ block.settings.button_padding_horizontal }}px;border-radius:{{ block.settings.button_border_radius }}px;cursor:pointer;font-size:{{ block.settings.button_font_size }}px;font-weight:600;box-shadow:0 4px 12px rgba(0,0,0,.15);transition:all .3s ease;display:flex;flex-direction:column;align-items:center;gap:{{ block.settings.button_gap }}px;writing-mode:horizontal-tb}
+.ai-comparison-sticky-button-{{ ai_gen_id }}:hover{background-color:{{ block.settings.button_hover_color }};transform:translateY(-50%) scale(1.05);box-shadow:0 6px 16px rgba(0,0,0,.2)}
+.ai-comparison-sticky-button-{{ ai_gen_id }} svg{width:{{ block.settings.button_icon_size }}px;height:{{ block.settings.button_icon_size }}px;flex-shrink:0}
+.ai-comparison-sticky-button-{{ ai_gen_id }} span{writing-mode:vertical-rl;text-orientation:mixed;letter-spacing:{{ block.settings.button_letter_spacing }}px;white-space:nowrap}
+
+.ai-comparison-modal-{{ ai_gen_id }}{position:fixed !important;top:0 !important;left:0 !important;width:100% !important;height:100% !important;background-color:rgba(0,0,0,.88) !important;z-index:2147483647 !important;display:none;align-items:center;justify-content:center;padding:0 10%;overflow-y:auto}
+.ai-comparison-modal-{{ ai_gen_id }}.active{display:flex !important}
+.ai-comparison-modal-content-{{ ai_gen_id }}{background-color:{{ block.settings.modal_bg_color }};border-radius:12px;width:100%;max-height:90vh;display:flex;flex-direction:column;position:relative;z-index:2147483647 !important;margin:20px 0;overflow:hidden}
+.ai-comparison-modal-header-{{ ai_gen_id }}{display:flex;justify-content:space-between;align-items:center;padding:30px 25px 20px;background-color:{{ block.settings.modal_bg_color }};border-bottom:2px solid {{ block.settings.border_color }};flex-shrink:0}
+.ai-comparison-modal-title-{{ ai_gen_id }}{font-size:28px;font-weight:700;color:{{ block.settings.modal_text_color }};margin:0}
+
+/* --- Bigger close X --- */
+.ai-comparison-close-button-{{ ai_gen_id }}{background:none;border:none;cursor:pointer;padding:10px; color: {{ block.settings.modal_text_color }}; opacity:.85; transition:opacity .2s ease; flex-shrink:0; display:flex; align-items:center; justify-content:center}
+.ai-comparison-close-button-{{ ai_gen_id }}:hover{opacity:1}
+.ai-comparison-close-button-{{ ai_gen_id }} svg{width:34px;height:34px} /* <- larger X */
+
+/* Table wrapper and table */
+.ai-comparison-table-wrapper-{{ ai_gen_id }}{overflow-x:auto;overflow-y:auto;-webkit-overflow-scrolling:touch;flex:1;padding:0 0px 0px}
+.ai-comparison-table-{{ ai_gen_id }}{width:100%;border-collapse:separate;border-spacing:0;min-width:600px}
+.ai-comparison-table-{{ ai_gen_id }} th,.ai-comparison-table-{{ ai_gen_id }} td{padding:16px;text-align:center;border-bottom:1px solid {{ block.settings.border_color }}}
+.ai-comparison-table-{{ ai_gen_id }} thead{position:sticky;top:0;z-index:10}
+.ai-comparison-table-{{ ai_gen_id }} th{background-color:{{ block.settings.header_bg_color }};color:{{ block.settings.header_text_color }};font-weight:600}
+
+/* --- Make the left feature column larger and more prominent --- */
+.ai-comparison-table-{{ ai_gen_id }} th:first-child{ text-align:left; min-width:220px; position:sticky; left:0; z-index:11; padding-left:24px; padding-right:24px; }
+.ai-comparison-table-{{ ai_gen_id }} td:first-child{ text-align:left; font-weight:700; color:{{ block.settings.modal_text_color }}; background-color:{{ block.settings.modal_bg_color }}; position:sticky; left:0; z-index:4; padding-left:24px; padding-right:24px; }
+
+
+
+
+/* Feature label and icon — made bigger */
+.ai-comparison-feature-label-{{ ai_gen_id }}{display:flex;align-items:center;gap:14px;font-size:16px}
+.ai-comparison-feature-icon-{{ ai_gen_id }},{/* ensure svg fallback */} .ai-comparison-feature-icon-svg-{{ ai_gen_id }}{ width:28px; height:28px; flex-shrink:0; }
+
+/* Product header: reduce gap between title and price, make image/title/price into a single clickable link */
+.ai-comparison-product-header-{{ ai_gen_id }}{display:flex;flex-direction:column;align-items:center;gap:0px;min-width:150px}
+.ai-comparison-product-link-{{ ai_gen_id }}{display:flex;flex-direction:column;align-items:center;gap:0px;text-decoration:none;color:inherit}
+.ai-comparison-product-image-{{ ai_gen_id }}{ width:{{ block.settings.product_image_size }}px; height:{{ block.settings.product_image_size }}px; object-fit:cover; border-radius:{{ block.settings.product_image_radius }}px; border:{{ block.settings.product_image_border_width }}px solid {{ block.settings.product_image_border_color }}}
+
+/* make product title still bold but keep spacing tight */
+.ai-comparison-product-title-{{ ai_gen_id }}{font-size:14px;font-weight:600;color:{{ block.settings.header_text_color }};text-decoration:none;transition:opacity .3s ease}
+.ai-comparison-product-title-{{ ai_gen_id }}:hover{opacity:.8}
+
+/* price smaller and slightly lighter */
+.ai-comparison-product-price-{{ ai_gen_id }}{font-size:13px;font-weight:700;color:{{ block.settings.price_color }};
+
+}
+
+/* Bar containers & fills (unchanged behavior) */
+.ai-comparison-bar-container-{{ ai_gen_id }}{width:100%;max-width:120px;height:24px;background-color:{{ block.settings.bar_bg_color }};border-radius:12px;overflow:hidden;margin:0 auto;position:relative}
+.ai-comparison-table-{{ ai_gen_id }} td:not(:first-child){text-align:left;vertical-align:middle}
+.ai-comparison-bar-container-{{ ai_gen_id }}{margin:8px 0;max-width:120px;width:100%;display:block}
+.ai-comparison-bar-fill-{{ ai_gen_id }}{display:inline-block;width:auto;min-width:28px}
+.ai-comparison-bar-fill-{{ ai_gen_id }}{height:100%;border-radius:12px;transition:width .3s ease;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#ffffff}
+.ai-comparison-bar-fill-low-{{ ai_gen_id }}{background-color:{{ block.settings.bar_low_color }}}
+.ai-comparison-bar-fill-mid-{{ ai_gen_id }}{background-color:{{ block.settings.bar_mid_color }}}
+.ai-comparison-bar-fill-high-{{ ai_gen_id }}{background-color:{{ block.settings.bar_high_color }}}
+
+/* Empty state */
+.ai-comparison-empty-state-{{ ai_gen_id }}{text-align:center;padding:60px 20px;color:{{ block.settings.modal_text_color }};opacity:.6}
+/* Disclaimer (info icon left) — better, larger icon */
+.ai-comparison-disclaimer-{{ ai_gen_id }}{border-top:1px solid {{ block.settings.border_color }};padding:18px 25px;background:transparent;color:{{ block.settings.modal_text_color }};font-size:14px;line-height:1.45;display:flex;gap:12px;align-items:flex-start;flex-shrink:0}
+.ai-comparison-disclaimer-icon-{{ ai_gen_id }}{width:28px;height:28px;flex-shrink:0;margin-top:4px;color:#6b6b6b;display:inline-block}
+.ai-comparison-disclaimer-text-{{ ai_gen_id }}{min-width:0}
+.ai-comparison-disclaimer-title-{{ ai_gen_id }}{margin:0 0 6px 0;font-weight:700;font-size:16px;color:{{ block.settings.modal_text_color }}}
+.ai-comparison-disclaimer-body-{{ ai_gen_id }}{margin:0;opacity:.95;font-weight:400;color:{{ block.settings.modal_text_color }};word-break:break-word}
+@media screen and (max-width:480px){ .ai-comparison-disclaimer-{{ ai_gen_id }}{padding:14px 18px;font-size:13px;gap:10px} .ai-comparison-disclaimer-icon-{{ ai_gen_id }}{width:22px;height:22px;margin-top:3px} .ai-comparison-disclaimer-title-{{ ai_gen_id }}{font-size:14px} }
+
+
+
+
+
+/* === Fix: keep link a column (image / title / price), clip the image only === */
+.ai-comparison-product-link-{{ ai_gen_id }}{
+  display: inline-flex;              /* column layout but keeps natural width */
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  color: inherit;
+  width: auto;                       /* allow the text to flow */
+  height: auto;
+  border-radius: 0;                  /* let the image handle the rounding */
+  overflow: visible;                 /* IMPORTANT — don't clip title/price */
+}
+
+/* Make the image itself the clipped rounded box */
+.ai-comparison-product-image-{{ ai_gen_id }}{
+  display: block;
+  width: {{ block.settings.product_image_size }}px;
+  height: {{ block.settings.product_image_size }}px;
+  object-fit: cover;
+  border-radius: {{ block.settings.product_image_radius }}px; /* image gets the radius */
+  overflow: hidden;                 /* defensive — browsers honor this on img when it has children (SVG) */
+  -webkit-transform: translateZ(0); /* render-smoothing */
+}
+
+/* Ensure the text stays readable and doesn't get pushed off */
+.ai-comparison-product-title-{{ ai_gen_id }},
+.ai-comparison-product-price-{{ ai_gen_id }}{
+  white-space: normal;
+  text-align: center;
+  display: block;
+  width: 100%;
+  overflow: visible;
+}
+
+/* If a global rule is forcing zero radius, be explicit (use only if you find that rule) */
+.ai-comparison-product-image-{{ ai_gen_id }}{
+  border-radius: {{ block.settings.product_image_radius }}px !important;
+}
+
+{% endstyle %}
+
+
+
+
+
+
+
+
+{% style %}
+/* Mobile adjustments (clean, readable) */
+@media screen and (max-width: 768px) {
+.ai-comparison-sticky-button-{{ ai_gen_id }} {
+right: 10px;
+padding: {{ block.settings.button_padding_vertical | times:0.8 }}px {{ block.settings.button_padding_horizontal | times:0.8 }}px;
+font-size: {{ block.settings.button_font_size | times:0.9 }}px;
+}
+
+.ai-comparison-sticky-button-{{ ai_gen_id }} svg {
+width: {{ block.settings.button_icon_size | times:0.8 }}px;
+height: {{ block.settings.button_icon_size | times:0.8 }}px;
+}
+
+.ai-comparison-modal-{{ ai_gen_id }} {
+padding: 0 5%;
+}
+
+.ai-comparison-modal-content-{{ ai_gen_id }} {
+max-height: 95vh;
+border-radius: 8px;
+}
+
+.ai-comparison-modal-header-{{ ai_gen_id }} {
+padding: 20px 20px 15px;
+}
+
+.ai-comparison-modal-title-{{ ai_gen_id }} {
+font-size: 20px;
+}
+
+.ai-comparison-close-button-{{ ai_gen_id }} svg {
+width: 30px;
+height: 30px;
+}
+
+.ai-comparison-table-wrapper-{{ ai_gen_id }} {
+padding: 0 0px 0px;
+}
+
+.ai-comparison-table-{{ ai_gen_id }} {
+min-width: 500px;
+}
+
+.ai-comparison-table-{{ ai_gen_id }} th,
+.ai-comparison-table-{{ ai_gen_id }} td {
+padding: 12px 8px;
+font-size: 13px;
+}
+
+.ai-comparison-product-header-{{ ai_gen_id }} {
+gap: 8px;
+min-width: 120px;
+}
+
+.ai-comparison-product-image-{{ ai_gen_id }} {
+width: {{ block.settings.product_image_size | times:0.7 }}px;
+height: {{ block.settings.product_image_size | times:0.7 }}px;
+}
+
+.ai-comparison-product-price-{{ ai_gen_id }} {
+font-size: 12px;
+}
+
+.ai-comparison-bar-container-{{ ai_gen_id }} {
+max-width: 100px;
+height: 20px;
+}
+
+.ai-comparison-bar-fill-{{ ai_gen_id }} {
+font-size: 11px;
+}
+
+
+
+
+
+.ai-comparison-table-{{ ai_gen_id }} {
+min-width: 450px;
+}
+
+
+.ai-comparison-product-header-{{ ai_gen_id }} {
+min-width: 100px;
+}
+
+.ai-comparison-product-image-{{ ai_gen_id }} {
+width: {{ block.settings.product_image_size | times:0.6 }}px;
+height: {{ block.settings.product_image_size | times:0.6 }}px;
+}
+
+.ai-comparison-bar-container-{{ ai_gen_id }} {
+max-width: 80px;
+height: 18px;
+}
+
+.ai-comparison-bar-fill-{{ ai_gen_id }} {
+font-size: 10px;
+}
+
+
+/* Mobile: make the left "Features" column semi-transparent (frosted glass) */
+@media screen and (max-width: 480px) {
+  .ai-comparison-table-{{ ai_gen_id }} th:first-child,
+  .ai-comparison-table-{{ ai_gen_id }} td:first-child {
+    /* semi-transparent background — lower the alpha to increase transparency (0.0 - 1.0) */
+    background-color: rgba(255,255,255,0.75) !important;
+
+    /* optional frosted blur (modern browsers) — remove if you don't want blur */
+    -webkit-backdrop-filter: blur(6px) saturate(120%);
+    backdrop-filter: blur(6px) saturate(120%);
+
+    /* keeps the text readable */
+    color: inherit !important;
+    transition: background-color .18s ease, transform .18s ease;
+  }
+}
+
+
+
+
+
+
+/* Mobile: make left "Features" column smaller & tighter */
+@media screen and (max-width: 480px) {
+  .ai-comparison-table-{{ ai_gen_id }} th:first-child,
+  .ai-comparison-table-{{ ai_gen_id }} td:first-child {
+    min-width: 140px !important;   /* smaller minimum width */
+    max-width: 140px !important;   /* cap it so it doesn't expand too much */
+    width: auto !important;
+    padding-left: 12px !important;  /* tighter left/right padding */
+    padding-right: 12px !important;
+    font-size: 14px !important;    /* slightly smaller text */
+  }
+
+  /* tighten label and icon so content fits nicely */
+  .ai-comparison-table-{{ ai_gen_id }} td:first-child .ai-comparison-feature-label-{{ ai_gen_id }},
+  .ai-comparison-table-{{ ai_gen_id }} th:first-child .ai-comparison-feature-label-{{ ai_gen_id }} {
+    gap: 8px !important;
+    font-size: 14px !important;
+  }
+
+  .ai-comparison-table-{{ ai_gen_id }} td:first-child .ai-comparison-feature-icon-{{ ai_gen_id }},
+  .ai-comparison-table-{{ ai_gen_id }} th:first-child .ai-comparison-feature-icon-{{ ai_gen_id }},
+  .ai-comparison-feature-icon-svg-{{ ai_gen_id }} {
+    width: 20px !important;
+    height: 20px !important;
+  }
+}
+
+{% endstyle %}
+
+
+{% style %}
+/* Desktop only: subtle semi-transparent gray right border for the Features column */
+@media screen and (min-width: 769px) {
+  .ai-comparison-table-{{ ai_gen_id }} th:first-child,
+  .ai-comparison-table-{{ ai_gen_id }} td:first-child {
+    border-right: 1px solid rgba(128,128,128,0.20) !important;
+    box-sizing: border-box;
+  }
+}
+{% endstyle %}
+
+{% style %}
+/* Align product image / title / price to the left so they line up with the bars */
+.ai-comparison-table-{{ ai_gen_id }} th:not(:first-child),
+.ai-comparison-table-{{ ai_gen_id }} td:not(:first-child) {
+  text-align: left !important; /* ensure header cells are left aligned like data cells */
+}
+
+/* Make the product header column layout left-aligned */
+.ai-comparison-table-{{ ai_gen_id }} th:not(:first-child) .ai-comparison-product-header-{{ ai_gen_id }},
+.ai-comparison-table-{{ ai_gen_id }} td:not(:first-child) .ai-comparison-product-header-{{ ai_gen_id }} {
+  align-items: flex-start !important; /* left-align image/title/price vertically */
+  gap: 8px !important;
+}
+
+/* Ensure the link wrapper follows the same left alignment */
+.ai-comparison-product-link-{{ ai_gen_id }} {
+  display: inline-flex;          /* keep sizing but allow column layout */
+  flex-direction: column;
+  align-items: flex-start !important; /* left-align contents inside the link */
+  text-decoration: none;
+  color: inherit;
+  width: 100%;
+}
+
+/* Force image, title and price to be left-aligned */
+.ai-comparison-product-image-{{ ai_gen_id }} {
+  display: block;
+  margin: 0 0 6px 0; /* small gap under image */
+}
+
+.ai-comparison-product-title-{{ ai_gen_id }},
+.ai-comparison-product-price-{{ ai_gen_id }} {
+  text-align: left !important;
+  width: 100%;
+  display: block;
+}
+
+/* Optional: nudge the image & text inward so they visually align with the bar starts */
+/* Adjust the padding-left value if your table cells use different padding */
+.ai-comparison-table-{{ ai_gen_id }} th:not(:first-child) .ai-comparison-product-header-{{ ai_gen_id }},
+.ai-comparison-table-{{ ai_gen_id }} td:not(:first-child) .ai-comparison-product-header-{{ ai_gen_id }} {
+  padding-left: 8px !important;
+}
+
+/* Desktop / mobile safe — tweak values if you want more or less left indent */
+{% endstyle %}
+
+
+{% style %}
+/* OVERRIDE: change comparison sticky button color */
+.ai-comparison-sticky-button-{{ ai_gen_id }}{
+  background-color: #0d6ba6 !important; /* <- primary color (replace) */
+  color: #FFFFFF !important;            /* <- text/icon color (replace) */
+}
+.ai-comparison-sticky-button-{{ ai_gen_id }}:hover{
+  background-color: #E64E14 !important; /* <- hover color (replace) */
+}
+
+{% endstyle %}
+
+
+
+
+
+
+
+{% style %}
+/* ↑ Increase "Features" text size (left sticky column) ↑ */
+.ai-comparison-table-{{ ai_gen_id }} th:first-child,
+.ai-comparison-table-{{ ai_gen_id }} td:first-child {
+  /* global left-column text sizing — change 18px to whatever you want */
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  letter-spacing: 0.2px !important;
+}
+
+/* If your markup uses the feature-label element, target it specifically */
+.ai-comparison-table-{{ ai_gen_id }} td:first-child .ai-comparison-feature-label-{{ ai_gen_id }},
+.ai-comparison-table-{{ ai_gen_id }} th:first-child .ai-comparison-feature-label-{{ ai_gen_id }} {
+  font-size: 18px !important;    /* change this number */
+  font-weight: 700 !important;
+}
+
+/* Increase the feature icon size next to the label (optional) */
+.ai-comparison-table-{{ ai_gen_id }} td:first-child .ai-comparison-feature-icon-{{ ai_gen_id }},
+.ai-comparison-table-{{ ai_gen_id }} th:first-child .ai-comparison-feature-icon-{{ ai_gen_id }} {
+  width: 30px !important;
+  height: 30px !important;
+}
+
+/* Mobile tweak: reduce a bit so layout doesn't break on small screens */
+@media screen and (max-width: 480px) {
+  .ai-comparison-table-{{ ai_gen_id }} th:first-child,
+  .ai-comparison-table-{{ ai_gen_id }} td:first-child,
+  .ai-comparison-table-{{ ai_gen_id }} td:first-child .ai-comparison-feature-label-{{ ai_gen_id }} {
+    font-size: 15px !important;
+  }
+  .ai-comparison-table-{{ ai_gen_id }} td:first-child .ai-comparison-feature-icon-{{ ai_gen_id }} {
+    width: 22px !important;
+    height: 22px !important;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* === MOBILE: force horizontal L→R, smaller, fixed (not sticky) === */
+@media screen and (max-width: 768px) {
+  .ai-comparison-sticky-button-{{ ai_gen_id }} {
+    position: fixed !important;     /* enforce fixed positioning */
+    left: 0px !important;         /* location on screen */
+        right:60% !important;         /* location on screen */
+        
+
+    bottom: 30px !important;        /* sit near the bottom for ergonomics */
+    top: auto !important;           /* cancel vertical-centering */
+    transform: none !important;     /* remove translateY(-50%) used for desktop */
+    z-index: 2147483649 !important; /* above modal mover but below system extremes */
+
+    /* Layout: horizontal, left-to-right */
+    display: inline-flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    writing-mode: horizontal-tb !important; /* L → R reading */
+    direction: ltr !important;
+
+    /* Smaller visual footprint */
+    padding: 10px 12px !important;
+    font-size: 15px !important;
+  border-radius: 0 30px 30px 0 !important;
+
+    min-height: 45px !important;
+    min-width: auto !important;
+    max-width: calc(100% - 48px) !important;
+
+    /* Keep it tappable but compact */
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.58) !important;
+  }
+
+  /* Force icon + text sizing for mobile */
+  .ai-comparison-sticky-button-{{ ai_gen_id }} svg {
+    width: 20px !important;
+    height: 20px !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Make the label read horizontally and avoid line-breaks */
+  .ai-comparison-sticky-button-{{ ai_gen_id }} span{
+    writing-mode: horizontal-tb !important;
+    text-orientation: mixed !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    display: inline-block !important;
+    line-height: 1 !important;
+    font-weight: 600 !important;
+  }
+
+  /* Slightly reduce hover transform on mobile (touch-friendly) */
+  .ai-comparison-sticky-button-{{ ai_gen_id }}:hover{
+    transform: none !important;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.22) !important;
+  }
+}
+
+
+
+
+
+{% endstyle %}
+
+
+
+
+
+
+
+
+
+<product-comparison-{{ ai_gen_id }} {{ block.shopify_attributes }}>
+  {%- comment -%} determine how many products to show 1..8 (default 8) {%- endcomment -%}
+  {% assign product_count = block.settings.product_count | default: 8 %}
+  {% assign has_products = false %}
+  {% for i in (1..product_count) %}
+    {% assign product_key = 'product_' | append: i %}
+    {% if block.settings[product_key] %}
+      {% assign has_products = true %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+
+  {% if has_products %}
+    <button class="ai-comparison-sticky-button-{{ ai_gen_id }}" aria-label="Open product comparison" aria-expanded="false">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 11l3 3L22 4"></path>
+        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+      </svg>
+      <span>{{ block.settings.button_text }}</span>
+    </button>
+  {% endif %}
+
+  <template id="ai-comparison-modal-template-{{ ai_gen_id }}">
+    <div class="ai-comparison-modal-{{ ai_gen_id }}" role="dialog" aria-modal="true" aria-labelledby="ai-comparison-modal-title-{{ ai_gen_id }}">
+      <div class="ai-comparison-modal-content-{{ ai_gen_id }}">
+        <div class="ai-comparison-modal-header-{{ ai_gen_id }}">
+          <h2 class="ai-comparison-modal-title-{{ ai_gen_id }}" id="ai-comparison-modal-title-{{ ai_gen_id }}">{{ block.settings.modal_title }}</h2>
+          <button class="ai-comparison-close-button-{{ ai_gen_id }}" aria-label="Close comparison">
+            <!-- bigger X -->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        {% if has_products %}
+          <div class="ai-comparison-table-wrapper-{{ ai_gen_id }}">
+            <table class="ai-comparison-table-{{ ai_gen_id }}">
+              <thead>
+                <tr>
+                  <th>{{ block.settings.feature_column_label }}</th>
+                  {% for i in (1..product_count) %}
+                    {% assign product_key = 'product_' | append: i %}
+                    {% assign product = block.settings[product_key] %}
+                    {% if product %}
+                      <th>
+                        <div class="ai-comparison-product-header-{{ ai_gen_id }}">
+                          <!-- wrap image + title + price in a single link so clicks go to product -->
+                          <a href="{{ product.url }}" class="ai-comparison-product-link-{{ ai_gen_id }}" aria-label="View {{ product.title }}">
+                            {% if product.featured_image %}
+                              <img src="{{ product.featured_image | image_url: width: 200 }}" alt="{{ product.featured_image.alt | escape }}" class="ai-comparison-product-image-{{ ai_gen_id }}" width="{{ block.settings.product_image_size }}" height="{{ block.settings.product_image_size }}" loading="lazy">
+                            {% endif %}
+                            <span class="ai-comparison-product-title-{{ ai_gen_id }}">{{ product.title }}</span>
+                            <span class="ai-comparison-product-price-{{ ai_gen_id }}">{{ product.price | money }}</span>
+                          </a>
+                        </div>
+                      </th>
+                    {% endif %}
+                  {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                {% if block.settings.show_ventilation %}
+                  <tr class="ai-comparison-feature-row-{{ ai_gen_id }}">
+                    <td>
+                      <div class="ai-comparison-feature-label-{{ ai_gen_id }}">
+                        {% if block.settings.ventilation_icon %}
+                          <img src="{{ block.settings.ventilation_icon | image_url: width: 40 }}" alt="" class="ai-comparison-feature-icon-{{ ai_gen_id }}" width="{{ block.settings.feature_icon_size }}" height="{{ block.settings.feature_icon_size }}" loading="lazy">
+                        {% else %}
+                          <svg class="ai-comparison-feature-icon-svg-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"></path>
+                          </svg>
+                        {% endif %}
+                        {{ block.settings.ventilation_label }}
+                      </div>
+                    </td>
+                    {% for i in (1..product_count) %}
+                      {% assign product_key = 'product_' | append: i %}
+                      {% assign value_key = 'ventilation_' | append: i %}
+                      {% assign product = block.settings[product_key] %}
+                      {% assign value = block.settings[value_key] %}
+                      {% if product %}
+                        <td>
+                          <div class="ai-comparison-bar-container-{{ ai_gen_id }}">
+                            {% assign display_value = value | divided_by: 10.0 %}
+                            {% assign width_percent = value %}
+                            {% if value < 40 %}
+                              {% assign bar_class = 'ai-comparison-bar-fill-low-' | append: ai_gen_id %}
+                            {% elsif value < 70 %}
+                              {% assign bar_class = 'ai-comparison-bar-fill-mid-' | append: ai_gen_id %}
+                            {% else %}
+                              {% assign bar_class = 'ai-comparison-bar-fill-high-' | append: ai_gen_id %}
+                            {% endif %}
+                            <div class="ai-comparison-bar-fill-{{ ai_gen_id }} {{ bar_class }}" style="width: {{ width_percent }}%;">{{ display_value }}</div>
+                          </div>
+                        </td>
+                      {% endif %}
+                    {% endfor %}
+                  </tr>
+                {% endif %}
+
+                {% if block.settings.show_sun_protection %}
+                  <tr class="ai-comparison-feature-row-{{ ai_gen_id }}">
+                    <td>
+                      <div class="ai-comparison-feature-label-{{ ai_gen_id }}">
+                        {% if block.settings.sun_protection_icon %}
+                          <img src="{{ block.settings.sun_protection_icon | image_url: width: 40 }}" alt="" class="ai-comparison-feature-icon-{{ ai_gen_id }}" width="{{ block.settings.feature_icon_size }}" height="{{ block.settings.feature_icon_size }}" loading="lazy">
+                        {% else %}
+                          <svg class="ai-comparison-feature-icon-svg-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                          </svg>
+                        {% endif %}
+                        {{ block.settings.sun_protection_label }}
+                      </div>
+                    </td>
+                    {% for i in (1..product_count) %}
+                      {% assign product_key = 'product_' | append: i %}
+                      {% assign value_key = 'sun_protection_' | append: i %}
+                      {% assign product = block.settings[product_key] %}
+                      {% assign value = block.settings[value_key] %}
+                      {% if product %}
+                        <td>
+                          <div class="ai-comparison-bar-container-{{ ai_gen_id }}">
+                            {% assign display_value = value | divided_by: 10.0 %}
+                            {% assign width_percent = value %}
+                            {% if value < 40 %}
+                              {% assign bar_class = 'ai-comparison-bar-fill-low-' | append: ai_gen_id %}
+                            {% elsif value < 70 %}
+                              {% assign bar_class = 'ai-comparison-bar-fill-mid-' | append: ai_gen_id %}
+                            {% else %}
+                              {% assign bar_class = 'ai-comparison-bar-fill-high-' | append: ai_gen_id %}
+                            {% endif %}
+                            <div class="ai-comparison-bar-fill-{{ ai_gen_id }} {{ bar_class }}" style="width: {{ width_percent }}%;">{{ display_value }}</div>
+                          </div>
+                        </td>
+                      {% endif %}
+                    {% endfor %}
+                  </tr>
+                {% endif %}
+
+                {% if block.settings.show_impact %}
+                  <tr class="ai-comparison-feature-row-{{ ai_gen_id }}">
+                    <td>
+                      <div class="ai-comparison-feature-label-{{ ai_gen_id }}">
+                        {% if block.settings.impact_icon %}
+                          <img src="{{ block.settings.impact_icon | image_url: width: 40 }}" alt="" class="ai-comparison-feature-icon-{{ ai_gen_id }}" width="{{ block.settings.feature_icon_size }}" height="{{ block.settings.feature_icon_size }}" loading="lazy">
+                        {% else %}
+                          <svg class="ai-comparison-feature-icon-svg-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                          </svg>
+                        {% endif %}
+                        {{ block.settings.impact_label }}
+                      </div>
+                    </td>
+                    {% for i in (1..product_count) %}
+                      {% assign product_key = 'product_' | append: i %}
+                      {% assign value_key = 'impact_' | append: i %}
+                      {% assign product = block.settings[product_key] %}
+                      {% assign value = block.settings[value_key] %}
+                      {% if product %}
+                        <td>
+                          <div class="ai-comparison-bar-container-{{ ai_gen_id }}">
+                            {% assign display_value = value | divided_by: 10.0 %}
+                            {% assign width_percent = value %}
+                            {% if value < 40 %}
+                              {% assign bar_class = 'ai-comparison-bar-fill-low-' | append: ai_gen_id %}
+                            {% elsif value < 70 %}
+                              {% assign bar_class = 'ai-comparison-bar-fill-mid-' | append: ai_gen_id %}
+                            {% else %}
+                              {% assign bar_class = 'ai-comparison-bar-fill-high-' | append: ai_gen_id %}
+                            {% endif %}
+                            <div class="ai-comparison-bar-fill-{{ ai_gen_id }} {{ bar_class }}" style="width: {{ width_percent }}%;">{{ display_value }}</div>
+                          </div>
+                        </td>
+                      {% endif %}
+                    {% endfor %}
+                  </tr>
+                {% endif %}
+
+                {% if block.settings.show_warranty %}
+                  <tr class="ai-comparison-feature-row-{{ ai_gen_id }}">
+                    <td>
+                      <div class="ai-comparison-feature-label-{{ ai_gen_id }}">
+                        {% if block.settings.warranty_icon %}
+                          <img src="{{ block.settings.warranty_icon | image_url: width: 40 }}" alt="" class="ai-comparison-feature-icon-{{ ai_gen_id }}" width="{{ block.settings.feature_icon_size }}" height="{{ block.settings.feature_icon_size }}" loading="lazy">
+                        {% else %}
+                          <svg class="ai-comparison-feature-icon-svg-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            <path d="M9 12l2 2 4-4"></path>
+                          </svg>
+                        {% endif %}
+                        {{ block.settings.warranty_label }}
+                      </div>
+                    </td>
+                    {% for i in (1..product_count) %}
+                      {% assign product_key = 'product_' | append: i %}
+                      {% assign value_key = 'warranty_' | append: i %}
+                      {% assign product = block.settings[product_key] %}
+                      {% assign value = block.settings[value_key] %}
+                      {% if product %}
+                        <td>
+                          <div class="ai-comparison-bar-container-{{ ai_gen_id }}">
+                            {% assign display_value = value | divided_by: 10.0 %}
+                            {% assign width_percent = value %}
+                            {% if value < 40 %}
+                              {% assign bar_class = 'ai-comparison-bar-fill-low-' | append: ai_gen_id %}
+                            {% elsif value < 70 %}
+                              {% assign bar_class = 'ai-comparison-bar-fill-mid-' | append: ai_gen_id %}
+                            {% else %}
+                              {% assign bar_class = 'ai-comparison-bar-fill-high-' | append: ai_gen_id %}
+                            {% endif %}
+                            <div class="ai-comparison-bar-fill-{{ ai_gen_id }} {{ bar_class }}" style="width: {{ width_percent }}%;">{{ display_value }}</div>
+                          </div>
+                        </td>
+                      {% endif %}
+                    {% endfor %}
+                  </tr>
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+
+          {%- comment -%} improved disclaimer with nicer, larger info icon {%- endcomment -%}
+          {% if block.settings.show_disclaimer %}
+            <div class="ai-comparison-disclaimer-{{ ai_gen_id }}" role="note" aria-label="How to read this chart">
+              <!-- larger, friendlier info circle icon -->
+              <svg class="ai-comparison-disclaimer-icon-{{ ai_gen_id }}" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.6"></circle>
+                <path d="M12 7.2a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" fill="currentColor"></path>
+                <rect x="11" y="10.8" width="2" height="6" rx="1" fill="currentColor"></rect>
+              </svg>
+
+              <div class="ai-comparison-disclaimer-text-{{ ai_gen_id }}">
+                <h3 class="ai-comparison-disclaimer-title-{{ ai_gen_id }}"><strong>{{ block.settings.disclaimer_heading }}</strong></h3>
+                <div class="ai-comparison-disclaimer-body-{{ ai_gen_id }}">{{ block.settings.disclaimer_body }}</div>
+              </div>
+            </div>
+          {% endif %}
+
+        {% else %}
+          <div class="ai-comparison-empty-state-{{ ai_gen_id }}">
+            <p>Add products to start comparing</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </template>
+</product-comparison-{{ ai_gen_id }}>
+
+<script>
+(function(){
+  class ProductComparison{{ ai_gen_id }} extends HTMLElement{
+    constructor(){ super();
+      this.button = this.querySelector('.ai-comparison-sticky-button-{{ ai_gen_id }}');
+      this.modalTemplate = this.querySelector('#ai-comparison-modal-template-{{ ai_gen_id }}');
+      this.modal = null; this.closeButton = null; this.focusableElements = []; this.firstFocusableElement = null; this.lastFocusableElement = null;
+    }
+    connectedCallback(){ this.setupEventListeners(); }
+    disconnectedCallback(){ if (this.modal && this.modal.parentNode === document.body) document.body.removeChild(this.modal); }
+    setupEventListeners(){
+      if (this.button) this.button.addEventListener('click', ()=>this.openModal());
+      document.addEventListener('keydown', (e)=>{
+        if (e.key === 'Escape' && this.modal && this.modal.classList.contains('active')) this.closeModal();
+        if (this.modal && this.modal.classList.contains('active') && e.key === 'Tab') this.handleTabKey(e);
+      });
+    }
+    createModalInBody(){
+      if (!this.modal){
+        const templateContent = this.modalTemplate.content.cloneNode(true);
+        this.modal = templateContent.querySelector('.ai-comparison-modal-{{ ai_gen_id }}');
+        if (!this.modal) return;
+        document.body.appendChild(this.modal);
+        this.closeButton = this.modal.querySelector('.ai-comparison-close-button-{{ ai_gen_id }}');
+        if (this.closeButton) this.closeButton.addEventListener('click', ()=>this.closeModal());
+        this.modal.addEventListener('click', (e)=>{ if (e.target === this.modal) this.closeModal(); });
+      }
+    }
+    openModal(){
+      this.createModalInBody();
+      if (!this.modal) return;
+      this.modal.classList.add('active');
+      if (this.button) this.button.setAttribute('aria-expanded','true');
+      document.body.style.overflow = 'hidden';
+      this.setupFocusTrap();
+      if (this.closeButton) this.closeButton.focus();
+    }
+    closeModal(){
+      if (!this.modal) return;
+      this.modal.classList.remove('active');
+      if (this.button) this.button.setAttribute('aria-expanded','false');
+      document.body.style.overflow = '';
+      if (this.button) this.button.focus();
+    }
+    setupFocusTrap(){
+      if (!this.modal) return;
+      const focusableSelectors = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+      this.focusableElements = Array.from(this.modal.querySelectorAll(focusableSelectors)).filter(el=>!el.hasAttribute('disabled')&& el.offsetParent !== null);
+      this.firstFocusableElement = this.focusableElements[0];
+      this.lastFocusableElement = this.focusableElements[this.focusableElements.length-1];
+    }
+    handleTabKey(e){
+      if (this.focusableElements.length === 0) return;
+      if (e.shiftKey) {
+        if (document.activeElement === this.firstFocusableElement){ e.preventDefault(); this.lastFocusableElement.focus(); }
+      } else {
+        if (document.activeElement === this.lastFocusableElement){ e.preventDefault(); this.firstFocusableElement.focus(); }
+      }
+    }
+  }
+  customElements.define('product-comparison-{{ ai_gen_id }}', ProductComparison{{ ai_gen_id }});
+})();
+</script>
+
+
+
+
+<script>
+(function(){
+  // Minimal mover: no cambia visuales, solo reubica el nodo y ajusta z-index.
+  try {
+    var ID = "{{ ai_gen_id }}";
+    if (!ID) return;
+
+    var SELECTOR = ".ai-comparison-sticky-button-" + ID;
+    var TARGET_Z = 2147483648; // por encima del modal
+
+    // backup storage so we can restore if needed
+    window.__aiComparisonBackup = window.__aiComparisonBackup || {};
+
+    function ensureAndMove() {
+      var btn = document.querySelector(SELECTOR);
+      if (!btn) {
+        // reintentar hasta que exista en DOM
+        window.requestAnimationFrame(ensureAndMove);
+        return;
+      }
+
+      // If already moved, do nothing
+      if (btn.dataset.__ai_moved === "1") return;
+
+      // store original parent & sibling references for safe rollback
+      window.__aiComparisonBackup[ID] = {
+        parent: btn.parentNode,
+        nextSibling: btn.nextSibling,
+        originalZ: btn.style.zIndex || ""
+      };
+
+      // move node to body (preserves event listeners)
+      document.body.appendChild(btn);
+
+      // set only z-index inline (minimal visual change)
+      try {
+        // only override if computed z-index is lower or not a number
+        var comp = window.getComputedStyle(btn).zIndex;
+        if (isNaN(Number(comp)) || Number(comp) < TARGET_Z) {
+          btn.style.zIndex = String(TARGET_Z);
+        }
+      } catch(e){ /* silent fallback */ }
+
+      btn.dataset.__ai_moved = "1";
+
+      // Keep it attached if something tries to remove/reinsert it elsewhere
+      var mo = new MutationObserver(function(mutations){
+        if (!document.body.contains(btn)) {
+          // re-append if removed
+          document.body.appendChild(btn);
+        }
+      });
+      mo.observe(document.documentElement || document.body, { childList: true, subtree: true });
+
+      // Save observer so developer can disconnect later if desired
+      window.__aiComparisonBackup[ID].observer = mo;
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", ensureAndMove);
+    } else {
+      ensureAndMove();
+    }
+
+    // Optional helper to restore original placement (call from console if needed):
+    // window.__aiComparisonRestore && window.__aiComparisonRestore("{{ ai_gen_id }}")
+    window.__aiComparisonRestore = function(id){
+      var info = window.__aiComparisonBackup && window.__aiComparisonBackup[id];
+      if (!info) return false;
+      var btn = document.querySelector(".ai-comparison-sticky-button-" + id);
+      if (!btn) return false;
+      // disconnect observer
+      if (info.observer) try{ info.observer.disconnect(); }catch(e){}
+      // restore original z-index
+      btn.style.zIndex = info.originalZ || "";
+      // move back to original parent at original position
+      if (info.parent) {
+        if (info.nextSibling && info.nextSibling.parentNode === info.parent) {
+          info.parent.insertBefore(btn, info.nextSibling);
+        } else {
+          info.parent.appendChild(btn);
+        }
+      }
+      delete btn.dataset.__ai_moved;
+      return true;
+    };
+
+  } catch (err) {
+    console.error("ai-comparison-mover error:", err);
+  }
+})();
+</script>
+
+
+
+
+
+
+
+
+{% schema %}
+{
+  "name": "Product comparison",
+  "tag": null,
+  "settings": [
+    { "type": "header", "content": "Button" },
+    { "type": "text", "id": "button_text", "label": "Button text", "default": "Compare" },
+    { "type": "color", "id": "button_bg_color", "label": "Background color", "default": "#242833" },
+    { "type": "color", "id": "button_text_color", "label": "Text color", "default": "#ffffff" },
+    { "type": "color", "id": "button_hover_color", "label": "Hover background color", "default": "#121212" },
+    { "type": "range", "id": "button_padding_vertical", "min": 8, "max": 40, "step": 2, "unit": "px", "label": "Vertical padding", "default": 20 },
+    { "type": "range", "id": "button_padding_horizontal", "min": 6, "max": 30, "step": 2, "unit": "px", "label": "Horizontal padding", "default": 12 },
+    { "type": "range", "id": "button_border_radius", "min": 0, "max": 40, "step": 2, "unit": "px", "label": "Border radius", "default": 8 },
+    { "type": "range", "id": "button_font_size", "min": 10, "max": 20, "step": 1, "unit": "px", "label": "Font size", "default": 14 },
+    { "type": "range", "id": "button_icon_size", "min": 14, "max": 32, "step": 2, "unit": "px", "label": "Icon size", "default": 20 },
+    { "type": "range", "id": "button_gap", "min": 2, "max": 20, "step": 2, "unit": "px", "label": "Gap between icon and text", "default": 8 },
+    { "type": "range", "id": "button_letter_spacing", "min": 0, "max": 10, "step": 1, "unit": "px", "label": "Letter spacing", "default": 2 },
+
+    { "type": "header", "content": "Modal" },
+    { "type": "text", "id": "modal_title", "label": "Modal title", "default": "Product Comparison" },
+    { "type": "color", "id": "modal_bg_color", "label": "Background color", "default": "#ffffff" },
+    { "type": "color", "id": "modal_text_color", "label": "Text color", "default": "#121212" },
+
+    { "type": "header", "content": "Product images" },
+    { "type": "range", "id": "product_image_size", "min": 40, "max": 160, "step": 10, "unit": "px", "label": "Image size", "default": 80 },
+    { "type": "range", "id": "product_image_radius", "min": 0, "max": 40, "step": 2, "unit": "px", "label": "Border radius", "default": 8 },
+    { "type": "range", "id": "product_image_border_width", "min": 0, "max": 10, "step": 1, "unit": "px", "label": "Border width", "default": 0 },
+    { "type": "color", "id": "product_image_border_color", "label": "Border color", "default": "#e5e5e5" },
+
+    { "type": "header", "content": "Feature icons" },
+    { "type": "range", "id": "feature_icon_size", "min": 16, "max": 40, "step": 2, "unit": "px", "label": "Icon size", "default": 20 },
+
+    { "type": "header", "content": "Table style" },
+    { "type": "text", "id": "feature_column_label", "label": "Feature column label", "default": "Features" },
+    { "type": "color", "id": "header_bg_color", "label": "Header background", "default": "#f2f2f2" },
+    { "type": "color", "id": "header_text_color", "label": "Header text", "default": "#121212" },
+    { "type": "color", "id": "row_bg_color", "label": "Row background", "default": "#ffffff" },
+    { "type": "color", "id": "row_alt_bg_color", "label": "Alternate row background", "default": "#f9f9f9" },
+    { "type": "color", "id": "border_color", "label": "Border color", "default": "#e5e5e5" },
+    { "type": "color", "id": "price_color", "label": "Price color", "default": "#334fb4" },
+
+    { "type": "header", "content": "Rating bars" },
+    { "type": "color", "id": "bar_bg_color", "label": "Bar background", "default": "#e5e5e5" },
+    { "type": "color", "id": "bar_low_color", "label": "Low rating color", "default": "#ff4444" },
+    { "type": "color", "id": "bar_mid_color", "label": "Mid rating color", "default": "#ffaa00" },
+    { "type": "color", "id": "bar_high_color", "label": "High rating color", "default": "#00cc66" },
+
+    { "type": "header", "content": "Products" },
+    { "type": "range", "id": "product_count", "label": "Number of products to show", "min": 1, "max": 8, "step": 1, "default": 4 },
+    { "type": "product", "id": "product_1", "label": "Product 1" },
+    { "type": "product", "id": "product_2", "label": "Product 2" },
+    { "type": "product", "id": "product_3", "label": "Product 3" },
+    { "type": "product", "id": "product_4", "label": "Product 4" },
+    { "type": "product", "id": "product_5", "label": "Product 5" },
+    { "type": "product", "id": "product_6", "label": "Product 6" },
+    { "type": "product", "id": "product_7", "label": "Product 7" },
+    { "type": "product", "id": "product_8", "label": "Product 8" },
+
+    { "type": "header", "content": "Ventilation" },
+    { "type": "checkbox", "id": "show_ventilation", "label": "Show ventilation", "default": true },
+    { "type": "text", "id": "ventilation_label", "label": "Label", "default": "Ventilation" },
+    { "type": "image_picker", "id": "ventilation_icon", "label": "Custom icon" },
+    { "type": "range", "id": "ventilation_1", "min": 0, "max": 100, "step": 5, "label": "Product 1 rating", "default": 50 },
+    { "type": "range", "id": "ventilation_2", "min": 0, "max": 100, "step": 5, "label": "Product 2 rating", "default": 50 },
+    { "type": "range", "id": "ventilation_3", "min": 0, "max": 100, "step": 5, "label": "Product 3 rating", "default": 50 },
+    { "type": "range", "id": "ventilation_4", "min": 0, "max": 100, "step": 5, "label": "Product 4 rating", "default": 50 },
+    { "type": "range", "id": "ventilation_5", "min": 0, "max": 100, "step": 5, "label": "Product 5 rating", "default": 50 },
+    { "type": "range", "id": "ventilation_6", "min": 0, "max": 100, "step": 5, "label": "Product 6 rating", "default": 50 },
+    { "type": "range", "id": "ventilation_7", "min": 0, "max": 100, "step": 5, "label": "Product 7 rating", "default": 50 },
+    { "type": "range", "id": "ventilation_8", "min": 0, "max": 100, "step": 5, "label": "Product 8 rating", "default": 50 },
+
+    { "type": "header", "content": "Sun protection" },
+    { "type": "checkbox", "id": "show_sun_protection", "label": "Show sun protection", "default": true },
+    { "type": "text", "id": "sun_protection_label", "label": "Label", "default": "Sun protection" },
+    { "type": "image_picker", "id": "sun_protection_icon", "label": "Custom icon" },
+    { "type": "range", "id": "sun_protection_1", "min": 0, "max": 100, "step": 5, "label": "Product 1 rating", "default": 50 },
+    { "type": "range", "id": "sun_protection_2", "min": 0, "max": 100, "step": 5, "label": "Product 2 rating", "default": 50 },
+    { "type": "range", "id": "sun_protection_3", "min": 0, "max": 100, "step": 5, "label": "Product 3 rating", "default": 50 },
+    { "type": "range", "id": "sun_protection_4", "min": 0, "max": 100, "step": 5, "label": "Product 4 rating", "default": 50 },
+    { "type": "range", "id": "sun_protection_5", "min": 0, "max": 100, "step": 5, "label": "Product 5 rating", "default": 50 },
+    { "type": "range", "id": "sun_protection_6", "min": 0, "max": 100, "step": 5, "label": "Product 6 rating", "default": 50 },
+    { "type": "range", "id": "sun_protection_7", "min": 0, "max": 100, "step": 5, "label": "Product 7 rating", "default": 50 },
+    { "type": "range", "id": "sun_protection_8", "min": 0, "max": 100, "step": 5, "label": "Product 8 rating", "default": 50 },
+
+    { "type": "header", "content": "Impact" },
+    { "type": "checkbox", "id": "show_impact", "label": "Show impact", "default": true },
+    { "type": "text", "id": "impact_label", "label": "Label", "default": "Impact resistance" },
+    { "type": "image_picker", "id": "impact_icon", "label": "Custom icon" },
+    { "type": "range", "id": "impact_1", "min": 0, "max": 100, "step": 5, "label": "Product 1 rating", "default": 50 },
+    { "type": "range", "id": "impact_2", "min": 0, "max": 100, "step": 5, "label": "Product 2 rating", "default": 50 },
+    { "type": "range", "id": "impact_3", "min": 0, "max": 100, "step": 5, "label": "Product 3 rating", "default": 50 },
+    { "type": "range", "id": "impact_4", "min": 0, "max": 100, "step": 5, "label": "Product 4 rating", "default": 50 },
+    { "type": "range", "id": "impact_5", "min": 0, "max": 100, "step": 5, "label": "Product 5 rating", "default": 50 },
+    { "type": "range", "id": "impact_6", "min": 0, "max": 100, "step": 5, "label": "Product 6 rating", "default": 50 },
+    { "type": "range", "id": "impact_7", "min": 0, "max": 100, "step": 5, "label": "Product 7 rating", "default": 50 },
+    { "type": "range", "id": "impact_8", "min": 0, "max": 100, "step": 5, "label": "Product 8 rating", "default": 50 },
+
+    { "type": "header", "content": "Warranty" },
+    { "type": "checkbox", "id": "show_warranty", "label": "Show warranty", "default": true },
+    { "type": "text", "id": "warranty_label", "label": "Label", "default": "Warranty" },
+    { "type": "image_picker", "id": "warranty_icon", "label": "Custom icon" },
+    { "type": "range", "id": "warranty_1", "min": 0, "max": 100, "step": 5, "label": "Product 1 rating", "default": 50 },
+    { "type": "range", "id": "warranty_2", "min": 0, "max": 100, "step": 5, "label": "Product 2 rating", "default": 50 },
+    { "type": "range", "id": "warranty_3", "min": 0, "max": 100, "step": 5, "label": "Product 3 rating", "default": 50 },
+    { "type": "range", "id": "warranty_4", "min": 0, "max": 100, "step": 5, "label": "Product 4 rating", "default": 50 },
+    { "type": "range", "id": "warranty_5", "min": 0, "max": 100, "step": 5, "label": "Product 5 rating", "default": 50 },
+    { "type": "range", "id": "warranty_6", "min": 0, "max": 100, "step": 5, "label": "Product 6 rating", "default": 50 },
+    { "type": "range", "id": "warranty_7", "min": 0, "max": 100, "step": 5, "label": "Product 7 rating", "default": 50 },
+    { "type": "range", "id": "warranty_8", "min": 0, "max": 100, "step": 5, "label": "Product 8 rating", "default": 50 },
+
+    { "type": "header", "content": "Disclaimer" },
+    { "type": "checkbox", "id": "show_disclaimer", "label": "Show disclaimer (How to read this chart)", "default": true },
+    { "type": "text", "id": "disclaimer_heading", "label": "Disclaimer heading", "default": "How to read this chart" },
+    { "type": "textarea", "id": "disclaimer_body", "label": "Disclaimer text", "default": "Each row shows a feature score per helmet. Bars change color by performance; numeric labels show points (0.0–10.0). Click a helmet image or title to view the product page." }
+  ],
+  "presets": [{"name":"Product comparison"}]
+}
+{% endschema %}

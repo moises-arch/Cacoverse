@@ -1,0 +1,1885 @@
+{% doc %}
+  @prompt
+    generate a modern mobile friendly items  shopping card section. shopify 2.0, with options to modify it. , add margins left and right for mobile and desktop.
+    
+     container maximum width 1450px
+    
+    Create a modern, minimalist shopping cart layout similar to HelloPrint's style.
+    
+    - Show a large product card with image, title, quantity, delivery time, and editable actions (edit, duplicate, delete).
+    - On the right, add an order summary card with subtotals, taxes, and total in bold.
+    - Use clean white background, soft shadows, rounded corners, and subtle dividers.
+    - Include upsell options below the product (checkboxes with green accent and prices on the right).
+    - Add a green “Continue” button with right arrow icon.
+    - Typography: use Barlow or Inter, medium weight, with clear spacing.
+    - Keep the layout responsive and visually balanced.
+    - Language: English.
+    , images always square,
+    
+    force the section box to be a maximum of 1450px wide. 
+    
+    in mobile leave 20px margin left and right sides. 
+    
+    , upsell does not add to the cart summary when i chose it.    
+    
+    Add a "Recommended Products" module below the cart summary.
+    
+    - Suggest items related to the current cart contents.
+    - Each product card should include image, name, price, and an “Add to cart” button.
+    - When clicked, the product should be added instantly to the cart without reloading the page.
+    - Keep the same clean, minimalist style as the cart page (white background, soft shadows, rounded corners).
+    - Responsive and visually consistent with the rest of the design.
+    , the recommended products should be detectect automatly based in the category of the products already in the cart. , 
+    
+    
+      - Suggested products must be dynamically based on matching product tags from the current cart items.
+      - Each upsell card should include image, title, price, and an “Add to cart” button that adds the product instantly (AJAX, no reload).
+      - Keep spacing consistent and layout responsive.
+    
+    - Free Shipping:
+      - Add full controls for free shipping logic.
+      - When the subtotal is $50 or more, show a green check-circle SVG icon with the text “FREE SHIPPING available”.
+      - When below $50, show a truck SVG icon and text “Add  $ more to unlock FREE SHIPPING” ($ = remaining amount, rounded, no decimals).
+      - Ensure this text always appears and updates dynamically.
+    
+    - Edit / Remove actions:
+      - Replace text links (“Edit” and “Remove”) with SVG icons (e.g., pencil and trash can).
+      - Align icons vertically to the right side of each product card, one below the other.
+      - Use hover effects with subtle color change or opacity to indicate interactivity.
+    
+    - Design:
+      - Maintain HelloPrint-style minimalism: soft shadows, rounded corners, white background, and clean typography (Barlow or Inter preferred).
+      - Align elements neatly with clear spacing and visual hierarchy.
+    , For the mobile version of the cart page:
+    
+    - Move the product price below the product title.
+    - Place the edit and delete buttons (as SVG icons) below the product image, aligned horizontally and centered.
+    - Replace both “Shipping calculated at checkout” and “Taxes calculated at checkout” with one simple gray text line that says:
+      “Shipping and taxes calculated at checkout.”
+    - Keep the overall HelloPrint-inspired style: clean layout, clear spacing, rounded corners, and minimalist typography.
+    - Language: English.
+    , change only this: Shipping and taxes calculated at checkout message, has to be  be a nice box color gray  text left aligned 
+    
+    remove the Upsells, Move the product price above the edit and delete icons in the cart layout.
+    
+    - The edit and delete buttons should remain as SVG icons, aligned vertically below the price.
+    - Keep spacing consistent and maintain the clean HelloPrint-inspired design.
+    - Apply this change for both desktop and mobile layouts.
+    For desktop, limit the cart content width to a maximum of 1200px and center it on the page.  
+    For mobile, add 20px padding on both the left and right sides.  
+    Keep the design consistent with the current style. , Mobile version adjustments only:
+    
+    - Shorten the estimated shipping message to show only a truck SVG icon and the text “3–5 days”.
+    - Move the price below the product title.
+    - Place the edit and delete icons below the product image, side by side and centered.
+    - Do not move or modify anything else., Do not move or modify anything else.
+    
+    Make the "Recommended Products" section automatically display items based on the tags of the products currently in the cart.
+    
+    Keep the layout and style consistent with the existing design., dont make changes.   add adjustment functions, 🧠 Prompt
+    Make the "You may also like" section automatically display recommended products based on the items currently in the cart.
+    
+    - Use product tags or collections to determine related products.
+    - Update recommendations dynamically as the cart contents change.
+    - Allow horizontal scrolling on mobile with smooth animation and visible “Add to cart” buttons.
+    - Keep the same clean HelloPrint-inspired design and spacing.
+    - Do not modify anything else., Do not modify anything else.
+    
+    Add a title above the cart section that says “Your Cart Summary”.
+    Allow this title to be fully customizable later (text, size, margins, alignment, font weight, etc.).
+    Keep the same clean HelloPrint-inspired style and layout consistency.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-cart-wrapper-{{ ai_gen_id }} {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-cart-wrapper-{{ ai_gen_id }} {
+      padding: 60px 40px;
+    }
+  }
+
+  .ai-cart-page-title-{{ ai_gen_id }} {
+    font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
+    font-size: {{ block.settings.page_title_size }}px;
+    font-weight: {{ block.settings.page_title_weight }};
+    color: {{ block.settings.page_title_color }};
+    text-align: {{ block.settings.page_title_alignment }};
+    margin: 0 0 {{ block.settings.page_title_margin_bottom }}px 0;
+    line-height: 1.2;
+  }
+
+  .ai-cart-container-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  @media screen and (min-width: 990px) {
+    .ai-cart-container-{{ ai_gen_id }} {
+      grid-template-columns: 1fr 400px;
+      gap: 32px;
+    }
+  }
+
+  .ai-cart-items-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .ai-cart-item-{{ ai_gen_id }} {
+    background: {{ block.settings.card_background }};
+    border-radius: {{ block.settings.card_radius }}px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 16px;
+    position: relative;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-cart-item-{{ ai_gen_id }} {
+      padding: 24px;
+      grid-template-columns: 140px 1fr auto;
+      gap: 24px;
+    }
+  }
+
+  .ai-cart-item-left-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .ai-cart-item-image-{{ ai_gen_id }} {
+    width: 120px;
+    height: 120px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f5f5f5;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-cart-item-image-{{ ai_gen_id }} {
+      width: 140px;
+      height: 140px;
+    }
+  }
+
+  .ai-cart-item-image-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-cart-item-mobile-actions-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-cart-item-mobile-actions-{{ ai_gen_id }} {
+      display: none;
+    }
+  }
+
+  .ai-cart-item-details-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .ai-cart-item-title-{{ ai_gen_id }} {
+    font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.4;
+    color: {{ block.settings.text_color }};
+    margin: 0;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-cart-item-title-{{ ai_gen_id }} {
+      font-size: 18px;
+    }
+  }
+
+  .ai-cart-item-price-mobile-{{ ai_gen_id }} {
+    font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
+    font-weight: 600;
+    font-size: 16px;
+    color: {{ block.settings.text_color }};
+    display: block;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-cart-item-price-mobile-{{ ai_gen_id }} {
+      display: none;
+    }
+  }
+
+  .ai-cart-item-meta-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .ai-cart-item-variant-{{ ai_gen_id }} {
+    font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
+    font-size: 13px;
+    color: {{ block.settings.secondary_text_color }};
+  }
+
+  .ai-cart-item-delivery-{{ ai_gen_id }} {
+    font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
+    font-size: 13px;
+    color: {{ block.settings.secondary_text_color }};
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .ai-cart-item-delivery-{{ ai_gen_id }} svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
+  .ai-cart-item-delivery-{{ ai_gen_id }} .full-text {
+    display: none;
+  }
+
+  .ai-cart-item-delivery-{{ ai_gen_id }} .short-text {
+    display: inline;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-cart-item-delivery-{{ ai_gen_id }} .full-text {
+      display: inline;
+    }
+
+    .ai-cart-item-delivery-{{ ai_gen_id }} .short-text {
+      display: none;
+    }
+  }
+
+  .ai-cart-item-quantity-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .ai-cart-quantity-selector-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    border: 1px solid {{ block.settings.border_color }};
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .ai-cart-quantity-btn-{{ ai_gen_id }} {
+    background: transparent;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    color: {{ block.settings.text_color }};
+    font-size: 18px;
+    line-height: 1;
+    transition: background 0.2s;
+  }
+
+  .ai-cart-quantity-btn-{{ ai_gen_id }}:hover {
+    background: #f5f5f5;
+  }
+
+  .ai-cart-quantity-input-{{ ai_gen_id }} {
+    border: none;
+    width: 40px;
+    text-align: center;
+    font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
+    font-size: 14px;
+    font-weight: 500;
+    color: {{ block.settings.text_color }};
+    padding: 8px 4px;
+  }
+
+  .ai-cart-item-right-{{ ai_gen_id }} {
+    display: none;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-cart-item-right-{{ ai_gen_id }} {
+      display: flex;
+    }
+  }
+
+  .ai-cart-item-price-{{ ai_gen_id }} {
+    font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
+    font-weight: 600;
+    font-size: 18px;
+    color: {{ block.settings.text_color }};
+    white-space: nowrap;
+  }
+
+  .ai-cart-item-actions-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .ai-cart-action-icon-btn-{{ ai_gen_id }} {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    color: {{ block.settings.secondary_text_color }};
+    transition: all 0.2s;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-cart-action-icon-btn-{{ ai_gen_id }}:hover {
+    background: #f5f5f5;
+    color: {{ block.settings.text_color }};
+  }
+
+  .ai-cart-action-icon-btn-{{ ai_gen_id }}.remove:hover {
+    color: #d32f2f;
+    background: #ffebee;
+  }
+
+  .ai-cart-action-icon-btn-{{ ai_gen_id }} svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .ai-cart-summary-{{ ai_gen_id }} {
+    background: {{ block.settings.card_background }};
+    border-radius: {{ block.settings.card_radius }}px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    height: fit-content;
+    position: sticky;
+    top: 20px;
+  }
+
+  .ai-cart-summary-title-{{ ai_gen_id }} {
+    font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
+    font-size: 20px;
+    font-weight: 600;
+    color: {{ block.settings.text_color }};
+    margin: 0 0 20px 0;
+  }
+
+  .ai-cart-shipping-message-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .ai-cart-shipping-message-{{ ai_gen_id }}.success {
+    background: {{ block.settings.shipping_success_bg }};
+    color: {{ block.settings.shipping_success_text }};
+  }
+
+  .ai-cart-shipping-message-{{ ai_gen_id }}.progress {
+    background: {{ block.settings.shipping_progress_bg }};
+    color: {{ block.settings.shipping_progress_text }};
+  }
+
+  .ai-cart-shipping-message-{{ ai_gen_id }} svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+
+  .ai-cart-shipping-message-{{ ai_gen_id }} strong {
+    font-weight: 600;
+  }
+
+  .ai-cart-summary-row-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
+    font-size: 14px;
+    color: {{ block.settings.text_color }};
+  }
+
+  .ai-cart-summary-row-{{ ai_gen_id }}.divider {
+    border-top: 1px solid {{ block.settings.border_color }};
+    margin-top: 8px;
+    padding-top: 20px;
+  }
+
+  .ai-cart-summary-row-{{ ai_gen_id }}.total {
+    font-size: 18px;
+    font-weight: 700;
+    padding-top: 16px;
+  }
+
+  .ai-cart-summary-label-{{ ai_gen_id }} {
+    color: {{ block.settings.secondary_text_color }};
+  }
+
+  .ai-cart-summary-value-{{ ai_gen_id }} {
+    font-weight: 500;
+  }
+
+  .ai-cart-summary-note-{{ ai_gen_id }} {
+    font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
+    font-size: 13px;
+    color: {{ block.settings.note_text_color }};
+    background: {{ block.settings.note_background }};
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin: 12px 0;
+    text-align: left;
+    line-height: 1.5;
+  }
+
+  .ai-cart-checkout-btn-{{ ai_gen_id }} {
+    width: 100%;
+    background: {{ block.settings.button_background }};
+    color: {{ block.settings.button_text_color }};
+    border: none;
+    border-radius: 8px;
+    padding: 16px 24px;
+    font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+    transition: background 0.2s;
+  }
+
+  .ai-cart-checkout-btn-{{ ai_gen_id }}:hover {
+    background: {{ block.settings.button_hover_background }};
+  }
+
+  .ai-cart-checkout-btn-{{ ai_gen_id }} svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .ai-cart-recommended-{{ ai_gen_id }} {
+    margin-top: 48px;
+  }
+
+  .ai-cart-recommended-title-{{ ai_gen_id }} {
+    font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
+    font-size: 22px;
+    font-weight: 600;
+    color: {{ block.settings.text_color }};
+    margin: 0 0 24px 0;
+  }
+
+  .ai-cart-recommended-scroll-{{ ai_gen_id }} {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .ai-cart-recommended-scroll-{{ ai_gen_id }}::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ai-cart-recommended-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 280px;
+    gap: 16px;
+    padding-bottom: 8px;
+  }
+
+  @media screen and (min-width: 990px) {
+    .ai-cart-recommended-scroll-{{ ai_gen_id }} {
+      overflow-x: visible;
+    }
+
+    .ai-cart-recommended-grid-{{ ai_gen_id }} {
+      grid-auto-flow: row;
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-columns: auto;
+      gap: 20px;
+    }
+  }
+
+  .ai-cart-recommended-product-{{ ai_gen_id }} {
+    background: {{ block.settings.card_background }};
+    border-radius: {{ block.settings.card_radius }}px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .ai-cart-recommended-image-{{ ai_gen_id }} {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f5f5f5;
+  }
+
+  .ai-cart-recommended-image-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-cart-recommended-info-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+  }
+
+  .ai-cart-recommended-name-{{ ai_gen_id }} {
+    font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
+    font-size: 14px;
+    font-weight: 500;
+    color: {{ block.settings.text_color }};
+    line-height: 1.4;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .ai-cart-recommended-price-{{ ai_gen_id }} {
+    font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
+    font-size: 16px;
+    font-weight: 600;
+    color: {{ block.settings.text_color }};
+  }
+
+  .ai-cart-recommended-add-btn-{{ ai_gen_id }} {
+    width: 100%;
+    background: {{ block.settings.secondary_button_background }};
+    color: {{ block.settings.secondary_button_text_color }};
+    border: 1px solid {{ block.settings.border_color }};
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .ai-cart-recommended-add-btn-{{ ai_gen_id }}:hover {
+    background: {{ block.settings.accent_color }};
+    color: #ffffff;
+    border-color: {{ block.settings.accent_color }};
+  }
+
+  .ai-cart-recommended-add-btn-{{ ai_gen_id }}.adding {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  .ai-cart-empty-{{ ai_gen_id }} {
+    text-align: center;
+    padding: 60px 20px;
+  }
+
+  .ai-cart-empty-title-{{ ai_gen_id }} {
+    font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
+    font-size: 24px;
+    font-weight: 600;
+    color: {{ block.settings.text_color }};
+    margin: 0 0 12px 0;
+  }
+
+  .ai-cart-empty-text-{{ ai_gen_id }} {
+    font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
+    font-size: 16px;
+    color: {{ block.settings.secondary_text_color }};
+    margin: 0 0 24px 0;
+  }
+
+  .ai-cart-empty-btn-{{ ai_gen_id }} {
+    display: inline-block;
+    background: {{ block.settings.button_background }};
+    color: {{ block.settings.button_text_color }};
+    padding: 14px 32px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
+    font-size: 16px;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+
+  .ai-cart-empty-btn-{{ ai_gen_id }}:hover {
+    background: {{ block.settings.button_hover_background }};
+  }
+
+
+
+
+#shopify-section-{{ section.id }}{
+  background:#f2f2f2 !important;
+}
+#shopify-section-{{ section.id }} .page-width{
+  background: transparent !important;
+  max-width: none !important;
+  padding: 0 !important;
+}
+
+
+
+
+
+
+
+
+/* 1) Asegura que el custom element sea un bloque “normal” */
+#shopify-section-{{ section.id }} cart-items-{{ ai_gen_id }} {
+  display: block !important;
+}
+
+/* 2) Centra TODO el contenido del carrito a 1200px */
+#shopify-section-{{ section.id }} cart-items-{{ ai_gen_id }}.ai-cart-wrapper-{{ ai_gen_id }} {
+  max-width: 1475px !important;   /* ancho objetivo */
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 20px !important;  /* respira en mobile */
+  padding-right: 20px !important;
+  box-sizing: border-box !important;
+}
+
+/* 3) Neutraliza los contenedores del theme dentro de la sección de carrito */
+#shopify-section-{{ section.id }} .page-width,
+#shopify-section-{{ section.id }} .container,
+#shopify-section-{{ section.id }} .content-for-layout {
+  max-width: none !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* 4) Si alguna sub-grid intenta romper el ancho, la obligamos a heredar el límite */
+#shopify-section-{{ section.id }} .ai-cart-container-{{ ai_gen_id }},
+#shopify-section-{{ section.id }} .ai-cart-items-{{ ai_gen_id }},
+#shopify-section-{{ section.id }} .ai-cart-summary-{{ ai_gen_id }},
+#shopify-section-{{ section.id }} .ai-cart-recommended-{{ ai_gen_id }} {
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+
+
+
+
+
+
+/* === Layout adjustments: product list vs summary === */
+.ai-cart-container-{{ ai_gen_id }} {
+  display: grid;
+  grid-template-columns: 65% 35%; /* reduce ancho de lista de productos */
+  gap: 40px; /* más espacio entre ambos contenedores */
+  align-items: flex-start;
+}
+
+/* Ajusta en pantallas pequeñas para mantener usabilidad */
+@media screen and (max-width: 989px) {
+  .ai-cart-container-{{ ai_gen_id }} {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+
+{% endstyle %}
+
+
+{% style %}
+/* === Flush absoluto con el módulo siguiente === */
+
+/* 1) Este bloque (carrito) no deja colchón inferior */
+.ai-cart-wrapper-{{ ai_gen_id }}{
+  padding-bottom: 10px !important;
+}
+.ai-cart-recommended-{{ ai_gen_id }}{
+  margin-top: 10px !important;
+}
+
+/* 2) Quita el margen/padding que el theme pone al PRÓXIMO módulo */
+#shopify-section-{{ section.id }} + .shopify-section{
+  margin-top: 10px !important;
+  padding-top: 10px !important;
+}
+/* si el theme usa page-width/container dentro del siguiente módulo */
+#shopify-section-{{ section.id }} + .shopify-section .page-width,
+#shopify-section-{{ section.id }} + .shopify-section .container{
+  padding-top: 10px !important;
+  margin-top: 10px !important;
+}
+
+/* 3) Por si el primer heading del siguiente módulo trae margin-top */
+#shopify-section-{{ section.id }} + .shopify-section h1:first-child,
+#shopify-section-{{ section.id }} + .shopify-section h2:first-child{
+  margin-top: 10px !important;
+}
+{% endstyle %}
+
+
+
+
+
+{% style %}
+/* Unit price under title */
+#shopify-section-{{ section.id }} .ai-cart-item-unit-{{ ai_gen_id }}{
+  margin-top: 0px;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
+  line-height: 1.2;
+}
+
+#shopify-section-{{ section.id }} .ai-unit-current-{{ ai_gen_id }}{
+  font-size: 14px;
+  font-weight: 600;
+  color: {{ block.settings.text_color }};
+}
+
+#shopify-section-{{ section.id }} .ai-unit-compare-{{ ai_gen_id }}{
+  font-size: 13px;
+  color: {{ block.settings.secondary_text_color }};
+  text-decoration: line-through;
+}
+
+#shopify-section-{{ section.id }} .ai-unit-label-{{ ai_gen_id }},
+#shopify-section-{{ section.id }} .ai-unit-ref-{{ ai_gen_id }}{
+  font-size: 13px;
+  color: {{ block.settings.secondary_text_color }};
+}
+{% endstyle %}
+
+
+
+
+
+
+
+
+{% style %}
+  /* Keep the whole section centered and boxed */
+  .ai-cart-wrapper-{{ ai_gen_id }}{
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    box-sizing: border-box;
+  }
+
+  /* One column on mobile */
+  .ai-cart-container-{{ ai_gen_id }}{
+    display: grid;
+    grid-template-columns: minmax(0,1fr);
+    gap: 24px;
+  }
+
+  /* Two columns on desktop, with a HARD cap for the summary */
+  @media (min-width: 990px){
+    .ai-cart-container-{{ ai_gen_id }}{
+      grid-template-columns: minmax(0,1fr) minmax(320px, 360px); /* <= clamp summary width */
+      gap: 32px;
+      align-items: start;
+    }
+    .ai-cart-summary-{{ ai_gen_id }}{
+      width: 100%;
+      max-width: 360px;       /* <= never exceed */
+      justify-self: end;      /* stick to the right inside the grid */
+      box-sizing: border-box; /* include padding in the width */
+    }
+  }
+{% endstyle %}
+
+
+
+{% style %}
+/* === Show "Total" before the amount === */
+#shopify-section-{{ section.id }} .ai-cart-item-price-{{ ai_gen_id }}{
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+#shopify-section-{{ section.id }} .ai-cart-item-price-label-{{ ai_gen_id }}{
+  font-size: 13px;
+  font-weight: 500;
+  color: {{ block.settings.secondary_text_color }};
+  opacity: 0.8;
+}
+
+#shopify-section-{{ section.id }} .ai-cart-item-price-value-{{ ai_gen_id }}{
+  font-size: 18px;
+  font-weight: 700;
+  color: {{ block.settings.text_color }};
+}
+{% endstyle %}
+
+
+{% style %}
+/* === Show "Total" before the amount === */
+#shopify-section-{{ section.id }} .ai-cart-item-price-{{ ai_gen_id }}{
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+#shopify-section-{{ section.id }} .ai-cart-item-price-label-{{ ai_gen_id }}{
+  font-size: 13px;
+  font-weight: 500;
+  color: {{ block.settings.secondary_text_color }};
+  opacity: 0.8;
+}
+
+#shopify-section-{{ section.id }} .ai-cart-item-price-value-{{ ai_gen_id }}{
+  font-size: 18px;
+  font-weight: 700;
+  color: {{ block.settings.text_color }};
+}
+{% endstyle %}
+
+
+
+
+
+
+
+{% style %}
+/* === Cart spacing fine-tuning (drop-in) === */
+#shopify-section-{{ section.id }} .ai-cart-item-details-{{ ai_gen_id }}{
+  gap: 1px;              /* título ↔ meta */
+}
+
+#shopify-section-{{ section.id }} .ai-cart-item-title-{{ ai_gen_id }}{
+  margin-bottom: 1px;     /* separa título del resto */
+}
+
+#shopify-section-{{ section.id }} .ai-cart-item-meta-{{ ai_gen_id }}{
+  gap: 1px;              /* pila de: variantes, delivery, qty */
+}
+
+#shopify-section-{{ section.id }} .ai-cart-item-variant-{{ ai_gen_id }}{
+  margin-bottom: 1px;     /* un respiro bajo la variante */
+}
+
+#shopify-section-{{ section.id }} .ai-cart-item-delivery-{{ ai_gen_id }}{
+  margin-top: 2px;        /* separa el ícono/truck del texto previo */
+}
+
+#shopify-section-{{ section.id }} .ai-cart-item-quantity-{{ ai_gen_id }}{
+  margin-top: 10px;       /* baja un poquito el “– 10 +” para que no se pegue */
+}
+
+@media (min-width: 750px){
+  #shopify-section-{{ section.id }} .ai-cart-item-quantity-{{ ai_gen_id }}{
+    margin-top: 12px;     /* un pelín más de aire en desktop */
+  }
+}
+
+/* Touch-up del pill de cantidad para que respire y se vea parejo */
+#shopify-section-{{ section.id }} .ai-cart-quantity-selector-{{ ai_gen_id }}{
+  gap: 0;
+  border-radius: 9999px;
+}
+
+#shopify-section-{{ section.id }} .ai-cart-quantity-btn-{{ ai_gen_id }}{
+  padding: 10px 14px;
+  line-height: 1;
+}
+
+#shopify-section-{{ section.id }} .ai-cart-quantity-input-{{ ai_gen_id }}{
+  width: 48px;
+  padding: 10px 6px;
+}
+{% endstyle %}
+
+
+{% style %}
+.ai-cart-item-title-{{ ai_gen_id }} a{
+  color: inherit;
+  text-decoration: none;
+}
+.ai-cart-item-title-{{ ai_gen_id }} a:hover{
+  text-decoration: underline;
+}
+
+.ai-cart-item-image-link-{{ ai_gen_id }}{
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.ai-cart-item-image-link-{{ ai_gen_id }} img{
+  display: block;
+}
+{% endstyle %}
+
+
+
+
+
+{% style %}
+/* Icon + amount layout */
+#shopify-section-{{ section.id }} .ai-cart-item-price-{{ ai_gen_id }}{
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  justify-content: flex-end; /* keep it right aligned */
+}
+
+#shopify-section-{{ section.id }} .ai-cart-price-icon-{{ ai_gen_id }} svg{
+  width: 16px;
+  height: 16px;
+  color: {{ block.settings.secondary_text_color }};
+  opacity: .85;
+}
+
+/* Amount */
+#shopify-section-{{ section.id }} .ai-cart-item-price-value-{{ ai_gen_id }}{
+  font-size: 18px;
+  font-weight: 700;
+  color: {{ block.settings.text_color }};
+}
+
+/* a11y helper */
+#shopify-section-{{ section.id }} .visually-hidden-{{ ai_gen_id }}{
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden; clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap; border: 0; padding: 0; margin: -1px;
+}
+{% endstyle %}
+
+
+
+{% style %}
+/* === Make the "Total" icon larger === */
+#shopify-section-{{ section.id }} .ai-cart-price-icon-{{ ai_gen_id }} svg {
+  width: 22px;   /* try 22–24px for bigger icons */
+  height: 22px;
+  color: {{ block.settings.text_color }};
+  opacity: 0.9;
+}
+
+/* Optional: increase spacing if icon looks too close to price */
+#shopify-section-{{ section.id }} .ai-cart-item-price-{{ ai_gen_id }} {
+  gap: 3px;  /* add more breathing room */
+}
+{% endstyle %}
+
+
+
+
+
+<cart-items-{{ ai_gen_id }} class="ai-cart-wrapper-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% if cart.item_count > 0 %}
+    <h1 class="ai-cart-page-title-{{ ai_gen_id }}">{{ block.settings.page_title }}</h1>
+    
+    <div class="ai-cart-container-{{ ai_gen_id }}">
+      <div class="ai-cart-items-{{ ai_gen_id }}">
+        {% for item in cart.items %}
+          <div class="ai-cart-item-{{ ai_gen_id }}" data-line-item="{{ forloop.index }}">
+            <div class="ai-cart-item-left-{{ ai_gen_id }}">
+            
+            
+            
+            
+            
+<div class="ai-cart-item-image-{{ ai_gen_id }}">
+  <a class="ai-cart-item-image-link-{{ ai_gen_id }}" href="{{ item.url }}" aria-label="{{ item.product.title | escape }}">
+    {% if item.image %}
+      <img
+        src="{{ item.image | image_url: width: 280 }}"
+        alt="{{ item.image.alt | default: item.product.title | escape }}"
+        loading="lazy"
+        width="140"
+        height="140"
+      >
+    {% else %}
+      {{ 'product-1' | placeholder_svg_tag }}
+    {% endif %}
+  </a>
+</div>
+
+
+
+              <div class="ai-cart-item-mobile-actions-{{ ai_gen_id }}">
+          
+                <button
+                  class="ai-cart-action-icon-btn-{{ ai_gen_id }} remove"
+                  data-action="remove"
+                  data-line="{{ forloop.index }}"
+                  aria-label="Remove product"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                  </svg>
+                </button>
+              </div>
+              
+            </div>
+            <div class="ai-cart-item-details-{{ ai_gen_id }}">
+<h3 class="ai-cart-item-title-{{ ai_gen_id }}">
+  <a class="ai-cart-item-title-link-{{ ai_gen_id }}" href="{{ item.url }}">
+    {{ item.product.title }}
+  </a>
+</h3>
+
+
+<div class="ai-cart-item-unit-{{ ai_gen_id }}">
+  {%- if item.unit_price_measurement -%}
+    <span class="ai-unit-current-{{ ai_gen_id }}">
+      {{ item.unit_price | money }}
+    </span>
+    <span class="ai-unit-ref-{{ ai_gen_id }}">
+      / {{ item.unit_price_measurement.reference_value }}{{ item.unit_price_measurement.reference_unit }}
+    </span>
+  {%- else -%}
+    {%- if item.final_price < item.original_price -%}
+      <span class="ai-unit-compare-{{ ai_gen_id }}">{{ item.original_price | money }}</span>
+      <span class="ai-unit-current-{{ ai_gen_id }}">{{ item.final_price | money }}</span>
+      <span class="ai-unit-label-{{ ai_gen_id }}">per unit</span>
+    {%- else -%}
+      <span class="ai-unit-current-{{ ai_gen_id }}">{{ item.final_price | money }}</span>
+      <span class="ai-unit-label-{{ ai_gen_id }}">per unit</span>
+    {%- endif -%}
+  {%- endif -%}
+</div>
+
+
+
+              <div class="ai-cart-item-price-mobile-{{ ai_gen_id }}">{{ item.final_line_price | money }}</div>
+              <div class="ai-cart-item-meta-{{ ai_gen_id }}">
+                {% if item.variant.title != 'Default Title' %}
+                  <div class="ai-cart-item-variant-{{ ai_gen_id }}">
+                    {{ item.variant.title }}
+                  </div>
+                {% endif %}
+                <div class="ai-cart-item-delivery-{{ ai_gen_id }}">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="1" y="3" width="15" height="13"></rect>
+                    <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                    <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                    <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                  </svg>
+                  <span class="short-text">3–5 days</span>
+                  <span class="full-text">{{ block.settings.delivery_text }}</span>
+                </div>
+                <div class="ai-cart-item-quantity-{{ ai_gen_id }}">
+                  <div class="ai-cart-quantity-selector-{{ ai_gen_id }}">
+                    <button
+                      class="ai-cart-quantity-btn-{{ ai_gen_id }}"
+                      data-action="decrease"
+                      data-line="{{ forloop.index }}"
+                      aria-label="Decrease quantity"
+                    >
+                      −
+                    </button>
+                    <input
+                      type="number"
+                      class="ai-cart-quantity-input-{{ ai_gen_id }}"
+                      value="{{ item.quantity }}"
+                      min="0"
+                      data-line="{{ forloop.index }}"
+                      aria-label="Quantity"
+                    >
+                    <button
+                      class="ai-cart-quantity-btn-{{ ai_gen_id }}"
+                      data-action="increase"
+                      data-line="{{ forloop.index }}"
+                      aria-label="Increase quantity"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="ai-cart-item-right-{{ ai_gen_id }}">
+<div class="ai-cart-item-price-{{ ai_gen_id }}">
+  <span class="ai-cart-price-icon-{{ ai_gen_id }}" aria-hidden="true">
+    <!-- Receipt / order total icon -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 4h14a2 2 0 0 1 2 2v12l-3-2-3 2-3-2-3 2-4-2V6a2 2 0 0 1 2-2z"/>
+      <line x1="8" y1="9" x2="16" y2="9"/>
+      <line x1="8" y1="13" x2="14" y2="13"/>
+    </svg>
+  </span>
+  <span class="visually-hidden-{{ ai_gen_id }}">Total</span>
+  <span class="ai-cart-item-price-value-{{ ai_gen_id }}">{{ item.final_line_price | money }}</span>
+</div>
+
+
+
+              <div class="ai-cart-item-actions-{{ ai_gen_id }}">
+       
+                <button
+                  class="ai-cart-action-icon-btn-{{ ai_gen_id }} remove"
+                  data-action="remove"
+                  data-line="{{ forloop.index }}"
+                  aria-label="Remove product"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="ai-cart-summary-{{ ai_gen_id }}">
+        <h2 class="ai-cart-summary-title-{{ ai_gen_id }}">{{ block.settings.summary_title }}</h2>
+        
+        <div class="ai-cart-shipping-message-{{ ai_gen_id }}" data-shipping-threshold="{{ block.settings.free_shipping_threshold }}">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+          <span></span>
+        </div>
+
+        <div class="ai-cart-summary-row-{{ ai_gen_id }}">
+          <span class="ai-cart-summary-label-{{ ai_gen_id }}">Subtotal</span>
+          <span class="ai-cart-summary-value-{{ ai_gen_id }}" data-cart-subtotal>{{ cart.total_price | money }}</span>
+        </div>
+        
+        <div class="ai-cart-summary-note-{{ ai_gen_id }}">
+          {{ block.settings.checkout_note }}
+        </div>
+
+        <div class="ai-cart-summary-row-{{ ai_gen_id }} divider total">
+          <span>Total</span>
+          <span data-cart-total>{{ cart.total_price | money }}</span>
+        </div>
+        <button class="ai-cart-checkout-btn-{{ ai_gen_id }}" onclick="window.location.href='/checkout'">
+          {{ block.settings.checkout_button_text }}
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+
+
+
+
+
+    
+
+    {% if block.settings.show_recommended %}
+      <div class="ai-cart-recommended-{{ ai_gen_id }}">
+        <h2 class="ai-cart-recommended-title-{{ ai_gen_id }}">{{ block.settings.recommended_title }}</h2>
+
+
+
+
+        <div class="ai-cart-recommended-scroll-{{ ai_gen_id }}">
+          <div class="ai-cart-recommended-grid-{{ ai_gen_id }}" data-recommended-products></div>
+
+
+
+
+
+
+
+  
+          
+        </div>
+      </div>
+    {% endif %}
+  {% else %}
+    <div class="ai-cart-empty-{{ ai_gen_id }}">
+      <h2 class="ai-cart-empty-title-{{ ai_gen_id }}">Your cart is empty</h2>
+      <p class="ai-cart-empty-text-{{ ai_gen_id }}">Add some products to get started</p>
+      <a href="/collections/all" class="ai-cart-empty-btn-{{ ai_gen_id }}">Continue shopping</a>
+    </div>
+  {% endif %}
+</cart-items-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+
+
+
+
+
+    class CartItems{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.cart = {{ cart | json }};
+        this.freeShippingThreshold = {{ block.settings.free_shipping_threshold | times: 100 }};
+      }
+
+
+
+
+
+
+      
+
+      connectedCallback() {
+        this.setupEventListeners();
+        this.updateShippingMessage();
+        this.loadRecommendedProducts();
+      }
+
+      setupEventListeners() {
+        this.querySelectorAll('.ai-cart-quantity-btn-{{ ai_gen_id }}').forEach(btn => {
+          btn.addEventListener('click', (e) => this.handleQuantityChange(e));
+        });
+
+        this.querySelectorAll('.ai-cart-quantity-input-{{ ai_gen_id }}').forEach(input => {
+          input.addEventListener('change', (e) => this.handleQuantityInput(e));
+        });
+
+        this.querySelectorAll('.ai-cart-action-icon-btn-{{ ai_gen_id }}[data-action="remove"]').forEach(btn => {
+          btn.addEventListener('click', (e) => this.handleRemove(e));
+        });
+
+        this.querySelectorAll('.ai-cart-action-icon-btn-{{ ai_gen_id }}[data-action="edit"]').forEach(btn => {
+          btn.addEventListener('click', (e) => this.handleEdit(e));
+        });
+      }
+
+      async handleQuantityChange(e) {
+        const button = e.currentTarget;
+        const action = button.dataset.action;
+        const line = button.dataset.line;
+        const input = this.querySelector(`.ai-cart-quantity-input-{{ ai_gen_id }}[data-line="${line}"]`);
+        let quantity = parseInt(input.value);
+
+        if (action === 'increase') {
+          quantity++;
+        } else if (action === 'decrease' && quantity > 0) {
+          quantity--;
+        }
+
+        await this.updateCart(line, quantity);
+      }
+
+      async handleQuantityInput(e) {
+        const input = e.currentTarget;
+        const line = input.dataset.line;
+        const quantity = parseInt(input.value) || 0;
+        await this.updateCart(line, quantity);
+      }
+
+      async handleRemove(e) {
+        const button = e.currentTarget;
+        const line = button.dataset.line;
+        await this.updateCart(line, 0);
+      }
+
+      handleEdit(e) {
+        const button = e.currentTarget;
+        const productUrl = button.dataset.productUrl;
+        window.location.href = productUrl;
+      }
+
+      async addToCart(variantId) {
+        try {
+          const response = await fetch('/cart/add.js', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              id: variantId,
+              quantity: 1
+            })
+          });
+
+          if (response.ok) {
+            window.location.reload();
+          }
+        } catch (error) {
+          console.error('Error adding to cart:', error);
+        }
+      }
+
+      async updateCart(line, quantity) {
+        try {
+          const response = await fetch('/cart/change.js', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              line: line,
+              quantity: quantity
+            })
+          });
+
+          if (response.ok) {
+            window.location.reload();
+          }
+        } catch (error) {
+          console.error('Error updating cart:', error);
+        }
+      }
+
+      updateShippingMessage() {
+        const messageEl = this.querySelector('.ai-cart-shipping-message-{{ ai_gen_id }}');
+        if (!messageEl) return;
+
+        const cartTotal = this.cart.total_price;
+        const threshold = this.freeShippingThreshold;
+        const remaining = threshold - cartTotal;
+
+        const textEl = messageEl.querySelector('span');
+        const iconEl = messageEl.querySelector('svg');
+
+        if (cartTotal >= threshold) {
+          messageEl.classList.remove('progress');
+          messageEl.classList.add('success');
+          textEl.innerHTML = '<strong>Free Shipping</strong> secured on your $50+ order.';
+          iconEl.innerHTML = '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>';
+        } else {
+          messageEl.classList.remove('success');
+          messageEl.classList.add('progress');
+          const remainingAmount = Math.ceil(remaining / 100);
+          textEl.innerHTML = `Add <strong>$${remainingAmount}</strong> more to unlock <strong>FREE SHIPPING</strong>`;
+          iconEl.innerHTML = '<rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle>';
+        }
+      }
+
+      async loadRecommendedProducts() {
+        const container = this.querySelector('[data-recommended-products]');
+        if (!container) return;
+
+        const cartTags = [...new Set(this.cart.items.flatMap(item => item.product.tags || []))];
+        const cartProductIds = this.cart.items.map(item => item.product_id);
+        
+        if (cartTags.length === 0) {
+          container.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">No recommendations available</p>';
+          return;
+        }
+
+        try {
+          const searchPromises = cartTags.slice(0, 8).map(tag => 
+            fetch(`/search/suggest.json?q=${encodeURIComponent(tag)}&resources[type]=product&resources[limit]=8`)
+              .then(res => res.json())
+              .then(data => data.resources?.results?.products || [])
+              .catch(() => [])
+          );
+
+          const results = await Promise.all(searchPromises);
+          const allProducts = results
+            .flat()
+            .filter(product => !cartProductIds.includes(product.id) && product.available);
+
+          const uniqueProducts = Array.from(
+            new Map(allProducts.map(p => [p.id, p])).values()
+          ).slice(0, 8);
+
+          this.renderRecommendedProducts(uniqueProducts, container);
+        } catch (error) {
+          console.error('Error loading recommended products:', error);
+          container.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">Unable to load recommendations</p>';
+        }
+      }
+
+      renderRecommendedProducts(products, container) {
+        if (products.length === 0) {
+          container.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">No recommendations available</p>';
+          return;
+        }
+
+        container.innerHTML = products.map(product => {
+          const imageUrl = product.featured_image || product.image;
+          return `
+            <div class="ai-cart-recommended-product-{{ ai_gen_id }}">
+              <div class="ai-cart-recommended-image-{{ ai_gen_id }}">
+                ${imageUrl ? 
+                  `<img src="${imageUrl}" alt="${this.escapeHtml(product.title)}" loading="lazy">` :
+                  '{{ "product-1" | placeholder_svg_tag }}'
+                }
+              </div>
+              <div class="ai-cart-recommended-info-{{ ai_gen_id }}">
+                <h3 class="ai-cart-recommended-name-{{ ai_gen_id }}">${this.escapeHtml(product.title)}</h3>
+                <div class="ai-cart-recommended-price-{{ ai_gen_id }}">${this.formatMoney(product.price)}</div>
+              </div>
+              <button 
+                class="ai-cart-recommended-add-btn-{{ ai_gen_id }}"
+                data-variant-id="${product.variants?.[0]?.id || product.id}"
+              >
+                Add to cart
+              </button>
+            </div>
+          `;
+        }).join('');
+
+        container.querySelectorAll('.ai-cart-recommended-add-btn-{{ ai_gen_id }}').forEach(btn => {
+          btn.addEventListener('click', async (e) => {
+            const button = e.currentTarget;
+            const variantId = button.dataset.variantId;
+            button.classList.add('adding');
+            button.textContent = 'Adding...';
+            await this.addToCart(variantId);
+          });
+        });
+      }
+
+      escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      formatMoney(cents) {
+        const amount = (cents / 100).toFixed(2);
+        return `$${amount}`;
+      }
+    }
+
+    customElements.define('cart-items-{{ ai_gen_id }}', CartItems{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Shopping cart",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Page title"
+    },
+    {
+      "type": "text",
+      "id": "page_title",
+      "label": "Title text",
+      "default": "Your Cart Summary"
+    },
+    {
+      "type": "range",
+      "id": "page_title_size",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size",
+      "default": 32
+    },
+    {
+      "type": "select",
+      "id": "page_title_weight",
+      "label": "Title weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi-bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "select",
+      "id": "page_title_alignment",
+      "label": "Title alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "color",
+      "id": "page_title_color",
+      "label": "Title color",
+      "default": "#222222"
+    },
+    {
+      "type": "range",
+      "id": "page_title_margin_bottom",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom margin",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "General"
+    },
+    {
+      "type": "text",
+      "id": "summary_title",
+      "label": "Summary title",
+      "default": "Order Summary"
+    },
+    {
+      "type": "text",
+      "id": "delivery_text",
+      "label": "Delivery text",
+      "default": "Estimated delivery: 3-5 business days"
+    },
+    {
+      "type": "text",
+      "id": "checkout_button_text",
+      "label": "Checkout button text",
+      "default": "Continue to Checkout"
+    },
+    {
+      "type": "text",
+      "id": "checkout_note",
+      "label": "Checkout note",
+      "default": "Shipping and taxes calculated at checkout."
+    },
+    {
+      "type": "header",
+      "content": "Free shipping"
+    },
+    {
+      "type": "range",
+      "id": "free_shipping_threshold",
+      "min": 0,
+      "max": 500,
+      "step": 10,
+      "unit": "$",
+      "label": "Threshold amount",
+      "default": 50
+    },
+    {
+      "type": "color",
+      "id": "shipping_success_bg",
+      "label": "Success background",
+      "default": "#e8f5e9"
+    },
+    {
+      "type": "color",
+      "id": "shipping_success_text",
+      "label": "Success text",
+      "default": "#2e7d32"
+    },
+    {
+      "type": "color",
+      "id": "shipping_progress_bg",
+      "label": "Progress background",
+      "default": "#fff3e0"
+    },
+    {
+      "type": "color",
+      "id": "shipping_progress_text",
+      "label": "Progress text",
+      "default": "#e65100"
+    },
+    {
+      "type": "header",
+      "content": "Recommended products"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_recommended",
+      "label": "Show recommended products",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "recommended_title",
+      "label": "Recommended section title",
+      "default": "You may also like"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#222222"
+    },
+    {
+      "type": "color",
+      "id": "secondary_text_color",
+      "label": "Secondary text color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#4caf50"
+    },
+    {
+      "type": "color",
+      "id": "note_background",
+      "label": "Note background",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "note_text_color",
+      "label": "Note text color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Button background",
+      "default": "#4caf50"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_background",
+      "label": "Button hover background",
+      "default": "#45a049"
+    },
+    {
+      "type": "color",
+      "id": "secondary_button_background",
+      "label": "Secondary button background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "secondary_button_text_color",
+      "label": "Secondary button text",
+      "default": "#222222"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Card border radius",
+      "default": 12
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shopping cart"
+    }
+  ]
+}
+{% endschema %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+// === Reemplazar por completo ===
+async loadRecommendedProducts() {
+  const container = this.querySelector('[data-recommended-products]');
+  if (!container) return;
+
+  // 1) Lee colecciones desde el data-atributo inyectado por Liquid
+  const collectionsAttr = container.getAttribute('data-collections') || '';
+  const collectionHandles = collectionsAttr
+    .split(',')
+    .map(h => h.trim())
+    .filter(Boolean);
+
+  // Si no hay colecciones, no mostramos nada
+  if (collectionHandles.length === 0) {
+    container.innerHTML = '<p style="text-align:center;color:#666;padding:20px;">No recommendations available</p>';
+    return;
+  }
+
+  // 2) IDs de productos en el carrito (para excluirlos)
+  const cartProductIds = (this.cart.items || []).map(i => i.product_id);
+
+  try {
+    // 3) Trae productos de cada colección vía /collections/{handle}/products.json
+    //    (Shopify endpoint público: sin necesidad de activar predictive search)
+    const perCollectionLimit = 8;
+    const fetches = collectionHandles.slice(0, 6).map(handle =>
+      fetch(`/collections/${handle}/products.json?limit=${perCollectionLimit}`)
+        .then(r => r.ok ? r.json() : { products: [] })
+        .catch(() => ({ products: [] }))
+    );
+
+    const results = await Promise.all(fetches);
+    const allProducts = results
+      .flatMap(r => r.products || [])
+      .filter(p => p.available !== false) // algunos themes usan available:false
+      .filter(p => !cartProductIds.includes(p.id));
+
+    // 4) Únicos por ID y corta a 8
+    const unique = Array.from(new Map(allProducts.map(p => [p.id, p])).values())
+      .slice(0, 8);
+
+    this.renderRecommendedProducts(unique, container);
+  } catch (err) {
+    console.error('Recommendations error:', err);
+    container.innerHTML = '<p style="text-align:center;color:#666;padding:20px;">Unable to load recommendations</p>';
+  }
+},
+
+// Mantén el estilo existente (botones, colores). Solo asegúrate que use tus clases actuales.
+renderRecommendedProducts(products, container) {
+  if (!products || products.length === 0) {
+    container.innerHTML = '<p style="text-align:center;color:#666;padding:20px;">No recommendations available</p>';
+    return;
+  }
+
+  container.innerHTML = products.map(product => {
+    const image = (product.images && product.images[0]) ? product.images[0].src : null;
+    const priceCents = (product.price || 0);
+    const compareCents = product.compare_at_price || 0;
+
+    // Helper de precio simple (USD). Ajusta si necesitas multi-moneda.
+    const fmt = (cents) => `$${(cents / 100).toFixed(2)}`;
+
+    return `
+      <div class="ai-cart-recommended-product-{{ ai_gen_id }}">
+        <a href="/products/${product.handle}" class="ai-cart-recommended-image-{{ ai_gen_id }}">
+          ${image
+            ? `<img src="${image}" alt="${this.escapeHtml(product.title)}" loading="lazy">`
+            : `{{ "product-1" | placeholder_svg_tag }}`
+          }
+        </a>
+        <div class="ai-cart-recommended-info-{{ ai_gen_id }}">
+          <h3 class="ai-cart-recommended-name-{{ ai_gen_id }}">${this.escapeHtml(product.title)}</h3>
+          <div class="ai-cart-recommended-price-{{ ai_gen_id }}">
+            ${compareCents > priceCents
+              ? `<span class="ai-you-may-like-compare-price-{{ ai_gen_id }}">${fmt(compareCents)}</span>
+                 <span class="ai-you-may-like-sale-price-{{ ai_gen_id }}">${fmt(priceCents)}</span>`
+              : fmt(priceCents)
+            }
+          </div>
+        </div>
+        <button
+          class="ai-cart-recommended-add-btn-{{ ai_gen_id }}"
+          data-variant-id="${(product.variants && product.variants[0] && product.variants[0].id) ? product.variants[0].id : ''}"
+        >
+          Add to cart
+        </button>
+      </div>
+    `;
+  }).join('');
+
+  // Bind “Add to cart” con el mismo comportamiento que ya usas
+  container.querySelectorAll('.ai-cart-recommended-add-btn-{{ ai_gen_id }}').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      const b = e.currentTarget;
+      const variantId = b.dataset.variantId;
+      if (!variantId) return;
+
+      b.classList.add('adding');
+      b.textContent = 'Adding...';
+      await this.addToCart(variantId);
+    });
+  });
+}
+</script>

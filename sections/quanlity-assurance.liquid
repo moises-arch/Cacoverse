@@ -1,0 +1,181 @@
+{% style %}
+  #shopify-section-{{ section.id }}{
+    padding-top: {{ section.settings.padding_top_desktop }};
+    padding-bottom: {{ section.settings.padding_bottom_desktop }};
+    background-color: #EBF0F5;
+  }
+
+
+  @media( max-width: 767px){
+     #shopify-section-{{ section.id }}{
+      padding-top: {{ section.settings.padding_top_mobile }};
+      padding-bottom: {{ section.settings.padding_bottom_mobile }};
+    }
+  }
+{% endstyle %}
+
+{{ 'quanlity-assurance.css' | asset_url | stylesheet_tag }}
+<div class="page-width container-fluid">
+  <div class="row">
+    <div class="col-md-6 d-flex flex-column justity-content-start align-items-start gap-4">
+      <h2 class="sh-48">{{ section.settings.heading }}</h2>
+      <p class="sp-16">{{ section.settings.sub_heading }}</p>
+      <p class="sp-16 mt-2">{{ section.settings.sub_heading1 }}</p>
+      <ul>
+        {% for block in section.blocks %}
+          {% if block.type == 'Images' %}
+            <li class="sp-24 d-flex gap-3 align-items-start justify-content-start mb-3">
+              <img
+                src="{{ block.settings.image | img_url : 'master' }}"
+                width="{{ block.settings.image.width }}"
+                height="{{ block.settings.image.height }}"
+                loading="lazy"
+                alt="{{ block.settings.image.alt }}"
+                class="img-fluid"
+              >
+              <div>
+                <h4 class="sp-24">{{ block.settings.heading }}</h4>
+                <p class="sp-16">{{ block.settings.sub_text }}</p>
+              </div>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+      <ul class="list-unstyled d-flex flex-wrap flex-md-nowrap gap-3">
+        {% for block in section.blocks %}
+          {% if block.type == 'logos' %}
+            <li>
+              <img
+                src="{{ block.settings.logo_image | img_url : 'master' }}"
+                width="{{ block.settings.logo_image.width }}"
+                height="{{ block.settings.logo_image.height }}"
+                loading="lazy"
+                alt="{{ block.settings.logo_image.alt }}"
+                class="img-fluid"
+              >
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+
+      <p class="sp-16">{{ section.settings.sub_heading2 }}</p>
+    </div>
+    <div class="col-md-6">
+      <img
+        src="{{ section.settings.image | img_url : '1000x' }}"
+        width="{{ section.settings.image.width }}"
+        height="{{ section.settings.image.height }}"
+        loading="lazy"
+        alt="{{ section.settings.image.alt }}"
+        class="img-fluid"
+      >
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Quanlity Assurance",
+  "class": "quanlity-assurance",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Select Image",
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Quality Assurance"
+    },
+     {
+      "type": "textarea",
+      "id": "sub_heading",
+      "label": "Sub Heading",
+      "default": "<At Caco American LLC, we prioritize safety and durability by subjecting our Personal Protective Equipment (PPE) to rigorous testing and validation processes. Each product undergoes comprehensive quality checks at every stage of production to ensure it meets or exceeds international safety standards, including ISO, FDA, and CE requirements."
+    },
+     {
+      "type": "textarea",
+      "id": "sub_heading1",
+      "label": "Sub Heading 1",
+      "default": "Our testing protocols include:"
+    },
+     {
+      "type": "textarea",
+      "id": "sub_heading2",
+      "label": "Sub Heading 2",
+      "default": "Through these stringent measures, we ensure our PPE delivers the reliability and protection professionals need in high-risk environments."
+    },
+    {
+      "type": "image_picker",
+      "id": "logos",
+      "label": "Logos",
+    },
+    {
+      "type": "text",
+      "id": "padding_top_desktop",
+      "label": "Padding Desktop Top",
+      "default": "80px"
+    },
+     {
+      "type": "text",
+      "id": "padding_bottom_desktop",
+      "label": "Padding Desktop Bottom",
+      "default": "80px"
+    },
+     {
+      "type": "text",
+      "id": "padding_top_mobile",
+      "label": "Padding Mobile Top",
+      "default": "40px"
+    },
+     {
+      "type": "text",
+      "id": "padding_bottom_mobile",
+      "label": "Padding Mobile Bottom",
+      "default": "40px"
+    },
+
+  ],
+  "blocks": [
+    {
+      "type": "Images",
+      "name": "Image with Text",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Add the Image",
+        },
+       {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+        },
+        {
+          "type": "text",
+          "id": "sub_text",
+          "label": "Heading",
+        },
+      ]
+    },
+      {
+      "type": "logos",
+      "name": "Logos Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "logo_image",
+          "label": "Add the Image",
+        },
+      ]
+    },
+  ],
+  "presets": [
+    {
+      "name": "Quanlity Assurance",
+    }
+  ]
+}
+{% endschema %}

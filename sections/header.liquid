@@ -1,0 +1,4966 @@
+<!-- Caco Custom Header - v5 sticky + new mobile drawer (light, app-like) -->
+
+<script>
+  // Fallback inmediato para evitar salto de contenido antes del JS principal
+  (function() {
+    try {
+      if (document.body) {
+        document.body.classList.add('has-caco-sticky');
+      }
+      // Altura estimada para el primer paint, se ajusta luego con JS
+      document.documentElement.style.setProperty('--caco-header-height', '120px');
+    } catch (e) {}
+  })();
+</script>
+
+{%- assign caco_search_categories = '' | split: ',' -%}
+{%- assign caco_search_handles = '' | split: ',' -%}
+{%- assign caco_mega_triggers = section.blocks | where: 'type', 'mega_trigger' -%}
+{%- for link in section.settings.menu.links -%}
+  {%- assign is_mega = false -%}
+  {%- assign link_title_down = link.title | strip | downcase -%}
+
+  {%- for trigger in caco_mega_triggers -%}
+    {%- assign trigger_name = trigger.settings.menu_item | downcase -%}
+    {%- if trigger_name == link_title_down -%}
+      {%- assign is_mega = true -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  {%- if is_mega and link.links != blank -%}
+    {%- for childlink in link.links -%}
+      {%- unless caco_search_handles contains childlink.handle -%}
+        {%- assign caco_search_handles = caco_search_handles | push: childlink.handle -%}
+        {%- assign combined = childlink.title | append: '||' | append: childlink.url | append: '||' | append: childlink.handle -%}
+        {%- assign caco_search_categories = caco_search_categories | push: combined -%}
+      {%- endunless -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endfor -%}
+
+<div class="caco-header-wrapper caco-is-booting" style="opacity:0;visibility:hidden;">
+  {%- if section.settings.show_announcement -%}
+    {%- assign announcements = section.blocks | where: "type", "announcement" -%}
+    <div
+      class="caco-announcement-bar caco-announcement-bar--{{ section.settings.announcement_effect | default: 'fade' }}"
+      id="caco-announcement-bar"
+      data-interval="{{ section.settings.announcement_interval | default: 8 }}"
+    >
+      <div class="caco-container" style="position:relative;display:flex;align-items:center;justify-content:center;height:100%;">
+        <div class="caco-announcement-content">
+          <div class="caco-announcement-slider">
+            {%- if announcements.size > 0 -%}
+              {%- for block in announcements -%}
+                <div
+                  class="caco-announcement-slide {% if forloop.first %}active{% endif %}"
+                  data-index="{{ forloop.index0 | plus: 0 }}"
+                >
+                  {{ block.settings.text }}
+                </div>
+              {%- endfor -%}
+            {%- else -%}
+              <div class="caco-announcement-slide active" data-index="0">Welcome to our store</div>
+            {%- endif -%}
+          </div>
+        </div>
+
+        <div class="caco-ann-controls">
+          <div class="caco-ann-nav-group">
+            <button class="caco-ann-nav caco-ann-prev" type="button" aria-label="Previous announcement">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+            <span class="caco-ann-counter">
+              <span id="caco-ann-current">1</span> /
+              <span id="caco-ann-total">{{ announcements.size | default: 1 }}</span>
+            </span>
+            <button class="caco-ann-nav caco-ann-next" type="button" aria-label="Next announcement">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+          </div>
+         
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+
+  <!-- Overlay used when predictive search is open -->
+  <div class="caco-search-overlay" id="caco-search-overlay"></div>
+
+  <!-- TOP HEADER -->
+  <header class="caco-header-top">
+    <div class="caco-container caco-grid-container">
+      <div class="caco-area-left">
+        <!-- Burger (mobile only) -->
+        <button class="caco-mobile-toggle md-hidden" id="caco-mobile-trigger" aria-label="Toggle menu">
+          <span class="caco-burger-icon caco-burger-icon--menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+              <line x1="3" y1="6"  x2="21" y2="6"></line>
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </span>
+          <span class="caco-burger-icon caco-burger-icon--close">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </span>
+        </button>
+
+        <!-- Logo -->
+        <div class="caco-logo">
+          <a href="{{ routes.root_url }}">
+            {%- if section.settings.logo != blank -%}
+              {{ section.settings.logo | image_url: width: 600 | image_tag: class: 'caco-logo-img', width: section.settings.logo_width, alt: shop.name }}
+            {%- else -%}
+              <span class="caco-logo-text">{{ shop.name }}</span>
+            {%- endif -%}
+          </a>
+        </div>
+      </div>
+
+      <!-- Desktop search in the middle -->
+      <div class="caco-area-center small-hidden">
+        <div class="caco-search-bar-container">
+          <form action="{{ routes.search_url }}" method="get" role="search" class="caco-search-form caco-search-form--desktop">
+            <div class="caco-search-icon">
+              <svg
+                class="caco-search-icon-svg"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <circle
+                  cx="11"
+                  cy="11"
+                  r="6"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.9"
+                />
+                <line
+                  x1="15"
+                  y1="15"
+                  x2="20"
+                  y2="20"
+                  stroke="currentColor"
+                  stroke-width="1.9"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </div>
+
+            <!-- VOICE SEARCH BUTTON – DESKTOP -->
+            <button
+              type="button"
+              class="caco-search-voice-btn caco-search-voice-btn--desktop"
+              aria-label="Search by voice"
+            >
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M12 3a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z"></path>
+                <path d="M19 11a7 7 0 0 1-14 0"></path>
+                <path d="M12 18v3"></path>
+                <path d="M9 21h6"></path>
+              </svg>
+            </button>
+
+            <input
+              class="caco-search-input caco-search-input--desktop"
+              type="search"
+              name="q"
+              placeholder="Search gloves, helmets, tools and more…"
+              autocomplete="off"
+            >
+          </form>
+          {% if caco_search_categories.size > 0 %}
+            <div class="caco-search-categories" data-search-tags="desktop">
+              <div class="caco-search-categories__title">Browse by category</div>
+              <div class="caco-search-categories__list">
+                {% for cat in caco_search_categories %}
+                  {% assign parts = cat | split: '||' %}
+                  <a class="caco-search-pill" href="{{ parts[1] }}" data-category-handle="{{ parts[2] }}">{{ parts[0] }}</a>
+                {% endfor %}
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="caco-area-right">
+        <div class="caco-tools">
+          {%- assign partner_links = section.blocks | where: 'type', 'partner_link' -%}
+          {%- if partner_links.size > 0 -%}
+            <div class="caco-partner-menu small-hidden">
+              <button type="button" class="caco-icon-btn caco-partner-toggle" aria-haspopup="true" aria-expanded="false">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                  <path d="M8 10a4 4 0 118 0 4 4 0 01-8 0z"></path>
+                  <path d="M3 21a7 7 0 0118 0"></path>
+                  <path d="M4 7h4"></path>
+                  <path d="M16 7h4"></path>
+                </svg>
+              </button>
+              <div class="caco-partner-dropdown" role="menu">
+                <ul>
+                  {%- for block in partner_links -%}
+                    <li><a href="{{ block.settings.url }}" class="caco-partner-link">{{ block.settings.label }}</a></li>
+                  {%- endfor -%}
+                </ul>
+              </div>
+            </div>
+          {%- endif -%}
+
+          {% if shop.customer_accounts_enabled %}
+            <a href="{{ routes.account_url }}" class="caco-link-login small-hidden">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </a>
+          {% endif %}
+
+          <a
+            href="{{ routes.cart_url }}"
+            class="caco-icon-btn caco-cart-btn"
+            data-caco-cart-drawer
+            aria-label="{{ 'sections.cart.title' | t }}"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <path d="M16 10a4 4 0 01-8 0"></path>
+            </svg>
+            {%- if cart.item_count > 0 -%}
+              <div class="caco-cart-count">{{ cart.item_count }}</div>
+            {%- endif -%}
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- DESKTOP NAVIGATION -->
+  <div class="caco-header-bottom small-hidden">
+    <div class="caco-container">
+      <nav class="caco-nav">
+        <ul class="caco-nav-list">
+          {%- for link in section.settings.menu.links -%}
+            {%- assign is_mega = false -%}
+            {%- assign link_title_down = link.title | strip | downcase -%}
+
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'mega_trigger' -%}
+                {%- assign trigger_name = block.settings.menu_item | downcase -%}
+                {%- if trigger_name == link_title_down -%}
+                  {%- assign is_mega = true -%}
+                {%- endif -%}
+              {%- endif -%}
+            {%- endfor -%}
+
+            <li class="caco-nav-item {% if is_mega %}mega-menu{% endif %}">
+              <a href="{{ link.url }}" class="caco-nav-link {% if link.current %}active{% endif %}">
+                {{ link.title | escape }}
+                {%- for block in section.blocks -%}
+                  {%- if block.type == 'badge' and block.settings.link_title != blank -%}
+                    {%- assign badge_target = block.settings.link_title | strip | downcase -%}
+                    {%- if badge_target == link_title_down -%}
+                      <span class="caco-badge" style="background-color: {{ block.settings.bg_color }}; color: {{ block.settings.text_color }}">{{ block.settings.text }}</span>
+                    {%- endif -%}
+                  {%- endif -%}
+                {%- endfor -%}
+              </a>
+
+              {%- if link.links != blank -%}
+                <div class="caco-dropdown">
+
+
+{%- if is_mega -%}
+  {%- comment %}
+    Detectar si este mega menu tiene promos a la derecha.
+  {% endcomment -%}
+  {%- assign has_promos_for_menu = false -%}
+  {%- for block in section.blocks -%}
+    {%- if block.type == 'promo_block' -%}
+      {%- assign target_menu = block.settings.menu_handle | handleize -%}
+      {%- if block.settings.apply_global or target_menu == link.handle -%}
+        {%- assign has_promos_for_menu = true -%}
+      {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  <!-- Mega menu -->
+  <div class="caco-mega-container{% unless has_promos_for_menu %} caco-mega-container--no-promos{% endunless %}">
+
+
+
+
+
+
+                      <!-- Sidebar -->
+                      <div class="caco-mega-sidebar">
+                        <ul>
+                            {%- for childlink in link.links -%}
+                              {%- assign child_title_down = childlink.title | strip | downcase -%}
+                              {%- assign child_handle_down = childlink.handle | strip | downcase -%}
+                              {%- assign is_sale_link = false -%}
+                              {%- if child_title_down == 'sale' or child_handle_down == 'sale' -%}
+                                {%- assign is_sale_link = true -%}
+                              {%- endif -%}
+                            <li>
+                              <a
+                                href="{{ childlink.url }}"
+                                class="caco-mega-sidebar-link {% if forloop.first %}active{% endif %}{% if is_sale_link %} caco-mega-sidebar-link--sale{% endif %}"
+                                data-target="{{ childlink.handle }}"
+                              >
+                                <span class="caco-mega-sidebar-link__label{% if is_sale_link %} caco-mega-sidebar-link__label--sale{% endif %}">
+                                  {% if is_sale_link %}
+                                    <span class="caco-sale-icon" role="img" aria-label="Sale" aria-hidden="false">
+                                      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M20.59 13.41L12 4.83a2 2 0 00-1.41-.58H4v6.59a2 2 0 00.59 1.41l8.58 8.59a2 2 0 002.83 0l4.59-4.59a2 2 0 000-2.83z" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        <circle cx="7.5" cy="7.5" r="1.5" fill="currentColor" stroke="none"></circle>
+                                      </svg>
+                                    </span>
+                                  {% endif %}
+                                  {{ childlink.title }}
+                                  {%- for block in section.blocks -%}
+                                    {%- if block.type == 'badge' and block.settings.link_title != blank -%}
+                                      {%- assign badge_target = block.settings.link_title | strip | downcase -%}
+                                      {%- if badge_target == child_title_down -%}
+                                        <span class="caco-badge small" style="background-color: {{ block.settings.bg_color }}; color: {{ block.settings.text_color }}">{{ block.settings.text }}</span>
+                                      {%- endif -%}
+                                    {%- endif -%}
+                                  {%- endfor -%}
+                                </span>
+                                <svg class="caco-chevron" width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                              </a>
+                            </li>
+                          {%- endfor -%}
+                        </ul>
+                      </div>
+
+                      <!-- Main content panels -->
+                      <div class="caco-mega-content">
+                        {%- for childlink in link.links -%}
+                          {%- assign child_title_down = childlink.title | strip | downcase -%}
+                          <div class="caco-mega-panel {% if forloop.first %}active{% endif %}" id="panel-{{ childlink.handle }}">
+                            <a href="{{ childlink.url }}" class="caco-mega-panel-title-link">
+                              <h3 class="caco-mega-panel-title">
+                                {{ childlink.title }}
+                                <span class="caco-see-all">View all</span>
+                              </h3>
+                            </a>
+
+                            {%- if childlink.links != blank -%}
+                              <ul class="caco-mega-grid">
+                                {%- for grandchild in childlink.links -%}
+                                  {%- assign grand_title_down = grandchild.title | strip | downcase -%}
+                                  <li>
+                                    <a href="{{ grandchild.url }}">
+                                      {{ grandchild.title }}
+                                      {%- for block in section.blocks -%}
+                                        {%- if block.type == 'badge' and block.settings.link_title != blank -%}
+                                          {%- assign badge_target = block.settings.link_title | strip | downcase -%}
+                                          {%- if badge_target == grand_title_down -%}
+                                            <span class="caco-badge mini" style="background-color: {{ block.settings.bg_color }}; color: {{ block.settings.text_color }}">{{ block.settings.text }}</span>
+                                          {%- endif -%}
+                                        {%- endif -%}
+                                      {%- endfor -%}
+                                    </a>
+                                  </li>
+                                {%- endfor -%}
+                              </ul>
+                            {%- endif -%}
+
+                            <!-- Inline promos area (center) -->
+                            {%- assign current_panel_handle = childlink.handle -%}
+                            <div class="caco-mega-inline-promos">
+                              {%- for block in section.blocks -%}
+                                {%- if block.type == 'mega_promo_card' or block.type == 'mega_promo_banner' -%}
+                                  {%- assign scope = block.settings.scope | default: 'panel' -%}
+                                  {%- assign show_block = false -%}
+
+                                  {%- if scope == 'global' -%}
+                                    {%- assign show_block = true -%}
+                                  {%- elsif scope == 'menu' and block.settings.parent_menu_handle == link.handle -%}
+                                    {%- assign show_block = true -%}
+                                  {%- elsif scope == 'panel' and block.settings.panel_handle == current_panel_handle -%}
+                                    {%- assign show_block = true -%}
+                                  {%- endif -%}
+
+                                  {%- if show_block -%}
+                                    {%- if block.type == 'mega_promo_card' -%}
+                                      <a href="{{ block.settings.url }}" class="caco-mega-inline-card" {{ block.shopify_attributes }}>
+                                        {%- if block.settings.image != blank -%}
+                                          <div class="caco-mega-inline-image">
+                                            {{ block.settings.image | image_url: width: 260 | image_tag: loading: 'lazy' }}
+                                          </div>
+                                        {%- endif -%}
+                                        <div class="caco-mega-inline-body">
+                                          <span class="caco-mega-inline-title">{{ block.settings.title }}</span>
+                                          {%- if block.settings.meta != blank -%}
+                                            <span class="caco-mega-inline-meta">{{ block.settings.meta }}</span>
+                                          {%- endif -%}
+                                        </div>
+                                      </a>
+                                    {%- else -%}
+                                      <a href="{{ block.settings.url }}" class="caco-mega-inline-banner" {{ block.shopify_attributes }}>
+                                        {%- if block.settings.image != blank -%}
+                                          {{ block.settings.image | image_url: width: 600 | image_tag: loading: 'lazy' }}
+                                        {%- endif -%}
+                                        {%- if block.settings.text != blank -%}
+                                          <span class="caco-mega-inline-banner-text">{{ block.settings.text }}</span>
+                                        {%- endif -%}
+                                      </a>
+                                    {%- endif -%}
+                                  {%- endif -%}
+                                {%- endif -%}
+                              {%- endfor -%}
+                            </div>
+                          </div>
+                        {%- endfor -%}
+                      </div>
+
+                      <!-- Right column promos -->
+                      <div class="caco-mega-promos">
+                        {%- assign has_promos = false -%}
+                        {%- for block in section.blocks -%}
+                          {%- if block.type == 'promo_block' -%}
+                            {%- assign target_menu = block.settings.menu_handle | handleize -%}
+                            {%- assign show_here = false -%}
+
+                            {%- if block.settings.apply_global -%}
+                              {%- assign show_here = true -%}
+                            {%- elsif target_menu == link.handle -%}
+                              {%- assign show_here = true -%}
+                            {%- endif -%}
+
+                            {%- if show_here -%}
+                              {%- assign has_promos = true -%}
+                              <div class="caco-promo-card" {{ block.shopify_attributes }}>
+                                {%- if block.settings.image != blank -%}
+                                  <div class="caco-promo-img-wrap">
+                                    {{ block.settings.image | image_url: width: 600 | image_tag: loading: 'lazy' }}
+                                  </div>
+                                {%- endif -%}
+                                <div class="caco-promo-text">
+                                  {%- if block.settings.title != blank -%}
+                                    <h4>{{ block.settings.title }}</h4>
+                                  {%- endif -%}
+                                  {%- if block.settings.coupon != blank -%}
+                                    <div class="caco-coupon-box">
+                                      <span>Code: <strong>{{ block.settings.coupon }}</strong></span>
+                                    </div>
+                                  {%- endif -%}
+                                  {%- if block.settings.countdown_date != blank -%}
+                                    <div class="caco-countdown" data-date="{{ block.settings.countdown_date }}">Loading...</div>
+                                  {%- endif -%}
+                                  {%- if block.settings.link != blank -%}
+                                    <a href="{{ block.settings.link }}" class="caco-promo-btn">Shop now</a>
+                                  {%- endif -%}
+                                </div>
+                              </div>
+                            {%- endif -%}
+                          {%- endif -%}
+                        {%- endfor -%}
+                      </div>
+                    </div>
+                  {%- else -%}
+                    <!-- Simple dropdown mejorado: muestra todos los submenús -->
+                    <div class="caco-simple-dropdown">
+                      <ul class="caco-simple-list">
+                        {%- for childlink in link.links -%}
+                          {%- assign child_title_down = childlink.title | strip | downcase -%}
+                          <li class="caco-simple-item">
+                            <!-- Nivel 1 -->
+                            <a href="{{ childlink.url }}" class="caco-simple-link caco-simple-link--parent">
+                              <span class="caco-simple-title">
+                                {{ childlink.title }}
+                                {%- for block in section.blocks -%}
+                                  {%- if block.type == 'badge' and block.settings.link_title != blank -%}
+                                    {%- assign badge_target = block.settings.link_title | strip | downcase -%}
+                                    {%- if badge_target == child_title_down -%}
+                                      <span class="caco-badge small" style="background-color: {{ block.settings.bg_color }}; color: {{ block.settings.text_color }}">
+                                        {{ block.settings.text }}
+                                      </span>
+                                    {%- endif -%}
+                                  {%- endif -%}
+                                {%- endfor -%}
+                              </span>
+                            </a>
+
+                            {%- if childlink.links != blank -%}
+                              <!-- Nivel 2 (submenús) -->
+                              <ul class="caco-simple-sub">
+                                {%- for grandchild in childlink.links -%}
+                                  {%- assign grand_title_down = grandchild.title | strip | downcase -%}
+                                  <li>
+                                    <a href="{{ grandchild.url }}" class="caco-simple-link caco-simple-link--child">
+                                      <span class="caco-simple-sub-title">
+                                        {{ grandchild.title }}
+                                        {%- for block in section.blocks -%}
+                                          {%- if block.type == 'badge' and block.settings.link_title != blank -%}
+                                            {%- assign badge_target = block.settings.link_title | strip | downcase -%}
+                                            {%- if badge_target == grand_title_down -%}
+                                              <span class="caco-badge mini" style="background-color: {{ block.settings.bg_color }}; color: {{ block.settings.text_color }}">
+                                                {{ block.settings.text }}
+                                              </span>
+                                            {%- endif -%}
+                                          {%- endif -%}
+                                        {%- endfor -%}
+                                      </span>
+                                    </a>
+                                  </li>
+                                {%- endfor -%}
+                              </ul>
+                            {%- endif -%}
+                          </li>
+                        {%- endfor -%}
+                      </ul>
+                    </div>
+                  {%- endif -%}
+
+                </div>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <div class="caco-nav-right-links">
+          {%- assign help_items = section.blocks | where: 'type', 'help_menu_item' -%}
+          {%- assign industry_items = section.blocks | where: 'type', 'industry_menu_item' -%}
+
+          {%- if help_items.size > 0 -%}
+            <!-- HELP CENTER DROPDOWN (DESKTOP) -->
+            <div class="caco-help-menu">
+              <button
+                type="button"
+                class="caco-nav-aux-link caco-help-toggle"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <span class="caco-nav-aux-icon">
+                  {%- if section.settings.help_icon_svg != blank -%}
+                    {{ section.settings.help_icon_svg }}
+                  {%- else -%}
+                    <svg
+                      class="caco-help-svg-desktop"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="9"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                      />
+                      <path
+                        d="M12 16.4v-1.4"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                      />
+                      <path
+                        d="M10.4 9.2a1.8 1.8 0 1 1 3 1.4c-.4.3-.8.6-1.1.9-.4.4-.5.7-.5 1.3"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  {%- endif -%}
+                </span>
+                <span class="caco-nav-aux-text">
+                  {{ section.settings.help_label | default: 'Help Center' }}
+                </span>
+                <svg
+                  class="caco-help-chevron"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+
+              <div class="caco-help-dropdown" role="menu">
+                <ul>
+                  {%- for block in help_items -%}
+                    <li>
+                      <a
+                        href="{{ block.settings.url }}"
+                        class="caco-help-link"
+                        {{ block.shopify_attributes }}
+                      >
+                        {%- if block.settings.icon_svg != blank -%}
+                          <span class="caco-help-icon" aria-hidden="true">
+                            {{ block.settings.icon_svg }}
+                          </span>
+                        {%- endif -%}
+
+                        <span class="caco-help-copy">
+                          <span class="caco-help-title">
+                            {{ block.settings.label }}
+                          </span>
+                          {%- if block.settings.description != blank -%}
+                            <span class="caco-help-description">
+                              {{ block.settings.description }}
+                            </span>
+                          {%- endif -%}
+                        </span>
+
+                        {%- if block.settings.show_badge -%}
+                          <span class="caco-help-badge">
+                            {{ block.settings.badge_text | default: 'New' }}
+                          </span>
+                        {%- endif -%}
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              </div>
+            </div>
+
+          {%- elsif section.settings.help_link != blank -%}
+            <!-- SIMPLE HELP PILL (SIN DROPDOWN) -->
+            <a
+              href="{{ section.settings.help_link }}"
+              class="caco-nav-aux-link caco-nav-aux-link--help"
+            >
+              <span class="caco-nav-aux-icon">
+                {%- if section.settings.help_icon_svg != blank -%}
+                  {{ section.settings.help_icon_svg }}
+                {%- else -%}
+                  <svg
+                    class="caco-help-svg-desktop"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="9"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                    />
+                    <path
+                      d="M12 16.4v-1.4"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                    />
+                    <path
+                      d="M10.4 9.2a1.8 1.8 0 1 1 3 1.4c-.4.3-.8.6-1.1.9-.4.4-.5.7-.5 1.3"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                {%- endif -%}
+              </span>
+              <span class="caco-nav-aux-text">
+                {{ section.settings.help_label | default: 'Help Center' }}
+              </span>
+            </a>
+          {%- endif -%}
+
+          {%- if industry_items.size > 0 -%}
+            <!-- INDUSTRIES DROPDOWN (DESKTOP) -->
+            <div class="caco-industries-menu">
+              <button
+                type="button"
+                class="caco-nav-aux-link caco-industries-toggle"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <span class="caco-nav-aux-icon">
+                  {%- if section.settings.industries_icon_svg != blank -%}
+                    {{ section.settings.industries_icon_svg }}
+                  {%- else -%}
+                    <svg
+                      class="caco-help-svg-desktop"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="9"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                      />
+                      <path
+                        d="M8 14h8"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                      />
+                      <path
+                        d="M9 10l2-3h2l2 3"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  {%- endif -%}
+                </span>
+                <span class="caco-nav-aux-text">
+                  {{ section.settings.industries_label | default: 'Industries' }}
+                </span>
+                <svg
+                  class="caco-help-chevron"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+
+              <div class="caco-industries-dropdown" role="menu">
+                <ul>
+                  {%- for block in industry_items -%}
+                    <li>
+                      <a
+                        href="{{ block.settings.url }}"
+                        class="caco-help-link"
+                        {{ block.shopify_attributes }}
+                      >
+                        {%- if block.settings.icon_svg != blank -%}
+                          <span class="caco-help-icon" aria-hidden="true">
+                            {{ block.settings.icon_svg }}
+                          </span>
+                        {%- endif -%}
+
+                        <span class="caco-help-copy">
+                          <span class="caco-help-title">
+                            {{ block.settings.label }}
+                          </span>
+                          {%- if block.settings.description != blank -%}
+                            <span class="caco-help-description">
+                              {{ block.settings.description }}
+                            </span>
+                          {%- endif -%}
+                        </span>
+
+                        {%- if block.settings.show_badge -%}
+                          <span class="caco-help-badge">
+                            {{ block.settings.badge_text | default: 'New' }}
+                          </span>
+                        {%- endif -%}
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              </div>
+            </div>
+
+          {%- elsif section.settings.industries_link != blank -%}
+            <!-- SIMPLE INDUSTRIES PILL (SIN DROPDOWN) -->
+            <a
+              href="{{ section.settings.industries_link }}"
+              class="caco-nav-aux-link caco-nav-aux-link--industries"
+            >
+              <span class="caco-nav-aux-icon">
+                {%- if section.settings.industries_icon_svg != blank -%}
+                  {{ section.settings.industries_icon_svg }}
+                {%- else -%}
+                  <svg
+                    class="caco-help-svg-desktop"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="9"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                    />
+                    <path
+                      d="M8 14h8"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      stroke-linecap="round"
+                    />
+                    <path
+                      d="M9 10l2-3h2l2 3"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                {%- endif -%}
+              </span>
+              <span class="caco-nav-aux-text">
+                {{ section.settings.industries_label | default: 'Industries' }}
+              </span>
+            </a>
+          {%- endif -%}
+
+          <div class="caco-loading-icon" aria-hidden="true">
+            <span class="caco-loading-dot"></span>
+            <span class="caco-loading-dot"></span>
+            <span class="caco-loading-dot"></span>
+          </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <span class="caco-loading-dot"></span>
+            <span class="caco-loading-dot"></span>
+            <span class="caco-loading-dot"></span>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <!-- MOBILE OVERLAY + DRAWER (Panels) -->
+  <div class="caco-mobile-overlay md-hidden" id="caco-mobile-overlay"></div>
+  <div class="caco-mobile-drawer md-hidden" id="caco-mobile-drawer" aria-hidden="true">
+    <div class="caco-mobile-drawer-inner">
+      <!-- Search inside drawer -->  
+      <div class="caco-mobile-drawer-search">
+        <form action="{{ routes.search_url }}" method="get" role="search" class="caco-search-form caco-search-form--mobile">
+          <div class="caco-search-icon caco-search-icon--mobile">
+            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+            </svg>
+          </div>
+
+          <!-- VOICE SEARCH BUTTON – MOBILE -->
+          <button
+            type="button"
+            class="caco-search-voice-btn caco-search-voice-btn--mobile"
+            aria-label="Search by voice"
+          >
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M12 3a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z"></path>
+              <path d="M19 11a7 7 0 0 1-14 0"></path>
+              <path d="M12 18v3"></path>
+              <path d="M9 21h6"></path>
+            </svg>
+          </button>
+
+          <input
+            class="caco-search-input caco-search-input--mobile"
+            type="search"
+            name="q"
+            placeholder="Search gloves, helmets, tools and more…"
+            autocomplete="off"
+          >
+        </form>
+        {% if caco_search_categories.size > 0 %}
+          <div class="caco-search-categories" data-search-tags="mobile">
+            <div class="caco-search-categories__title">Browse by category</div>
+            <div class="caco-search-categories__list">
+              {% for cat in caco_search_categories %}
+                {% assign parts = cat | split: '||' %}
+                <a class="caco-search-pill" href="{{ parts[1] }}" data-category-handle="{{ parts[2] }}">{{ parts[0] }}</a>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="caco-mobile-drawer-header">
+        <div class="caco-mobile-drawer-grabber"></div>
+        <button class="caco-mobile-back" type="button" aria-label="Back">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <span class="caco-mobile-drawer-title" data-panel-title>Menu</span>
+
+        <div class="caco-loading-icon caco-loading-icon--mobile" aria-hidden="true">
+          <span class="caco-loading-dot"></span>
+          <span class="caco-loading-dot"></span>
+          <span class="caco-loading-dot"></span>
+        </div>
+      </div>
+
+      <!-- Mobile navigation: panel-based -->
+      <div class="caco-mobile-drawer-content">
+        <div class="caco-mobile-panels">
+
+          <!-- PANEL HELP CENTER -->
+          <div
+            class="caco-mobile-panel"
+            data-panel-id="panel-help-center"
+            data-panel-title="{{ section.settings.help_label | default: 'Help Center' }}"
+          >
+            <ul class="caco-mobile-nav">
+              <li class="caco-mobile-item">
+                <a href="/pages/contact" class="caco-mobile-link caco-mobile-link-sub caco-mobile-link-help-item">
+                  <span class="caco-mobile-help-item-text">
+                    <span class="caco-mobile-help-item-title">General inquiries</span>
+                    <span class="caco-mobile-help-item-sub">Questions, quotes or support</span>
+                  </span>
+                </a>
+              </li>
+
+              <li class="caco-mobile-item">
+                <a href="/pages/become-a-distributor" class="caco-mobile-link caco-mobile-link-sub caco-mobile-link-help-item">
+                  <span class="caco-mobile-help-item-text">
+                    <span class="caco-mobile-help-item-title">Become a distributor</span>
+                    <span class="caco-mobile-help-item-sub">Partner with us in your region</span>
+                  </span>
+                </a>
+              </li>
+
+              <li class="caco-mobile-item">
+                <a href="/pages/faqs" class="caco-mobile-link caco-mobile-link-sub caco-mobile-link-help-item">
+                  <span class="caco-mobile-help-item-text">
+                    <span class="caco-mobile-help-item-title">FAQs</span>
+                    <span class="caco-mobile-help-item-sub">Fast answers, no waiting</span>
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- PANEL INDUSTRIES (lista interna de industrias) -->
+          <div
+            class="caco-mobile-panel"
+            data-panel-id="panel-industries-center"
+            data-panel-title="{{ section.settings.industries_label | default: 'Industries' }}"
+          >
+            <ul class="caco-mobile-nav">
+              {%- assign industry_items = section.blocks | where: 'type', 'industry_menu_item' -%}
+              {%- for block in industry_items -%}
+                <li class="caco-mobile-item">
+                  <a
+                    href="{{ block.settings.url }}"
+                    class="caco-mobile-link caco-mobile-link-sub caco-mobile-link-help-item"
+                    {{ block.shopify_attributes }}
+                  >
+                    <span class="caco-mobile-help-item-text">
+                      <span class="caco-mobile-help-item-title">
+                        {{ block.settings.label }}
+                      </span>
+                      {%- if block.settings.description != blank -%}
+                        <span class="caco-mobile-help-item-sub">
+                          {{ block.settings.description }}
+                        </span>
+                      {%- endif -%}
+                    </span>
+                  </a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+
+          {%- comment -%} ROOT PANEL {%- endcomment -%}
+          <div
+            class="caco-mobile-panel is-active"
+            data-panel-id="root"
+            data-panel-title="Menu"
+            data-panel-root
+          >
+            <ul class="caco-mobile-nav">
+              {%- for link in section.settings.menu.links -%}
+                {%- assign top_title_down = link.title | strip | downcase -%}
+                {%- assign top_handle_down = link.handle | strip | downcase -%}
+                {%- assign is_sale_link = false -%}
+                {%- if top_title_down == 'sale' or top_handle_down == 'sale' -%}
+                  {%- assign is_sale_link = true -%}
+                {%- endif -%}
+
+                {%- comment -%}
+                  No mostrar "Industries" como item principal en mobile.
+                  (Sigue existiendo en desktop y en su propio panel.)
+                {%- endcomment -%}
+                {%- if top_title_down == 'industries' -%}
+                  {%- continue -%}
+                {%- endif -%}
+
+                {%- if link.links != blank -%}
+                  <li class="caco-mobile-item">
+                    <button
+                      class="caco-mobile-link caco-mobile-link--has-children{% if is_sale_link %} caco-mobile-link--sale{% endif %}"
+                      type="button"
+                      data-panel-target="panel-top-{{ link.handle }}"
+                    >
+                      <span class="caco-mobile-link-label{% if is_sale_link %} caco-mobile-link-label--sale{% endif %}">
+                        {{ link.title }}
+                        {%- for block in section.blocks -%}
+                          {%- if block.type == 'badge' and block.settings.link_title != blank -%}
+                            {%- assign badge_target = block.settings.link_title | strip | downcase -%}
+                            {%- if badge_target == top_title_down -%}
+                              <span class="caco-badge small" style="background-color: {{ block.settings.bg_color }}; color: {{ block.settings.text_color }}">{{ block.settings.text }}</span>
+                            {%- endif -%}
+                          {%- endif -%}
+                        {%- endfor -%}
+                      </span>
+                      <span class="caco-mobile-icon caco-mobile-icon--forward">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                          <polyline points="9 6 15 12 9 18"></polyline>
+                        </svg>
+                      </span>
+                    </button>
+                  </li>
+                {%- else -%}
+                  <li class="caco-mobile-item">
+                    <a href="{{ link.url }}" class="caco-mobile-link{% if is_sale_link %} caco-mobile-link--sale{% endif %}">
+                      <span class="caco-mobile-link-label{% if is_sale_link %} caco-mobile-link-label--sale{% endif %}">
+                        {{ link.title }}
+                        {%- for block in section.blocks -%}
+                          {%- if block.type == 'badge' and block.settings.link_title != blank -%}
+                            {%- assign badge_target = block.settings.link_title | strip | downcase -%}
+                            {%- if badge_target == top_title_down -%}
+                              <span class="caco-badge small" style="background-color: {{ block.settings.bg_color }}; color: {{ block.settings.text_color }}">{{ block.settings.text }}</span>
+                            {%- endif -%}
+                          {%- endif -%}
+                        {%- endfor -%}
+                      </span>
+                    </a>
+                  </li>
+                {%- endif -%}
+              {%- endfor -%}
+
+              {%- comment -%}
+                Help Center + Industries al final del root, pensados para ir lado a lado en mobile.
+              {%- endcomment -%}
+
+
+
+              <li class="caco-mobile-item caco-mobile-item--help-industries">
+                <div class="caco-mobile-dual-card-row">
+                  <!-- Help Center card -->
+                  <button
+                    type="button"
+                    class="caco-mobile-link caco-mobile-link-help"
+                    data-panel-target="panel-help-center"
+                  >
+                   
+                   
+                   
+                   
+                   
+  <span class="caco-mobile-help-icon">
+  {%- if section.settings.help_icon_svg != blank -%}
+    {{ section.settings.help_icon_svg }}
+  {%- else -%}
+    <svg
+      class="caco-help-svg"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <!-- Bold question mark -->
+      <path d="M9.3 9.2a2.9 2.9 0 0 1 5.1-1.9c.9 1.2.7 2.8-.4 3.7-.7.6-1.3 1-1.7 1.4-.4.5-.6.9-.6 1.7v.6" />
+      <path d="M12 17.8h0.01" />
+    </svg>
+
+
+
+
+  {%- endif -%}
+</span>
+
+
+                    <span class="caco-mobile-help-text">
+                      <span class="caco-mobile-help-title">
+                        {{ section.settings.help_label | default: 'Help Center' }}
+                      </span>
+                      <span class="caco-mobile-help-sub">
+                        {{ section.settings.help_sub_label | default: 'Support, FAQs & contact' }}
+                      </span>
+                    </span>
+
+                    <span class="caco-mobile-icon caco-mobile-icon--forward">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                        <polyline points="9 6 15 12 9 18"></polyline>
+                      </svg>
+                    </span>
+                  </button>
+
+
+
+
+
+
+
+                  <!-- Industries card -->
+                  <button
+                    type="button"
+                    class="caco-mobile-link caco-mobile-link-help caco-mobile-link-industries"
+                    data-panel-target="panel-industries-center"
+                  >
+
+
+
+
+
+
+      <span class="caco-mobile-help-icon">
+    {%- if section.settings.industries_icon_svg != blank -%}
+      {{ section.settings.industries_icon_svg }}
+    {%- else -%}
+      <svg
+        class="caco-help-svg"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <!-- Engranaje tipo “settings” -->
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a1.9 1.9 0 0 1-2.7 2.7l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.2a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8.3l-.1.1a1.9 1.9 0 0 1-2.7-2.7l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.2a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8l-.1-.1a1.9 1.9 0 0 1 2.7-2.7l.1.1a1.6 1.6 0 0 0 1.8.3h.1A1.6 1.6 0 0 0 10.8 3V3a2 2 0 0 1 4 0v.2a1.6 1.6 0 0 0 1 1.5h.1a1.6 1.6 0 0 0 1.8-.3l.1-.1a1.9 1.9 0 0 1 2.7 2.7l-.1.1a1.6 1.6 0 0 0-.3 1.8v.1a1.6 1.6 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.2a1.6 1.6 0 0 0-1.4 1Z"></path>
+      </svg>
+    {%- endif -%}
+  </span>
+
+
+
+
+  
+
+
+                    <span class="caco-mobile-help-text">
+                      <span class="caco-mobile-help-title">
+                        {{ section.settings.industries_label | default: 'Industries' }}
+                      </span>
+                      <span class="caco-mobile-help-sub">
+                        Solutions by industry
+                      </span>
+                    </span>
+
+                    <span class="caco-mobile-icon caco-mobile-icon--forward">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                        <polyline points="9 6 15 12 9 18"></polyline>
+                      </svg>
+                    </span>
+                  </button>
+                </div>
+              </li>
+
+
+
+
+
+
+
+
+            </ul>
+          </div>
+
+          {%- comment -%} PANELS NIVEL 2 {%- endcomment -%}
+          {%- for link in section.settings.menu.links -%}
+            {%- assign top_title_down = link.title | strip | downcase -%}
+            {%- if link.links != blank -%}
+              <div
+                class="caco-mobile-panel"
+                data-panel-id="panel-top-{{ link.handle }}"
+                data-panel-title="{{ link.title | escape }}"
+              >
+                <ul class="caco-mobile-nav">
+                  {%- for childlink in link.links -%}
+                    {%- assign child_title_down = childlink.title | strip | downcase -%}
+                    {%- assign child_handle_down = childlink.handle | strip | downcase -%}
+                    {%- assign is_sale_child = false -%}
+                    {%- if child_title_down == 'sale' or child_handle_down == 'sale' -%}
+                      {%- assign is_sale_child = true -%}
+                    {%- endif -%}
+                    {%- if childlink.links != blank -%}
+                      <li class="caco-mobile-item">
+                        <button
+                          class="caco-mobile-link caco-mobile-link--has-children{% if is_sale_child %} caco-mobile-link--sale{% endif %}"
+                          type="button"
+                          data-panel-target="panel-sub-{{ childlink.handle }}"
+                        >
+                          <span class="caco-mobile-link-label{% if is_sale_child %} caco-mobile-link-label--sale{% endif %}">
+                            {{ childlink.title }}
+                            {%- for block in section.blocks -%}
+                              {%- if block.type == 'badge' and block.settings.link_title != blank -%}
+                                {%- assign badge_target = block.settings.link_title | strip | downcase -%}
+                                {%- if badge_target == child_title_down -%}
+                                  <span class="caco-badge small" style="background-color: {{ block.settings.bg_color }}; color: {{ block.settings.text_color }}">{{ block.settings.text }}</span>
+                                {%- endif -%}
+                              {%- endif -%}
+                            {%- endfor -%}
+                          </span>
+                          <span class="caco-mobile-icon caco-mobile-icon--forward">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                              <polyline points="9 6 15 12 9 18"></polyline>
+                            </svg>
+                          </span>
+                        </button>
+                      </li>
+                    {%- else -%}
+                      <li class="caco-mobile-item">
+                        <a href="{{ childlink.url }}" class="caco-mobile-link caco-mobile-link-sub{% if is_sale_child %} caco-mobile-link--sale{% endif %}">
+                          <span class="caco-mobile-link-label{% if is_sale_child %} caco-mobile-link-label--sale{% endif %}">
+                            {{ childlink.title }}
+                            {%- for block in section.blocks -%}
+                              {%- if block.type == 'badge' and block.settings.link_title != blank -%}
+                                {%- assign badge_target = block.settings.link_title | strip | downcase -%}
+                                {%- if badge_target == child_title_down -%}
+                                  <span class="caco-badge small" style="background-color: {{ block.settings.bg_color }}; color: {{ block.settings.text_color }}">{{ block.settings.text }}</span>
+                                {%- endif -%}
+                              {%- endif -%}
+                            {%- endfor -%}
+                          </span>
+                        </a>
+                      </li>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </ul>
+              </div>
+
+              {%- comment -%} PANELS NIVEL 3 {%- endcomment -%}
+              {%- for childlink in link.links -%}
+                {%- if childlink.links != blank -%}
+                  {%- assign child_title_down = childlink.title | strip | downcase -%}
+                  <div
+                    class="caco-mobile-panel"
+                    data-panel-id="panel-sub-{{ childlink.handle }}"
+                    data-panel-title="{{ childlink.title | escape }}"
+                  >
+                    <ul class="caco-mobile-nav">
+                      <li class="caco-mobile-item caco-mobile-item--all">
+                        <a
+                          href="{{ childlink.url }}"
+                          class="caco-mobile-link caco-mobile-link-sub caco-mobile-link-all"
+                        >
+                          <span class="caco-mobile-link-label">
+                            All {{ childlink.title }}
+                          </span>
+                        </a>
+                      </li>
+
+                      {%- for grandchild in childlink.links -%}
+                        {%- assign grand_title_down = grandchild.title | strip | downcase -%}
+                        <li class="caco-mobile-item">
+                          <a href="{{ grandchild.url }}" class="caco-mobile-link caco-mobile-link-grand">
+                            <span class="caco-mobile-link-label">
+                              {{ grandchild.title }}
+                              {%- for block in section.blocks -%}
+                                {%- if block.type == 'badge' and block.settings.link_title != blank -%}
+                                  {%- assign badge_target = block.settings.link_title | strip | downcase -%}
+                                  {%- if badge_target == grand_title_down -%}
+                                    <span class="caco-badge mini" style="background-color: {{ block.settings.bg_color }}; color: {{ block.settings.text_color }}">{{ block.settings.text }}</span>
+                                  {%- endif -%}
+                                {%- endif -%}
+                              {%- endfor -%}
+                            </span>
+                          </a>
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endif -%}
+          {%- endfor -%}
+
+        </div>
+      </div>
+
+
+
+
+
+      <!-- Footer links inside drawer (blocks) -->
+      <div class="caco-mobile-drawer-footer">
+        {%- assign footer_links = section.blocks | where: 'type', 'drawer_footer_link' -%}
+        {%- for block in footer_links -%}
+          {%- if block.settings.enabled and block.settings.label != blank and block.settings.url != blank -%}
+            <a href="{{ block.settings.url }}" class="caco-mobile-footer-link" {{ block.shopify_attributes }}>
+              {%- if block.settings.icon != blank -%}
+                <span class="caco-mobile-footer-icon">{{ block.settings.icon }}</span>
+              {%- endif -%}
+              <span>{{ block.settings.label }}</span>
+            </a>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<style>
+  :root{
+    --header-bg:#ffffff;
+    --header-text:#1f2933;
+    --announcement-bg:#0051c3;
+    --announcement-text:#ffffff;
+    --primary-blue:#0051c3;
+    --primary-blue-hover:#003d99;
+    --border-color:#e5e7eb;
+    --drawer-active-bg:#0051c3;
+    --drawer-active-soft:#e6f0ff;
+    /* Fallback no-calc para evitar flicker de salto */
+    --caco-header-height:120px;
+  }
+/* Evitar el "rubber-band" solo en desktop */
+@media (min-width: 1025px) {
+  html,
+  body {
+    overscroll-behavior-y: none;
+  }
+}
+
+
+  body.has-caco-sticky{
+    padding-top:var(--caco-header-height);
+  }
+
+  html.caco-mobile-open,
+  html.caco-mobile-open body{
+    overflow:hidden;
+    height:100%;
+  }
+
+  /* ==== Scroll behavior: hide/show announcement + mega menu ==== */
+  .caco-header-wrapper .caco-announcement-bar,
+  .caco-header-wrapper .caco-header-bottom {
+    will-change: transform, opacity;
+  }
+
+  .caco-header-wrapper.caco-is-ready .caco-announcement-bar,
+  .caco-header-wrapper.caco-is-ready .caco-header-bottom {
+    transition:
+      transform .25s ease,
+      opacity .25s ease,
+      max-height .25s ease,
+      padding .25s ease,
+      border-width .25s ease;
+  }
+
+  .caco-announcement-bar {
+    max-height: 44px;
+    overflow: hidden;
+  }
+
+  .caco-header-bottom {
+    max-height: 200px;
+    overflow: hidden;
+  }
+
+  .caco-header-wrapper.caco-hide-announcement .caco-announcement-bar {
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-bottom-width: 0;
+  }
+
+  html.caco-mobile-open .caco-announcement-bar {
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+    height: 0;
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-bottom-width: 0;
+    overflow: hidden;
+  }
+
+  .caco-header-wrapper.caco-hide-nav .caco-header-bottom {
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-bottom-width: 0;
+  }
+
+  .caco-header-wrapper ul{list-style:none;margin:0;padding:0;}
+  .caco-header-wrapper a{text-decoration:none;color:inherit;transition:color .2s;}
+  .caco-header-wrapper button{background:none;border:none;cursor:pointer;font-family:inherit;}
+
+  .caco-header-wrapper{
+    background-color:var(--header-bg);
+    color:var(--header-text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:14px;
+    line-height:1.5;
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    z-index:200;
+    box-shadow:0 1px 3px rgba(0,0,0,0.04);
+    transition: opacity .18s ease;
+  }
+  .caco-header-wrapper.is-scrolled{
+    box-shadow:0 4px 15px rgba(0,0,0,0.08);
+  }
+
+  .caco-header-wrapper.caco-is-booting{}
+  .caco-header-wrapper.caco-is-booting .caco-nav-list,
+  .caco-header-wrapper.caco-is-booting .caco-mobile-panels,
+  .caco-header-wrapper.caco-is-booting .caco-partner-menu,
+  .caco-header-wrapper.caco-is-booting .caco-cart-btn{
+    opacity:.6;
+    pointer-events:none;
+  }
+
+  /* 🔧 Loader hard-off: ocultar completamente en desktop y mobile */
+  .caco-loading-icon,
+  .caco-loading-icon--mobile {
+    display: none !important;
+  }
+
+  .caco-loading-dot {
+    display: none !important;
+  }
+
+  @keyframes cacoLoadingPulse{
+    0%,80%,100%{
+      opacity:.2;
+      transform:translateY(0);
+    }
+    40%{
+      opacity:1;
+      transform:translateY(-2px);
+    }
+  }
+
+
+  .caco-container{max-width:1500px;margin:0 auto;padding:0 24px;}
+  .small-hidden{display:block;}
+  .md-hidden{display:none;}
+  @media (max-width:1024px){
+    .small-hidden{display:none!important;}
+    .md-hidden{display:block!important;}
+    .caco-grid-container{grid-template-columns:auto 1fr auto;}
+  }
+
+  .caco-announcement-bar{
+    background-color:var(--announcement-bg);
+    color:var(--announcement-text);
+    padding:0;
+    height:44px;
+    font-size:{{ section.settings.announcement_font_size | default: 13 }}px;
+    font-weight:600;
+    letter-spacing:.5px;
+    position:relative;
+    z-index:150;
+  }
+  .caco-announcement-content{flex:1;display:flex;justify-content:center;overflow:hidden;padding:0 10px;}
+  .caco-announcement-slider{display:flex;justify-content:center;width:100%;text-align:center;}
+  .caco-announcement-slide{display:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;animation:fadeIn .5s ease-in-out;}
+  .caco-announcement-slide.active{display:block;}
+  .caco-announcement-bar--slide .caco-announcement-slide.active{animation:slideUp .4s ease-out;}
+  .caco-ann-controls{display:flex;align-items:center;gap:16px;position:absolute;right:24px;height:100%;}
+  .caco-ann-nav-group{display:flex;align-items:center;gap:8px;}
+  .caco-ann-nav{color:currentColor;opacity:.8;display:flex;align-items:center;transition:opacity .2s;}
+  .caco-ann-nav:hover{opacity:1;}
+  .caco-ann-counter{font-size:11px;font-weight:400;opacity:.9;min-width:24px;text-align:center;}
+  .caco-announcement-close{color:currentColor;opacity:.7;padding:4px 0 4px 12px;display:flex;align-items:center;justify-content:center;border-left:1px solid rgba(255,255,255,0.2);}
+  .caco-announcement-close:hover{opacity:1;}
+  @media (max-width:768px){
+    .caco-ann-controls{right:10px;gap:8px;}
+    .caco-ann-nav-group{display:none;}
+    .caco-announcement-close{padding-left:0;border:none;}
+
+    .caco-announcement-content{
+      justify-content:flex-start;
+    }
+    .caco-announcement-slider{
+      justify-content:flex-start;
+    }
+    .caco-announcement-slide{
+      display:none!important;
+    }
+    .caco-announcement-marquee-track{
+      display:flex;
+      width:200%;
+      animation:caco-ann-marquee 18s linear infinite;
+    }
+    .caco-announcement-marquee-item{
+      flex:0 0 100%;
+      white-space:nowrap;
+      padding:0 16px;
+    }
+  }
+
+  .caco-search-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.32);
+    opacity:0;
+    visibility:hidden;
+    transition:.2s;
+    z-index:120;
+  }
+  .caco-search-overlay.active{
+    opacity:1;
+    visibility:visible;
+  }
+  @media (min-width:1025px){
+    .caco-search-overlay{
+      top:var(--caco-header-height);
+      background:rgba(0,0,0,.6);
+      pointer-events:none;
+    }
+    .caco-search-overlay.active{pointer-events:auto;}
+  }
+
+  @media (min-width:1025px){
+    .caco-header-wrapper.caco-overlay-active .caco-header-top{position:relative;z-index:170;}
+  }
+
+  .caco-header-top{
+    padding:16px 0;
+    border-bottom:1px solid var(--border-color);
+    background-color:var(--header-bg);
+    width:100%;
+    position:relative;
+    z-index:160;
+  }
+  .caco-grid-container{
+    display:grid;
+    align-items:center;
+    gap:24px;
+    grid-template-columns:auto 1fr auto;
+  }
+  .caco-area-left{display:flex;align-items:center;gap:10px;position:relative;}
+  .caco-area-center{display:flex;justify-content:center;}
+  .caco-area-right{display:flex;justify-content:flex-end;}
+
+  .caco-logo{display:flex;align-items:center;}
+  .caco-logo-text{font-size:26px;font-weight:800;color:var(--header-text);letter-spacing:-.5px;}
+  .caco-logo-img{display:block;height:auto;object-fit:contain;max-height:64px;max-width:100%;}
+
+  @media (max-width:1024px){
+    .caco-grid-container{
+      grid-template-columns:auto 1fr auto;
+    }
+
+    .caco-area-center{
+      display:none;
+    }
+
+    .caco-area-left{
+      position:static;
+    }
+
+    .caco-logo{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%, -50%);
+    }
+
+    .caco-logo-img{
+      max-height:44px;
+      width:auto;
+    }
+  }
+
+  .caco-mobile-toggle{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:6px;
+    border-radius:9999px;
+    color:#111827;
+  }
+  .caco-burger-icon{
+    display:inline-flex;
+  }
+  .caco-burger-icon--close{
+    display:none;
+  }
+  .caco-mobile-toggle.is-open .caco-burger-icon--menu{
+    display:none;
+  }
+  .caco-mobile-toggle.is-open .caco-burger-icon--close{
+    display:inline-flex;
+  }
+
+  .caco-search-bar-container{
+    width:100%;
+    max-width:{{ section.settings.search_max_width | default: 900 }}px;
+    position:relative;
+    filter:drop-shadow(0 2px 8px rgba(0,0,0,.035));
+  }
+  .caco-search-form{position:relative;width:100%;}
+  .caco-search-input{
+    width:100%;
+    background:#fff;
+    border:1px solid #d1d5db;
+    border-radius:16px!important;
+    padding:14px 52px;
+    padding-left:52px;
+    font-size:16px;
+    color:#0f172a;
+    transition:border-color .18s ease, box-shadow .18s ease, background-color .18s ease, transform .12s ease;
+    box-shadow:0 1px 5px rgba(0,0,0,.035), 0 1px 0 rgba(255,255,255,.5) inset;
+    -webkit-appearance:none;
+  }
+  .caco-search-input:hover{
+    border-color:#cbd5e1;
+    box-shadow:0 2px 7px rgba(0,0,0,.05), 0 1px 0 rgba(255,255,255,.5) inset;
+  }
+  .caco-search-input:focus{
+    background-color:#fff;
+    border-color:var(--primary-blue);
+    box-shadow:0 0 0 2px rgba(0,81,195,.12), 0 4px 10px rgba(0,0,0,.05);
+    outline:none;
+  }
+
+  .caco-search-categories{margin-top:10px;padding:0 2px;}
+  .caco-search-categories__title{font-size:13px;font-weight:700;color:#0f172a;margin-bottom:6px;letter-spacing:-0.01em;}
+  .caco-search-categories__list{display:flex;flex-wrap:wrap;gap:8px;}
+  .caco-search-pill{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:9999px;border:1px solid #e5e7eb;background:#f8fafc;color:#0f172a;font-weight:600;font-size:13px;text-decoration:none;transition:all .18s ease;box-shadow:0 6px 12px rgba(0,0,0,.04);}
+  .caco-search-pill:hover{background:#eef2ff;border-color:#c7d2fe;color:#1d4ed8;box-shadow:0 10px 22px rgba(0,0,0,.08);transform:translateY(-1px);}
+  .caco-search-pill:focus-visible{outline:2px solid #2563eb;outline-offset:2px;}
+  .caco-search-categories[data-search-tags="mobile"]{margin-top:12px;}
+  @media (max-width:1024px){
+    .caco-search-pill{padding:7px 11px;font-size:13px;}
+    .caco-search-categories__title{margin-bottom:8px;}
+  }
+
+  .caco-search-voice-btn {
+    position:absolute;
+    right:14px;
+    top:50%;
+    transform:translateY(-50%);
+    width:28px;
+    height:28px;
+    border-radius:9999px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border:none;
+    background:transparent;
+    color:#6b7280;
+    cursor:pointer;
+    transition:background .18s ease, color .18s ease, box-shadow .18s ease, transform .08s ease;
+  }
+
+  .caco-search-voice-btn:hover {
+    background:#e5e7eb;
+    color:#111827;
+  }
+
+  .caco-search-voice-btn:active {
+    transform:translateY(-50%) scale(0.96);
+  }
+
+  .caco-search-voice-btn.is-listening {
+    background:#dcfce7;
+    color:#16a34a;
+    box-shadow:0 0 0 2px rgba(22,163,74,.25);
+  }
+
+  .caco-search-voice-btn.is-listening svg {
+    animation:caco-voice-pulse 1s infinite ease-out;
+  }
+
+  @keyframes caco-voice-pulse {
+    0% { transform:scale(1); opacity:1; }
+    50% { transform:scale(1.08); opacity:0.85; }
+    100% { transform:scale(1); opacity:1; }
+  }
+
+  @media (max-width:1024px){
+    .caco-mobile-drawer-search .caco-search-input--mobile{
+      padding-right:48px;
+    }
+  }
+
+  @media (min-width:1025px){
+    .caco-search-input--desktop{
+      padding-right:48px;
+    }
+  }
+
+  .caco-search-icon{
+    position:absolute;
+    top:50%;
+    left:16px;
+    transform:translateY(-50%);
+    width:20px;
+    height:20px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#9ca3af;
+    pointer-events:none;
+  }
+
+  .caco-search-icon--mobile{
+    left:22px;
+  }
+
+  .caco-search-icon-svg{
+    width:18px;
+    height:18px;
+    display:block;
+    shape-rendering:geometricPrecision;
+  }
+
+  .caco-search-input--desktop{
+    padding-left:42px;
+  }
+
+  .caco-search-icon--mobile{left:18px;}
+
+  .caco-search-input--mobile{
+    font-size:16px;
+    padding-top:8px;
+    padding-bottom:8px;
+    background:#f3f4f6;
+    border-radius:9999px;
+  }
+  @supports (-webkit-touch-callout: none) {
+    .caco-search-input--mobile{
+      font-size:16px;
+    }
+  }
+
+  .caco-predictive-results{
+    display:none;
+    position:absolute;
+    top:calc(100% + 6px);
+    left:0;
+    width:100%;
+    background:#fff;
+    border-radius:14px;
+    box-shadow:0 10px 24px rgba(0,0,0,.1);
+    border:1px solid #d9dde5;
+    z-index:170;
+    overflow:hidden;
+    padding-top:0;
+  }
+
+  @media (max-width:1024px){
+    .caco-mobile-drawer-search .caco-predictive-results{
+      top:calc(100% + 6px);
+      border-radius:12px;
+      padding-top:0;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .caco-mobile-drawer .caco-predictive-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin: 0;
+      padding: 8px 8px 0;
+      list-style: none;
+    }
+
+    .caco-mobile-drawer .caco-predictive-item {
+      border-bottom: none;
+    }
+
+    .caco-mobile-drawer .caco-predictive-link {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: #f9fafb;
+      border-radius: 12px;
+      transition: background .15s ease;
+    }
+
+    .caco-mobile-drawer .caco-predictive-link:hover {
+      background: #eef2ff;
+    }
+
+    .caco-mobile-drawer .caco-predictive-link img {
+      flex: 0 0 48px;
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .caco-mobile-drawer .caco-predictive-info {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .caco-mobile-drawer .caco-predictive-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #111;
+      white-space: normal;
+    }
+
+    .caco-mobile-drawer .caco-predictive-price {
+      font-size: 12px;
+      color: #6b7280;
+      margin-top: 2px;
+    }
+
+    .caco-mobile-drawer .caco-view-all {
+      padding: 12px 12px 16px;
+    }
+  }
+
+  @media (min-width: 1025px) {
+    .caco-predictive-results .caco-predictive-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin: 0;
+      padding: 12px 12px 4px;
+      list-style: none;
+    }
+
+    .caco-predictive-results .caco-predictive-item {
+      border-bottom: none;
+    }
+
+    .caco-predictive-results .caco-predictive-link {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: #f9fafb;
+      border-radius: 10px;
+      transition: background .15s ease, transform .1s ease;
+    }
+
+    .caco-predictive-results .caco-predictive-link:hover {
+      background: #eef2ff;
+      transform: translateY(-1px);
+    }
+
+    .caco-predictive-results .caco-predictive-link img {
+      flex: 0 0 52px;
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .caco-predictive-results .caco-predictive-info {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .caco-predictive-results .caco-predictive-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #111;
+      white-space: normal;
+    }
+
+    .caco-predictive-results .caco-predictive-price {
+      font-size: 13px;
+      color: #6b7280;
+      margin-top: 2px;
+    }
+
+    .caco-predictive-results .caco-view-all {
+      padding: 8px 12px 12px;
+    }
+  }
+
+  .caco-predictive-list{margin:0;padding:0;list-style:none;}
+  .caco-predictive-item{border-bottom:1px solid var(--border-color);}
+  .caco-predictive-item:last-child{border-bottom:none;}
+  .caco-predictive-link{
+    display:flex;align-items:center;gap:12px;
+    padding:12px 16px;
+    transition:background .15s;
+  }
+  .caco-predictive-link:hover{background:#f9fafb;}
+  .caco-predictive-link img{
+    width:48px;height:48px;
+    object-fit:cover;
+    border-radius:6px;
+    background:#f3f4f6;
+  }
+  .caco-predictive-info{display:flex;flex-direction:column;}
+  .caco-predictive-title{font-weight:500;font-size:14px;color:#111;}
+  .caco-predictive-price{font-size:13px;color:#666;margin-top:2px;}
+
+  .caco-view-all {
+    padding: 12px;
+  }
+
+  .caco-predictive-results .caco-view-all-link {
+    display: block;
+    width: 100%;
+    text-align: center;
+    background: #111;
+    color: #ffffff !important;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    border-radius: 9999px;
+    letter-spacing: .5px;
+    text-decoration: none;
+    transition: background .2s ease, transform .1s ease;
+  }
+
+  .caco-predictive-results .caco-view-all-link:hover {
+    background: #333;
+    color: #ffffff !important;
+    text-decoration: none;
+    transform: translateY(-1px);
+  }
+
+  @media (max-width: 1024px) {
+    .caco-predictive-results .caco-view-all {
+      padding: 16px 16px 20px;
+    }
+
+    .caco-predictive-results .caco-view-all-link {
+      padding: 16px 18px;
+      font-size: 15px;
+      min-height: 48px;
+    }
+  }
+
+  @media (max-width:1024px){
+    .caco-mobile-drawer-search .caco-predictive-results{top:calc(100% + 6px);}
+  }
+
+  .caco-tools{display:flex;align-items:center;gap:10px;}
+
+  .caco-icon-btn{
+    display:flex;align-items:center;justify-content:center;
+    color:#374151;padding:8px;border-radius:8px;
+    transition:all .2s;position:relative;
+  }
+  .caco-icon-btn:hover{background:#f3f4f6;color:#111;}
+  .caco-link-login{
+    display:flex;align-items:center;gap:6px;
+    font-weight:600;font-size:14px;color:#374151;
+    padding:8px;transition:color .2s;
+  }
+  .caco-link-login:hover{color:var(--primary-blue);}
+  .caco-cart-count{
+    position:absolute;top:-2px;right:-2px;
+    background:#ef4444;color:#fff;
+    font-size:10px;font-weight:bold;
+    min-width:18px;height:18px;
+    border-radius:9999px;
+    display:flex;align-items:center;justify-content:center;
+    border:2px solid #fff;
+  }
+
+  .caco-cart-count.caco-cart-count--pulse{
+    animation:cacoCartCountPulse .35s ease-out;
+  }
+
+  .caco-partner-menu{position:relative;}
+  .caco-partner-dropdown{
+    position:absolute;right:0;top:calc(100% + 8px);
+    min-width:200px;background:#fff;
+    border-radius:12px;
+    box-shadow:0 10px 30px rgba(0,0,0,.15);
+    border:1px solid rgba(0,0,0,0.04);
+    padding:8px 0;
+    opacity:0;visibility:hidden;
+    transform:translateY(6px);
+    transition:all .18s ease-out;
+    z-index:180;
+  }
+  .caco-partner-menu.open .caco-partner-dropdown{
+    opacity:1;visibility:visible;transform:translateY(0);
+  }
+  .caco-partner-dropdown ul{margin:0;padding:0;list-style:none;}
+  .caco-partner-link{
+    display:block;padding:8px 14px;
+    font-size:14px;color:#374151;
+  }
+  .caco-partner-link:hover{background:#f3f4f6;color:var(--primary-blue);}
+
+  .caco-header-bottom{border-bottom:1px solid var(--border-color);background:#fff;}
+  .caco-nav{display:flex;align-items:center;gap:24px;}
+  .caco-nav-list{display:flex;align-items:center;gap:40px;flex:1;}
+  .caco-nav-item{position:relative;}
+  .caco-nav-link{
+    display:block;padding:14px 0;
+    font-weight:600;font-size:16px;
+    color:#1f2937;letter-spacing:-.2px;
+  }
+  .caco-nav-link:hover,.caco-nav-link.active{color:var(--primary-blue);}
+
+  .caco-dropdown{
+    position:absolute;top:calc(100% - 1px);left:0;
+    background:#fff;
+    box-shadow:0 20px 40px -22px rgba(15,23,42,.18);
+    border:1px solid rgba(0,0,0,.05);
+    border-top:none;
+    opacity:0;visibility:hidden;
+    transform:translateY(4px);
+    transition:all .2s ease-out;
+    z-index:130;
+    min-width:220px;
+    border-radius:0 0 8px 8px;
+  }
+  .caco-nav-item:hover>.caco-dropdown{
+    opacity:1;visibility:visible;transform:translateY(0);
+  }
+
+  .caco-nav-item.mega-menu>.caco-dropdown{
+    width:940px;max-width:90vw;
+    border-radius:0 0 12px 12px;
+    border:none;
+  }
+
+  .caco-simple-list{padding:10px 0;}
+  .caco-simple-list li a{
+    display:block;
+    padding:10px 18px;
+    font-size:14px;color:#374151;
+  }
+  .caco-simple-list li a:hover{
+    background:#f3f4f6;
+    color:var(--primary-blue);
+  }
+
+  .caco-mega-container{display:flex;min-height:380px;}
+  .caco-mega-sidebar{
+    width:{{ section.settings.mega_sidebar_width | default: 22 }}%;
+    background:{{ section.settings.mega_sidebar_bg | default: '#f9fafb' }};
+    border-right:none;
+    padding:16px 0;
+    border-bottom-left-radius:12px;
+  }
+  .caco-mega-sidebar ul{margin:0;padding:0;}
+  .caco-mega-sidebar-link{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:12px 20px;cursor:pointer;
+    font-weight:600;color:#4b5563;font-size:15px;
+    border-left:3px solid transparent;
+    transition:all .2s;
+  }
+  .caco-mega-sidebar-link__label{display:flex;align-items:center;gap:8px;}
+  .caco-mega-sidebar-link--sale{
+    color:#e11d48;
+    border-left-color:transparent;
+    background:transparent;
+    position:relative;
+    overflow:hidden;
+  }
+  .caco-mega-sidebar-link--sale::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:radial-gradient(circle at 10% 20%, rgba(225,29,72,.25), transparent 35%);
+    opacity:0;
+    pointer-events:none;
+  }
+  .caco-sale-icon{
+    color:#e11d48;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:18px;
+    height:18px;
+  }
+  .caco-mega-sidebar-link__label--sale,
+  .caco-mobile-link-label--sale{
+    gap:6px;
+    color:#e11d48;
+  }
+  .caco-mega-sidebar-link__label--sale,
+  .caco-mega-sidebar-link__label--sale .caco-sale-icon,
+  .caco-mobile-link-label--sale,
+  .caco-mobile-link-label--sale .caco-sale-icon{
+    animation:caco-sale-fade 1.2s ease-in-out infinite;
+  }
+  @keyframes caco-sale-fade{
+    0%,100%{opacity:1;}
+    50%{opacity:0.7;}
+  }
+  .caco-mega-sidebar-link:hover,
+  .caco-mega-sidebar-link.active{
+    background:#fff;color:var(--primary-blue);border-left-color:var(--primary-blue);
+  }
+  .caco-mega-sidebar-link--sale:hover,
+  .caco-mega-sidebar-link--sale.active{
+    color:#b91c1c;
+    background:linear-gradient(90deg, rgba(225,29,72,0.18), rgba(255,255,255,0));
+    border-left-color:#e11d48;
+  }
+  .caco-mega-sidebar-link--sale:hover::after,
+  .caco-mega-sidebar-link--sale.active::after{
+    opacity:1;
+  }
+
+  .caco-mobile-link--sale{
+    position:relative;
+    overflow:hidden;
+    color:#e11d48;
+    text-decoration:none!important;
+    background:linear-gradient(90deg, rgba(225,29,72,0.2) 0%, rgba(225,29,72,0.1) 46%, rgba(225,29,72,0.05) 100%);
+    box-shadow:
+      0 0 0 1px rgba(225,29,72,0.26),
+      0 12px 22px -14px rgba(225,29,72,0.55);
+  }
+  .caco-mobile-link--sale::before{
+    content:"";
+    position:absolute;
+    inset:-2px;
+    background:radial-gradient(circle at 12% 30%, rgba(225,29,72,0.18), transparent 42%);
+    opacity:0.75;
+    pointer-events:none;
+    z-index:0;
+  }
+  .caco-mobile-link--sale .caco-mobile-link-label,
+  .caco-mobile-link--sale .caco-mobile-icon{
+    position:relative;
+    z-index:1;
+  }
+  .caco-mobile-link--sale .caco-mobile-link-label--sale{
+    font-size:17px;
+    font-weight:800;
+    text-decoration:none!important;
+    letter-spacing:-0.01em;
+    color:#e11d48;
+  }
+  .caco-mobile-link--sale .caco-sale-icon{display:none;}
+  .caco-mobile-link--sale .caco-mobile-icon--forward{
+    color:#e11d48;
+  }
+  .caco-mobile-link--sale:active{
+    background:linear-gradient(90deg, rgba(225,29,72,0.2), rgba(225,29,72,0.1));
+  }
+
+  .caco-mega-content{width:53%;padding:24px 28px;}
+  .caco-mega-panel{display:none;animation:fadeIn .3s ease;}
+  .caco-mega-panel.active{display:block;}
+  .caco-mega-panel-title{
+    font-size:22px;font-weight:700;color:#111;
+    margin-bottom:24px;padding-bottom:12px;
+    border-bottom:1px solid var(--border-color);
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+  }
+  .caco-see-all{
+    font-size:12px;font-weight:600;
+    text-transform:uppercase;color:var(--primary-blue);
+  }
+
+  .caco-mega-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:14px;
+    margin-bottom:14px;
+  }
+  .caco-mega-grid li a{
+    font-size:14px;color:#555;
+    display:flex;align-items:center;gap:8px;
+    font-weight:500;
+  }
+  .caco-mega-grid li a:hover{color:var(--primary-blue);text-decoration:underline;}
+
+  .caco-nav-right-links{
+    display:flex;
+    align-items:center;
+    gap:0px;
+    margin-left:-20px;
+  }
+
+
+   /* Help Center / Industries desktop – pills delgados, hover solo color */
+.caco-nav-aux-link{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:4px 14px;
+  border-radius:9999px;
+  font-size:14px;
+  font-weight:600;
+  color:#111827;
+  background:transparent;
+  box-shadow:none;
+  transition:color .16s ease;
+}
+
+/* Hover + estado activo (dropdown abierto) -> solo cambia el color del texto */
+.caco-nav-aux-link:hover,
+.caco-help-menu.open .caco-nav-aux-link,
+.caco-industries-menu.open .caco-nav-aux-link,
+.caco-help-toggle[aria-expanded="true"],
+.caco-industries-toggle[aria-expanded="true"]{
+  color:var(--primary-blue);
+  background:transparent;
+  box-shadow:none;
+  transform:none;
+}
+
+/* Desktop: ocultar íconos circulares de Help Center / Industries */
+.caco-nav-aux-icon{
+  display:none;
+}
+
+.caco-help-svg-desktop{
+  width:22px;
+  height:22px;
+  display:block;
+}
+
+.caco-nav-aux-text{
+  white-space:nowrap;
+}
+
+  /* Desktop: Industries dropdown auto-size y 2 columnas sin deformar texto */
+@media (min-width: 1025px) {
+  .caco-industries-dropdown{
+    width: min(760px, calc(100vw - 32px));       /* más compacto sin perder legibilidad */
+    min-width: 0;
+    display: inline-block;
+  }
+
+  .caco-industries-dropdown ul{
+    display: grid;
+    grid-template-columns: repeat(3, minmax(180px, 1fr)); /* columnas con ancho mínimo cómodo */
+    column-gap: 14px;
+    row-gap: 10px;
+    padding: 12px 12px 14px;
+  }
+
+  .caco-industries-dropdown li{
+    margin: 0;
+  }
+
+  .caco-industries-dropdown .caco-help-link,
+  .caco-industries-dropdown .caco-industries-link{
+    width: 100%;
+    margin: 0;
+    padding: 12px 16px;
+  }
+
+  .caco-industries-dropdown .caco-help-icon{
+    width: 54px;
+    height: 54px;
+    color: var(--primary-blue);
+  }
+
+  .caco-industries-dropdown .caco-help-icon svg{
+    width: 26px;
+    height: 26px;
+  }
+}
+
+/* Desktop: Help Center + Industries más suaves en gris */
+@media (min-width: 1025px) {
+  .caco-nav-aux-link{
+    color:#4b5563;   /* gris oscuro, menos protagonista */
+    opacity:0.9;
+  }
+
+  /* Hover / activo siguen en azul corporativo */
+  .caco-nav-aux-link:hover,
+  .caco-help-menu.open .caco-nav-aux-link,
+  .caco-industries-menu.open .caco-nav-aux-link,
+  .caco-help-toggle[aria-expanded="true"],
+  .caco-industries-toggle[aria-expanded="true"]{
+    color:var(--primary-blue);
+  }
+}
+
+
+
+
+
+
+  /* HELP CENTER DROPDOWN STYLES */
+  .caco-help-menu,
+  .caco-industries-menu{
+    position:relative;
+  }
+
+  .caco-help-toggle,
+  .caco-industries-toggle{
+    cursor:pointer;
+  }
+
+  .caco-help-chevron{
+    margin-left:2px;
+  }
+
+  .caco-help-dropdown,
+  .caco-industries-dropdown{
+    position:absolute;
+    right:0;
+    top:calc(100% - 1px);
+    min-width:300px;
+    background:#ffffff;
+    border-radius:0 0 12px 12px;
+    box-shadow:0 18px 36px -16px rgba(15,23,42,0.22);
+    border:1px solid rgba(15,23,42,0.04);
+    border-top:none;
+    padding:12px 0;
+    opacity:0;
+    visibility:hidden;
+    transform:translateY(6px);
+    transition:all .18s ease-out;
+    z-index:185;
+  }
+
+  .caco-help-menu.open .caco-help-dropdown,
+  .caco-industries-menu.open .caco-industries-dropdown{
+    opacity:1;
+    visibility:visible;
+    transform:translateY(0);
+  }
+
+
+
+
+
+  
+  .caco-help-dropdown ul{
+    margin:0;
+    padding:0;
+    list-style:none;
+  }
+
+  .caco-help-link{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:10px 14px;
+    font-size:14px;
+    color:#374151;
+    text-decoration:none;
+    transition:
+      background .16s ease,
+      color .16s ease,
+      transform .08s ease,
+      box-shadow .12s ease;
+    border-radius:12px;
+    margin:0 8px;
+  }
+
+  .caco-help-link:hover{
+    background:#f9fafb;
+    color:#111827;
+    box-shadow:0 6px 16px rgba(15,23,42,0.06);
+    transform:translateY(-1px);
+  }
+
+  .caco-help-icon{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+    width:34px;
+    height:34px;
+    border-radius:999px;
+    background:#eef2ff;
+  }
+
+  .caco-help-icon svg{
+    width:20px;
+    height:20px;
+    display:block;
+  }
+
+  .caco-help-copy{
+    flex:1;
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+  }
+
+  .caco-help-title{
+    font-size:14px;
+    font-weight:600;
+    color:#111827;
+    line-height:1.3;
+  }
+
+  .caco-help-description{
+    font-size:12px;
+    color:#6b7280;
+    line-height:1.3;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+    overflow:hidden;
+  }
+
+  .caco-help-badge{
+    margin-left:8px;
+    padding:4px 8px;
+    border-radius:9999px;
+    font-size:12px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    background:#e0edff;
+    color:#1d4ed8;
+    flex-shrink:0;
+  }
+
+  .caco-badge{
+    display:inline-flex;align-items:center;justify-content:center;
+    padding:2px 7px;border-radius:999px;
+    font-size:11px;font-weight:800;text-transform:uppercase;
+    letter-spacing:.05em;
+    margin-left:3px;vertical-align:middle;line-height:1;position:relative;top:-2px;
+  }
+  .caco-badge.small{
+    font-size:10px;padding:2px 6px;margin-left:3px;border-radius:999px;top:-2px;
+  }
+  .caco-badge.mini{
+    font-size:9px;padding:2px 5px;margin-left:2px;border-radius:999px;top:-2px;
+  }
+
+  .caco-mega-promos{
+    width:{{ section.settings.promo_max_width | default: 280 }}px;
+    background:#fff;padding:24px;
+    border-left:1px solid var(--border-color);
+    display:flex;flex-direction:column;
+    gap:20px;overflow-y:auto;
+  }
+  .caco-promo-card{
+    border-radius:8px;overflow:hidden;
+    border:1px solid #f0f0f0;position:relative;
+    background:#fff;
+  }
+  .caco-promo-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.08);}
+  .caco-promo-img-wrap img{
+    width:100%;
+    height:{{ section.settings.promo_image_height | default: 200 }}px;
+    object-fit:cover;
+    display:block;
+  }
+  .caco-promo-text{text-align:center;padding:16px;}
+  .caco-promo-text h4{margin:0 0 8px;font-size:16px;font-weight:700;color:#111;}
+  .caco-coupon-box{
+    border:1px dashed var(--primary-blue);
+    background:#f0f9ff;
+    color:var(--primary-blue);
+    padding:6px;font-size:12px;
+    margin-bottom:10px;border-radius:4px;
+  }
+  .caco-promo-btn{
+    display:inline-block;margin-top:8px;
+    font-size:12px;font-weight:700;
+    text-transform:uppercase;color:var(--primary-blue);
+  }
+  .caco-countdown{
+    font-family:monospace;font-weight:700;
+    color:#e11d48;background:#fff1f2;
+    padding:4px;border-radius:4px;
+    margin-bottom:8px;font-size:14px;
+  }
+
+  .caco-mega-inline-promos{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-top:10px;
+  }
+  .caco-mega-inline-card{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:8px 10px;
+    border-radius:8px;
+    border:1px solid #e5e7eb;
+    text-decoration:none;
+    background:#f9fafb;
+    flex:0 0 calc(50% - 6px);
+  }
+  .caco-mega-inline-card:hover{
+    background:#eef2ff;
+    border-color:var(--primary-blue);
+  }
+  .caco-mega-inline-image img{
+    width:40px;
+    height:40px;
+    object-fit:cover;
+    border-radius:6px;
+    background:#fff;
+  }
+  .caco-mega-inline-title{
+    display:block;
+    font-size:13px;
+    font-weight:600;
+    color:#111;
+  }
+  .caco-mega-inline-meta{
+    display:block;
+    font-size:12px;
+    color:#6b7280;
+  }
+  .caco-mega-inline-banner{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-top:6px;
+    width:100%;
+    border-radius:10px;
+    overflow:hidden;
+    border:1px solid #e5e7eb;
+    background:#111;
+    position:relative;
+    text-decoration:none;
+  }
+  .caco-mega-inline-banner img{
+    width:100%;
+    height:64px;
+    object-fit:cover;
+    display:block;
+    opacity:.85;
+  }
+  .caco-mega-inline-banner-text{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:13px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:#fff;
+  }
+
+  .caco-header-bottom {
+    overflow: visible;
+  }
+
+  .caco-header-wrapper.caco-hide-nav .caco-header-bottom {
+    overflow: hidden;
+  }
+
+  @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+  @keyframes slideUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes caco-ann-marquee{
+    0%{transform:translateX(0);}
+    100%{transform:translateX(-50%);}
+  }
+
+  @keyframes cacoCartCountPulse{
+    0%{transform:scale(1);}
+    40%{transform:scale(1.2);}
+    100%{transform:scale(1);}
+  }
+
+  .caco-mobile-overlay{
+    position:fixed;
+    inset:0;
+    background:transparent;
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+    transition:opacity .20s ease, visibility .20s ease;
+    z-index:190;
+  }
+  .caco-mobile-overlay.open{
+    opacity:1;
+    visibility:visible;
+    pointer-events:auto;
+  }
+
+  .caco-mobile-drawer {
+    position: fixed;
+    top: var(--caco-header-height);
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index:195;
+    display:flex;
+    flex-direction:column;
+    pointer-events:none;
+    opacity:0;
+    visibility:hidden;
+    transform:translateX(100%);
+    transition:
+      transform .28s cubic-bezier(0.25, 0.8, 0.25, 1),
+      opacity .18s ease,
+      visibility .18s.ease;
+    background:transparent;
+  }
+
+  .caco-mobile-drawer.open {
+    pointer-events:auto;
+    opacity:1;
+    visibility:visible;
+    transform:translateX(0);
+  }
+
+  .caco-mobile-drawer-inner{
+    display:flex;
+    flex-direction:column;
+    height:100%;
+    background:#f5f5f7;
+    border-radius:0;
+    box-shadow:0 -4px 14px rgba(0,0,0,0.08);
+    overflow:hidden;
+  }
+
+  .caco-mobile-drawer-header{
+    padding:14px 20px 8px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    position:relative;
+    border-bottom:1px solid rgba(0,0,0,0.06);
+    background:#f5f5f7;
+  }
+
+  .caco-mobile-drawer-grabber{
+    position:absolute;
+    top:4px;
+    left:50%;
+    transform:translateX(-50%);
+    width:38px;
+    height:4px;
+    border-radius:9999px;
+    background:rgba(0,0,0,0.16);
+  }
+
+  .caco-mobile-back{
+    display:none;
+    align-items:center;
+    justify-content:center;
+    margin-right:4px;
+    padding:6px;
+    border-radius:9999px;
+    color:#4b5563;
+    transition:background .16s ease, color .16s.ease, transform .08s.ease;
+  }
+
+  .caco-mobile-back.is-visible{
+    display:inline-flex;
+  }
+
+  .caco-mobile-back:active{
+    background:rgba(0,0,0,0.05);
+    transform:scale(0.96);
+  }
+
+  .caco-mobile-drawer-title{
+    font-size:17px;
+    font-weight:700;
+    letter-spacing:-0.02em;
+    color:#111827;
+  }
+
+  .caco-mobile-drawer-search{
+    position:relative;
+    padding:8px 20px 10px;
+    border-bottom:1px solid rgba(0,0,0,0.05);
+    background:#f5f5f7;
+    box-shadow:0 1px 0 rgba(0,0,0,0.03);
+  }
+
+  .caco-mobile-drawer-search .caco-search-input--mobile{
+    font-size:16px;
+    padding-top:9px;
+    padding-bottom:9px;
+    padding-left:44px;
+    background:#ffffff;
+    border-radius:9999px;
+    border:1px solid rgba(0,0,0,0.08);
+    box-shadow:0 1px 0 rgba(255,255,255,0.8);
+  }
+
+  .caco-mobile-drawer-search .caco-search-input--mobile:focus{
+    background:#ffffff;
+    border-color:#0a84ff;
+    box-shadow:0 0 0 3px rgba(10,132,255,0.18);
+  }
+
+  .caco-mobile-drawer-search .caco-search-icon--mobile{
+    left:22px;
+  }
+
+  .caco-mobile-drawer-content{
+    flex:1;
+    position:relative;
+    overflow:hidden;
+    background:#f5f5f7;
+  }
+
+  .caco-mobile-panels{
+    position:relative;
+    height:100%;
+  }
+
+  .caco-mobile-panel{
+    position:absolute;
+    inset:0;
+    padding-top:6px;
+    overflow-y:auto;
+    overflow-x:hidden;
+    opacity:0;
+    pointer-events:none;
+    transform:translateX(8px);
+    transition:opacity .2s ease-out, transform .2s ease-out;
+  }
+
+  .caco-mobile-panel.is-active{
+    opacity:1;
+    pointer-events:auto;
+    transform:translateX(0);
+  }
+
+  .caco-mobile-nav{
+    list-style:none;
+    margin:0;
+    padding:10px 16px 24px 0;
+  }
+
+  .caco-mobile-item{
+    margin:0 0 8px;
+  }
+
+  .caco-mobile-link{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    width:calc(100% - 36px);
+    box-sizing:border-box;
+    text-align:left;
+    border:none;
+    background:#ffffff;
+    border-radius:18px;
+    padding:13px 18px;
+    font-size:16px;
+    font-weight:600;
+    color:#111827;
+    box-shadow:0 1px 0 rgba(0,0,0,0.04);
+    transition:
+      background .16s ease,
+      box-shadow .16s ease,
+      transform .08s ease,
+      color .16s.ease;
+    margin-left:20px;
+    margin-right:16px;
+  }
+
+  .caco-mobile-link:active{
+    background:#f3f4f6;
+    transform:scale(0.98);
+  }
+
+  .caco-mobile-link-label{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+  }
+
+  .caco-mobile-icon--forward{
+    color:#9ca3af;
+  }
+
+  .caco-mobile-link-sub{
+    font-size:15px;
+    font-weight:500;
+  }
+
+  .caco-mobile-link-grand{
+    font-size:14px;
+    font-weight:500;
+    padding-left:18px;
+  }
+
+  .caco-mobile-item--root-active .caco-mobile-link,
+  .caco-mobile-item--all .caco-mobile-link-all,
+  .caco-mobile-item.is-grand-active .caco-mobile-link-grand{
+    background:#0a84ff;
+    color:#ffffff;
+    box-shadow:0 0 0 1px rgba(10,132,255,0.35);
+  }
+
+  .caco-mobile-item--root-active .caco-mobile-link .caco-mobile-icon--forward,
+  .caco-mobile-item--all .caco-mobile-link-all .caco-mobile-icon--forward{
+    color:rgba(255,255,255,0.9);
+  }
+
+  .caco-mobile-item--all .caco-mobile-link-all .caco-mobile-link-label,
+  .caco-mobile-item--root-active .caco-mobile-link .caco-mobile-link-label{
+    font-weight:700;
+  }
+
+  .caco-mobile-item--all .caco-mobile-link-all .caco-badge,
+  .caco-mobile-item--root-active .caco-mobile-link .caco-badge,
+  .caco-mobile-item.is-grand-active .caco-mobile-link-grand .caco-badge{
+    background:#ffffff;
+    color:#0a84ff;
+  }
+
+  .caco-mobile-drawer-footer{
+    padding:10px 16px 18px;
+    border-top:1px solid rgba(0,0,0,0.06);
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    background:#f5f5f7;
+    padding-bottom:calc(env(safe-area-inset-bottom, 0px) + 12px);
+  }
+
+  .caco-mobile-footer-link{
+    font-size:14px;
+    font-weight:600;
+    color:#111827;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:8px 12px;
+    border-radius:9999px;
+    background:#ffffff;
+    box-shadow:0 1px 0 rgba(0,0,0,0.04);
+    transition:background .16s ease, transform .08s ease, color .16s.ease;
+  }
+
+  .caco-mobile-footer-link:hover{
+    background:#ffffff;
+    color:#0a84ff;
+  }
+
+  .caco-mobile-footer-link:active{
+    transform:scale(0.97);
+  }
+
+  .caco-mobile-footer-icon{
+    font-size:15px;
+    line-height:1;
+  }
+
+  .caco-mobile-toggle {
+    display: none !important;
+  }
+
+  @media (max-width: 1024px) {
+    .caco-mobile-toggle {
+      display: inline-flex !important;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .caco-header-top .caco-cart-btn{
+      transform: translateX(26px);
+    }
+  }
+
+  .caco-mobile-drawer-inner{
+    background:#f6f7fb;
+  }
+
+  .caco-mobile-drawer-search{
+    background:#dfe1e2;
+    border-color:rgba(0,0,0,0.06);
+  }
+
+  /* === Mobile Help Center card inside drawer === */
+
+
+
+
+  .caco-mobile-help-wrapper{
+    padding: 8px 16px 4px;
+    display:flex;
+    gap:10px;
+  }
+
+  .caco-mobile-help-card{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    width:100%;
+    padding:12px 14px;
+    border-radius:18px;
+    background:#111827;
+    color:#ffffff;
+    text-decoration:none;
+    box-shadow:0 4px 10px rgba(0,0,0,0.20);
+    transform:translateY(0);
+    transition:
+      background .18s ease,
+      box-shadow .18s ease,
+      transform .10s ease;
+    flex:1 1 0;
+  }
+
+  .caco-mobile-help-card:active{
+    transform:translateY(1px) scale(0.99);
+    box-shadow:0 2px 6px rgba(0,0,0,0.18);
+  }
+
+
+
+
+
+  .caco-mobile-link-help{
+    align-items: center;
+  }
+
+  .caco-mobile-help-icon{
+    width: 40px;
+    height: 40px;
+    border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+    color: #111827;
+    flex-shrink: 0;
+  }
+
+  .caco-help-svg{
+    width: 22px;
+    height: 22px;
+    display: block;
+  }
+
+  .caco-mobile-help-icon svg{
+    display:block;
+  }
+
+  .caco-mobile-help-text{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+  }
+
+  .caco-mobile-help-title{
+    font-size:15px;
+    font-weight:700;
+    letter-spacing:-0.01em;
+  }
+
+  .caco-mobile-help-sub{
+    font-size:12px;
+    opacity:0.85;
+  }
+
+  .caco-mobile-link-help-item{
+    display:flex;
+    align-items:flex-start;
+  }
+
+  .caco-mobile-help-item-text{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .caco-mobile-help-item-title{
+    font-size:15px;
+    font-weight:600;
+  }
+
+  .caco-mobile-help-item-sub{
+    font-size:12px;
+    opacity:0.8;
+  }
+/* Force hide header loading dots (desktop + mobile) */
+.caco-loading-icon,
+.caco-loading-icon--mobile {
+  display: none !important;
+}
+
+
+/* Mobile: Help Center + Industries side by side, slim pills */
+@media (max-width: 1024px) {
+  .caco-mobile-item--help-industries {
+    /* más aire arriba para separarlo de "About Us" */
+    margin: 20px 0 18px;
+  }
+
+  .caco-mobile-dual-card-row {
+    display: flex;
+    gap: 10px; /* espacio limpio entre pills */
+    margin-left: 20px;
+    margin-right: 16px;
+  }
+
+  .caco-mobile-dual-card-row .caco-mobile-link {
+    flex: 1 1 0;
+    width: auto;
+    margin: 0;
+  }
+
+  /* Ocultar subtítulo solo en estos dos pills */
+  .caco-mobile-item--help-industries .caco-mobile-help-sub {
+    display: none;
+  }
+}
+/* Simple dropdown: estilo tipo Help/Industries, pero por hover */
+.caco-nav-item:not(.mega-menu) > .caco-dropdown{
+  top:calc(100% - 1px);
+  border-radius:0 0 12px 12px;
+  box-shadow:0 18px 36px -16px rgba(15,23,42,0.22);
+  border:1px solid rgba(15,23,42,0.04);
+  border-top:none;
+  padding:6px 0 8px;
+}
+
+@media (min-width: 769px) and (max-width: 1024px){
+  .caco-logo-img{
+    max-height:36px;
+  }
+
+  .caco-logo-text{
+    font-size:22px;
+  }
+}
+
+/* Wrapper interno */
+.caco-simple-dropdown{
+  padding:2px 6px 6px;
+}
+
+/* Lista principal */
+.caco-simple-list{
+  list-style:none;
+  margin:0;
+  padding:0;
+}
+
+.caco-simple-item + .caco-simple-item{
+  margin-top:4px;
+}
+
+/* Links tipo card */
+.caco-simple-link{
+  display:flex;
+  align-items:flex-start;
+  width:100%;
+  box-sizing:border-box;
+  padding:8px 12px;
+  border-radius:12px;
+  text-decoration:none;
+  color:#111827;
+  background:transparent;
+  transition:background .16s ease, color .16s.ease;
+}
+
+.caco-simple-link--parent{
+  font-size:14px;
+  font-weight:600;
+}
+
+.caco-simple-link--child{
+  font-size:13px;
+  font-weight:500;
+  padding-left:22px;
+}
+
+/* Hover del item */
+.caco-simple-link:hover{
+  background:#f9fafb;
+  color:var(--primary-blue);
+}
+
+/* Sublista (nivel 2) */
+.caco-simple-sub{
+  list-style:none;
+  margin:2px 0 4px;
+  padding:0;
+}
+
+.caco-simple-sub-title{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+}
+
+/* Desktop: 2 columnas cuando el dropdown simple tiene 4 o más items */
+@media (min-width: 1025px) {
+
+  /* Caso base: 1 columna (hasta 3 items) */
+  .caco-simple-dropdown .caco-simple-list{
+    display:block;
+  }
+
+  /* Ajuste base de ancho para dropdowns normales */
+  .caco-nav-item:not(.mega-menu) > .caco-dropdown{
+    min-width:260px;
+  }
+
+  /* Si existe un 4to .caco-simple-item => 2 columnas */
+  .caco-simple-dropdown:has(.caco-simple-item:nth-child(4)) .caco-simple-list{
+    display:grid;
+    grid-template-columns: repeat(2, minmax(200px, 1fr));
+    column-gap:32px;
+    row-gap:8px;
+    margin:0;
+    padding:0;
+  }
+
+  /* Hacer la caja más ancha SOLO para estos dropdowns de 4+ items */
+  .caco-nav-item:not(.mega-menu) > .caco-dropdown:has(.caco-simple-item:nth-child(4)){
+    min-width:520px;
+    width:auto;
+  }
+
+  .caco-simple-dropdown:has(.caco-simple-item:nth-child(4)) .caco-simple-item{
+    margin-bottom:4px;
+  }
+}
+
+
+/* Spacing inside simple dropdowns (Resources, etc.) */
+.caco-simple-dropdown .caco-simple-link{
+  padding:8px 14px;      /* más alto y ancho, pero sin volverse gigante */
+}
+
+/* Vertical gap entre items en modo 1 columna */
+.caco-simple-dropdown .caco-simple-item + .caco-simple-item{
+  margin-top:4px;
+}
+
+/* En modo 2 columnas (4+ ítems) */
+@media (min-width: 1025px) {
+  .caco-simple-dropdown:has(.caco-simple-item:nth-child(4)) .caco-simple-list{
+    row-gap:8px;         /* un poquito más de aire entre filas */
+  }
+
+  .caco-simple-dropdown:has(.caco-simple-item:nth-child(4)) .caco-simple-item{
+    margin-bottom:4px;
+  }
+}
+
+/* Mega menu: si no hay promos, esconder columna derecha
+   y darle todo el espacio al contenido */
+@media (min-width: 1025px) {
+  .caco-mega-container--no-promos .caco-mega-promos{
+    display:none;
+  }
+
+  .caco-mega-container--no-promos .caco-mega-content{
+    width:calc(100% - {{ section.settings.mega_sidebar_width | default: 22 }}%);
+  }
+}
+
+
+
+
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+// Sticky header (fixed) + scroll behaviour (announcement + mega menu)
+(function() {
+  var headerWrapper = document.querySelector('.caco-header-wrapper');
+  if (!headerWrapper) return;
+
+  var lastScrollY = window.scrollY || 0;
+  var lastDirection = null;             // 'up' o 'down'
+  var directionChangeStartY = lastScrollY;
+
+  var HIDE_THRESHOLD = 8;              // sensibilidad al cambio de scroll
+  var MIN_SCROLL_TO_HIDE = 120;        // desde aquí hacia abajo empezamos a esconder
+  var SHOW_AFTER = 200;                // cuánto tienes que subir antes de que vuelva a aparecer
+  var ANNOUNCEMENT_HIDE_AFTER = 120; // px que debes scrollear antes de ocultar la barra
+  var ticking = false;
+
+  function computeHeaderHeight() {
+    var h = headerWrapper.offsetHeight || 0;
+    document.documentElement.style.setProperty('--caco-header-height', h + 'px');
+    document.body.classList.add('has-caco-sticky');
+  }
+
+  window.cacoUpdateHeaderHeight = computeHeaderHeight;
+
+  function handleScroll() {
+    var currentY = window.scrollY || 0;
+    var delta = currentY - lastScrollY;
+
+    // Determinar dirección actual
+    var direction = lastDirection;
+    if (delta > 0) {
+      direction = 'down';
+    } else if (delta < 0) {
+      direction = 'up';
+    }
+
+    // Si cambia la dirección, reseteamos el punto de referencia
+    if (direction !== lastDirection && direction !== null) {
+      directionChangeStartY = currentY;
+      lastDirection = direction;
+    }
+
+    // Sombra del header
+    if (currentY > 0) {
+      headerWrapper.classList.add('is-scrolled');
+    } else {
+      headerWrapper.classList.remove('is-scrolled');
+    }
+
+    // Announcement bar: se esconde solo después de scrollear un poco
+    if (currentY <= ANNOUNCEMENT_HIDE_AFTER) {
+      headerWrapper.classList.remove('caco-hide-announcement');
+    } else {
+      headerWrapper.classList.add('caco-hide-announcement');
+    }
+
+
+    // Lógica de hide/show de la nav
+    if (currentY <= MIN_SCROLL_TO_HIDE) {
+      // Cerca del top: siempre visible, sin espacios raros
+      headerWrapper.classList.remove('caco-hide-nav');
+    } else {
+      // Esconder cuando vas hacia abajo y te mueves suficiente
+      if (direction === 'down' && Math.abs(delta) >= HIDE_THRESHOLD) {
+        headerWrapper.classList.add('caco-hide-nav');
+      }
+
+      // Mostrar solo cuando has subido una buena cantidad (SHOW_AFTER)
+      if (direction === 'up' && (directionChangeStartY - currentY) >= SHOW_AFTER) {
+        headerWrapper.classList.remove('caco-hide-nav');
+      }
+    }
+
+    lastScrollY = currentY;
+  }
+
+  computeHeaderHeight();
+  handleScroll();
+
+  headerWrapper.classList.remove('caco-is-booting');
+  headerWrapper.classList.add('caco-is-ready');
+  headerWrapper.style.opacity = '1';
+  headerWrapper.style.visibility = 'visible';
+
+  window.addEventListener('scroll', function() {
+    if (!ticking) {
+      window.requestAnimationFrame(function() {
+        handleScroll();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+
+  window.addEventListener('resize', function() {
+    computeHeaderHeight();
+  });
+})();
+
+
+  // Mega menu sidebar behaviour
+  (function() {
+    document.querySelectorAll('.caco-nav-item.mega-menu').forEach(function(megaItem) {
+      var sidebarLinks = megaItem.querySelectorAll('.caco-mega-sidebar-link');
+      var panels = megaItem.querySelectorAll('.caco-mega-panel');
+      if (!sidebarLinks.length || !panels.length) return;
+
+      function activatePanel(targetHandle, linkEl) {
+        sidebarLinks.forEach(function(l){ l.classList.remove('active'); });
+        panels.forEach(function(p){ p.classList.remove('active'); });
+
+        if (linkEl) linkEl.classList.add('active');
+
+        var panelId = 'panel-' + targetHandle;
+        var targetPanel = megaItem.querySelector('#' + CSS.escape(panelId));
+        if (targetPanel) targetPanel.classList.add('active');
+      }
+
+      sidebarLinks.forEach(function(link) {
+        var handle = link.getAttribute('data-target');
+        if (!handle) return;
+
+        link.addEventListener('mouseenter', function() {
+          if (window.innerWidth >= 1025) activatePanel(handle, link);
+        });
+
+        link.addEventListener('focus', function() {
+          if (window.innerWidth >= 1025) activatePanel(handle, link);
+        });
+
+        link.addEventListener('click', function(evt) {
+          if (window.innerWidth >= 1025 && !link.classList.contains('active')) {
+            evt.preventDefault();
+            activatePanel(handle, link);
+          }
+        });
+      });
+    });
+  })();
+
+  // Header overlay manager (desktop dim for open elements)
+  var cacoOverlayManager = (function() {
+    var overlay = document.getElementById('caco-search-overlay');
+    var headerWrapper = document.querySelector('.caco-header-wrapper');
+    var sources = new Set();
+
+    function isDesktop() {
+      return window.innerWidth >= 1025;
+    }
+
+    function sync() {
+      if (!overlay) return;
+      var active = sources.size > 0 && isDesktop();
+
+      overlay.classList.toggle('active', active);
+
+      if (headerWrapper) {
+        headerWrapper.classList.toggle('caco-overlay-active', active);
+      }
+    }
+
+    window.addEventListener('resize', sync);
+
+    return {
+      show: function(source) {
+        if (!overlay) return;
+        if (source) sources.add(source);
+        sync();
+      },
+      hide: function(source) {
+        if (!overlay) return;
+        if (source) sources.delete(source);
+        sync();
+      }
+    };
+  })();
+
+  // Desktop overlay for open header elements
+  (function() {
+    if (!cacoOverlayManager) return;
+    var navItems = document.querySelectorAll('.caco-nav-item');
+    if (!navItems.length) return;
+
+    function shouldApplyOverlay() {
+      return window.innerWidth >= 1025;
+    }
+
+    function showNavOverlay() {
+      if (shouldApplyOverlay()) cacoOverlayManager.show('nav');
+    }
+
+    function hideNavOverlay() {
+      if (shouldApplyOverlay()) cacoOverlayManager.hide('nav');
+    }
+
+    navItems.forEach(function(item) {
+      item.addEventListener('mouseenter', showNavOverlay);
+      item.addEventListener('mouseleave', hideNavOverlay);
+      item.addEventListener('focusin', showNavOverlay);
+      item.addEventListener('focusout', hideNavOverlay);
+    });
+  })();
+
+  // Cart drawer (Dawn)
+  (function() {
+    var cartButton = document.querySelector('[data-caco-cart-drawer]');
+    if (!cartButton) return;
+    cartButton.addEventListener('click', function(e) {
+      var cartDrawer = document.querySelector('cart-drawer');
+      if (!cartDrawer) return;
+      e.preventDefault();
+      if (typeof cartDrawer.open === 'function') {
+        cartDrawer.open();
+      } else {
+        cartDrawer.setAttribute('open', 'true');
+        cartDrawer.classList.add('is-open');
+      }
+    });
+  })();
+
+  // Cart count auto-update
+  (function() {
+    var cartBtn = document.querySelector('.caco-cart-btn');
+    if (!cartBtn) return;
+
+    var lastCount = null;
+    var refreshTimeout = null;
+
+    function ensureBadge() {
+      var badge = cartBtn.querySelector('.caco-cart-count');
+      if (!badge) {
+        badge = document.createElement('div');
+        badge.className = 'caco-cart-count';
+        cartBtn.appendChild(badge);
+      }
+      return badge;
+    }
+
+    function renderCount(count) {
+      if (lastCount === count) return;
+      lastCount = count;
+
+      var badge = cartBtn.querySelector('.caco-cart-count');
+      if (!badge && count > 0) {
+        badge = ensureBadge();
+      }
+      if (!badge) return;
+
+      if (count > 0) {
+        badge.textContent = count;
+        badge.style.display = 'flex';
+
+        badge.classList.remove('caco-cart-count--pulse');
+        badge.offsetWidth;
+        badge.classList.add('caco-cart-count--pulse');
+      } else {
+        badge.textContent = '';
+        badge.style.display = 'none';
+      }
+    }
+
+    function updateFromCart(cart) {
+      if (!cart || typeof cart.item_count !== 'number') return;
+      window.requestAnimationFrame(function() {
+        renderCount(cart.item_count);
+      });
+    }
+
+    function fetchCartAndUpdate(delay) {
+      if (refreshTimeout) clearTimeout(refreshTimeout);
+      refreshTimeout = setTimeout(function() {
+        fetch('/cart.js', {
+          credentials: 'same-origin',
+          cache: 'no-store'
+        })
+          .then(function(res) { return res.json(); })
+          .then(function(cart) {
+            updateFromCart(cart);
+          })
+          .catch(function(err) {
+            console.warn('Cart count update failed', err);
+          });
+      }, delay || 120);
+    }
+
+    function handleCartEvent(e) {
+      if (e && e.detail && e.detail.cart) {
+        updateFromCart(e.detail.cart);
+      } else {
+        fetchCartAndUpdate(80);
+      }
+    }
+
+    ['cart:updated', 'cart:change', 'cart:refresh', 'cart:requestComplete']
+      .forEach(function(evtName) {
+        document.addEventListener(evtName, handleCartEvent);
+      });
+
+    document.body.addEventListener('submit', function(e) {
+      var form = e.target;
+      if (!form || form.tagName !== 'FORM') return;
+
+      var action = form.getAttribute('action') || '';
+
+      if (action.indexOf('/cart/add') !== -1 || form.querySelector('[name="add"]')) {
+        fetchCartAndUpdate(150);
+      }
+
+      if (action.indexOf('/cart') !== -1 && form.querySelector('input[name="updates[]"]')) {
+        fetchCartAndUpdate(150);
+      }
+    });
+
+    document.body.addEventListener('click', function(e) {
+      var target = e.target;
+
+      if (
+        target.closest('[data-cart-remove]') ||
+        target.closest('.cart-remove') ||
+        target.closest('.cart-remove-button') ||
+        target.closest('.cart__remove')
+      ) {
+        fetchCartAndUpdate(150);
+        return;
+      }
+
+      if (
+        target.closest('.quantity__button') ||
+        target.closest('[name="minus"]') ||
+        target.closest('[name="plus"]')
+      ) {
+        fetchCartAndUpdate(200);
+      }
+    });
+
+    if (window.fetch && !window.__cacoCartPatchedFetch) {
+      var originalFetch = window.fetch;
+      window.fetch = function() {
+        var args = arguments;
+        var url = args[0];
+        var urlStr = '';
+
+        if (typeof url === 'string') {
+          urlStr = url;
+        } else if (url && typeof url.url === 'string') {
+          urlStr = url.url;
+        }
+
+        var isCartCall = urlStr.indexOf('/cart') !== -1;
+
+        var p = originalFetch.apply(this, args);
+
+        if (isCartCall) {
+          p.then(function() {
+            fetchCartAndUpdate(120);
+          }).catch(function() {
+            fetchCartAndUpdate(200);
+          });
+        }
+
+        return p;
+      };
+      window.__cacoCartPatchedFetch = true;
+    }
+
+    if (window.XMLHttpRequest && !window.__cacoCartPatchedXHR) {
+      var XHROpen = XMLHttpRequest.prototype.open;
+      var XHRSend = XMLHttpRequest.prototype.send;
+
+      XMLHttpRequest.prototype.open = function(method, url) {
+        this.__cacoIsCart =
+          typeof url === 'string' && url.indexOf('/cart') !== -1;
+        return XHROpen.apply(this, arguments);
+      };
+
+      XMLHttpRequest.prototype.send = function(body) {
+        if (this.__cacoIsCart) {
+          this.addEventListener('load', function() {
+            fetchCartAndUpdate(120);
+          });
+          this.addEventListener('error', function() {
+            fetchCartAndUpdate(200);
+          });
+        }
+        return XHRSend.apply(this, arguments);
+      };
+
+      window.__cacoCartPatchedXHR = true;
+    }
+
+    fetchCartAndUpdate(0);
+  })();
+
+  // Partner dropdown
+  (function() {
+    var partnerMenu = document.querySelector('.caco-partner-menu');
+    if (!partnerMenu) return;
+    var toggle = partnerMenu.querySelector('.caco-partner-toggle');
+    if (!toggle) return;
+
+    toggle.addEventListener('click', function() {
+      var isOpen = partnerMenu.classList.contains('open');
+      if (isOpen) {
+        partnerMenu.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+        if (cacoOverlayManager) cacoOverlayManager.hide('nav');
+      } else {
+        partnerMenu.classList.add('open');
+        toggle.setAttribute('aria-expanded', 'true');
+        if (cacoOverlayManager) cacoOverlayManager.show('nav');
+      }
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!partnerMenu.contains(e.target)) {
+        partnerMenu.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+        if (cacoOverlayManager) cacoOverlayManager.hide('nav');
+      }
+    });
+  })();
+
+  // HELP CENTER DROPDOWN
+  (function() {
+    var helpMenu = document.querySelector('.caco-help-menu');
+    if (!helpMenu) return;
+
+    var toggle = helpMenu.querySelector('.caco-help-toggle');
+    var dropdown = helpMenu.querySelector('.caco-help-dropdown');
+    if (!toggle || !dropdown) return;
+
+    toggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      var isOpen = helpMenu.classList.contains('open');
+      if (isOpen) {
+        helpMenu.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+        if (cacoOverlayManager) cacoOverlayManager.hide('nav');
+      } else {
+        helpMenu.classList.add('open');
+        toggle.setAttribute('aria-expanded', 'true');
+        if (cacoOverlayManager) cacoOverlayManager.show('nav');
+      }
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!helpMenu.contains(e.target)) {
+        helpMenu.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+        if (cacoOverlayManager) cacoOverlayManager.hide('nav');
+      }
+    });
+  })();
+
+
+  // INDUSTRIES DROPDOWN
+  (function() {
+    var industriesMenu = document.querySelector('.caco-industries-menu');
+    if (!industriesMenu) return;
+
+    var toggle   = industriesMenu.querySelector('.caco-industries-toggle');
+    var dropdown = industriesMenu.querySelector('.caco-industries-dropdown');
+    if (!toggle || !dropdown) return;
+
+    toggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      var isOpen = industriesMenu.classList.contains('open');
+      if (isOpen) {
+        industriesMenu.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+        if (cacoOverlayManager) cacoOverlayManager.hide('nav');
+      } else {
+        industriesMenu.classList.add('open');
+        toggle.setAttribute('aria-expanded', 'true');
+        if (cacoOverlayManager) cacoOverlayManager.show('nav');
+      }
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!industriesMenu.contains(e.target)) {
+        industriesMenu.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+        if (cacoOverlayManager) cacoOverlayManager.hide('nav');
+      }
+    });
+  })();
+
+  // Announcement slider + mobile marquee infinito
+  (function() {
+    var bar = document.getElementById('caco-announcement-bar');
+    if (!bar) return;
+
+    var slides = bar.querySelectorAll('.caco-announcement-slide');
+    if (!slides.length) return;
+
+    var prevBtn   = bar.querySelector('.caco-ann-prev');
+    var nextBtn   = bar.querySelector('.caco-ann-next');
+    var currentEl = bar.querySelector('#caco-ann-current');
+    var totalEl   = bar.querySelector('#caco-ann-total');
+    var closeBtn  = bar.querySelector('.caco-announcement-close');
+
+    var isMobileAnn = window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
+
+    var total = slides.length;
+    var current = 0;
+    if (totalEl) totalEl.textContent = String(total);
+
+    if (isMobileAnn) {
+      var texts = [];
+      slides.forEach(function(s) {
+        var t = (s.textContent || '').replace(/\s+/g, ' ').trim();
+        if (t) texts.push(t);
+      });
+      if (!texts.length) {
+        texts.push(' ');
+      }
+      var merged = texts.join('   •   ');
+
+      var slider = bar.querySelector('.caco-announcement-slider');
+      if (slider) {
+        slider.innerHTML = '';
+        var track = document.createElement('div');
+        track.className = 'caco-announcement-marquee-track';
+
+        var item1 = document.createElement('div');
+        item1.className = 'caco-announcement-marquee-item';
+        item1.textContent = merged;
+
+        var item2 = document.createElement('div');
+        item2.className = 'caco-announcement-marquee-item';
+        item2.textContent = merged;
+
+        track.appendChild(item1);
+        track.appendChild(item2);
+        slider.appendChild(track);
+      }
+
+      var navGroup = bar.querySelector('.caco-ann-nav-group');
+      if (navGroup) {
+        navGroup.style.display = 'none';
+      }
+
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+          bar.style.display = 'none';
+          if (window.cacoUpdateHeaderHeight) {
+            window.cacoUpdateHeaderHeight();
+          }
+        });
+      }
+      return;
+    }
+
+    var timer;
+
+    function showSlide(index) {
+      slides.forEach(function(s){ s.classList.remove('active'); });
+      current = (index + total) % total;
+      slides[current].classList.add('active');
+      if (currentEl) currentEl.textContent = String(current + 1);
+    }
+
+    var intervalSec = parseInt(bar.getAttribute('data-interval') || '8', 10);
+    if (isNaN(intervalSec) || intervalSec <= 0) intervalSec = 8;
+
+    function startAuto() {
+      if (timer) clearInterval(timer);
+      if (total <= 1) return;
+      timer = setInterval(function(){
+        showSlide(current + 1);
+      }, intervalSec * 1000);
+    }
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', function() {
+        showSlide(current - 1);
+        startAuto();
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', function() {
+        showSlide(current + 1);
+        startAuto();
+      });
+    }
+
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function() {
+        bar.style.display = 'none';
+        if (window.cacoUpdateHeaderHeight) {
+          window.cacoUpdateHeaderHeight();
+        }
+      });
+    }
+
+    showSlide(0);
+    startAuto();
+  })();
+
+  // Header overlay manager (desktop dim for open elements)
+  var cacoOverlayManager = (function() {
+    var overlay = document.getElementById('caco-search-overlay');
+    var headerWrapper = document.querySelector('.caco-header-wrapper');
+    var sources = new Set();
+
+    function isDesktop() {
+      return window.innerWidth >= 1025;
+    }
+
+    function sync() {
+      if (!overlay) return;
+      var active = sources.size > 0 && isDesktop();
+
+      overlay.classList.toggle('active', active);
+
+      if (headerWrapper) {
+        headerWrapper.classList.toggle('caco-overlay-active', active);
+      }
+    }
+
+    window.addEventListener('resize', sync);
+
+    return {
+      show: function(source) {
+        if (!overlay) return;
+        if (source) sources.add(source);
+        sync();
+      },
+      hide: function(source) {
+        if (!overlay) return;
+        if (source) sources.delete(source);
+        sync();
+      }
+    };
+  })();
+
+  // Predictive search
+  (function() {
+    var overlay = document.getElementById('caco-search-overlay');
+    var defaultImage = 'https://www.cacoamerica.com/cdn/shop/files/caco-usa.png';
+    var searchBase = '{{ routes.search_url }}';
+
+    var predictiveEnabled   = {{ section.settings.enable_predictive_search | default: true | json }};
+    var predictiveLimit     = {{ section.settings.predictive_limit | default: 5 | json }};
+    var predictiveMinChars  = {{ section.settings.predictive_min_chars | default: 2 | json }};
+    var predictiveDebounce  = {{ section.settings.predictive_debounce | default: 250 | json }};
+    var predictiveOverlayOn = {{ section.settings.predictive_overlay | default: true | json }};
+
+    if (!predictiveEnabled) return;
+
+    function setupPredictive(formSelector, inputSelector) {
+      var form  = document.querySelector(formSelector);
+      var input = document.querySelector(inputSelector);
+      if (!form || !input) return;
+
+      var resultsContainer = document.createElement('div');
+      resultsContainer.className = 'caco-predictive-results';
+      form.parentNode.appendChild(resultsContainer);
+
+      var typingTimer;
+
+      function closePredictive() {
+        resultsContainer.innerHTML = '';
+        resultsContainer.style.display = 'none';
+        resultsContainer.classList.remove('is-visible');
+        if (cacoOverlayManager) cacoOverlayManager.hide('search');
+      }
+
+      function openOverlay() {
+        if (cacoOverlayManager && predictiveOverlayOn) cacoOverlayManager.show('search');
+      }
+
+      input.addEventListener('focus', function() {
+        if (input.value.trim().length >= predictiveMinChars) {
+          openOverlay();
+        }
+      });
+
+      input.addEventListener('input', function() {
+        var q = input.value.trim();
+        clearTimeout(typingTimer);
+
+        if (!q || q.length < predictiveMinChars) {
+          closePredictive();
+          return;
+        }
+
+        typingTimer = setTimeout(function() {
+
+          var fields = [
+            'title',
+            'product_type',
+            'variants.title',
+            'variants.sku',
+            'variants.barcode',
+            'tag'
+          ].join(',');
+
+          var isNumeric = /^\d+$/.test(q);
+          if (isNumeric) {
+            fields = [
+              'title',
+              'variants.sku',
+              'variants.barcode',
+              'tag'
+            ].join(',');
+          }
+
+          var url =
+            '/search/suggest.json' +
+            '?q=' + encodeURIComponent(q) +
+            '&resources[type]=product' +
+            '&resources[options][fields]=' + encodeURIComponent(fields) +
+            '&resources[options][unavailable_products]=last' +
+            '&resources[limit]=' + encodeURIComponent(predictiveLimit);
+
+          fetch(url)
+            .then(function(res){ return res.json(); })
+            .then(function(data) {
+              var products =
+                (data.resources && data.resources.results && data.resources.results.products) || [];
+              if (!products.length) {
+                closePredictive();
+                return;
+              }
+
+              var html = '<ul class="caco-predictive-list">';
+              products.forEach(function(p) {
+                var imgSrc = p.image || defaultImage;
+                html += ''
+                  + '<li class="caco-predictive-item">'
+                  +   '<a class="caco-predictive-link" href="' + p.url + '">'
+                  +     '<img src="' + imgSrc + '" alt="">'
+                  +     '<div class="caco-predictive-info">'
+                  +       '<span class="caco-predictive-title">' + p.title + '</span>'
+                  +       (p.price ? '<span class="caco-predictive-price">' + p.price + '</span>' : '')
+                  +     '</div>'
+                  +   '</a>'
+                  + '</li>';
+              });
+
+              html += '</ul>'
+                + '<div class="caco-view-all">'
+                +   '<a href="' + searchBase + '?q=' + encodeURIComponent(q) + '" class="caco-view-all-link">'
+                +     'View all results'
+                +   '</a>'
+                + '</div>';
+
+              resultsContainer.innerHTML = html;
+              resultsContainer.style.display = 'block';
+              resultsContainer.classList.add('is-visible');
+              openOverlay();
+            })
+            .catch(function() {
+              closePredictive();
+            });
+        }, predictiveDebounce);
+      });
+
+      document.addEventListener('click', function(e) {
+        if (!resultsContainer.contains(e.target) && !form.contains(e.target)) {
+          closePredictive();
+        }
+      });
+
+      input.addEventListener('blur', function() {
+        setTimeout(closePredictive, 150);
+      });
+    }
+
+    setupPredictive('.caco-search-form--desktop', '.caco-search-input--desktop');
+    setupPredictive('.caco-search-form--mobile',  '.caco-search-input--mobile');
+  })();
+
+  // Mobile drawer (burger + swipe + panel navigation + highlight pills)
+  (function() {
+    var drawer   = document.getElementById('caco-mobile-drawer');
+    var overlay  = document.getElementById('caco-mobile-overlay');
+    var burger   = document.getElementById('caco-mobile-trigger');
+    var searchBtn= document.getElementById('caco-mobile-search-toggle');
+    if (!drawer || !overlay) return;
+
+    var panels   = drawer.querySelectorAll('.caco-mobile-panel');
+    var titleEl  = drawer.querySelector('[data-panel-title]');
+    var backBtn  = drawer.querySelector('.caco-mobile-back');
+    var rootPanel = drawer.querySelector('.caco-mobile-panel[data-panel-root]');
+    var currentPanelId = 'root';
+    var historyStack   = [];
+
+    function clearRootActive() {
+      if (!rootPanel) return;
+      rootPanel.querySelectorAll('.caco-mobile-item--root-active').forEach(function(li){
+        li.classList.remove('caco-mobile-item--root-active');
+      });
+    }
+
+    function clearGrandActive() {
+      drawer.querySelectorAll('.caco-mobile-item.is-grand-active').forEach(function(li){
+        li.classList.remove('is-grand-active');
+      });
+    }
+
+    function setBackVisibility() {
+      if (!backBtn) return;
+      if (historyStack.length === 0) {
+        backBtn.classList.remove('is-visible');
+      } else {
+        backBtn.classList.add('is-visible');
+      }
+    }
+
+    function showPanel(id) {
+      var target = drawer.querySelector('.caco-mobile-panel[data-panel-id="' + id + '"]');
+      if (!target) return;
+
+      panels.forEach(function(p) {
+        p.classList.remove('is-active');
+      });
+      target.classList.add('is-active');
+      currentPanelId = id;
+
+      var title = target.getAttribute('data-panel-title');
+      if (titleEl && title) {
+        titleEl.textContent = title;
+      }
+      setBackVisibility();
+    }
+
+    function resetPanels() {
+      historyStack = [];
+      currentPanelId = 'root';
+      clearRootActive();
+      clearGrandActive();
+      showPanel('root');
+    }
+
+    function openDrawer() {
+      drawer.classList.add('open');
+      drawer.style.transform = '';
+      overlay.classList.add('open');
+      drawer.setAttribute('aria-hidden', 'false');
+      document.documentElement.classList.add('caco-mobile-open');
+
+      if (window.cacoUpdateHeaderHeight) {
+        window.cacoUpdateHeaderHeight();
+      }
+
+      if (burger) burger.classList.add('is-open');
+      resetPanels();
+    }
+
+    function closeDrawer() {
+      drawer.classList.remove('open');
+      drawer.style.transform = '';
+      overlay.classList.remove('open');
+      drawer.setAttribute('aria-hidden', 'true');
+      document.documentElement.classList.remove('caco-mobile-open');
+
+      if (window.cacoUpdateHeaderHeight) {
+        window.cacoUpdateHeaderHeight();
+      }
+
+      if (burger) burger.classList.remove('is-open');
+      resetPanels();
+    }
+
+    [burger, searchBtn].forEach(function(btn) {
+      if (!btn) return;
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (drawer.classList.contains('open')) {
+          closeDrawer();
+        } else {
+          openDrawer();
+        }
+      });
+    });
+
+    overlay.addEventListener('click', closeDrawer);
+
+    document.addEventListener('keyup', function(e) {
+      if (e.key === 'Escape' && drawer.classList.contains('open')) {
+        closeDrawer();
+      }
+    });
+
+    drawer.addEventListener('click', function(e) {
+      var grandLink = e.target.closest('.caco-mobile-link-grand');
+      if (grandLink) {
+        var panel = grandLink.closest('.caco-mobile-panel');
+        if (panel) {
+          panel.querySelectorAll('.caco-mobile-item.is-grand-active').forEach(function(li){
+            li.classList.remove('is-grand-active');
+          });
+          var liGrand = grandLink.closest('.caco-mobile-item');
+          if (liGrand) liGrand.classList.add('is-grand-active');
+        }
+      }
+
+      var trigger = e.target.closest('[data-panel-target]');
+      if (!trigger) return;
+      var targetId = trigger.getAttribute('data-panel-target');
+      if (!targetId) return;
+
+      var parentPanel = trigger.closest('.caco-mobile-panel');
+
+      if (parentPanel && parentPanel.hasAttribute('data-panel-root')) {
+        clearRootActive();
+        var li = trigger.closest('.caco-mobile-item');
+        if (li) li.classList.add('caco-mobile-item--root-active');
+      }
+
+      if (currentPanelId) {
+        historyStack.push(currentPanelId);
+      }
+      showPanel(targetId);
+    });
+
+    if (backBtn) {
+      backBtn.addEventListener('click', function() {
+        if (!historyStack.length) return;
+        historyStack.pop();
+        var prev = historyStack[historyStack.length - 1] || 'root';
+        showPanel(prev);
+        if (!historyStack.length) {
+          setBackVisibility();
+        }
+      });
+    }
+
+    var startX = 0;
+    var currentX = 0;
+    var isDragging = false;
+    var SWIPE_THRESHOLD = 60;
+
+    function onDrawerTouchStart(e) {
+      if (!drawer.classList.contains('open')) return;
+      var touch = e.touches[0];
+      startX = touch.clientX;
+      currentX = startX;
+      isDragging = true;
+      drawer.style.transition = 'none';
+    }
+
+    function onDrawerTouchMove(e) {
+      if (!isDragging) return;
+      var touch = e.touches[0];
+      currentX = touch.clientX;
+      var deltaX = currentX - startX;
+      if (deltaX > 0) {
+        var drawerWidth = drawer.offsetWidth || window.innerWidth;
+        var translate = Math.min(deltaX / drawerWidth * 100, 100);
+        drawer.style.transform = 'translateX(' + translate + '%)';
+      }
+    }
+
+    function onDrawerTouchEnd() {
+      if (!isDragging) return;
+      var deltaX = currentX - startX;
+      drawer.style.transition = '';
+      isDragging = false;
+
+      if (deltaX > SWIPE_THRESHOLD) {
+        closeDrawer();
+      } else {
+        drawer.classList.add('open');
+        drawer.style.transform = '';
+      }
+    }
+
+    drawer.addEventListener('touchstart', onDrawerTouchStart);
+    drawer.addEventListener('touchmove', onDrawerTouchMove);
+    drawer.addEventListener('touchend', onDrawerTouchEnd);
+    drawer.addEventListener('touchcancel', onDrawerTouchEnd);
+
+    var edgeStartX = null;
+
+    document.addEventListener('touchstart', function(e) {
+      if (drawer.classList.contains('open')) return;
+      var touch = e.touches[0];
+      if (touch.clientX > window.innerWidth - 24) {
+        edgeStartX = touch.clientX;
+      } else {
+        edgeStartX = null;
+      }
+    });
+
+    document.addEventListener('touchend', function(e) {
+      if (drawer.classList.contains('open') || edgeStartX === null) return;
+      var touch = e.changedTouches[0];
+      var deltaX = edgeStartX - touch.clientX;
+      if (deltaX > SWIPE_THRESHOLD) {
+        openDrawer();
+      }
+      edgeStartX = null;
+    });
+  })();
+});
+
+  // Simple dropdowns: si tienen más de 4 items, pasar a 3 columnas y hacer la caja más ancha
+  (function() {
+    var dropdowns = document.querySelectorAll('.caco-nav-item:not(.mega-menu) > .caco-dropdown');
+    if (!dropdowns.length) return;
+
+    dropdowns.forEach(function(drop) {
+      var simple = drop.querySelector('.caco-simple-dropdown');
+      if (!simple) return;
+
+      var list = simple.querySelector('.caco-simple-list');
+      if (!list) return;
+
+      var items = list.querySelectorAll('.caco-simple-item');
+      if (items.length > 4) {
+        // Marcamos este dropdown como "largo"
+        simple.classList.add('caco-simple-dropdown--three-cols');
+        drop.classList.add('caco-dropdown--wide');
+      }
+    });
+  })();
+
+
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    document.querySelectorAll('.caco-search-voice-btn').forEach(function(btn){
+      btn.style.display = 'none';
+    });
+    return;
+  }
+
+  function setupVoiceSearch(btnSelector, inputSelector, formSelector) {
+    var btn   = document.querySelector(btnSelector);
+    var input = document.querySelector(inputSelector);
+    var form  = document.querySelector(formSelector);
+
+    if (!btn || !input) return;
+
+    var recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    var listening = false;
+
+    function setListening(on) {
+      listening = on;
+      if (on) {
+        btn.classList.add('is-listening');
+      } else {
+        btn.classList.remove('is-listening');
+      }
+    }
+
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      if (listening) {
+        recognition.stop();
+        return;
+      }
+      try {
+        recognition.start();
+      } catch (err) {
+        console.warn('Voice recognition start error', err);
+      }
+    });
+
+    recognition.addEventListener('start', function() {
+      setListening(true);
+    });
+
+    recognition.addEventListener('end', function() {
+      setListening(false);
+    });
+
+    recognition.addEventListener('result', function(event) {
+      var transcript = '';
+      for (var i = event.resultIndex; i < event.results.length; i++) {
+        transcript += event.results[i][0].transcript;
+      }
+      transcript = transcript.trim();
+      if (!transcript) return;
+
+      input.value = transcript;
+
+      var ev = new Event('input', { bubbles: true });
+      input.dispatchEvent(ev);
+    });
+
+    recognition.addEventListener('error', function(e) {
+      console.warn('Voice recognition error', e.error);
+      setListening(false);
+    });
+  }
+
+  setupVoiceSearch('.caco-search-voice-btn--desktop', '.caco-search-input--desktop', '.caco-search-form--desktop');
+  setupVoiceSearch('.caco-search-voice-btn--mobile',  '.caco-search-input--mobile',  '.caco-search-form--mobile');
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var desktopInput = document.querySelector('.caco-search-input--desktop');
+  var mobileInput  = document.querySelector('.caco-search-input--mobile');
+
+  if (!desktopInput && !mobileInput) return;
+
+  var hints = [
+    'Search gloves, helmets, tools and more…',
+    'Try “cut resistant gloves”',
+    'Looking for safety helmets?',
+    'Try typing a SKU like “GH400”…'
+  ];
+
+  var basePlaceholder = hints[0];
+  var currentIndex = 0;
+  var typingTimer = null;
+  var cycleTimer  = null;
+  var isFocused   = false;
+
+  function setPlaceholder(text) {
+    if (desktopInput) desktopInput.setAttribute('placeholder', text);
+    if (mobileInput)  mobileInput.setAttribute('placeholder', text);
+  }
+
+  function clearTimers() {
+    if (typingTimer) {
+      clearInterval(typingTimer);
+      typingTimer = null;
+    }
+    if (cycleTimer) {
+      clearTimeout(cycleTimer);
+      cycleTimer = null;
+    }
+  }
+
+  function typeText(text, done) {
+    clearTimers();
+    var i = 0;
+    setPlaceholder('');
+
+    typingTimer = setInterval(function() {
+      if (isFocused) {
+        clearTimers();
+        setPlaceholder(basePlaceholder);
+        return;
+      }
+
+      i++;
+      setPlaceholder(text.slice(0, i));
+
+      if (i >= text.length) {
+        clearInterval(typingTimer);
+        typingTimer = null;
+
+        cycleTimer = setTimeout(function() {
+          if (typeof done === 'function') done();
+        }, 9900);
+      }
+    }, 55);
+  }
+
+  function startCycle() {
+    if (isFocused) {
+      setPlaceholder(basePlaceholder);
+      return;
+    }
+
+    var text = hints[currentIndex];
+    currentIndex = (currentIndex + 1) % hints.length;
+    typeText(text, startCycle);
+  }
+
+  function attachFocusHandlers(input) {
+    if (!input) return;
+    input.addEventListener('focus', function() {
+      isFocused = true;
+      clearTimers();
+      setPlaceholder(basePlaceholder);
+    });
+    input.addEventListener('blur', function() {
+      isFocused = false;
+      clearTimers();
+      cycleTimer = setTimeout(startCycle, 1500);
+    });
+  }
+
+  attachFocusHandlers(desktopInput);
+  attachFocusHandlers(mobileInput);
+
+  setPlaceholder(basePlaceholder);
+  setTimeout(startCycle, 1500);
+});
+</script>
+
+{%- render 'cart-drawer' -%}
+
+
+
+
+
+
+{% schema %}
+{
+  "name": "t:sections.header.name",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 50,
+      "max": 250,
+      "step": 10,
+      "default": 180,
+      "unit": "px",
+      "label": "Logo width"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "default": "main-menu",
+      "label": "Menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_announcement",
+      "label": "Show announcement bar",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "announcement_font_size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "default": 13,
+      "unit": "px",
+      "label": "Announcement text size"
+    },
+    {
+      "type": "range",
+      "id": "announcement_interval",
+      "min": 3,
+      "max": 20,
+      "step": 1,
+      "default": 8,
+      "unit": "sec",
+      "label": "Announcement rotation interval"
+    },
+    {
+      "type": "select",
+      "id": "announcement_effect",
+      "label": "Announcement transition",
+      "default": "fade",
+      "options": [
+        { "value": "fade", "label": "Fade" },
+        { "value": "slide", "label": "Slide up" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "search_max_width",
+      "min": 300,
+      "max": 1100,
+      "step": 20,
+      "default": 900,
+      "unit": "px",
+      "label": "Desktop search bar max width"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_predictive_search",
+      "label": "Enable predictive search (desktop & mobile)",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "predictive_limit",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 5,
+      "label": "Predictive search result limit"
+    },
+    {
+      "type": "range",
+      "id": "predictive_min_chars",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 2,
+      "label": "Minimum characters to start predictive search"
+    },
+    {
+      "type": "range",
+      "id": "predictive_debounce",
+      "min": 100,
+      "max": 600,
+      "step": 50,
+      "default": 250,
+      "unit": "ms",
+      "label": "Predictive search debounce time"
+    },
+    {
+      "type": "checkbox",
+      "id": "predictive_overlay",
+      "label": "Darken background when predictive search is open",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "mega_sidebar_width",
+      "min": 15,
+      "max": 35,
+      "step": 1,
+      "default": 22,
+      "unit": "%",
+      "label": "Mega menu sidebar width"
+    },
+    {
+      "type": "color",
+      "id": "mega_sidebar_bg",
+      "label": "Mega menu sidebar background",
+      "default": "#f9fafb"
+    },
+    {
+      "type": "range",
+      "id": "promo_max_width",
+      "min": 220,
+      "max": 380,
+      "step": 10,
+      "default": 280,
+      "unit": "px",
+      "label": "Right promo column width"
+    },
+    {
+      "type": "range",
+      "id": "promo_image_height",
+      "min": 140,
+      "max": 280,
+      "step": 10,
+      "default": 200,
+      "unit": "px",
+      "label": "Right promo image height"
+    },
+    {
+      "type": "text",
+      "id": "help_label",
+      "label": "Help Center label",
+      "default": "Help Center"
+    },
+    {
+      "type": "text",
+      "id": "help_sub_label",
+      "label": "Help Center sublabel (mobile)",
+      "default": "Support, FAQs & contact"
+    },
+    {
+      "type": "url",
+      "id": "help_link",
+      "label": "Help Center link"
+    },
+    {
+      "type": "textarea",
+      "id": "help_icon_svg",
+      "label": "Custom Help icon SVG (desktop & mobile)",
+      "info": "Optional. Paste raw <svg>…</svg>. If empty, default icon is used."
+    },
+    {
+      "type": "text",
+      "id": "industries_label",
+      "label": "Industries label",
+      "default": "Industries"
+    },
+    {
+      "type": "textarea",
+      "id": "industries_icon_svg",
+      "label": "Custom Industries icon SVG (desktop & mobile)",
+      "info": "Optional. Paste raw <svg>…</svg>. If empty, default icon is used."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "announcement",
+      "name": "Announcement",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "default": "Welcome",
+          "label": "Text"
+        }
+      ]
+    },
+    {
+      "type": "badge",
+      "name": "Menu badge",
+      "settings": [
+        {
+          "type": "text",
+          "id": "link_title",
+          "label": "Link title to match",
+          "info": "Exact title of any menu / submenu item"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Badge text",
+          "default": "New"
+        },
+        {
+          "type": "color",
+          "id": "bg_color",
+          "label": "Background color",
+          "default": "#e11d48"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text color",
+          "default": "#ffffff"
+        }
+      ]
+    },
+    {
+      "type": "mega_trigger",
+      "name": "Mega menu trigger",
+      "settings": [
+        {
+          "type": "text",
+          "id": "menu_item",
+          "label": "Menu item title",
+          "info": "Top-level link that should open a mega menu"
+        }
+      ]
+    },
+    {
+      "type": "promo_block",
+      "name": "Right Promo Banner",
+      "settings": [
+        {
+          "type": "text",
+          "id": "menu_handle",
+          "label": "Parent menu handle",
+          "info": "Handle of top menu (e.g. 'head-protection')"
+        },
+        {
+          "type": "checkbox",
+          "id": "apply_global",
+          "label": "Show in all mega menus (global)",
+          "default": false
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link URL"
+        },
+        {
+          "type": "text",
+          "id": "coupon",
+          "label": "Coupon code"
+        },
+        {
+          "type": "text",
+          "id": "countdown_date",
+          "label": "Countdown date (YYYY-MM-DD)",
+          "info": "Optional"
+        }
+      ]
+    },
+    {
+      "type": "mega_promo_card",
+      "name": "Inline promo card",
+      "settings": [
+        {
+          "type": "select",
+          "id": "scope",
+          "label": "Where to show",
+          "default": "panel",
+          "options": [
+            { "value": "panel",  "label": "Specific subcategory panel" },
+            { "value": "menu",   "label": "All panels of a menu" },
+            { "value": "global", "label": "All mega menus (global)" }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "parent_menu_handle",
+          "label": "Menu handle (for 'menu' scope)",
+          "info": "Top menu handle, e.g. 'head-protection'"
+        },
+        {
+          "type": "text",
+          "id": "panel_handle",
+          "label": "Panel handle (for 'panel' scope)",
+          "info": "Child handle, e.g. 'head-protection-helmets'"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Product image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Promo product"
+        },
+        {
+          "type": "text",
+          "id": "meta",
+          "label": "Meta / price line",
+          "default": "From $9.99"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link URL"
+        }
+      ]
+    },
+    {
+      "type": "mega_promo_banner",
+      "name": "Inline promo banner",
+      "settings": [
+        {
+          "type": "select",
+          "id": "scope",
+          "label": "Where to show",
+          "default": "panel",
+          "options": [
+            { "value": "panel",  "label": "Specific subcategory panel" },
+            { "value": "menu",   "label": "All panels of a menu" },
+            { "value": "global", "label": "All mega menus (global)" }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "parent_menu_handle",
+          "label": "Menu handle (for 'menu' scope)"
+        },
+        {
+          "type": "text",
+          "id": "panel_handle",
+          "label": "Panel handle (for 'panel' scope)"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Banner image"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Overlay text"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link URL"
+        }
+      ]
+    },
+    {
+      "type": "partner_link",
+      "name": "Partner / rewards link",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Partners"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link URL"
+        }
+      ]
+    },
+    {
+      "type": "drawer_footer_link",
+      "name": "Drawer footer link",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "enabled",
+          "label": "Show this link",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Contact"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link URL"
+        },
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Icon (emoji or short text)",
+          "default": "🔗"
+        }
+      ]
+    },
+    {
+      "type": "help_menu_item",
+      "name": "Help Center item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Title",
+          "default": "General inquiries"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Subtext",
+          "default": "Questions, quotes or support"
+        },
+        {
+          "type": "textarea",
+          "id": "icon_svg",
+          "label": "Icon SVG",
+          "info": "Paste an <svg>…</svg> element. Leave blank to hide icon."
+        },
+        {
+          "type": "checkbox",
+          "id": "show_badge",
+          "label": "Show badge",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "badge_text",
+          "label": "Badge text",
+          "default": "New"
+        }
+      ]
+    },
+    {
+      "type": "industry_menu_item",
+      "name": "Industries menu item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Title",
+          "default": "Construction"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Subtext",
+          "default": "PPE solutions for construction"
+        },
+        {
+          "type": "textarea",
+          "id": "icon_svg",
+          "label": "Icon SVG",
+          "info": "Paste an <svg>…</svg> element. Leave blank to hide icon."
+        },
+        {
+          "type": "checkbox",
+          "id": "show_badge",
+          "label": "Show badge",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "badge_text",
+          "label": "Badge text",
+          "default": "New"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Header with drawer",
+      "blocks": [
+        {
+          "type": "drawer_footer_link",
+          "settings": {
+            "enabled": true,
+            "label": "Contact",
+            "url": "/pages/contact",
+            "icon": "✉️"
+          }
+        },
+        {
+          "type": "drawer_footer_link",
+          "settings": {
+            "enabled": true,
+            "label": "About",
+            "url": "/pages/about-us",
+            "icon": "ℹ️"
+          }
+        },
+        {
+          "type": "drawer_footer_link",
+          "settings": {
+            "enabled": true,
+            "label": "Resources",
+            "url": "/pages/resources",
+            "icon": "📚"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,100 @@
+.download-resources .s-btn{
+  min-width: 216px;
+  min-height: 56px;
+  background: #FFFFFF;
+  border: 1px solid #0A5BA6;
+  padding: 16px 32px;
+}
+
+
+.download-resources li{
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 32px 0px;
+  gap: 27px;
+  border-bottom: 0.5px dashed #ABB8C3;
+}
+
+.download-resources li a{
+  text-decoration: none;
+}
+
+
+/* ===== MOBILE HEADER ICON FIX (OPTIMIZED TO FIT SCREEN) ===== */
+@media (max-width: 767px) {
+  /* Keep layout compact and aligned */
+  #resourcesTable {
+    width: 100%;
+    table-layout: fixed; /* prevent overflow */
+    font-size: 13px;
+  }
+
+  #resourcesTable thead th {
+    font-size: 0; /* hide labels */
+    text-align: center;
+    padding: 8px 4px;
+  }
+
+  /* Replace text with icons */
+  #resourcesTable thead th:nth-child(1)::before {
+    content: "📁";
+    font-size: 18px;
+  }
+  #resourcesTable thead th:nth-child(2)::before {
+    content: "🏷️";
+    font-size: 18px;
+  }
+  #resourcesTable thead th:nth-child(3)::before {
+    content: "📄";
+    font-size: 18px;
+  }
+  #resourcesTable thead th:nth-child(4)::before {
+    content: "⬇️";
+    font-size: 18px;
+  }
+
+  /* Shrink columns proportionally */
+  #resourcesTable th,
+  #resourcesTable td {
+    padding: 8px 4px;
+    word-break: break-word;
+  }
+
+  /* Tighten spacing */
+  #resourcesTable td:nth-child(1),
+  #resourcesTable td:nth-child(2) {
+    width: 22%;
+  }
+
+  #resourcesTable td:nth-child(3) {
+    width: 40%;
+  }
+
+  #resourcesTable td:nth-child(4) {
+    width: 16%;
+    text-align: center;
+  }
+
+  /* Make PDF icon smaller and centered */
+  #resourcesTable img {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* Compact pagination + filter area */
+  .dataTables_wrapper {
+    overflow-x: hidden;
+  }
+
+  .dataTables_length,
+  .dataTables_filter {
+    text-align: center;
+    font-size: 13px;
+  }
+}
+
+
+

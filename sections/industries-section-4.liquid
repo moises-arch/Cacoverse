@@ -1,0 +1,118 @@
+{% style %}
+  #shopify-section-{{ section.id }}{
+    padding-top: {{ section.settings.padding_top_desktop }};
+    padding-bottom: {{ section.settings.padding_bottom_desktop }};
+  }
+
+
+  @media( max-width: 767px){
+     #shopify-section-{{ section.id }}{
+      padding-top: {{ section.settings.padding_top_mobile }};
+      padding-bottom: {{ section.settings.padding_bottom_mobile }};
+    }
+  }
+{% endstyle %}
+
+{{ 'industries-section-4.css' | asset_url | stylesheet_tag }}
+<div class="page-width container-fluid ">
+  <div class="row pt-5">
+    <div class="col-12">
+      <h2 class="sh-48 text-center mb-3">{{ section.settings.heading }}</h2>
+       <p class="sp-16 text-center">{{ section.settings.sub_heading }}</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <ul class="info-list list-unstyled d-flex flex-wrap flex-xl-nowrap mt-5 gap-lg-3 gap-3 text-center" >
+        {% for block in section.blocks %}
+          <li class="d-flex flex-column gap-2 align-items-center justify-content-start">
+            <div class="imger">
+              <img class="img-fluid flex-shrik-0" src="{{ block.settings.image | img_url : 'master' }}" width="{{ block.settings.image.width }}" height="{{ block.settings.image.height }}" loading="lazy"  /></div>
+              {{ block.settings.heading | replace : '|' , '<br>' }}
+          </li>
+        {% endfor %}
+      </ul>
+       <p class="sh-16 text-center ash-16">{{ section.settings.sub_heading1 }}</p>
+      {% if section.settings.sub_heading2 != blank %}
+       <p class="sh-16 text-center ash-16s">{{ section.settings.sub_heading2 }}</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Industries Section 4",
+  "class": "industries-section-4",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+    },
+     {
+      "type": "text",
+      "id": "sub_heading",
+      "label": "Sub Heading",
+    },
+     {
+      "type": "text",
+      "id": "sub_heading1",
+      "label": "Sub Heading 1",
+    },
+    {
+      "type": "text",
+      "id": "sub_heading2",
+      "label": "Sub Heading 2",
+    },
+    {
+      "type": "text",
+      "id": "padding_top_desktop",
+      "label": "Padding Desktop Top",
+      "default": "80px"
+    },
+     {
+      "type": "text",
+      "id": "padding_bottom_desktop",
+      "label": "Padding Desktop Bottom",
+      "default": "80px"
+    },
+     {
+      "type": "text",
+      "id": "padding_top_mobile",
+      "label": "Padding Mobile Top",
+      "default": "40px"
+    },
+     {
+      "type": "text",
+      "id": "padding_bottom_mobile",
+      "label": "Padding Mobile Bottom",
+      "default": "40px"
+    },
+
+  ],
+  "blocks": [
+    {
+      "type": "info",
+      "name": "Information",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+        },
+        {
+          "type": "richtext",
+          "id": "heading",
+          "label": "heading"
+        },
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Industries Section 4",
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,116 @@
+{% style %}
+  #shopify-section-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top_desktop | default: '80px' }};
+    padding-bottom: {{ section.settings.padding_bottom_desktop | default: '80px' }};
+    background-image: url("{{ 'faq-bg.jpg' | asset_img_url: 'master' }}");
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  @media (max-width: 767px) {
+    #shopify-section-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top_mobile | default: '40px' }};
+      padding-bottom: {{ section.settings.padding_bottom_mobile | default: '40px' }};
+    }
+  }
+
+
+  
+{% endstyle %}
+
+{{ 'faqs.css' | asset_url | stylesheet_tag }}
+<div class="page-width container-fluid">
+  <div class="row">
+    <div class="col-md-12 col-xl-4">
+      <h2 class="sh-48 mb-4">{{ section.settings.heading }}</h2>
+    </div>
+    <div class="col-md-12 col-xl-8" itemscope="" itemtype="https://schema.org/FAQPage">
+      {%- for faq in section.blocks -%}
+        <div class="faq-item" itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
+          <div class="faq-question" itemprop="name">
+            <div>
+              {{ faq.settings.question }}
+            </div>
+            <!-- Plus -->
+            <svg class="plus" width="14" height="8" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 3.81438e-07L7 5L12 1.25567e-06L14 1L7 8L-1.29539e-06 1L2 3.81438e-07Z" fill="#222222"/>
+            </svg>
+
+            <!-- Minus -->
+
+            <svg class="minus" width="14" height="8" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 8L7 3L2 8L0 7L7 0L14 7L12 8Z" fill="#222222"/>
+            </svg>
+          </div>
+          <div class="faq-answer" itemscope="" itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+            <span itemprop="text"> {{ faq.settings.answer }}</span>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Faqs Section",
+  "class": "faq-sections",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Download Resources"
+    },
+    {
+      "type": "text",
+      "id": "padding_top_desktop",
+      "label": "Padding Desktop Top",
+      "default": "80px"
+    },
+     {
+      "type": "text",
+      "id": "padding_bottom_desktop",
+      "label": "Padding Desktop Bottom",
+      "default": "80px"
+    },
+     {
+      "type": "text",
+      "id": "padding_top_mobile",
+      "label": "Padding Mobile Top",
+      "default": "40px"
+    },
+     {
+      "type": "text",
+      "id": "padding_bottom_mobile",
+      "label": "Padding Mobile Bottom",
+      "default": "40px"
+    },
+  ],
+  "blocks": [
+    {
+      "type": "QA",
+      "name": "QA",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+        },
+         {
+          "type": "text",
+          "id": "answer",
+          "label": "Answer",
+        },
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Faqs Section",
+    }
+  ]
+}
+{% endschema %}

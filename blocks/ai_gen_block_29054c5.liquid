@@ -1,0 +1,477 @@
+{% doc %}
+  @prompt
+    Create a “Customer Reviews” section.
+    
+    Layout:
+    - Desktop: show 3 review cards per row.
+    - Mobile: show 1 review card at a time, horizontally scrollable with finger drag (no arrows or dots).
+    - Use scroll-snap so cards snap when swiped.
+    - Max width 1200px, centered.
+    
+    Card design:
+    - Rounded card with light shadow and padding.
+    - Stars at top, review text in middle, avatar + reviewer name at bottom.
+    - Use theme fonts and colors.
+    
+    Settings:
+    - Section title.
+    - For each review: stars (1–5), text, avatar image, reviewer name.
+    - Controls for card background color, border radius, and spacing.
+    
+    Implementation notes:
+    - Desktop uses CSS grid for 3 columns.
+    - Mobile uses overflow-x: auto with scroll-snap.
+    - Hide scrollbar but keep it functional.
+    - No navigation controls., display only 3 reviews in the desktop
+    
+    display 1 review in the mobile, in the mobile the user can slide the reviews with the finger.
+
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-customer-reviews-{{ ai_gen_id }} {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+
+  .ai-customer-reviews__title-{{ ai_gen_id }} {
+    text-align: center;
+    margin: 0 0 40px;
+    font-size: 2rem;
+    font-weight: 600;
+    color: rgb(var(--color-foreground));
+  }
+
+  .ai-customer-reviews__container-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: {{ block.settings.card_spacing }}px;
+  }
+
+  .ai-customer-reviews__card-{{ ai_gen_id }} {
+    background-color: {{ block.settings.card_background_color }};
+    border-radius: {{ block.settings.card_border_radius }}px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-height: 200px;
+  }
+
+  .ai-customer-reviews__stars-{{ ai_gen_id }} {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+  }
+
+  .ai-customer-reviews__star-{{ ai_gen_id }} {
+    width: 16px;
+    height: 16px;
+    color: {{ block.settings.star_color }};
+  }
+
+  .ai-customer-reviews__star--empty-{{ ai_gen_id }} {
+    color: {{ block.settings.empty_star_color }};
+  }
+
+  .ai-customer-reviews__text-{{ ai_gen_id }} {
+    flex-grow: 1;
+    font-size: 14px;
+    line-height: 1.5;
+    color: rgb(var(--color-foreground));
+  }
+
+  .ai-customer-reviews__reviewer-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: auto;
+  }
+
+  .ai-customer-reviews__avatar-{{ ai_gen_id }} {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;background-color: #f0f0f0;
+  }
+
+  .ai-customer-reviews__avatar-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;object-fit: cover;
+  }
+
+  .ai-customer-reviews__avatar-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .ai-customer-reviews__name-{{ ai_gen_id }} {
+    font-size: 14px;
+    font-weight: 600;
+    color: rgb(var(--color-foreground));
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-customer-reviews-{{ ai_gen_id }} {
+      padding: 40px 0;
+    }
+
+    .ai-customer-reviews__title-{{ ai_gen_id }} {
+      padding: 0 20px;
+      margin-bottom: 30px;
+    }
+
+    .ai-customer-reviews__container-{{ ai_gen_id }} {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: {{ block.settings.card_spacing }}px;
+      padding: 0 20px;scrollbar-width: none;
+      -ms-overflow-style: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .ai-customer-reviews__container-{{ ai_gen_id }}::-webkit-scrollbar {
+      display: none;
+    }
+
+    .ai-customer-reviews__card-{{ ai_gen_id }} {
+      flex: 0 0 calc(100vw - 80px);
+      max-width: 320px;
+      scroll-snap-align: start;scroll-snap-stop: always;
+    }
+  }
+
+  @media screen and (max-width: 990px) and (min-width: 750px) {
+    .ai-customer-reviews__container-{{ ai_gen_id }} {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+{% endstyle %}
+
+<div class="ai-customer-reviews-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% if block.settings.section_title != blank %}
+    <h2 class="ai-customer-reviews__title-{{ ai_gen_id }}">{{ block.settings.section_title }}</h2>
+  {% endif %}
+
+  <div class="ai-customer-reviews__container-{{ ai_gen_id }}">
+    {% for i in (1..6) %}
+      {% liquid
+        assign review_text_key = 'review_' | append: i | append: '_text'
+        assign review_stars_key = 'review_' | append: i | append: '_stars'
+        assign review_name_key = 'review_' | append: i | append: '_name'
+        assign review_avatar_key = 'review_' | append: i | append: '_avatar'
+
+        assign review_text = block.settings[review_text_key]
+        assign review_stars = block.settings[review_stars_key]
+        assign review_name = block.settings[review_name_key]
+        assign review_avatar = block.settings[review_avatar_key]
+      %}
+
+      {% if review_text != blank or review_name != blank %}
+        <div class="ai-customer-reviews__card-{{ ai_gen_id }}">
+          <div class="ai-customer-reviews__stars-{{ ai_gen_id }}">
+            {% for star in (1..5) %}
+              {% if star <= review_stars %}
+                <svg class="ai-customer-reviews__star-{{ ai_gen_id }}" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                </svg>
+              {% else %}
+                <svg class="ai-customer-reviews__star-{{ ai_gen_id }} ai-customer-reviews__star--empty-{{ ai_gen_id }}" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                </svg>
+              {% endif %}
+            {% endfor %}
+          </div>
+
+          {% if review_text != blank %}
+            <div class="ai-customer-reviews__text-{{ ai_gen_id }}">
+              {{ review_text }}
+            </div>
+          {% endif %}
+
+          <div class="ai-customer-reviews__reviewer-{{ ai_gen_id }}">
+            <div class="ai-customer-reviews__avatar-{{ ai_gen_id }}">
+              {% if review_avatar %}
+                <img
+                  src="{{ review_avatar | image_url: width: 80}}"
+                  alt="{{ review_name | escape }}"
+                  loading="lazy"
+                  width="80"
+                  height="80"
+                >
+              {% else %}
+                <div class="ai-customer-reviews__avatar-placeholder-{{ ai_gen_id }}">
+                  {% if review_name != blank %}
+                    {{ review_name | slice: 0 | upcase }}
+                  {% else %}
+                    ?
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>{% if review_name != blank %}
+              <div class="ai-customer-reviews__name-{{ ai_gen_id }}">{{ review_name }}</div>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Customer reviews",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section title",
+      "default": "What our customers say"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Card background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Card border radius",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "card_spacing",
+      "min": 8,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "label": "Card spacing",
+      "default": 24
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Star color",
+      "default": "#fbbf24"
+    },
+    {
+      "type": "color",
+      "id": "empty_star_color",
+      "label": "Empty star color",
+      "default": "#e5e7eb"
+    },
+    {
+      "type": "header",
+      "content": "Review1"
+    },
+    {
+      "type": "range",
+      "id": "review_1_stars",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "label": "Star rating",
+      "default": 5
+    },
+    {
+      "type": "textarea",
+      "id": "review_1_text",
+      "label": "Review text",
+      "default": "Amazing product! Exceeded my expectations in every way. The quality is outstanding and delivery was super fast."
+    },
+    {
+      "type": "text",
+      "id": "review_1_name",
+      "label": "Reviewer name",
+      "default": "Sarah Johnson"
+    },
+    {
+      "type": "image_picker",
+      "id": "review_1_avatar",
+      "label": "Reviewer avatar"
+    },
+    {
+      "type": "header",
+      "content": "Review 2"
+    },
+    {
+      "type": "range",
+      "id": "review_2_stars",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "label": "Star rating",
+      "default": 5
+    },
+    {
+      "type": "textarea",
+      "id": "review_2_text",
+      "label": "Review text",
+      "default": "Great customer service and the product works perfectly. I've been using it for months now and it's still like new."
+    },
+    {
+      "type": "text",
+      "id": "review_2_name",
+      "label": "Reviewer name",
+      "default": "Mike Chen"
+    },
+    {
+      "type": "image_picker",
+      "id": "review_2_avatar",
+      "label": "Reviewer avatar"
+    },
+    {
+      "type": "header",
+      "content": "Review 3"
+    },
+    {
+      "type": "range",
+      "id": "review_3_stars",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "label": "Star rating",
+      "default": 4
+    },
+    {
+      "type": "textarea",
+      "id": "review_3_text",
+      "label": "Review text",
+      "default": "Really happy with my purchase. The design is beautiful and it fits perfectly in my space. Highly recommend!"
+    },
+    {
+      "type": "text",
+      "id": "review_3_name",
+      "label": "Reviewer name",
+      "default": "Emma Davis"
+    },
+    {
+      "type": "image_picker",
+      "id": "review_3_avatar",
+      "label": "Reviewer avatar"
+    },
+    {
+      "type": "header",
+      "content": "Review 4"
+    },
+    {
+      "type": "range",
+      "id": "review_4_stars",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "label": "Star rating",
+      "default": 5
+    },
+    {
+      "type": "textarea",
+      "id": "review_4_text",
+      "label": "Review text",
+      "default": "Fantastic quality and arrived exactly as described. The team was helpful throughout the entire process."
+    },
+    {
+      "type": "text",
+      "id": "review_4_name",
+      "label": "Reviewer name",
+      "default": "David Wilson"
+    },
+    {
+      "type": "image_picker",
+      "id": "review_4_avatar",
+      "label": "Reviewer avatar"
+    },
+    {
+      "type": "header",
+      "content": "Review 5"
+    },
+    {
+      "type": "range",
+      "id": "review_5_stars",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "label": "Star rating",
+      "default": 5
+    },
+    {
+      "type": "textarea",
+      "id": "review_5_text",
+      "label": "Review text",
+      "default": "Love this! It's become an essential part of my daily routine. Worth every penny and more."
+    },
+    {
+      "type": "text",
+      "id": "review_5_name",
+      "label": "Reviewer name",
+      "default": "Lisa Rodriguez"
+    },
+    {
+      "type": "image_picker",
+      "id": "review_5_avatar",
+      "label": "Reviewer avatar"
+    },
+    {
+      "type": "header",
+      "content": "Review 6"
+    },
+    {
+      "type": "range",
+      "id": "review_6_stars",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "label": "Star rating",
+      "default": 4
+    },
+    {
+      "type": "textarea",
+      "id": "review_6_text",
+      "label": "Review text",
+      "default": "Excellent product with great attention to detail. Shipping was fast and packaging was perfect."
+    },
+    {
+      "type": "text",
+      "id": "review_6_name",
+      "label": "Reviewer name",
+      "default": "James Thompson"
+    },
+    {
+      "type": "image_picker",
+      "id": "review_6_avatar",
+      "label": "Reviewer avatar"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Customer reviews"
+    }
+  ],
+  "tag": null
+}
+{% endschema %}

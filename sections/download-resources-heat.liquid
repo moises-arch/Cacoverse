@@ -1,0 +1,130 @@
+{% style %}
+  #shopify-section-{{ section.id }}{
+    padding-top: {{ section.settings.padding_top_desktop }};
+    padding-bottom: {{ section.settings.padding_bottom_desktop }};
+  }
+
+  @media( max-width: 767px){
+     #shopify-section-{{ section.id }}{
+      padding-top: {{ section.settings.padding_top_mobile }};
+      padding-bottom: {{ section.settings.padding_bottom_mobile }};
+    }
+  }
+{% endstyle %}
+{{ 'heat-download-resources.css' | asset_url | stylesheet_tag }}
+<div class="page-width container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <ul>
+        {% for block in section.blocks %}
+          <li>
+            <span
+              ><a
+                class="sp-24"
+                href="{% if block.settings.link != blank %}{{ block.settings.link }}{% else %}#{% endif %}"
+              >
+                {{- block.settings.heading -}}
+              </a></span
+            >
+            <span
+              ><a href="{% if block.settings.link != blank %}{{ block.settings.link }}{% else %}#{% endif %}">
+                <img
+                  src="{{  block.settings.image | img_url: 'master' }}"
+                  width="{{ block.settings.image.width }}"
+                  height="{{ block.settings.image.height }}"
+                  alt="{{   block.settings.image.alt }}"
+                  class="img-fluid"
+                  loading="lazy"
+                > </a
+            ></span>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Heat Download Resources",
+  "class": "heat-download-resources",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+     {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background Image",
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Download Resources"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+       "default" : "View All Resources"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "link",
+    },
+    {
+      "type": "text",
+      "id": "padding_top_desktop",
+      "label": "Padding Desktop Top",
+      "default": "80px"
+    },
+     {
+      "type": "text",
+      "id": "padding_bottom_desktop",
+      "label": "Padding Desktop Bottom",
+      "default": "80px"
+    },
+     {
+      "type": "text",
+      "id": "padding_top_mobile",
+      "label": "Padding Mobile Top",
+      "default": "40px"
+    },
+     {
+      "type": "text",
+      "id": "padding_bottom_mobile",
+      "label": "Padding Mobile Bottom",
+      "default": "40px"
+    },
+  ],
+  "blocks": [
+    {
+      "type": "resource",
+      "name": "Resource",
+      "settings": [
+         {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link",
+        },
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Heat Download Resources",
+    }
+  ]
+}
+{% endschema %}

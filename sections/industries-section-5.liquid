@@ -1,0 +1,104 @@
+{% style %}
+  #shopify-section-{{ section.id }}{
+    padding-top: {{ section.settings.padding_top_desktop }};
+    padding-bottom: {{ section.settings.padding_bottom_desktop }};
+  }
+
+
+  @media( max-width: 767px){
+     #shopify-section-{{ section.id }}{
+      padding-top: {{ section.settings.padding_top_mobile }};
+      padding-bottom: {{ section.settings.padding_bottom_mobile }};
+    }
+  }
+{% endstyle %}
+
+{{ 'industries-section-5.css' | asset_url | stylesheet_tag }}
+<div class="page-width container-fluid ">
+  <div class="row ">
+    <div class="col-12">
+      <h2 class="sh-48 text-center mb-3">{{ section.settings.heading | replace : '|' , '<br>' }}</h2>
+    </div>
+  </div>
+  <div class="row ">
+    <div class="col-12 bbl">
+      <ul class="info-list list-unstyled d-flex flex-wrap flex-xl-nowrap mt-5 pb-5 gap-lg-3 gap-3 text-center text-center text-xl-start" >
+        {% for block in section.blocks %}
+          <li class="d-flex {% if section.settings.icon_left == true %} flex-row {% else %}flex-column {% endif %} gap-2 align-items-center align-items-center align-items-xl-start justify-content-center justify-content-lg-start">
+            <div class="imger flex-shrink-0">
+              <img class="img-fluid flex-shrik-0" src="{{ block.settings.image | img_url : 'master' }}" width="{{ block.settings.image.width }}" height="{{ block.settings.image.height }}" loading="lazy"  /></div>
+              <div>{{ block.settings.heading }}</div>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Industries Section 5",
+  "class": "industries-section-5",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+    },
+    {
+      "type": "checkbox",
+      "id": "icon_left",
+      "label": "Icon Left",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "padding_top_desktop",
+      "label": "Padding Desktop Top",
+      "default": "80px"
+    },
+     {
+      "type": "text",
+      "id": "padding_bottom_desktop",
+      "label": "Padding Desktop Bottom",
+      "default": "80px"
+    },
+     {
+      "type": "text",
+      "id": "padding_top_mobile",
+      "label": "Padding Mobile Top",
+      "default": "40px"
+    },
+     {
+      "type": "text",
+      "id": "padding_bottom_mobile",
+      "label": "Padding Mobile Bottom",
+      "default": "40px"
+    },
+
+  ],
+  "blocks": [
+    {
+      "type": "info",
+      "name": "Information",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+        },
+        {
+          "type": "richtext",
+          "id": "heading",
+          "label": "heading"
+        },
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Industries Section 5",
+    }
+  ]
+}
+{% endschema %}

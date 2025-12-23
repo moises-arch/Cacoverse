@@ -1,0 +1,1851 @@
+{% schema %}
+{
+  "name": "Premium Grid",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "label": "Padding Top",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "label": "Padding Bottom",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 4,
+      "max": 48,
+      "step": 4,
+      "label": "Products per page",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "mobile_columns",
+      "label": "Mobile Columns",
+      "options": [
+        {
+          "value": "1",
+          "label": "1 Column"
+        },
+        {
+          "value": "2",
+          "label": "2 Columns"
+        }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "header",
+      "content": "Sidebar"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_categories",
+      "label": "Show Categories",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_filters",
+      "label": "Show Filters",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "filter_blacklist",
+      "label": "Filter Blacklist (comma separated)",
+      "default": "Product Sub Category",
+      "info": "Case insensitive names of filters to hide (e.g. 'Size, Color')"
+    },
+    {
+      "type": "header",
+      "content": "Card Elements"
+    },
+    {
+      "type": "text",
+      "id": "card_content_order",
+      "label": "Card Content Order",
+      "default": "title,subtitle,custom_subtitle,category_sku,reviews,price,swatches,variants",
+      "info": "Control the content order using a comma-separated list. Options: title, subtitle, custom_subtitle, category_sku, reviews, price, swatches, variants."
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "label": "Card Internal Padding",
+      "default": 18
+    },
+    {
+      "type": "checkbox",
+      "id": "show_hover",
+      "label": "Show Second Image on Hover",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sku",
+      "label": "Show SKU / Category",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_reviews",
+      "label": "Show Reviews",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_subtitle",
+      "label": "Show Subtitle",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_custom_subtitle",
+      "label": "Show Custom Subtitle (Metafield)",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_swatches",
+      "label": "Show Color Swatches",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Color Swatches"
+    },
+    {
+      "type": "paragraph",
+      "content": "Adjust the colors used for known swatch names."
+    },
+    {
+      "type": "color",
+      "id": "color_carbon_black",
+      "label": "Carbon Black",
+      "default": "#0B0B0B"
+    },
+    {
+      "type": "color",
+      "id": "color_black",
+      "label": "Black",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "color_blue",
+      "label": "Blue",
+      "default": "#0A5BA6"
+    },
+    {
+      "type": "color",
+      "id": "color_light_blue",
+      "label": "Light Blue",
+      "default": "#ADD8E6"
+    },
+    {
+      "type": "color",
+      "id": "color_green",
+      "label": "Green",
+      "default": "#34E159"
+    },
+    {
+      "type": "color",
+      "id": "color_orange",
+      "label": "Orange",
+      "default": "#ECBC1E"
+    },
+    {
+      "type": "color",
+      "id": "color_gray",
+      "label": "Gray / Grey",
+      "default": "#EFEFEF"
+    },
+    {
+      "type": "color",
+      "id": "color_hi_vis_lime",
+      "label": "Hi-Vis Lime",
+      "default": "#C7EA46"
+    },
+    {
+      "type": "color",
+      "id": "color_red",
+      "label": "Red",
+      "default": "#E4002B"
+    },
+    {
+      "type": "color",
+      "id": "color_white",
+      "label": "White",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "color_yellow",
+      "label": "Yellow",
+      "default": "#FFFF00"
+    },
+    {
+      "type": "color",
+      "id": "color_purple",
+      "label": "Purple",
+      "default": "#800080"
+    },
+    {
+      "type": "color",
+      "id": "color_pink",
+      "label": "Pink",
+      "default": "#FFC0CB"
+    },
+    {
+      "type": "paragraph",
+      "content": "Add new colors below using the format 'Name: #HEX' (one per line)."
+    },
+    {
+      "type": "textarea",
+      "id": "custom_swatch_definitions",
+      "label": "Custom Swatches",
+      "info": "Add extra swatches using one per line in the format 'Name: #HEX'. Names should match your product color values.",
+      "default": "Sample: #123456"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quantity_variants",
+      "label": "Show Chip Variants (Size/Pack)",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "chip_options_whitelist",
+      "label": "Chip Options Whitelist (comma separated)",
+      "default": "Dead"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_chip_option_name",
+      "label": "Show Chip Option Name",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Badges"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Bestseller Badge Text",
+      "default": "BEST SELLER"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_new_badge",
+      "label": "Show New Badge",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "new_badge_text",
+      "label": "New Badge Text",
+      "default": "NEW ARRIVAL"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_discount_badge",
+      "label": "Show Discount Badge",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Promo Block"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_promo",
+      "label": "Enable Promo Block",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "promo_position",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "label": "Promo Position",
+      "default": 2
+    },
+    {
+      "type": "select",
+      "id": "promo_bg_type",
+      "label": "Background Type",
+      "options": [
+        {
+          "value": "color",
+          "label": "Color"
+        },
+        {
+          "value": "image",
+          "label": "Image"
+        },
+        {
+          "value": "gradient",
+          "label": "Gradient"
+        },
+        {
+          "value": "video",
+          "label": "Video"
+        }
+      ],
+      "default": "image"
+    },
+    {
+      "type": "color",
+      "id": "promo_bg_color",
+      "label": "Background Color",
+      "default": "#111111"
+    },
+    {
+      "type": "image_picker",
+      "id": "promo_image",
+      "label": "Background Image"
+    },
+    {
+      "type": "text",
+      "id": "promo_video_url",
+      "label": "Video URL (MP4)",
+      "default": "https://cdn.shopify.com/videos/c/o/v/fbb140a46d3b46c784f11cc372d2f693.mp4"
+    },
+    {
+      "type": "text",
+      "id": "promo_gradient",
+      "label": "CSS Gradient",
+      "default": "linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d)"
+    },
+    {
+      "type": "color",
+      "id": "promo_text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "promo_title",
+      "label": "Title",
+      "default": "Special Offer"
+    },
+    {
+      "type": "textarea",
+      "id": "promo_subtitle",
+      "label": "Subtitle",
+      "default": "Get 20% off select items"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_countdown",
+      "label": "Show Countdown",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "countdown_date",
+      "label": "Countdown Date (ISO)",
+      "default": "2025-12-31T23:59"
+    },
+    {
+      "type": "select",
+      "id": "promo_action",
+      "label": "Action Type",
+      "options": [
+        {
+          "value": "link",
+          "label": "Link Button"
+        },
+        {
+          "value": "code",
+          "label": "Reveal Code"
+        }
+      ],
+      "default": "link"
+    },
+    {
+      "type": "text",
+      "id": "promo_btn_text",
+      "label": "Button Text",
+      "default": "SHOP NOW"
+    },
+    {
+      "type": "url",
+      "id": "promo_link",
+      "label": "Link URL"
+    },
+    {
+      "type": "text",
+      "id": "promo_code",
+      "label": "Promo Code",
+      "default": "SAVE20"
+    },
+    {
+      "type": "color",
+      "id": "promo_btn_bg",
+      "label": "Button Background",
+      "default": "#FF6600"
+    },
+    {
+      "type": "color",
+      "id": "promo_btn_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quick_view",
+      "label": "Show Quick View",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Premium Grid",
+      "category": "Collection"
+    }
+  ]
+}
+{% endschema %}
+
+{%- assign custom_swatch_lines = section.settings.custom_swatch_definitions | default: '' | replace: '\r', '' | split: '\n' -%}
+{%- assign custom_swatch_name_list = '' -%}
+{%- assign custom_swatch_color_list = '' -%}
+{%- for line in custom_swatch_lines -%}
+  {%- assign trimmed_line = line | strip -%}
+  {%- if trimmed_line != '' -%}
+    {%- assign parts = trimmed_line | split: ':' -%}
+    {%- if parts.size > 1 -%}
+      {%- assign custom_name = parts[0] | strip | downcase | escape | handleize -%}
+      {%- assign custom_color = parts[1] | strip -%}
+
+      {%- if custom_swatch_name_list == '' -%}
+        {%- assign custom_swatch_name_list = custom_name -%}
+        {%- assign custom_swatch_color_list = custom_color -%}
+      {%- else -%}
+        {%- assign custom_swatch_name_list = custom_swatch_name_list | append: '|' | append: custom_name -%}
+        {%- assign custom_swatch_color_list = custom_swatch_color_list | append: '|' | append: custom_color -%}
+      {%- endif -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- assign custom_swatch_name_array = custom_swatch_name_list | split: '|' -%}
+{%- assign custom_swatch_color_array = custom_swatch_color_list | split: '|' -%}
+
+<div id="wd40-root">
+  <!-- Premium grid section markup -->
+<style>
+
+    #wd40-root {
+       --badge-color: #E4002B;
+       --new-badge-color: #0A4A9C;
+       --chip-bg: #F8F9FA;
+       --chip-text: #444444;
+       --chip-border: #E5E5E5;
+       --chip-bg-active: #0056B3;
+       --chip-text-active: #FFFFFF;
+       --chip-border-active: #0056B3;
+       --title-color: #0056B3;
+       --price-color: #222222;
+       --button-bg: #134baa;
+       --promo-btn-bg: #FF6600;
+       --card-padding: {{ section.settings.card_padding | default: 18 }}px;
+       --pagination-active: #134baa;
+       --menu-hover-bg: #f8f9fa;
+       --section-padding-top: {{ section.settings.section_padding_top | default: 20 }}px;
+       --section-padding-bottom: {{ section.settings.section_padding_bottom | default: 20 }}px;
+    }
+
+    .wd40-collection-container { width: 100%; max-width: 1500px; margin: 0 auto; padding: 0 20px; box-sizing: border-box; background-color: #ffffff; padding-top: var(--section-padding-top); padding-bottom: var(--section-padding-bottom); font-family: Inter, sans-serif; position: relative; }
+    
+    .wd40-collection-layout { display: flex; gap: 34px; align-items: flex-start; }
+    
+    /* Toolbar */
+    .wd40-toolbar-container { width: 100%; margin-bottom: 30px; position: relative; z-index: 30; }
+    .wd40-toolbar-inner { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px; position: relative; z-index: 30; }
+    
+    .wd40-tags-scroll-wrapper { flex: 1; position: relative; min-width: 0; display: flex; align-items: center; }
+    .wd40-scroll-arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 32px; height: 32px; background: white; border: 1px solid #e5e5e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; box-shadow: 0 2px 6px rgba(0,0,0,0.1); color: #333; opacity: 0; transition: opacity 0.2s; pointer-events: none; }
+    .wd40-scroll-arrow.visible { opacity: 1; pointer-events: auto; }
+    .wd40-scroll-arrow.left { left: 0; }
+    .wd40-scroll-arrow.right { right: 0; }
+
+    .wd40-tags-list { 
+      display: flex; 
+      gap: 8px; 
+      overflow-x: auto; 
+      flex-wrap: nowrap;
+      scrollbar-width: none; 
+      -ms-overflow-style: none;
+      padding: 4px 0;
+      align-items: center;
+      width: 100%;
+      scroll-behavior: smooth;
+      /* Default mask for JS logic to override */
+      mask-image: none;
+      -webkit-mask-image: none;
+    }
+    .wd40-tags-list::-webkit-scrollbar { display: none; }
+
+    .wd40-tag-item { 
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 42px;
+      padding: 0 20px;
+      border-radius: 999px; 
+      background: var(--menu-hover-bg); 
+      border: 1px solid #E5E5E5; 
+      font-size: 13px; 
+      color: #222222; 
+      white-space: nowrap; 
+      cursor: pointer; 
+      text-decoration: none; 
+      transition: 0.2s ease;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    /* Active Tag Styling - Border & Color instead of Fill */
+    .wd40-tag-item.active { 
+       background: #fff; 
+       border: 2px solid #134baa; 
+       color: #134baa; 
+       font-weight: 800;
+    }
+    .wd40-tag-item:hover { background: #f0f0f0; }
+    
+    /* Desktop Sort */
+    .wd40-sort-desktop { position: relative; display: flex; align-items: center; gap: 10px; margin-left: auto; z-index: 50; flex-shrink: 0; }
+    .wd40-sort-trigger { 
+      height: 42px;
+      font-size: 14px; 
+      font-weight: 700; 
+      display: flex; 
+      align-items: center; 
+      gap: 4px; 
+      color: #222; 
+      cursor: pointer; 
+      padding-bottom: 2px; 
+      user-select: none; 
+      background: #fff; 
+      padding: 0 20px; 
+      border-radius: 999px; 
+      border: 1px solid #E5E5E5; 
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      transition: all 0.2s;
+    }
+    .wd40-sort-trigger:hover { border-color: #ccc; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .wd40-sort-label { text-decoration: underline; text-underline-offset: 4px; }
+    .wd40-sort-dropdown { position: absolute; top: 100%; right: 0; margin-top: 10px; background: #fff; border: 1px solid #E5E5E5; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 8px; min-width: 200px; overflow: hidden; display: none; flex-direction: column; padding: 8px 0; z-index: 100; }
+    .wd40-sort-dropdown.show { display: flex; }
+    .wd40-sort-item { padding: 10px 20px; font-size: 14px; color: #333; cursor: pointer; transition: background 0.1s; text-align: left; display: block; text-decoration: none; }
+    .wd40-sort-item:hover { background: #f5f5f5; }
+    .wd40-sort-item.active { background: #f0f0f0; font-weight: 600; }
+
+    /* Mobile Toolbar */
+    .wd40-mobile-bar { display: none; width: 100%; margin-bottom: 20px; justify-content: center; margin-top: 24px; position: relative; z-index: 20; }
+    .wd40-mobile-btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 24px; background: #222222; color: #ffffff; border: none; border-radius: 999px; font-weight: 600; cursor: pointer; font-size: 14px; max-width: 200px; margin: 0 auto; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .wd40-mobile-btn svg { width: 16px; height: 16px; }
+
+    .wd40-drawer { 
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+      background: white; z-index: 2147483647; 
+      transform: translateX(-100%); transition: transform 0.3s ease;
+      display: flex; flex-direction: column;
+      box-shadow: 2px 0 12px rgba(0,0,0,0.2);
+      pointer-events: none; visibility: hidden;
+    }
+    .wd40-drawer.open { transform: translateX(0); pointer-events: auto; visibility: visible; }
+    .wd40-drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2147483646; display: none; }
+    .wd40-drawer-overlay.open { display: block; }
+    .wd40-drawer-header { padding: 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; font-weight: 700; font-size: 16px; background: #fff; }
+    .wd40-drawer-close { background: none; border: none; font-size: 24px; cursor: pointer; }
+    .wd40-drawer-body { padding: 20px; overflow-y: auto; flex: 1; background: #fff; }
+
+    /* Mobile Sort Header (Thinner) */
+    .wd40-sidebar-header.mobile-sort-header { background-color: #F5F5F5; padding: 10px 16px; }
+    .mobile-sort-options { font-size: 13px; }
+    .mobile-sort-options .facet-checkbox { margin-bottom: 6px; font-size: 13px; }
+
+    /* Promo Block */
+    .wd40-promo-card { position: relative; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; min-height: 300px; width: 100%; box-sizing: border-box; border-radius: 15px; }
+    .wd40-promo-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.3); z-index: 1; }
+    .wd40-promo-content { position: relative; z-index: 2; padding: 20px; width: 100%; }
+    .wd40-video-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+    .wd40-promo-title { margin-bottom: 10px; font-weight: 800; line-height: 1.1; }
+    .wd40-promo-subtitle { margin-bottom: 20px; font-weight: 500; }
+    .wd40-promo-btn { display: inline-block; padding: 12px 24px; font-weight: 700; text-decoration: none; border-radius: 4px; transition: opacity 0.2s; border: none; cursor: pointer; font-size: 14px; }
+    .wd40-promo-btn:hover { opacity: 0.9; }
+    .wd40-countdown { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; font-weight: 700; font-size: 18px; }
+    .wd40-timer-box { display: flex; flex-direction: column; align-items: center; line-height: 1; }
+    .wd40-timer-box small { font-size: 10px; opacity: 0.8; margin-top: 2px; }
+
+    /* Sidebar */
+    .wd40-sidebar { width: 340px; min-width: 340px; flex-shrink: 0; display: block; box-sizing: border-box; }
+    
+    /* Category Menu */
+    .wd40-category-menu { margin-bottom: 30px; width: 100%; }
+    .wd40-cat-item { border-bottom: 1px solid #eee; }
+    .wd40-cat-item:last-child { border-bottom: none; }
+    
+    .wd40-cat-header-row {
+       display: flex; align-items: center; justify-content: space-between;
+       transition: background 0.2s;
+       border-left: 4px solid transparent;
+       border-radius: 0 !important;
+    }
+    .wd40-cat-header-row:hover { background-color: var(--menu-hover-bg); }
+    .wd40-cat-header-row.active { background-color: var(--menu-hover-bg); border-left-color: #0056B3; }
+
+    .wd40-cat-link { 
+        padding: 12px 10px; font-weight: 600; font-size: 15px; cursor: pointer; display: flex; align-items: center; color: #111; user-select: none; gap: 10px; text-decoration: none; flex-grow: 1;
+    }
+    .wd40-cat-header-row.active .wd40-cat-link { color: #0056B3; font-weight: 700; }
+    
+    /* Special SALE Animation */
+    @keyframes shineRed {
+       0% { background-position: -100%; }
+       100% { background-position: 200%; }
+    }
+    .wd40-sale-link {
+       color: #E4002B !important;
+       font-weight: 800 !important;
+       background: linear-gradient(110deg, #E4002B 30%, #ff8a8a 50%, #E4002B 70%);
+       background-size: 200% 100%;
+       -webkit-background-clip: text;
+       -webkit-text-fill-color: transparent;
+       animation: shineRed 3s linear infinite;
+       display: flex;
+       align-items: center;
+       gap: 8px;
+    }
+
+    .wd40-cat-toggle-btn {
+       background: none; border: none; cursor: pointer; padding: 12px; display: flex; align-items: center; justify-content: center; color: #555;
+    }
+    .wd40-cat-toggle-btn:hover { color: #000; }
+
+    .wd40-cat-sublist { display: none; padding-bottom: 12px; padding-left: 14px; }
+    .wd40-cat-sublist a { display: block; padding: 6px 0; color: #555; font-size: 14px; text-decoration: none; }
+    .wd40-cat-sublist a:hover { color: #000; text-decoration: underline; }
+    .wd40-cat-sublist a.active { font-weight: 700; color: #0056B3; }
+    
+    .wd40-sidebar-block { border: 1px solid #E5E5E5; border-radius: 11px; margin-bottom: 20px; background: #ffffff; overflow: hidden; box-sizing: border-box; width: 100%; }
+    .wd40-sidebar-header { padding: 16px; font-size: 16px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; box-sizing: border-box; line-height: 1.2; background: #fff; }
+    .wd40-sidebar-icon { font-size: 20px; font-weight: bold; }
+    .wd40-sidebar-content { padding: 16px; padding-top: 0; width: 100%; box-sizing: border-box; background: #fff; }
+    
+    /* Facets */
+    .facets-header { display: flex; justify-content: flex-end; align-items: baseline; margin-bottom: 4px; border-bottom: 1px solid #E5E5E5; padding-bottom: 4px; width: 100%; }
+    .facets-reset { font-size: 12px; text-decoration: underline; color: #111; cursor: pointer; display: inline-block; }
+    .facet-row { padding: 4px 0; border-bottom: 1px solid #f0f0f0; width: 100%; }
+    .facet-row:last-child { border-bottom: none; }
+    .facet-summary { display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 600; cursor: pointer; color: #111; width: 100%; margin-bottom: 4px; }
+    .facet-display { display: none; flex-direction: column; gap: 2px; width: 100%; margin-top: 4px; }
+    .facet-checkbox { display: flex; align-items: center; cursor: pointer; font-size: 14px; color: #444; width: 100%; position: relative; margin-bottom: 2px; }
+    .facet-checkbox input { position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0; margin: 0 !important; }
+    .custom-checkbox-box { height: 16px; width: 16px; min-width: 16px; min-height: 16px; background-color: #fff; border: 1px solid #ccc; border-radius: 3px; display: flex; align-items: center; justify-content: center; margin-right: 8px; flex-shrink: 0; transition: all 0.2s; }
+    .facet-checkbox:hover .custom-checkbox-box { border-color: #666; }
+    .facet-checkbox input:checked ~ .custom-checkbox-box { background-color: #111; border-color: #111; }
+    .custom-checkbox-box svg { display: none; stroke: white; }
+    .facet-checkbox input:checked ~ .custom-checkbox-box svg { display: block; }
+    .facet-count { color: #888; margin-left: auto; font-size: 0.9em; }
+    .facet-price-inputs { display: flex; gap: 4px; align-items: center; font-size: 14px; width: 100%; flex-wrap: wrap; }
+    .price-input-group { display: flex; align-items: center; border: 1px solid #ccc; border-radius: 4px; padding: 4px 8px; background: #fff; flex: 1; min-width: 70px; }
+    .price-input-group span { color: #666; margin-right: 4px; }
+    .price-input-group input { border: none; width: 100%; outline: none; font-size: 14px; color: #333; min-width: 0; }
+    
+    /* Price Filter UI */
+    .price-filter-container { padding: 10px 4px; }
+    .price-range-visual { height: 4px; background: #e5e5e5; border-radius: 2px; position: relative; margin-bottom: 16px; }
+    .range-bar { position: absolute; height: 100%; background: #111; }
+    .range-handle { width: 14px; height: 14px; background: #fff; border: 2px solid #111; border-radius: 50%; position: absolute; top: 50%; transform: translate(-50%, -50%); cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+    
+    .price-filter-row { display: flex; align-items: center; gap: 8px; }
+    .price-field { display: flex; align-items: center; background: #fff; border: 1px solid #ccc; border-radius: 4px; padding: 0 8px; height: 32px; flex: 1; font-size: 13px; }
+    .price-field:focus-within { border-color: #111; }
+    .currency { color: #888; margin-right: 4px; }
+    .price-field input { border: none; width: 100%; outline: none; font-size: 13px; color: #333; min-width: 0; background: transparent; }
+    .price-separator { color: #888; }
+    .price-apply-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: #f0f0f0; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; color: #333; transition: all 0.2s; }
+    .price-apply-btn:hover { background: #111; color: #fff; border-color: #111; }
+
+    /* Grid */
+    .wd40-product-grid { flex: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-content: start; }
+    .wd40-card { border: 1px solid transparent; border-radius: 15px; background: #ffffff; overflow: hidden; display: flex; flex-direction: column; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(0,0,0,0.08); position: relative; min-width: 0; }
+    .wd40-card:hover { box-shadow: 0 0 25px rgba(0,0,0,0.12); transform: none; }
+
+    /* Card Elements */
+    .wd40-card-media { position: relative; width: 100%; aspect-ratio: 1; overflow: hidden; }
+    .wd40-card-image, .wd40-card-image-hover { width: 100%; height: 100%; object-fit: cover; transition: opacity 0.35s ease; }
+    .wd40-card-image-hover { position: absolute; top: 0; left: 0; opacity: 0; }
+    .wd40-card:hover .wd40-card-image-hover { opacity: 1; }
+    .wd40-card:hover .wd40-card-image { opacity: 0; }
+    .wd40-card.wd40-hover-locked .wd40-card-image-hover { display: none; opacity: 0; }
+    .wd40-card.wd40-hover-locked:hover .wd40-card-image { opacity: 1; }
+    .wd40-badges { position: absolute; top: 10px; left: 10px; display: flex; flex-direction: column; gap: 4px; z-index: 5; }
+    .wd40-badge { background: #E4002B; color: #ffffff; padding: 3px 9px; font-size: 11px; font-weight: 700; border-radius: 3px; text-transform: uppercase; }
+    .wd40-badge.new-badge { background-color: #0A4A9C; }
+    .wd40-card-body { padding: var(--card-padding); display: flex; flex-direction: column; flex: 1; text-align: left; align-items: flex-start; }
+    .wd40-title { font-size: 18px; font-weight: 800; margin: 0 0 4px; line-height: 1.1; color: #0056B3; }
+    .wd40-title a { color: inherit; text-decoration: none; }
+    .wd40-meta-row { margin-bottom: 10px; font-size: 13px; font-weight: 400; line-height: 1.2; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; color: #9AA0AA; justify-content: flex-start; }
+    .wd40-meta-category { font-weight: 600; color: #4F5F73; text-decoration: none; }
+    .wd40-meta-sku-label { text-transform: uppercase; letter-spacing: 0.02em; color: #9AA0AA; font-weight: 600; }
+    .wd40-reviews { margin-bottom: 6px; justify-content: flex-start; display: flex; }
+    .wd40-subtitle { font-size: 14px; font-weight: 400; color: #4A4A4A; margin-bottom: 6px; line-height: 1.45; }
+    .wd40-metafield-subtitle { font-size: 13px; font-weight: 600; color: #111; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .wd40-price-row { display: flex; align-items: center; justify-content: flex-start; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; width: 100%; }
+    .wd40-price { font-size: 15px; font-weight: 700; color: #222222; }
+    
+    .wd40-swatches {
+      display: flex; gap: 6px !important;
+      margin: 0 !important; padding: 0 !important;
+      list-style: none !important;
+      margin-bottom: 8px !important;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+    }
+    .color-label { cursor: pointer; position: relative; display: block !important; width: auto !important; margin: 0 !important; padding: 0 !important; margin-right: 0 !important; }
+    .color-radio { position: absolute; opacity: 0; width: 0; height: 0; margin: 0 !important; }
+    .color-box {
+      display: block; width: 24px !important; height: 24px !important;
+      border-radius: 50%;
+      border: 1px solid rgba(0,0,0,0.1);
+      box-sizing: border-box; transition: all 0.2s ease;
+      box-shadow: inset 0 0 0 2px #fff, 0 0 0 1px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    .color-radio:checked + .color-box { border-color: #000; transform: scale(1.1); box-shadow: inset 0 0 0 2px #fff, 0 0 0 1px #000; }
+    .color-label.is-disabled .color-box { opacity: 0.35; }
+    .color-tooltip {
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 8px);
+      transform: translate(-50%, -2px) scale(0.98);
+      background: var(--swatch-color, #F7F7FA);
+      color: var(--tooltip-text, #111);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      line-height: 1.1;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12), 0 1px 0 rgba(255, 255, 255, 0.35) inset;
+      border: 1px solid rgba(17, 17, 17, 0.08);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+      z-index: 5;
+      backdrop-filter: saturate(1.4);
+    }
+    .color-tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 6px 6px 0 6px;
+      border-style: solid;
+      border-color: var(--swatch-color, #F7F7FA) transparent transparent transparent;
+      filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.1));
+    }
+    .color-label:hover .color-tooltip,
+    .color-radio:focus-visible + .color-box + .color-tooltip { opacity: 1; visibility: visible; transform: translate(-50%, -8px) scale(1); }
+    
+    .wd40-qty-variants-container { width: 100%; margin-bottom: 6px; }
+    .wd40-option-group { margin-bottom: 4px; }
+    .wd40-option-name { font-size: 12px; font-weight: 600; color: #666; display: block; margin-bottom: 2px; }
+    .wd40-chip-container { display: flex; flex-wrap: wrap; gap: 4px; justify-content: flex-start; }
+    .wd40-chip-label { cursor: pointer; margin: 0; }
+    .wd40-chip-radio { display: none; }
+    .wd40-chip-display {
+       display: inline-block; padding: 4px 10px; font-size: 11px; border-radius: 16px; 
+       background: #F8F9FA; 
+       border: 1px solid #E5E5E5; 
+       color: #444444; 
+       transition: all 0.2s; font-weight: 500;
+    }
+    .wd40-chip-label:hover .wd40-chip-display { opacity: 0.8; }
+    .wd40-chip-radio:checked + .wd40-chip-display { 
+        background: #0056B3; 
+        color: #FFFFFF; 
+        border-color: #0056B3; 
+    }
+
+    .wd40-pagination { margin: 40px auto 0; display: flex; justify-content: center; align-items: center; gap: 8px; grid-column: 1 / -1; width: 100%; }
+    .wd40-pagination-link { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 4px; border: 1px solid #DCDCDC; background: #fff; color: #111; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; text-decoration: none; }
+    .wd40-pagination-link:hover, .wd40-pagination-link.current { border-color: #134baa; background: #134baa; color: #ffffff; }
+    .wd40-pagination-link.disabled { opacity: 0.5; cursor: default; pointer-events: none; border-color: #eee; }
+    .pagination-wrapper { width: 100%; display: flex; justify-content: center; grid-column: 1 / -1; }
+    
+    .wd40-no-products { grid-column: 1 / -1; text-align: center; padding: 60px 20px; }
+    .wd40-no-products h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; color: #111; }
+    .wd40-no-products p { color: #666; margin-bottom: 16px; }
+    .wd40-clear-filters-btn { background: #134baa; color: #ffffff; padding: 8px 16px; border-radius: 4px; text-decoration: none; font-size: 14px; font-weight: 600; }
+
+    .wd40-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
+    .wd40-modal-content { background: #fff; border-radius: 8px; width: 100%; max-width: 550px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative; overflow: hidden; padding: 0; min-height: 520px; display: flex; flex-direction: column; }
+    .wd40-modal-close { position: absolute; top: 12px; right: 12px; background: none; border: none; cursor: pointer; color: #999; z-index: 10; font-size: 24px; line-height: 1; }
+    .wd40-modal-close:hover { color: #333; }
+    .wd40-modal-form { height: 100%; display: flex; flex-direction: column; flex: 1; }
+    .wd40-modal-body { padding: 24px; flex: 1; display: flex; flex-direction: column; }
+    
+    .wd40-modal-success { width: 100%; height: 100%; display: flex; flex-direction: column; }
+    .wd40-success-banner { background-color: #E8FCE8; color: #1f801f; padding: 12px 20px; font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; width: 100%; box-sizing: border-box; }
+    .wd40-success-body { padding: 24px; flex: 1; display: flex; flex-direction: column; }
+
+
+
+
+
+
+ @media (max-width: 991px) {
+  .wd40-collection-layout { flex-direction: column; } 
+  .wd40-sidebar { display: none; } 
+  .wd40-sort-desktop { display: none; }
+  .wd40-toolbar-inner { flex-direction: column; align-items: stretch; gap: 15px; }
+
+  /* 🔹 Ocultar product tags en mobile */
+  .wd40-tags-scroll-wrapper {
+    display: none;
+  }
+  
+  .wd40-tags-list { 
+     flex-wrap: nowrap; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; -webkit-overflow-scrolling: touch; 
+     gap: 8px; padding: 4px 0; 
+     mask-image: none;
+     -webkit-mask-image: none;
+  }
+  .wd40-tags-list::-webkit-scrollbar { display: none; }
+  .wd40-tag-item { flex-shrink: 0; }
+  .wd40-scroll-arrow { display: none; }
+
+  .wd40-mobile-bar { display: flex; width: 100%; margin-bottom: 20px; justify-content: center; margin-top: 24px; }
+  .wd40-mobile-btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 24px; background: #222222; color: #ffffff; border: none; border-radius: 999px; font-weight: 600; cursor: pointer; font-size: 14px; max-width: 200px; margin: 0 auto; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+  .wd40-mobile-btn svg { width: 16px; height: 16px; }
+}
+
+
+
+
+
+
+
+
+
+
+    
+    @media (max-width: 768px) {
+      .wd40-product-grid { grid-template-columns: repeat(1, minmax(0, 1fr)); gap: 16px; }
+    }
+    
+    @media (max-width: 480px) {
+      .wd40-product-grid { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+    }
+  
+</style>
+
+<div class="wd40-collection-container">
+  <div class="wd40-toolbar-container">
+    <div class="wd40-toolbar-inner">
+      <div class="wd40-tags-scroll-wrapper">
+        <button type="button" class="wd40-scroll-arrow left" onclick="wd40ScrollTags('left')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <div class="wd40-tags-list">
+          <!-- All Products Tag -->
+          {% assign tags_list = linklists['main-menu'].links %}
+          
+          <!-- Default to top level -->
+          {% for link in linklists['main-menu'].links %}
+             {% if link.title == 'Products' %}{% assign tags_list = link.links %}{% endif %}
+          {% endfor %}
+
+          <!-- Drill Down Logic -->
+          {% assign active_found = false %}
+          {% assign primary_parent_link = nil %}
+          {% for link in tags_list %}
+             {% if link.active and link.links.size > 0 %}
+                {% assign tags_list = link.links %}
+                {% assign active_found = true %}
+                {% assign primary_parent_link = link %}
+             {% elsif link.child_active %}
+                {% assign tags_list = link.links %}
+                {% assign active_found = true %}
+                {% assign primary_parent_link = link %}
+             {% endif %}
+          {% endfor %}
+          
+          <!-- If active link was a leaf node (no children), we want its siblings. Logic above handles parents. -->
+          <!-- If leaf active, loop already has correct list from parent context in Shopify liquid structure usually, but here we simulated top-down. -->
+          <!-- For robustness, we rely on the fact that if we didn't find a deeper level, we stay at current. -->
+          
+          <a href="/collections/all" class="wd40-tag-item {% if collection.handle == 'all' or collection.handle == 'all-products' %}active{% endif %}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            <span>All Products</span>
+          </a>
+          
+          {% if primary_parent_link %}
+            {% assign parent_handle = primary_parent_link.url | split: '/' | last %}
+            <a href="{{ primary_parent_link.url }}" class="wd40-tag-item {% if parent_handle == collection.handle %}active{% endif %}"><span>{{ primary_parent_link.title }}</span></a>
+          {% endif %}
+
+          {% for tag_link in tags_list %}
+             {% if tag_link.title == 'View All Categories' or tag_link.title contains 'All ' %}{% continue %}{% endif %}
+             {% assign tag_handle = tag_link.url | split: '/' | last %}
+             <a href="{{ tag_link.url }}" class="wd40-tag-item {% if tag_handle == collection.handle %}active{% endif %}"><span>{{ tag_link.title }}</span></a>
+          {% endfor %}
+        </div>
+        <button type="button" class="wd40-scroll-arrow right" onclick="wd40ScrollTags('right')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+      </div>
+
+      {% assign current_sort_value = collection.sort_by | default: collection.default_sort_by %}
+      {% assign current_sort_label = '' %}
+      {% for option in collection.sort_options %}
+        {% if option.value == current_sort_value %}
+          {% assign current_sort_label = option.name %}
+          {% break %}
+        {% endif %}
+      {% endfor %}
+      {% if current_sort_label == '' %}
+        {% assign current_sort_label = collection.default_sort_by %}
+        {% for option in collection.sort_options %}
+          {% if option.value == collection.default_sort_by %}
+            {% assign current_sort_label = option.name %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+        {% if current_sort_label == collection.default_sort_by %}
+          {% assign current_sort_label = current_sort_value | replace: '-', ' ' | capitalize %}
+        {% endif %}
+      {% endif %}
+
+      <!-- Desktop Sort By Dropdown -->
+      <div class="wd40-sort-desktop" id="wd40-sort">
+        <div class="wd40-sort-trigger" onclick="wd40ToggleSort(this)">
+          Sort by: <span class="wd40-sort-label">{{ current_sort_label }}</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+        <div class="wd40-sort-dropdown">
+          {% for option in collection.sort_options %}
+            <div class="wd40-sort-item {% if option.value == current_sort_value %}active{% endif %}"
+                 onclick="wd40UpdateSort('{{ option.value }}')">
+              {{ option.name }}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    
+    <div class="wd40-mobile-bar">
+       <button type="button" class="wd40-mobile-btn" onclick="wd40ToggleMobileDrawer(true)">
+         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="21" y2="21"/><line x1="4" x2="20" y1="14" y2="14"/><line x1="4" x2="20" y1="7" y2="7"/><circle cx="14" cy="14" r="2"/><circle cx="10" cy="7" r="2"/><circle cx="16" cy="21" r="2"/></svg>
+         Filter & Sort
+       </button>
+    </div>
+  </div>
+
+  <div class="wd40-collection-layout">
+     <div id="wd40-mobile-overlay" class="wd40-drawer-overlay" onclick="wd40ToggleMobileDrawer(false)"></div>
+     <div id="wd40-mobile-drawer" class="wd40-drawer">
+        <div class="wd40-drawer-header">
+           <span>Filter & Sort</span>
+           <button class="wd40-drawer-close" onclick="wd40ToggleMobileDrawer(false)">×</button>
+        </div>
+        <div class="wd40-drawer-body">
+           <div class="wd40-sidebar-block" style="margin-bottom: 15px;">
+             <div class="wd40-sidebar-header mobile-sort-header" onclick="wd40ToggleSidebar(this)"><span>Sort By</span><span class="wd40-sidebar-icon" style="transform: rotate(0deg); transition: transform 0.2s;"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg></span></div>
+             <div class="wd40-sidebar-content" style="display: none;">
+               <div class="facet-display mobile-sort-options" style="display:flex">
+                 {% for option in collection.sort_options %}
+                   <label class="facet-checkbox" onclick="wd40UpdateSort('{{ option.value }}')">
+                     <input type="radio" name="mobile_sort" value="{{ option.value }}" {% if option.value == current_sort_value %}checked{% endif %}>
+                     <span class="custom-checkbox-box" style="border-radius:50%"><div style="width:8px;height:8px;background:white;border-radius:50%;display:{% if option.value == current_sort_value %}block{% else %}none{% endif %}"></div></span>
+                     <span>{{ option.name }}</span>
+                   </label>
+                 {% endfor %}
+               </div>
+             </div>
+           </div>
+
+           <div class="wd40-category-menu">
+             <div class="wd40-cat-item">
+                <div class="wd40-cat-header-row {% if collection.handle == 'all' %}active{% endif %}" style="border-radius: 0 !important;">
+                   <a href="/collections/all" class="wd40-cat-link">
+                      <!-- All Products Icon Removed -->
+                      <span class="wd40-cat-text">All Products</span>
+                   </a>
+                </div>
+             </div>
+             
+             {% for link in linklists['main-menu'].links %}
+               {% assign parent_link_title = link.title | handleize | downcase %}
+               {% if parent_link_title == 'products' and link.links.size > 0 %}
+                 {% for sub_link in link.links %}
+                   {% assign is_active = false %}
+                   {% if sub_link.active or sub_link.child_active %}{% assign is_active = true %}{% endif %}
+                   
+                   <div class="wd40-cat-item">
+                     <div class="wd40-cat-header-row {% if is_active %}active{% endif %}" style="display: flex; align-items: center; border-radius: 0 !important;">
+                        <a href="{{ sub_link.url }}" class="wd40-cat-link {% if sub_link.title == 'SALE' and is_active == false %}wd40-sale-link{% endif %}" style="flex: 1;">
+                            {% if sub_link.title == 'SALE' and is_active == false %}
+                               <div class="wd40-cat-icon" style="display:flex;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg></div>
+                            {% endif %}
+                            <span class="wd40-cat-text">{{ sub_link.title }}</span>
+                        </a>
+                        {% if sub_link.links.size > 0 %}
+                          <button type="button" class="wd40-cat-toggle-btn" onclick="event.preventDefault(); event.stopPropagation(); wd40ToggleCategory(this)">
+                            <svg class="chevron-down" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: {% if is_active %}none{% else %}block{% endif %}"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                            <svg class="chevron-up" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: {% if is_active %}block{% else %}none{% endif %}"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                          </button>
+                        {% endif %}
+                     </div>
+                     {% assign has_sub = false %}{% if sub_link.links.size > 0 %}{% assign has_sub = true %}{% endif %}
+                     {% if has_sub %}
+                       <div class="wd40-cat-sublist" style="display: {% if is_active %}block{% else %}none{% endif %}">
+                         {% for grand_sub_link in sub_link.links %}
+                           {% if grand_sub_link.title contains 'All ' %}{% continue %}{% endif %}
+                           <a href="{{ grand_sub_link.url }}" class="{% if grand_sub_link.active %}active{% endif %}" style="{% if grand_sub_link.active %}font-weight:700;{% endif %}">{{ grand_sub_link.title }}</a>
+                         {% endfor %}
+                       </div>
+                     {% endif %}
+                   </div>
+                 {% endfor %}
+               {% endif %}
+             {% endfor %}
+           </div>
+
+           {% if section.settings.show_filters %}
+           <form class="wd40-sidebar-block">
+             <div class="wd40-sidebar-header" onclick="wd40ToggleSidebar(this)"><span>Filter</span><span class="wd40-sidebar-icon">–</span></div>
+             <div class="wd40-sidebar-content" style="padding-top: 16px;">
+               <div class="facets-mock-wrapper">
+                 <div class="facets-header"><span class="facets-reset" onclick="window.location.href='{{ collection.url }}'">Remove all</span></div>
+                 {% for filter in collection.filters %}
+                   {% if section.settings.filter_blacklist contains filter.label %}{% continue %}{% endif %}
+                   <div class="facet-row">
+                     <div class="facet-summary" onclick="wd40ToggleFacet(this)">
+                       <span>{{ filter.label }}</span>
+                       <span class="facet-icon">
+                         {% if filter.active_values.size > 0 or forloop.index <= 4 %}
+                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                         {% else %}
+                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                         {% endif %}
+                       </span>
+                     </div>
+                     <div class="facet-display" style="display: {% if filter.active_values.size > 0 or forloop.index <= 4 %}flex{% else %}none{% endif %}">
+                       {% case filter.type %}
+                       {% when 'boolean' or 'list' %}
+                         {% for value in filter.values %}
+                           <label class="facet-checkbox">
+                             <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" id="Filter-{{ filter.label | escape }}-{{ forloop.index }}" {% if value.active %}checked{% endif %} onchange="this.closest('form').submit()">
+                             <span class="custom-checkbox-box">
+                               <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                             </span>
+                             <span>{{ value.label | escape }}</span>
+                             <span class="facet-count">({{ value.count }})</span>
+                           </label>
+                         {% endfor %}
+                       {% when 'price_range' %}
+                         <div class="price-filter-container">
+                            <div class="price-range-visual">
+                               <div class="range-track"></div>
+                               <div class="range-bar" style="left: 0%; right: 0%;"></div>
+                               <div class="range-handle" style="left: 0%"></div>
+                               <div class="range-handle" style="right: 0%"></div>
+                            </div>
+                            <div class="price-filter-row">
+                               <div class="price-field">
+                                  <span class="currency">{{ cart.currency.symbol }}</span>
+                                  <input name="{{ filter.min_value.param_name }}" id="Filter-{{ filter.label | escape }}-GTE" type="number" placeholder="0" min="0" max="{{ filter.range_max | money_without_currency | replace: ',', '' }}">
+                               </div>
+                               <span class="price-separator">—</span>
+                               <div class="price-field">
+                                  <span class="currency">{{ cart.currency.symbol }}</span>
+                                  <input name="{{ filter.max_value.param_name }}" id="Filter-{{ filter.label | escape }}-LTE" type="number" placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}" min="0" max="{{ filter.range_max | money_without_currency | replace: ',', '' }}">
+                               </div>
+                               <button type="submit" class="price-apply-btn"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+                            </div>
+                         </div>
+                       {% endcase %}
+                     </div>
+                   </div>
+                 {% endfor %}
+               </div>
+             </div>
+           </form>
+           {% endif %}
+         </div>
+         <div style="padding: 20px; border-top: 1px solid #eee;">
+           <button onclick="wd40ToggleMobileDrawer(false)" style="width: 100%; padding: 12px; background: #222222; color: #fff; font-weight: 700; border-radius: 4px; border: none; cursor: pointer;">APPLY</button>
+        </div>
+     </div>
+
+     <aside class="wd40-sidebar">
+       <div class="wd40-category-menu">
+         <div class="wd40-cat-item">
+            <div class="wd40-cat-header-row {% if collection.handle == 'all' %}active{% endif %}" style="border-radius: 0 !important;">
+               <a href="/collections/all" class="wd40-cat-link">
+                  <!-- All Products Icon Removed -->
+                  <span class="wd40-cat-text">All Products</span>
+               </a>
+            </div>
+         </div>
+         
+         {% for link in linklists['main-menu'].links %}
+           {% assign parent_link_title = link.title | handleize | downcase %}
+           {% if parent_link_title == 'products' and link.links.size > 0 %}
+             {% for sub_link in link.links %}
+               {% assign is_active = false %}
+               {% if sub_link.active or sub_link.child_active %}{% assign is_active = true %}{% endif %}
+               
+               <div class="wd40-cat-item">
+                 <div class="wd40-cat-header-row {% if is_active %}active{% endif %}" style="display: flex; align-items: center; border-radius: 0 !important;">
+                    <a href="{{ sub_link.url }}" class="wd40-cat-link {% if sub_link.title == 'SALE' and is_active == false %}wd40-sale-link{% endif %}" style="flex: 1;">
+                        {% if sub_link.title == 'SALE' and is_active == false %}
+                           <div class="wd40-cat-icon" style="display:flex;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg></div>
+                        {% endif %}
+                        <span class="wd40-cat-text">{{ sub_link.title }}</span>
+                    </a>
+                    {% if sub_link.links.size > 0 %}
+                      <button type="button" class="wd40-cat-toggle-btn" onclick="event.preventDefault(); event.stopPropagation(); wd40ToggleCategory(this)">
+                        <svg class="chevron-down" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: {% if is_active %}none{% else %}block{% endif %}"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        <svg class="chevron-up" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: {% if is_active %}block{% else %}none{% endif %}"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                      </button>
+                    {% endif %}
+                 </div>
+                 {% assign has_sub = false %}{% if sub_link.links.size > 0 %}{% assign has_sub = true %}{% endif %}
+                 {% if has_sub %}
+                   <div class="wd40-cat-sublist" style="display: {% if is_active %}block{% else %}none{% endif %}">
+                     {% for grand_sub_link in sub_link.links %}
+                       {% if grand_sub_link.title contains 'All ' %}{% continue %}{% endif %}
+                       <a href="{{ grand_sub_link.url }}" class="{% if grand_sub_link.active %}active{% endif %}" style="{% if grand_sub_link.active %}font-weight:700;{% endif %}">{{ grand_sub_link.title }}</a>
+                     {% endfor %}
+                   </div>
+                 {% endif %}
+               </div>
+             {% endfor %}
+           {% endif %}
+         {% endfor %}
+       </div>
+
+       {% if section.settings.show_filters %}
+       <form class="wd40-sidebar-block">
+         <div class="wd40-sidebar-header" onclick="wd40ToggleSidebar(this)"><span>Filter</span><span class="wd40-sidebar-icon">–</span></div>
+         <div class="wd40-sidebar-content" style="padding-top: 16px;">
+           <div class="facets-mock-wrapper">
+             <div class="facets-header"><span class="facets-reset" onclick="window.location.href='{{ collection.url }}'">Remove all</span></div>
+             {% for filter in collection.filters %}
+               {% if section.settings.filter_blacklist contains filter.label %}{% continue %}{% endif %}
+               <div class="facet-row">
+                 <div class="facet-summary" onclick="wd40ToggleFacet(this)">
+                   <span>{{ filter.label }}</span>
+                   <span class="facet-icon">
+                     {% if filter.active_values.size > 0 or forloop.index <= 4 %}
+                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                     {% else %}
+                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                     {% endif %}
+                   </span>
+                 </div>
+                 <div class="facet-display" style="display: {% if filter.active_values.size > 0 or forloop.index <= 4 %}flex{% else %}none{% endif %}">
+                   {% case filter.type %}
+                   {% when 'boolean' or 'list' %}
+                     {% for value in filter.values %}
+                       <label class="facet-checkbox">
+                         <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" id="Filter-{{ filter.label | escape }}-{{ forloop.index }}" {% if value.active %}checked{% endif %} onchange="this.closest('form').submit()">
+                         <span class="custom-checkbox-box">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                         </span>
+                         <span>{{ value.label | escape }}</span>
+                         <span class="facet-count">({{ value.count }})</span>
+                       </label>
+                     {% endfor %}
+                   {% when 'price_range' %}
+                     <div class="price-filter-container">
+                        <div class="price-range-visual">
+                           <div class="range-track"></div>
+                           <div class="range-bar" style="left: 0%; right: 0%;"></div>
+                           <div class="range-handle" style="left: 0%"></div>
+                           <div class="range-handle" style="right: 0%"></div>
+                        </div>
+                        <div class="price-filter-row">
+                           <div class="price-field">
+                              <span class="currency">{{ cart.currency.symbol }}</span>
+                              <input name="{{ filter.min_value.param_name }}" id="Filter-{{ filter.label | escape }}-GTE" type="number" placeholder="0" min="0" max="{{ filter.range_max | money_without_currency | replace: ',', '' }}">
+                           </div>
+                           <span class="price-separator">—</span>
+                           <div class="price-field">
+                              <span class="currency">{{ cart.currency.symbol }}</span>
+                              <input name="{{ filter.max_value.param_name }}" id="Filter-{{ filter.label | escape }}-LTE" type="number" placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}" min="0" max="{{ filter.range_max | money_without_currency | replace: ',', '' }}">
+                           </div>
+                           <button type="submit" class="price-apply-btn"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+                        </div>
+                     </div>
+                   {% endcase %}
+                 </div>
+               </div>
+             {% endfor %}
+           </div>
+         </div>
+       </form>
+       {% endif %}
+     </aside>
+
+     <div class="wd40-product-grid">
+       {% paginate collection.products by section.settings.products_per_page %}
+         {% for product in collection.products %}
+           
+           {% if section.settings.show_promo and forloop.index == section.settings.promo_position %}
+             <div class="wd40-card wd40-promo-card" 
+                  style="{% if section.settings.promo_bg_type == 'image' and section.settings.promo_image != blank %}background-image: url({{ section.settings.promo_image | img_url: '800x' }}); background-size: cover; background-position: center;{% elsif section.settings.promo_bg_type == 'gradient' %}background: {{ section.settings.promo_gradient }};{% else %}background-color: {{ section.settings.promo_bg_color }};{% endif %} color: {{ section.settings.promo_text_color }};">
+                {% if section.settings.promo_bg_type == 'video' and section.settings.promo_video_url != blank %}<video class="wd40-video-bg" autoplay muted loop playsinline src="{{ section.settings.promo_video_url }}"></video>{% endif %}
+                <div class="wd40-promo-overlay"></div>
+                <div class="wd40-promo-content">
+                   <h3 class="wd40-promo-title" style="font-size: 24px;">{{ section.settings.promo_title }}</h3>
+                   <p class="wd40-promo-subtitle" style="font-size: 16px;">{{ section.settings.promo_subtitle }}</p>
+                   {% if section.settings.show_countdown %}<div class="wd40-countdown" data-date="{{ section.settings.countdown_date }}"><div class="wd40-timer-box"><span class="d">0</span><small>D</small></div>:<div class="wd40-timer-box"><span class="h">0</span><small>H</small></div>:<div class="wd40-timer-box"><span class="m">0</span><small>M</small></div>:<div class="wd40-timer-box"><span class="s">0</span><small>S</small></div></div>{% endif %}
+                   {% if section.settings.promo_action == 'link' %}<a href="{{ section.settings.promo_link }}" class="wd40-promo-btn" style="background-color: {{ section.settings.promo_btn_bg }}; color: {{ section.settings.promo_btn_text_color }};">{{ section.settings.promo_btn_text }}</a>{% else %}<button onclick="wd40RevealCode(this, '{{ section.settings.promo_code }}')" class="wd40-promo-btn wd40-code-btn" style="background-color: {{ section.settings.promo_btn_bg }}; color: {{ section.settings.promo_btn_text_color }};">REVEAL CODE</button>{% endif %}
+                </div>
+             </div>
+           {% endif %}
+           
+           <div class="wd40-card">
+              <div class="wd40-badges">
+                {% if product.tags contains 'bestseller' or product.tags contains 'best-seller' %}<span class="wd40-badge">{{ section.settings.badge_text }}</span>{% endif %}
+                {% if section.settings.show_new_badge and product.tags contains 'new' %}<span class="wd40-badge new-badge">{{ section.settings.new_badge_text }}</span>{% endif %}
+                {% if section.settings.show_discount_badge and product.compare_at_price > product.price %}
+                  {% assign discount = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round %}
+                  <span class="wd40-badge">Save up to {{ discount }}%</span>
+                {% endif %}
+              </div>
+
+              <div class="wd40-card-media">
+                <a href="{{ product.url }}" class="js-product-link">
+                  <img src="{{ product.featured_image | img_url: '500x' }}" alt="{{ product.title | escape }}" class="wd40-card-image">
+                  {% if section.settings.show_hover and product.images.size > 1 %}<img src="{{ product.images[1] | img_url: '500x' }}" alt="{{ product.title | escape }}" class="wd40-card-image-hover">{% endif %}
+                </a>
+                {% if section.settings.show_quick_view %}
+                  <button 
+                    class="wd40-quick-view-btn"
+                    onclick="wd40OpenModal({{ product.id }})"
+                    title="Quick View"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                  </button>
+                {% endif %}
+              </div>
+
+                <div class="wd40-card-body">
+                  {%- assign primary_variant = product.selected_or_first_available_variant -%}
+                  {%- assign display_category = product.type | default: collection.title -%}
+                  {%- assign card_content_order = section.settings.card_content_order | default: 'title,subtitle,custom_subtitle,category_sku,reviews,price,swatches,variants' | split: ',' -%}
+
+                  {%- for content_block in card_content_order -%}
+                    {%- assign block_type = content_block | strip -%}
+
+                    {%- case block_type -%}
+                    {%- when 'title' -%}
+                      <h3 class="wd40-title"><a href="{{ product.url }}" class="js-product-link">{{ product.title }}</a></h3>
+                    {%- when 'subtitle' -%}
+                      {% if section.settings.show_subtitle and product.metafields.custom.sub_title %}
+                        <div class="wd40-subtitle">{{ product.metafields.custom.sub_title }}</div>
+                      {% endif %}
+                    {%- when 'custom_subtitle' -%}
+                      {% if section.settings.show_custom_subtitle and product.metafields.custom.sub_title %}
+                        <div class="wd40-metafield-subtitle">{{ product.metafields.custom.sub_title }}</div>
+                      {% endif %}
+                    {%- when 'category_sku' -%}
+                      {% if section.settings.show_sku %}
+                        <div class="wd40-meta-row">
+                          {% if display_category != blank %}<span class="wd40-meta-category">{{ display_category }}</span>{% endif %}
+                          <span class="wd40-meta-separator">/</span>
+                          {% if primary_variant.sku != blank %}<span class="wd40-meta-sku-label">SKU:</span><span class="wd40-meta-sku-value js-product-sku">{{ primary_variant.sku }}</span>{% endif %}
+                        </div>
+                      {% endif %}
+                    {%- when 'reviews' -%}
+                      {% if section.settings.show_reviews %}
+                        <div class="wd40-reviews">{% render 'junip-product-summary', product: product %}</div>
+                      {% endif %}
+                    {%- when 'price' -%}
+                      <div class="wd40-price-row" style="width:100%">
+                        <div class="wd40-price js-product-price">From {{ product.price_min | money }}</div>
+                      </div>
+                    {%- when 'swatches' -%}
+                      {% if section.settings.show_swatches %}
+                        {%- assign has_color = false -%}
+                        {%- for option in product.options_with_values -%}
+                          {%- assign option_name_downcase = option.name | downcase -%}
+                          {%- if option_name_downcase == 'color' -%}{%- assign has_color = true -%}{%- endif -%}
+                        {%- endfor -%}
+
+                        {% if has_color %}
+                          <div class="wd40-swatches">
+                            {%- for option in product.options_with_values -%}
+                              {%- assign option_name_downcase = option.name | downcase | escape | handleize -%}
+                              {%- if option_name_downcase == 'color' -%}
+                                    {%- for value in option.values -%}
+                                    {%- assign pcolor = value | downcase | escape | handleize -%}
+                                    {%- assign pcolor_code = pcolor -%}
+
+                                    {%- assign custom_swatch_match_index = nil -%}
+                                    {%- for custom_name in custom_swatch_name_array -%}
+                                      {%- if custom_name != '' and custom_name == pcolor -%}
+                                        {%- assign custom_swatch_match_index = forloop.index0 -%}
+                                        {%- break -%}
+                                      {%- endif -%}
+                                    {%- endfor -%}
+
+                                    {%- if custom_swatch_match_index != nil and custom_swatch_color_array.size > custom_swatch_match_index -%}
+                                      {%- assign pcolor_code = custom_swatch_color_array[custom_swatch_match_index] -%}
+                                    {%- elsif pcolor == 'carbon-black' or pcolor == 'carbon black' -%}{%- assign pcolor_code = section.settings.color_carbon_black | default: '#0B0B0B' -%}{%- elsif pcolor == 'black' or pcolor == 'black' -%}{%- assign pcolor_code = section.settings.color_black | default: '#000000' -%}{%- elsif pcolor == 'blue' or pcolor == 'blue' -%}{%- assign pcolor_code = section.settings.color_blue | default: '#0A5BA6' -%}{%- elsif pcolor == 'light-blue' or pcolor == 'light blue' -%}{%- assign pcolor_code = section.settings.color_light_blue | default: '#ADD8E6' -%}{%- elsif pcolor == 'green' or pcolor == 'green' -%}{%- assign pcolor_code = section.settings.color_green | default: '#34E159' -%}{%- elsif pcolor == 'orange' or pcolor == 'orange' -%}{%- assign pcolor_code = section.settings.color_orange | default: '#ECBC1E' -%}{%- elsif pcolor == 'gray' or pcolor == 'gray' -%}{%- assign pcolor_code = section.settings.color_gray | default: '#EFEFEF' -%}{%- elsif pcolor == 'grey' or pcolor == 'grey' -%}{%- assign pcolor_code = section.settings.color_gray | default: '#EFEFEF' -%}{%- elsif pcolor == 'hi-vis-lime' or pcolor == 'hi-vis lime' -%}{%- assign pcolor_code = section.settings.color_hi_vis_lime | default: '#C7EA46' -%}{%- elsif pcolor == 'red' or pcolor == 'red' -%}{%- assign pcolor_code = section.settings.color_red | default: '#E4002B' -%}{%- elsif pcolor == 'white' or pcolor == 'white' -%}{%- assign pcolor_code = section.settings.color_white | default: '#FFFFFF' -%}{%- elsif pcolor == 'yellow' or pcolor == 'yellow' -%}{%- assign pcolor_code = section.settings.color_yellow | default: '#FFFF00' -%}{%- elsif pcolor == 'purple' or pcolor == 'purple' -%}{%- assign pcolor_code = section.settings.color_purple | default: '#800080' -%}{%- elsif pcolor == 'pink' or pcolor == 'pink' -%}{%- assign pcolor_code = section.settings.color_pink | default: '#FFC0CB' -%}{%- else -%}{%- assign pcolor_code = value | downcase -%}{%- endif -%}
+
+                                    <label class="color-label" data-product-id="{{ product.id }}" title="{{ value }}" style="margin: 0 !important; width: auto !important;">
+                                      <input
+                                        type="radio"
+                                        name="color-{{- product.id -}}"
+                                        value="{{- value | escape -}}"
+                                        class="color-radio js-variant-radio"
+                                        data-product-id="{{- product.id -}}"
+                                        data-option-name="Color"
+                                        {% if forloop.first %}checked{% endif %}
+                                        style="margin: 0 !important;"
+                                      >
+                                      <span style="background-color: {{- pcolor_code -}};" class="color-box"></span>
+                                      <span class="color-tooltip" data-color="{{ pcolor_code }}" style="--swatch-color: {{ pcolor_code }};">{{ value }}</span>
+                                    </label>
+                                  {%- endfor -%}
+                              {%- endif -%}
+                            {%- endfor -%}
+                          </div>
+                        {% endif %}
+                      {% endif %}
+                    {%- when 'variants' -%}
+                      {% if section.settings.show_quantity_variants %}
+                        {% assign whitelist_options = section.settings.chip_options_whitelist | downcase | split: ',' %}
+                        {% for option in product.options_with_values %}
+                           {% assign option_name_lower = option.name | downcase %}
+                           {% assign show_option = false %}
+                           {% if section.settings.chip_options_whitelist == blank %}
+                              {% if option_name_lower != 'color' %}{% assign show_option = true %}{% endif %}
+                           {% else %}
+                              {% for allowed in whitelist_options %}
+                                 {% assign allowed_trimmed = allowed | strip %}
+                                 {% if allowed_trimmed == option_name_lower %}{% assign show_option = true %}{% endif %}
+                              {% endfor %}
+                           {% endif %}
+
+                           {% if show_option %}
+                              <div class="wd40-qty-variants-container">
+                                 <div class="wd40-option-group">
+                                    {% if section.settings.show_chip_option_name %}
+                                    <span class="wd40-option-name">{{ option.name }}:</span>
+                                    {% endif %}
+                                    <div class="wd40-chip-container">
+                                       {% for value in option.values %}
+                                         <label class="wd40-chip-label">
+                                            <input type="radio" name="{{ option.name | handleize }}-{{ product.id }}" value="{{ value | escape }}" class="wd40-chip-radio js-variant-radio" data-product-id="{{ product.id }}" data-option-name="{{ option.name }}" {% if forloop.first %}checked{% endif %}>
+                                            <span class="wd40-chip-display">{{ value }}</span>
+                                         </label>
+                                       {% endfor %}
+                                    </div>
+                                 </div>
+                              </div>
+                           {% endif %}
+                        {% endfor %}
+                        <script type="application/json" id="variants-data-{{ product.id }}">[
+                           {% for variant in product.variants %}
+                             {
+                               "id": {{ variant.id }}, "sku": "{{ variant.sku }}", "price": "{{ variant.price | money }}", "image": "{{ variant.featured_media | img_url: '500x' }}",
+                               "url": "{{ variant.url }}",
+                               "options": { {% for opt in product.options %}"{{ opt }}": "{{ variant.options[forloop.index0] | escape }}"{% unless forloop.last %},{% endunless %}{% endfor %} }
+                             }{% unless forloop.last %},{% endunless %}
+                           {% endfor %}
+                        ]</script>
+
+                        <template id="wd40-modal-template-{{ product.id }}">
+                           <div class="wd40-modal-form" id="wd40-modal-form-{{ product.id }}">
+                             <div class="wd40-modal-body">
+                                <button class="wd40-modal-close" onclick="wd40CloseModal()">×</button>
+                                <div class="flex flex-col gap-4 h-full">
+                                   <div class="flex gap-4 items-start">
+                                      <img src="{{ product.featured_media | img_url: '500x' }}" alt="" class="w-24 h-24 object-contain rounded bg-gray-50 js-modal-img" />
+                                      <div>
+                                         <h3 class="font-bold text-xl mb-1">{{ product.title }}</h3>
+                                         <div class="text-lg font-semibold text-gray-800 mb-1 js-modal-price">From {{ product.price_min | money }}</div>
+                                         <div class="flex items-center gap-1 mb-2">
+                                            <span class="text-xs text-gray-500">Reviews</span>
+                                         </div>
+                                      </div>
+                                   </div>
+                                   <div class="space-y-3 pt-2 border-t border-gray-100 js-modal-options flex-1"></div>
+                                   <div class="pt-4 mt-auto">
+                                      <button class="w-full py-3 text-white font-bold rounded hover:opacity-90 transition-opacity uppercase" style="background-color: #134baa; color: #ffffff;" onclick="wd40AddToCartInModal({{ product.id }})">Add to Cart</button>
+                                   </div>
+                                </div>
+                             </div>
+                           </div>
+                           <div class="wd40-modal-success" id="wd40-modal-success-{{ product.id }}" style="display:none;">
+                               <div class="wd40-success-banner">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                  Added to your cart!
+                               </div>
+                               <div class="wd40-success-body">
+                                  <button class="wd40-modal-close" onclick="wd40CloseModal()">×</button>
+                                  <div class="flex items-center gap-4 mb-6">
+                                     <img src="{{ product.featured_media | img_url: '500x' }}" alt="" class="w-20 h-20 object-cover roundedborder js-modal-success-img" />
+                                     <div>
+                                        <h4 class="font-bold text-lg">{{ product.title }}</h4>
+                                        <p class="text-gray-600 js-modal-success-price">From {{ product.price_min | money }}</p>
+                                        <p class="text-xs text-gray-500 mt-1 js-modal-success-options"></p>
+                                     </div>
+                                  </div>
+                                  <div class="flex gap-3 mt-auto">
+                                     <a href="/cart" class="flex-1 py-3 text-white font-bold rounded hover:opacity-90 transition-colors uppercase text-sm text-center flex items-center justify-center" style="background-color: #FF6600;">View Cart</a>
+                                     <a href="/checkout" class="flex-1 py-3 text-[#FF6600] bg-white border border-[#FF6600] font-bold rounded hover:bg-orange-50 transition-colors uppercase text-sm text-center flex items-center justify-center">Checkout</a>
+                                  </div>
+                               </div>
+                           </div>
+                        </template>
+                      {% endif %}
+                  {%- endcase -%}
+                {%- endfor -%}
+
+              </div>
+           </div>
+         {% else %}
+           <div class="wd40-no-products">
+              <h3>No products found</h3>
+              <p>Use fewer filters or remove all.</p>
+              <a href="{{ collection.url }}" class="wd40-clear-filters-btn">Clear All Filters</a>
+           </div>
+         {% endfor %}
+         
+         {% if paginate.pages > 1 %}
+           <div class="pagination-wrapper">
+              <nav class="wd40-pagination">
+                {% if paginate.previous %}<a href="{{ paginate.previous.url }}" class="wd40-pagination-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></a>{% endif %}
+                {% for part in paginate.parts %}{% if part.is_link %}<a href="{{ part.url }}" class="wd40-pagination-link">{{ part.title }}</a>{% else %}{% if part.title == paginate.current_page %}<span class="wd40-pagination-link current">{{ part.title }}</span>{% else %}<span class="wd40-pagination-link disabled">{{ part.title }}</span>{% endif %}{% endif %}{% endfor %}
+                {% if paginate.next %}<a href="{{ paginate.next.url }}" class="wd40-pagination-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></a>{% endif %}
+              </nav>
+           </div>
+         {% endif %}
+       {% endpaginate %}
+     </div>
+  </div>
+</div>
+</div>
+
+<!-- Modal HTML -->
+<div id="wd40-modal-overlay" class="wd40-modal" style="display:none; opacity:0; transition: opacity 0.3s ease;">
+   <div class="wd40-modal-content" id="wd40-modal-content"></div>
+</div>
+
+
+<script>
+  // WD-40 Collection Logic
+  (function() {
+    const scrollKey = `wd40-scroll-${window.location.pathname}`;
+
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+
+    const saveScrollPosition = () => {
+      sessionStorage.setItem(scrollKey, String(window.scrollY || document.documentElement.scrollTop || 0));
+    };
+
+    const restoreScrollPosition = () => {
+      const stored = sessionStorage.getItem(scrollKey);
+      if (stored !== null) {
+        requestAnimationFrame(() => window.scrollTo(0, parseFloat(stored)));
+      }
+    };
+
+    restoreScrollPosition();
+    window.addEventListener('beforeunload', saveScrollPosition);
+
+    // Helper: Toggle Sidebar Sections
+    window.wd40ToggleSidebar = function(header) {
+       const content = header.nextElementSibling;
+       const icon = header.querySelector('.wd40-sidebar-icon');
+       const isHidden = content.style.display === 'none';
+       content.style.display = isHidden ? 'block' : 'none';
+       if(icon) {
+         if(icon.tagName === 'SPAN' && (icon.textContent === '+' || icon.textContent === '-')) {
+            icon.textContent = isHidden ? '-' : '+';
+         } else {
+            icon.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+         }
+       }
+    };
+
+    // Helper: Toggle Filter Facets
+    window.wd40ToggleFacet = function(summary) {
+       const display = summary.nextElementSibling;
+       const icon = summary.querySelector('.facet-icon svg');
+       const isHidden = display.style.display === 'none';
+       display.style.display = isHidden ? 'flex' : 'none';
+    };
+
+    // Helper: Toggle Categories
+    window.wd40ToggleCategory = function(btn) {
+       const row = btn.closest('.wd40-cat-header-row');
+       const sublist = row.nextElementSibling;
+       const downIcon = btn.querySelector('.chevron-down');
+       const upIcon = btn.querySelector('.chevron-up');
+       
+       if(sublist && sublist.classList.contains('wd40-cat-sublist')) {
+          const isHidden = sublist.style.display === 'none' || getComputedStyle(sublist).display === 'none';
+          sublist.style.display = isHidden ? 'block' : 'none';
+          if(downIcon) downIcon.style.display = isHidden ? 'none' : 'block';
+          if(upIcon) upIcon.style.display = isHidden ? 'block' : 'none';
+       }
+    };
+    
+    // Helper: Sort Dropdown
+    window.wd40ToggleSort = function(trigger) {
+       const dropdown = trigger.nextElementSibling;
+       dropdown.classList.toggle('show');
+       
+       const closeHandler = (e) => {
+          if(!trigger.contains(e.target) && !dropdown.contains(e.target)) {
+             dropdown.classList.remove('show');
+             document.removeEventListener('click', closeHandler);
+          }
+       };
+       setTimeout(() => document.addEventListener('click', closeHandler), 0);
+    };
+
+    window.wd40UpdateSort = function(value) {
+       const url = new URL(window.location.href);
+       url.searchParams.set('sort_by', value);
+       window.location.href = url.toString();
+    };
+
+    // Helper: Tags Scroll
+    window.wd40ScrollTags = function(direction) {
+       const container = document.querySelector('.wd40-tags-list');
+       if(container) {
+          const amount = 200;
+          container.scrollBy({ left: direction === 'left' ? -amount : amount, behavior: 'smooth' });
+       }
+    };
+    
+    // Tag Scroll Buttons Visibility & Dynamic Mask
+    const tagsWrap = document.querySelector('.wd40-tags-list');
+    if(tagsWrap) {
+       const updateScrollUI = () => {
+          const leftBtn = document.querySelector('.wd40-scroll-arrow.left');
+          const rightBtn = document.querySelector('.wd40-scroll-arrow.right');
+          
+          const showLeft = tagsWrap.scrollLeft > 10;
+          const showRight = tagsWrap.scrollWidth - tagsWrap.clientWidth - tagsWrap.scrollLeft > 10;
+
+          if(leftBtn) leftBtn.classList.toggle('visible', showLeft);
+          if(rightBtn) rightBtn.classList.toggle('visible', showRight);
+          
+          // Dynamic Mask Logic
+          const fadeSize = '60px';
+          let mask = 'none';
+          if (showLeft && showRight) {
+             mask = `linear-gradient(to right, transparent 0%, black ${fadeSize}, black calc(100% - ${fadeSize}), transparent 100%)`;
+          } else if (!showLeft && showRight) {
+             // Start: Clean left edge, fade right
+             mask = `linear-gradient(to right, black 0%, black calc(100% - ${fadeSize}), transparent 100%)`;
+          } else if (showLeft && !showRight) {
+             // End: Fade left, clean right edge
+             mask = `linear-gradient(to right, transparent 0%, black ${fadeSize}, black 100%)`;
+          }
+          tagsWrap.style.maskImage = mask;
+          tagsWrap.style.webkitMaskImage = mask;
+       };
+       tagsWrap.addEventListener('scroll', updateScrollUI);
+       window.addEventListener('resize', updateScrollUI);
+       setTimeout(updateScrollUI, 100);
+    }
+
+    // Helper: Mobile Drawer
+    window.wd40ToggleMobileDrawer = function(show) {
+       const drawer = document.getElementById('wd40-mobile-drawer');
+       const overlay = document.getElementById('wd40-mobile-overlay');
+       if(show) {
+          drawer.classList.add('open');
+          overlay.classList.add('open');
+          document.body.style.overflow = 'hidden';
+       } else {
+          drawer.classList.remove('open');
+          overlay.classList.remove('open');
+          document.body.style.overflow = '';
+       }
+    };
+
+    // Helper: Modal
+    window.wd40OpenModal = function(productId) {
+       const modal = document.getElementById('wd40-modal-overlay');
+       const content = document.getElementById('wd40-modal-content');
+       const template = document.getElementById('wd40-modal-template-' + productId);
+       
+       if(template) {
+          content.innerHTML = template.innerHTML;
+       }
+       
+       modal.style.display = 'flex';
+       requestAnimationFrame(() => { modal.style.opacity = '1'; });
+    };
+
+    window.wd40CloseModal = function() {
+       const modal = document.getElementById('wd40-modal-overlay');
+       modal.style.opacity = '0';
+       setTimeout(() => { modal.style.display = 'none'; }, 300);
+    };
+    
+    window.wd40AddToCartInModal = function(id) {
+        const formView = document.getElementById('wd40-modal-form-' + id);
+        const successView = document.getElementById('wd40-modal-success-' + id);
+        
+        if(formView && successView) {
+           formView.style.display = 'none';
+           successView.style.display = 'flex';
+        }
+    };
+    
+    window.wd40RevealCode = function(btn, code) {
+       btn.textContent = code;
+       btn.classList.add('revealed');
+    };
+
+    const resolveColorValue = (raw) => {
+      if(!raw) return null;
+
+      const temp = document.createElement('div');
+      temp.style.color = raw;
+      document.body.appendChild(temp);
+      const computed = getComputedStyle(temp).color;
+      document.body.removeChild(temp);
+
+      const match = computed.match(/rgb[a]?\((\d+),\s*(\d+),\s*(\d+)/i);
+      if(!match) return null;
+
+      return {
+        r: parseInt(match[1], 10),
+        g: parseInt(match[2], 10),
+        b: parseInt(match[3], 10),
+        css: `rgb(${match[1]}, ${match[2]}, ${match[3]})`
+      };
+    };
+
+    const getContrastingText = (rgb) => {
+      if(!rgb) return '#111';
+      const luminance = (0.2126 * (rgb.r / 255)) + (0.7152 * (rgb.g / 255)) + (0.0722 * (rgb.b / 255));
+      return luminance > 0.6 ? '#111' : '#fff';
+    };
+
+    const applyTooltipColors = () => {
+      const labels = document.querySelectorAll('.color-label');
+      labels.forEach(label => {
+        const tooltip = label.querySelector('.color-tooltip');
+        const swatch = label.querySelector('.color-box');
+        if(!tooltip || !swatch) return;
+
+        const colorValue = tooltip.dataset.color || swatch.style.backgroundColor;
+        const resolved = resolveColorValue(colorValue);
+        if(!resolved) return;
+
+        const textColor = getContrastingText(resolved);
+        tooltip.style.setProperty('--swatch-color', resolved.css);
+        tooltip.style.setProperty('--tooltip-text', textColor);
+      });
+    };
+
+    applyTooltipColors();
+
+    // Variant Selection Logic
+    document.addEventListener('change', function(e) {
+       if(e.target.matches('.js-variant-radio')) {
+          const productId = e.target.dataset.productId;
+          const container = e.target.closest('.wd40-card') || document.getElementById('wd40-modal-form-' + productId);
+          const cardEl = e.target.closest('.wd40-card');
+          const dataScript = document.getElementById('variants-data-' + productId);
+
+          if(!container || !dataScript) return;
+
+          const variants = JSON.parse(dataScript.textContent);
+
+          const cardRoot = container.classList.contains('wd40-card')
+            ? container
+            : document.querySelector('.wd40-card input.js-variant-radio[data-product-id="' + productId + '"]')?.closest('.wd40-card');
+          if(cardRoot && e.isTrusted) {
+            cardRoot.classList.add('wd40-hover-locked');
+          }
+
+          const inputs = container.querySelectorAll('.js-variant-radio[data-product-id="' + productId + '"]');
+
+          const collectSelectedOptions = () => {
+            const selected = {};
+            inputs.forEach(input => {
+              if(input.checked) {
+                selected[input.dataset.optionName] = input.value;
+              }
+            });
+            return selected;
+          };
+
+          const updateColorAvailability = (selectedOptions) => {
+            const colorInputs = container.querySelectorAll('.color-radio[data-product-id="' + productId + '"]');
+            if(!colorInputs.length) return;
+
+            const selectedNonColor = Object.entries(selectedOptions).filter(([key]) => key !== 'Color');
+            const availableColors = variants
+              .filter(v => selectedNonColor.every(([key, val]) => v.options[key] === val))
+              .map(v => v.options['Color']);
+
+            let firstAvailableColor = null;
+            let selectionAdjusted = false;
+
+            colorInputs.forEach(input => {
+              const isAvailable = availableColors.includes(input.value);
+              input.disabled = !isAvailable;
+              const label = input.closest('.color-label');
+              if(label) label.classList.toggle('is-disabled', !isAvailable);
+
+              if(isAvailable && !firstAvailableColor) firstAvailableColor = input;
+              if(input.checked && !isAvailable) {
+                input.checked = false;
+                selectionAdjusted = true;
+              }
+            });
+
+            if((selectionAdjusted || !selectedOptions['Color']) && firstAvailableColor) {
+              firstAvailableColor.checked = true;
+            }
+          };
+
+          updateColorAvailability(collectSelectedOptions());
+          const currentVisibleOptions = collectSelectedOptions();
+
+          // Fuzzy match variant: if hidden options exist, default to first match of visible options
+          const variant = variants.find(v => {
+             return Object.keys(currentVisibleOptions).every(k => v.options[k] === currentVisibleOptions[k]);
+          });
+
+          if(variant) {
+             const priceEl = container.querySelector('.js-product-price, .js-modal-price');
+             if(priceEl) priceEl.textContent = 'From ' + variant.price;
+
+             const cardImgEl = container.querySelector('.wd40-card-image');
+             const modalImgEl = container.querySelector('.js-modal-img');
+
+             if(variant.image) {
+                if(cardImgEl) cardImgEl.src = variant.image;
+                if(modalImgEl) modalImgEl.src = variant.image;
+             }
+             
+             const skuEl = container.querySelector('.wd40-meta-sku-value');
+             if(skuEl) skuEl.textContent = variant.sku;
+             
+             const links = container.querySelectorAll('.js-product-link');
+             links.forEach(a => a.href = variant.url);
+             
+             const successImg = document.getElementById('wd40-modal-success-' + productId)?.querySelector('.js-modal-success-img');
+             const successPrice = document.getElementById('wd40-modal-success-' + productId)?.querySelector('.js-modal-success-price');
+             const successOptions = document.getElementById('wd40-modal-success-' + productId)?.querySelector('.js-modal-success-options');
+
+             if(successImg && variant.image) successImg.src = variant.image;
+             if(successPrice) successPrice.textContent = 'From ' + variant.price;
+             if(successOptions) successOptions.textContent = Object.values(variant.options).join(' / ');
+
+             if(cardEl && e.isTrusted) {
+               cardEl.classList.add('variant-selected');
+             }
+          }
+       }
+    });
+
+    // Initialize availability states on load
+    const defaultVariantInputs = document.querySelectorAll('.wd40-card .js-variant-radio:checked');
+    defaultVariantInputs.forEach(input => {
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    
+    // Ensure default sort check
+    const currentSort = new URLSearchParams(window.location.search).get('sort_by');
+    const defaultSort = {{ collection.default_sort_by | json }};
+    const sortOptions = {{ collection.sort_options | json }};
+    const selectedSort = currentSort || defaultSort;
+
+    if(!currentSort) {
+       const defaultRadio = document.querySelector(`input[name="mobile_sort"][value="${defaultSort}"]`);
+       if(defaultRadio) {
+         defaultRadio.checked = true;
+         const indicator = defaultRadio.parentElement.querySelector('.custom-checkbox-box div');
+         if(indicator) indicator.style.display = 'block';
+       }
+    }
+
+    // Always sync the desktop sort text with the matching Shopify label
+    const desktopSortLabel = document.querySelector('.wd40-sort-label');
+    if(desktopSortLabel && Array.isArray(sortOptions)) {
+      const match = sortOptions.find(o => o.value === selectedSort);
+      if(match) {
+        desktopSortLabel.textContent = match.name;
+      }
+    }
+
+    // Countdown
+    const timers = document.querySelectorAll('.wd40-countdown');
+    timers.forEach(timer => {
+       const targetDate = timer.dataset.date;
+       if(!targetDate) return;
+       const target = new Date(targetDate).getTime();
+       
+       const update = () => {
+           const now = new Date().getTime();
+           const distance = target - now;
+           if(distance < 0) {
+               timer.style.display = 'none';
+               return;
+           }
+           const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+           const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+           const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+           const s = Math.floor((distance % (1000 * 60)) / 1000);
+           
+           const dEl = timer.querySelector('.d'); if(dEl) dEl.innerText = d;
+           const hEl = timer.querySelector('.h'); if(hEl) hEl.innerText = h;
+           const mEl = timer.querySelector('.m'); if(mEl) mEl.innerText = m;
+           const sEl = timer.querySelector('.s'); if(sEl) sEl.innerText = s;
+       };
+       setInterval(update, 1000);
+       update();
+    });
+
+  })();
+</script>
+  
+  

@@ -1,0 +1,136 @@
+{% style %}
+  #shopify-section-{{ section.id }}{
+    padding-top: {{ section.settings.padding_top_desktop }};
+    padding-bottom: {{ section.settings.padding_bottom_desktop }};
+  }
+
+  .cost-saving .sh-60{
+    color: #0A5BA6;
+  }
+
+  .white-paper-access h3{
+    font-size: 48px;
+    line-height: 60px;
+    margin-bottom: 25px;
+  }
+
+  .white-paper-access .des{
+    max-width: 40rem;
+    margin: 0 auto;
+  }
+  .white-paper-access ul {
+    min-height: 175px;
+  }
+  .white-paper-access ul li{
+    font-size: 22px;
+    line-height: 30px;
+    margin-bottom: 10px;
+  }
+
+  .white-paper-access p a{
+    padding: 16px 32px;
+    font-weight: 600 !important;
+    font-size: 16px !important;
+    line-height: 24px !important;
+    text-align: center;
+    color: #fff !important;
+    background: var(--primary-color);
+    width: 100%;
+    display: block;
+    text-decoration: none;
+  }
+
+   .white-paper-access p a:hover{
+     opacity: 0.85;
+     text-decoration: underline;
+   }
+
+  @media( max-width: 767px){
+     #shopify-section-{{ section.id }}{
+      padding-top: {{ section.settings.padding_top_mobile }};
+      padding-bottom: {{ section.settings.padding_bottom_mobile }};
+    }
+  }
+{% endstyle %}
+
+<div class="page-width container-fluid ">
+
+  <div class="row mb-3 mb-lg-5">
+    <div class="col-12 col-lg-12 text-center">
+      <h2 class="sh-60">{{ section.settings.heading }}</h2>
+    </div>
+  </div>
+  
+  <div class="row mb-3 mb-lg-5 white-paper-access">
+    <div class="col-12 col-lg-6 des">
+      {{ section.settings.description }}
+    </div>
+    <div class="col-12 col-lg-6 des">
+      {{ section.settings.description1 }}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 col-lg-12  text-center">
+      <iframe width="860" height="620" frameborder="0" scrolling="no" src="https://1drv.ms/x/c/8864a381ffef21bd/UQS9Ie__gaNkIICI6gAAAAAAABrDB0ysCOWWBFk?em=2&amp;wdAllowInteractivity=False&amp;AllowTyping=True&amp;ActiveCell='OFICIAL'!D8&amp;Item='OFICIAL'!A1%3AH20&amp;wdHideGridlines=True&amp;wdInConfigurator=True&amp;wdInConfigurator=True"></iframe>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Cost Saving",
+  "class": "cost-saving",
+  "settings": [
+     {
+      "type": "text",
+      "id": "heading",
+      "label": "heading",
+    },
+    
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+    },
+    {
+      "type": "richtext",
+      "id": "description1",
+      "label": "Description",
+    },
+    {
+      "type": "url",
+      "id": "cost_url",
+      "label": "Cost Url",
+    },
+    {
+      "type": "text",
+      "id": "padding_top_desktop",
+      "label": "Padding Desktop Top",
+      "default": "80px"
+    },
+     {
+      "type": "text",
+      "id": "padding_bottom_desktop",
+      "label": "Padding Desktop Bottom",
+      "default": "80px"
+    },
+     {
+      "type": "text",
+      "id": "padding_top_mobile",
+      "label": "Padding Mobile Top",
+      "default": "40px"
+    },
+     {
+      "type": "text",
+      "id": "padding_bottom_mobile",
+      "label": "Padding Mobile Bottom",
+      "default": "40px"
+    },
+
+  ],
+  "presets": [
+    {
+      "name": "Cost Saving",
+    }
+  ]
+}
+{% endschema %}

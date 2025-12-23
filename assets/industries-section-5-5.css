@@ -1,0 +1,60 @@
+.industries-section-5-5 h4{
+  
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 32px;
+  display: flex;
+  align-items: center;
+  color: #222222;
+
+}
+
+.template-industries-electrical .industries-section-5-5 .sh-48, .template-industries-oil-gas .industries-section-5-5 .sh-48, .template-industries-manufacturing .industries-section-5-5 .sh-48 {
+  display: none;
+}
+
+.industries-section-5-5 .info-list h2{
+ font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 48px;
+    line-height: 60px;
+    color: #222222;
+
+}
+
+.industries-section-5-5 p{
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 32px;
+  /* or 200% */
+  display: flex;
+  align-items: center;
+  color: #222222;
+}
+
+
+.industries-section-5-5  .bbl {
+    border-bottom: 1px solid var(--Blue-200, #ABB8C3);
+}
+
+@media (max-width: 767px){
+  .industries-section-5-5 h4{
+    font-size: 20px;
+    line-height: 28px;
+  }
+
+  .industries-section-5-5 .info-list h2{
+   font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 600;
+      font-size: 32px;
+      line-height: 40px;
+      color: #222222;
+  
+  }
+}

@@ -1,0 +1,193 @@
+/* === TABS: Base === */
+#ppe-features-tabs{
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  flex-wrap:wrap;            /* permite segunda línea en tablet si hace falta */
+  gap:28px;
+  border-bottom:1px solid #EBF0F5;
+}
+
+/* botón/tab */
+#ppe-features-tabs .nav-link{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 2px;          /* buen hit area sin empujar layout */
+  border:0;
+  background:transparent;
+  cursor:pointer;
+  text-transform:capitalize;
+  color:#222;
+  font-size:20px;
+  line-height:22px;
+  font-weight:600;
+  border-radius:4px;         /* solo para focus */
+  outline:0;
+}
+
+/* subrayado animado como indicador */
+#ppe-features-tabs .nav-link::after{
+  content:"";
+  position:absolute; left:0; bottom:-1px;
+  width:0; height:2px;
+  background:var(--primary-color);
+  transition:width .25s ease;
+}
+#ppe-features-tabs .nav-link:hover{ color:#111; }
+#ppe-features-tabs .nav-link.active{ color:var(--primary-color); }
+#ppe-features-tabs .nav-link.active::after{ width:100%; }
+
+/* Accesibilidad: teclado */
+#ppe-features-tabs .nav-link:focus-visible{
+  box-shadow:0 0 0 3px rgba(33,108,174,.25);
+}
+
+/* === CONTENT === */
+#ppe-features-tabs-content{
+  padding:32px 0 40px;
+}
+#ppe-features-tabs-content h1,
+#ppe-features-tabs-content h2,
+#ppe-features-tabs-content h3,
+#ppe-features-tabs-content h4,
+#ppe-features-tabs-content p{ padding:0; margin:0 0 12px; }
+
+#ppe-features-tabs-content h3{ font-weight:700; font-size:28px; line-height:36px; }
+#ppe-features-tabs-content h4{ font-weight:600; font-size:22px; line-height:30px; }
+#ppe-features-tabs-content p { font-size:16px; line-height:28px; }
+
+/* === LISTAS (ítems con icono a la izquierda) === */
+#ppe-features-tabs-content ul{ list-style:none; margin:0; padding:0; }
+#ppe-features-tabs-content ul li{
+  position:relative;
+  font-weight:400;
+  font-size:16px;
+  line-height:28px;
+  padding-left:48px;           /* espacio para icono */
+  margin-bottom:28px;
+}
+#ppe-features-tabs-content ul li strong{
+  display:block;
+  font-weight:700;
+  font-size:23px;
+  line-height:28px;
+}
+
+/* Grids por sección (desktop = 2 o 3 columnas, tablet = 2, mobile = 1) */
+#hand-gloves ul{ display:grid; grid-template-columns:1fr; gap:28px; }
+#protective-eyewear-glasses-goggles ul{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:32px; }
+#hearing-protection-ear-muffs-ear-plugs ul{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:32px; }
+
+/* === BREAKPOINTS === */
+/* Large (>=1200px): afinamos tipografía */
+@media (min-width:1200px){
+  #ppe-features-tabs .nav-link{ font-size:16px; line-height:24px; }
+  #ppe-features-tabs-content h3{ font-size:32px; line-height:40px; }
+  #ppe-features-tabs-content h4{ font-size:24px; line-height:32px; }
+}
+
+/* Tablet (<=991px): wrap + dos columnas en grids */
+@media (max-width:991px){
+  #ppe-features-tabs{ gap:20px; }
+  #ppe-features-tabs .nav-link{ padding:10px 0; }
+
+  #protective-eyewear-glasses-goggles ul,
+  #hearing-protection-ear-muffs-ear-plugs ul{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:24px;
+  }
+}
+
+/* Mobile (<=767px): tabs con scroll horizontal “pills” + una columna en grids */
+@media (max-width:767px){
+  #ppe-features-tabs{
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    gap:18px;
+    scrollbar-width:none;     /* Firefox */
+  }
+  #ppe-features-tabs::-webkit-scrollbar{ display:none; } /* WebKit */
+
+  #ppe-features-tabs .nav-link{
+    padding:10px 2px;
+    min-width:max-content;    /* que no se rompan los tabs al hacer scroll */
+  }
+
+  #ppe-features-tabs-content{ padding:24px 0 32px; }
+
+  #hand-gloves ul,
+  #protective-eyewear-glasses-goggles ul,
+  #hearing-protection-ear-muffs-ear-plugs ul{
+    grid-template-columns:1fr;
+    gap:22px;
+  }
+
+  #ppe-features-tabs-content ul li{
+    padding-left:44px;
+    margin-bottom:22px;
+  }
+}
+
+/* Ultra-small (<=380px): micro-tuning */
+@media (max-width:380px){
+  #ppe-features-tabs .nav-link{ font-size:14px; }
+}
+
+/* Opcional: reduce motion para usuarios sensibles */
+@media (prefers-reduced-motion:reduce){
+  #ppe-features-tabs .nav-link::after{ transition:none; }
+}
+
+
+/* keep existing desktop look, just fix visibility */
+#ppe-features-tabs{
+  flex-wrap: wrap;          /* allow line break instead of clipping */
+  row-gap: 8px;             /* small vertical gap if it wraps */
+  max-height: none;         /* make sure the second line is not hidden */
+  overflow: visible;        /* don't clip the extra row */
+}
+
+/* each tab behaves like a block that can shrink */
+#ppe-features-tabs .nav-link{
+  max-width: 100%;
+  min-width: 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  flex: 1 1 auto;           /* let all of them share space */
+}
+
+/* ensure underline still lands at the right place even if that tab moved to line 2 */
+#ppe-features-tabs .nav-link.active{
+  position: relative;
+}
+#ppe-features-tabs .nav-link.active::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:-1px;
+  height:2px;
+  background:var(--primary-color);
+}
+
+
+/* Mobile: títulos de tabs más grandes */
+@media (max-width: 767px){
+  #ppe-features-tabs .nav-link,
+  #ppe-features-tabs .nav-link.active{
+    font-size: 17px;
+    line-height: 24px;
+    min-width: 0;              /* mantiene el ellipsis funcionando */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #0d6ba6;
+  }
+}
+
+
+

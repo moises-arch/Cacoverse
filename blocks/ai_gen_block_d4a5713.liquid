@@ -1,0 +1,440 @@
+{% doc %}
+  @prompt
+    Create a banner that have a background image  and a foreground image aligned to right bottom.        it has a headline, subheading and a button.  it should be fully customizable.   the height can be adjusted from 300px to 500px.      the foreground should not be displayed in the mobile version., The  foreground should be contened in the available space and the height can be adjusted.   the text conted should have the option to adjust the left padding, Content left padding can be ajusted from 50 to 500
+
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-banner-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    height: {{ block.settings.banner_height }}px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    background-color: {{ block.settings.fallback_color }};
+  }
+
+  .ai-banner-background-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+
+  .ai-banner-background-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-banner-background-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ai-banner-background-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    opacity: 0.3;
+  }
+
+  .ai-banner-empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .ai-banner-foreground-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 0;
+    right: 16%;
+    z-index: 3;
+    width: 50%;
+    height: {{ block.settings.foreground_height }}%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+  }
+
+  .ai-banner-foreground-{{ ai_gen_id }} img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
+
+
+
+.ai-banner-content-{{ ai_gen_id }} {
+  position: relative;
+  z-index: 2;
+  padding-top: 10px;     /* 👈 small gap from the top edge */
+  padding-bottom: 20px;  /* keep a little breathing room at the bottom */
+  padding-left: 10px;
+  padding-right: 10px;
+  
+  color: {{ block.settings.text_color }};
+  max-width: 1400px;     /* cap at 1400px inside your 1500px box */
+  width: 100%;           /* stay responsive */
+  margin: 0 auto;        /* center horizontally */
+}
+
+
+
+  .ai-banner-headline-{{ ai_gen_id }} {
+    font-size: {{ block.settings.headline_size }}px;
+    font-weight: 700;
+    margin: 0 0 16px 0;
+    line-height: 1.2;
+  }
+
+  .ai-banner-subheading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subheading_size }}px;
+    font-weight: 400;
+    margin: 0 0 24px 0;
+    line-height: 1.4;
+    opacity: 0.9;
+  }
+
+  .ai-banner-button-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: {{ block.settings.button_color }};
+    color: {{ block.settings.button_text_color }};
+    text-decoration: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+
+
+
+
+
+
+
+
+/* Root: keep it behind header stacks */
+.ai-banner-{{ ai_gen_id }} {
+  position: relative;
+  z-index: 0;            /* ensure header/dropdowns (usually z>=100) sit above */
+}
+
+/* Background stays lowest */
+.ai-banner-background-{{ ai_gen_id }} {
+  z-index: 0;
+}
+
+/* Foreground: above bg, below text, and not blocking hovers */
+.ai-banner-foreground-{{ ai_gen_id }} {
+  position: absolute;
+  bottom: 0;
+  right: 16%;
+  z-index: 1;            /* lower than content; safely under menus */
+  width: 50%;
+  height: {{ block.settings.foreground_height }}%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  pointer-events: none;  /* <-- critical: don’t block nav dropdown hover/clicks */
+}
+
+.ai-banner-foreground-{{ ai_gen_id }} img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Text/content above the foreground */
+.ai-banner-content-{{ ai_gen_id }} {
+  position: relative;
+  z-index: 2;            /* sits above fg, still below header */
+  padding-top: 10px;
+  padding-bottom: 20px;
+  padding-left: {{ block.settings.content_left_padding }}px; /* use your setting */
+  padding-right: 10px;
+  color: {{ block.settings.text_color }};
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+  .ai-banner-button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_color }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-banner-{{ ai_gen_id }} {
+      height: {{ block.settings.banner_height | times: 0.8 }}px;
+    }
+
+    .ai-banner-foreground-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    .ai-banner-content-{{ ai_gen_id }} {
+      max-width: 100%;
+      padding: 20px;
+    }
+
+    .ai-banner-headline-{{ ai_gen_id }} {
+      font-size: {{ block.settings.headline_size | times: 0.8 }}px;
+    }
+
+    .ai-banner-subheading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subheading_size | times: 0.9 }}px;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .ai-banner-content-{{ ai_gen_id }} {
+      padding: 16px;
+    }
+
+    .ai-banner-headline-{{ ai_gen_id }} {
+      font-size: {{ block.settings.headline_size | times: 0.7 }}px;
+      margin-bottom: 12px;
+    }
+
+    .ai-banner-subheading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subheading_size | times: 0.8 }}px;
+      margin-bottom: 20px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-banner-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-banner-background-{{ ai_gen_id }}">
+    {% if block.settings.background_image %}
+      <img
+        src="{{ block.settings.background_image | image_url: width: 2000 }}"
+        alt="{{ block.settings.background_image.alt | escape }}"
+        loading="lazy"
+        width="{{ block.settings.background_image.width }}"
+        height="{{ block.settings.background_image.height }}"
+      >
+    {% else %}
+      <div class="ai-banner-background-placeholder-{{ ai_gen_id }}">
+        {{ 'hero-apparel-1' | placeholder_svg_tag }}
+        <div class="ai-banner-empty-state-{{ ai_gen_id }}">
+          Add a background image to get started
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="ai-banner-content-{{ ai_gen_id }}">
+    {% if block.settings.headline != blank %}
+      <h1 class="ai-banner-headline-{{ ai_gen_id }}">{{ block.settings.headline }}</h1>
+    {% endif %}
+
+    {% if block.settings.subheading != blank %}
+      <p class="ai-banner-subheading-{{ ai_gen_id }}">{{ block.settings.subheading }}</p>
+    {% endif %}
+
+    {% if block.settings.button_text != blank and block.settings.button_link != blank %}
+      <a href="{{ block.settings.button_link }}" class="ai-banner-button-{{ ai_gen_id }}">
+        {{ block.settings.button_text }}
+      </a>
+    {% endif %}
+  </div>
+
+  {% if block.settings.foreground_image %}
+    <div class="ai-banner-foreground-{{ ai_gen_id }}">
+      <img
+        src="{{ block.settings.foreground_image | image_url: width: 800 }}"
+        alt="{{ block.settings.foreground_image.alt | escape }}"
+        loading="lazy"
+        width="{{ block.settings.foreground_image.width }}"
+        height="{{ block.settings.foreground_image.height }}"
+      >
+    </div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Custom banner",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "banner_height",
+      "min": 300,
+      "max": 500,
+      "step": 10,
+      "unit": "px",
+      "label": "Banner height",
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "content_left_padding",
+      "min": 50,
+      "max": 500,
+      "step": 10,
+      "unit": "px",
+      "label": "Content left padding",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image"
+    },
+    {
+      "type": "image_picker",
+      "id": "foreground_image",
+      "label": "Foreground image"
+    },
+    {
+      "type": "range",
+      "id": "foreground_height",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Foreground image height",
+      "default": 80
+    },
+    {
+      "type": "color",
+      "id": "fallback_color",
+      "label": "Fallback background color",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "Headline",
+      "default": "Welcome to our store"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Discover our amazing collection of products"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Shop now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "headline_size",
+      "min": 24,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "label": "Headline size",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "min": 14,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Subheading size",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Button style"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Background color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_color",
+      "label": "Hover background color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom banner"
+    }
+  ],
+  "tag": null
+}
+{% endschema %}

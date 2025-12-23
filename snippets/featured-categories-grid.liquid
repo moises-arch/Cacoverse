@@ -1,0 +1,100 @@
+{% comment %}
+  Renders a tabs
+
+  Accepts:
+  - categories: {array} Product Liquid object
+  - section: object main section
+
+
+  Usage:
+  {% render 'featured-categories-grid', categories: categories, section: section %}
+{% endcomment %}
+
+<div class="grid-featured-categories desc ">
+  {% if section.settings.show_description == true %}
+    <div class="row">
+      <div class="col-md-12 mb-5">
+        {{- section.settings.description -}}
+      </div>
+    </div>
+  {% endif %}
+  {% if section.settings.heading != blank %}
+    <div class="row">
+      <div class="col-md-12 mb-5">
+        <h2 class="sh-48">{{ section.settings.heading }}</h2>
+      </div>
+    </div>
+  {% endif %}
+  <div class="row">
+    {% for block in section.blocks %}
+      {% if block.settings.collection_id %}
+<div class="col-6 col-md-3 col-lg-3">
+          {% assign mycategory_url = block.settings.collection_id.url %}
+          {% if block.settings.show_type == 'yes' %}
+            {% assign category_product_type = block.settings.type_filter | replace: ' ', '+' %}
+            {% assign mycategory_url = block.settings.collection_id.url
+              | append: '?filter.p.product_type='
+              | append: category_product_type
+            %}
+          {% endif %}
+          <div
+            class="imghvr-push-up category-item d-flex align-items-start flex-column gap-3 mb-3 mb-sm-5"
+            onclick="location.href = '{{ mycategory_url }}';"
+          >
+
+              {% if block.settings.show_product_type_image == blank %}
+                  {% assign coll_image = block.settings.collection_id.image.src %}
+                {% else %}
+                  {% assign coll_image = block.settings.show_product_type_image %}
+                {% endif %}
+                
+                 {% if block.settings.show_product_type_image_hover == blank %}
+                  {% assign coll_image_second = block.settings.collection_id.metafields.custom.second_image.value %}
+                {% else %}
+                  {% assign coll_image_second = block.settings.show_product_type_image_hover %}
+                {% endif %}
+
+               <figure class="imghvr-push-up">
+                      <img
+                        src="{{ coll_image | img_url: '464x' }}"
+                        width="464"
+                        height="720"
+                        alt="collection-1"
+                        class="img-fluid"
+                        loading="lazy"
+                      >
+                        
+                      <figcaption>
+                        <img
+                          src="{{ coll_image_second | img_url: '464x' }}"
+                          width="464"
+                          height="720"
+                          alt="collection-1-pushup"
+                          class="img-fluid"
+                          loading="lazy"
+                        >
+                      </figcaption>
+                    </figure>
+                    
+            <h3 class="sh-32">
+              {{ block.settings.collection_id.title }}
+              {% render 'arrow-icon' %}
+            </h3>
+            <p class="sp-16">
+              {{ block.settings.collection_id.metafields.custom.short_description }}
+            </p>
+            {% if section.settings.show_buttons == true and section.settings.button_label != blank %}
+              <a
+                class="s-btn"
+                href="{{ mycategory_url }}"
+                title="{{ section.settings.button_label }}"
+              >
+                <span>{{- section.settings.button_label -}}</span>
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>

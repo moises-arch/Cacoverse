@@ -1,0 +1,434 @@
+{% style %}
+  /* Desktop spacing */
+  #shopify-section-{{ section.id }} .page-width,
+  #shopify-section-{{ section.id }} .container-fluid {
+    padding-top: {{ section.settings.padding_top_desktop }};
+    padding-bottom: {{ section.settings.padding_bottom_desktop }};
+  }
+
+  /* Mobile spacing */
+  @media (max-width: 767px) {
+    #shopify-section-{{ section.id }} .page-width,
+    #shopify-section-{{ section.id }} .container-fluid {
+      padding-top: {{ section.settings.padding_top_mobile }};
+      padding-bottom: {{ section.settings.padding_bottom_mobile }};
+    }
+  }
+{% endstyle %}
+
+{{ 'main-product.css' | asset_url | stylesheet_tag }}
+{{ 'trending_products-custom.css' | asset_url | stylesheet_tag }}
+{{ 'custom-logo-form.css' | asset_url | stylesheet_tag }}
+{{ 'distributor-form.css' | asset_url | stylesheet_tag }}
+
+
+<div class="page-width container-fluid">
+  <div class="row">
+    <div class="col-12 col-md-6">
+      <div class="row mb-3 mb-md-4">
+        <div class="col-md-12 trending_products_header text-center">
+          {{ section.settings.heading }}
+        </div>
+      </div>
+      <div class="row trending_products ">
+        {% for block in section.blocks %}
+          <div class="col-sm-6 col-md-6">
+            {% render 'card-product-cus', product: block.settings.product_id %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="col-12 col-md-6">
+      <div class="row">
+        <div class="col-md-12 custom_logo_form_header text-center">
+          <h2 class="hi-2"><span>Step 2:</span> Fill Out the Form</h2>
+          <p class="p-2">Fill out the form below to get your custom helmet started. Our design team will prepare and send you a digital proof within 24 hours for your review and approval.</p>
+          <br>
+        </div>
+      </div>
+      <div class="row custom_logo_form_content mb-3 mb-md-4">
+        <div class="globo-formbuilder" data-id="MTAwMTA0"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Create a map for each product's color options and images
+  const productColorImageMap = {};
+  {% for block in section.blocks %}
+    productColorImageMap["{{ block.settings.product_id.id }}"] = {
+      {% for variant in block.settings.product_id.variants %}
+        "{{ variant.option1 | downcase }}": "{{ variant.featured_image | img_url: '750x' }}"{% unless forloop.last %},{% endunless %}
+      {% endfor %}
+    };
+  {% endfor %}
+
+  // Listen for color changes on each product
+  document.querySelectorAll('.color-radio').forEach(radio => {
+    radio.addEventListener('change', function () {
+      const productId = this.dataset.productId; // Get product ID
+      const selectedColor = this.value; // Get the selected color
+      const newImageSrc = productColorImageMap[productId][selectedColor]; // Get the corresponding image URL
+
+      // Check if the newImageSrc is a placeholder image
+      if (newImageSrc && !newImageSrc.includes('/assets/no-image')) {
+        // Update the image for the selected product
+        const productImage = document.querySelector(`.card-media img[data-product-id="${productId}"]`);
+        const loader = document.querySelector(`.loader[data-product-id="${productId}"]`);
+        
+        if (productImage) {
+          // Show loader
+          loader.style.display = 'block';
+          productImage.style.opacity = 0;
+
+          // Change the image source
+          productImage.src = newImageSrc;
+
+          // Wait for the image to load
+          productImage.onload = () => {
+            loader.style.display = 'none'; // Hide loader
+            productImage.style.opacity = 1; // Show the image
+          };
+
+          // Handle image load failure
+          productImage.onerror = () => {
+            loader.style.display = 'none'; // Hide loader
+            console.error(`Failed to load image for color: ${selectedColor}`);
+          };
+        }
+      } else {
+        console.log(`Placeholder image detected for color: ${selectedColor} of product ID: ${productId}. Image update skipped.`);
+      }
+    });
+  });
+</script>
+
+<script>
+ document.addEventListener('DOMContentLoaded', function () {
+  // For each product card
+  document.querySelectorAll('.card-wraper').forEach(function (card) {
+    let productId = card.dataset.productId;
+    let variantsScript = document.getElementById('variants-data-' + productId);
+
+    if (!variantsScript) return;
+
+    let variantsData = JSON.parse(variantsScript.textContent);
+
+    let selectedOptions = {};
+
+    // Update SKU function
+    function updateSKU() {
+      let variant = variantsData.find((v) => {
+        return v.options.every((opt, i) => {
+          if (!selectedOptions[i]) return true;
+          return opt.toLowerCase() === selectedOptions[i].toLowerCase();
+        });
+      });
+
+      let skuEl = card.querySelector('.sku-text');
+      if (variant && skuEl) {
+        skuEl.textContent = 'SKU: ' + variant.sku;
+      }
+    }
+
+    // Listen for changes on radios
+    card.querySelectorAll('input[type=radio]').forEach(function (input) {
+      input.addEventListener('change', function () {
+        let name = input.getAttribute('name').toLowerCase();
+
+        if (name.includes('color')) {
+          selectedOptions[0] = input.value;
+
+          // 🔹 Update Helmet Color legend
+          let colorLegend = card.querySelector('.helmet-color-label');
+          if (colorLegend) {
+            colorLegend.textContent = 'Helmet Color: ' + input.value.charAt(0).toUpperCase() + input.value.slice(1).toLowerCase();
+          }
+        } else if (name.includes('series')) {
+          selectedOptions[1] = input.value;
+
+          // (optional) update a Series legend if you have one
+          let seriesLegend = card.querySelector('.helmet-series-label');
+          if (seriesLegend) {
+            seriesLegend.textContent = 'Series: ' + input.value.charAt(0).toUpperCase() + input.value.slice(1).toLowerCase();
+          }
+        }
+
+        updateSKU();
+      });
+    });
+  });
+});
+
+
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('.card-wraper').forEach(function (card) {
+    let productId = card.dataset.productId;
+    let variantsScript = document.getElementById('variants-data-' + productId);
+    if (!variantsScript) return;
+
+    let variantsData = JSON.parse(variantsScript.textContent);
+    let selectedOptions = {};
+
+    function updateSKU() {
+      let variant = variantsData.find((v) => {
+        return v.options.every((opt, i) => opt.toLowerCase() === (selectedOptions[i] || '').toLowerCase());
+      });
+
+      let skuEl = card.querySelector('.sku-text');
+      if (variant && skuEl) {
+        skuEl.textContent = 'SKU: ' + variant.sku;
+      }
+    }
+
+    // Listen to color + series change
+    card.querySelectorAll('input[type=radio]').forEach(function (input) {
+      input.addEventListener('change', function () {
+        let name = input.getAttribute('name').toLowerCase();
+        if (name.includes('color')) {
+          selectedOptions[0] = input.value;
+        } else if (name.includes('series')) {
+          selectedOptions[1] = input.value;
+        }
+        updateSKU();
+      });
+    });
+
+    // ✅ Select the default (first available) variant on load
+    let defaultVariant = variantsData.find(v => v.available) || variantsData[0];
+    if (defaultVariant) {
+      defaultVariant.options.forEach((opt, i) => {
+        let input = card.querySelector(
+          `input[type=radio][value="${opt.toLowerCase()}"]`
+        );
+        if (input) {
+          input.checked = true;
+          selectedOptions[i] = opt;
+          input.dispatchEvent(new Event('change')); // trigger change
+        }
+      });
+    }
+  });
+});
+</script>
+
+
+<script>
+  // Prevent Shopify sections or form scripts from scrolling to top when focus changes
+  document.addEventListener('focusout', (e) => {
+    // Skip if inside Globo form
+    if (e.target.closest('.globo-formbuilder')) {
+      history.replaceState(null, null, window.location.pathname + window.location.search);
+    }
+  });
+</script>
+
+
+{% comment %}
+  <script>
+    const interval = setInterval(() => {
+      const hiddenInput = document.getElementById("hidden-1");
+      const cards = document.querySelectorAll(".card-wraper");
+
+      if (hiddenInput && cards.length > 0) {
+        clearInterval(interval); // Stop checking once everything is ready
+
+        // Set up click handler for all cards
+        cards.forEach(function (card) {
+          card.addEventListener("click", function () {
+            // Remove active from all
+            cards.forEach(c => c.classList.remove("active"));
+
+            // Add active to this
+            this.classList.add("active");
+
+            // Get <p> content from .descp
+            const desc = this.querySelector(".descp");
+            if (desc) {
+              const pTags = desc.querySelectorAll("p");
+              let combinedText = "";
+              pTags.forEach(p => {
+                combinedText += p.textContent.trim() + " ";
+              });
+
+              hiddenInput.value = combinedText.trim();
+              console.log("Set value to:", hiddenInput.value);
+            }
+          });
+        });
+
+        // ✅ Trigger the first one manually on page load
+        cards[0].click();
+      }
+    }, 2000); // check every 200ms
+
+      const radioInterval = setInterval(() => {
+      const radios = document.querySelectorAll(".color-radio");
+      const selectBox = document.getElementById("100104-select-1");
+
+      if (radios.length > 0 && selectBox) {
+        clearInterval(radioInterval); // Stop checking once form is ready
+
+        radios.forEach(function (radio) {
+          radio.addEventListener("click", function () {
+            const selectedValue = this.value.toLowerCase();
+            const options = selectBox.options;
+            let found = false;
+
+            for (let i = 0; i < options.length; i++) {
+              const optionValue = options[i].value.toLowerCase();
+              if (optionValue === selectedValue) {
+                selectBox.selectedIndex = i;
+                found = true;
+                break;
+              }
+            }
+
+            if (!found) {
+              console.warn("No matching option (case-insensitive) for:", selectedValue);
+            }
+          });
+        });
+      }
+    }, 2000); // check every 200ms
+
+
+
+  </script>
+
+  <script>
+    let attempts = 0;
+    const maxAttempts = 20;
+
+    const syncQuantityInputs = setInterval(() => {
+      const inputs = document.querySelectorAll(".quantity__input");
+      const target = document.getElementById("100104-number-1");
+
+      if (inputs.length && target) {
+        clearInterval(syncQuantityInputs);
+
+        // Set initial value
+        target.value = inputs[0].value;
+
+        // Add change listeners to all
+        inputs.forEach((input) => {
+          input.addEventListener("change", function () {
+            target.value = this.value;
+            console.log("Synced value to #100104-number-1:", this.value);
+          });
+        });
+      }
+
+      if (++attempts > maxAttempts) {
+        clearInterval(syncQuantityInputs);
+        console.warn("Could not find .quantity__input or #100104-number-1");
+      }
+    }, 200);
+  </script>
+{% endcomment %}
+
+<script>
+  setTimeout(function () {
+    const input = document.querySelector('input[name="number-1"]');
+    if (!input) return;
+
+    const parent = input.closest('.globo-form-control');
+    const errorContainer = document.getElementById('100104-number-1-error');
+    const form = document.querySelector('.globo-form-id-100104 .g-container');
+    if (!form || !parent || !errorContainer) return;
+
+    // Error message element
+    const errorMsg = document.createElement('p');
+    errorMsg.className = 'help-block error';
+    errorMsg.textContent = 'Value must be at least 20';
+
+    function validate() {
+      const value = parseFloat(input.value.trim());
+
+      if (isNaN(value) || value < 20) {
+        parent.classList.add('has-error');
+        parent.classList.remove('has-success');
+
+        if (!errorContainer.contains(errorMsg)) {
+          errorContainer.appendChild(errorMsg);
+        }
+        return false; // invalid
+      } else {
+        parent.classList.remove('has-error');
+        parent.classList.add('has-success');
+
+        if (errorContainer.contains(errorMsg)) {
+          errorContainer.removeChild(errorMsg);
+        }
+        return true; // valid
+      }
+    }
+
+    // Validate on input
+    input.addEventListener('input', validate);
+
+    // Validate on form submit
+    form.addEventListener('submit', function (e) {
+      if (!validate()) {
+        e.preventDefault(); // prevent submit if invalid
+      }
+    });
+  }, 2000); // Delay to wait for form to load
+</script>
+
+{% schema %}
+{
+  "name": "Trending Products Cus",
+  "class": "trending-products",
+  "settings": [
+    {
+      "type": "html",
+      "id": "heading",
+      "label": "heading"
+    },
+    {
+      "type": "text",
+      "id": "padding_top_desktop",
+      "label": "Padding Desktop Top",
+      "default": "60px"
+    },
+    {
+      "type": "text",
+      "id": "padding_bottom_desktop",
+      "label": "Padding Desktop Bottom",
+      "default": "80px"
+    },
+    {
+      "type": "text",
+      "id": "padding_top_mobile",
+      "label": "Padding Mobile Top",
+      "default": "40px"
+    },
+    {
+      "type": "text",
+      "id": "padding_bottom_mobile",
+      "label": "Padding Mobile Bottom",
+      "default": "40px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "trending_product",
+      "name": "Trending Product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product_id",
+          "label": "Select Product"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trending Products Cus"
+    }
+  ]
+}
+{% endschema %}

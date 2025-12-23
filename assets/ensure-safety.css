@@ -1,0 +1,20 @@
+.ensure-safety h4, .ensure-safety h5{
+  font-weight: 600;
+}
+
+.ensure-safety p{
+  margin:0;
+  padding: 20px 0;
+}
+.ensure-safety  .row.icons-with-text {
+    box-sizing: border-box;
+    padding: 40px 0px 80px;
+    border-bottom: 0.5px solid #ABB8C3;
+}
+.ensure-safety .icons-with-images{
+  margin-top: 40px;
+}
+.ensure-safety .icons-with-images h4, .ensure-safety .icons-with-images p{
+  margin:0;
+  padding: 0;
+}

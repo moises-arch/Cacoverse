@@ -1,0 +1,1479 @@
+
+<div id="wd40-root-{{ section.id }}">
+<style>
+    #wd40-root-{{ section.id }} {
+       --badge-color: #E4002B;
+       --new-badge-color: #0A4A9C;
+       --chip-bg: #F8F9FA;
+       --chip-text: #444444;
+       --chip-border: #E5E5E5;
+       --chip-bg-active: #0056B3;
+       --chip-text-active: #FFFFFF;
+       --chip-border-active: #0056B3;
+       --title-color: #0056B3;
+       --price-color: #222222;
+       --button-bg: #134baa;
+       --promo-btn-bg: #FF6600;
+       --card-padding: 18px; /* Default card padding */
+       --pagination-active: #134baa;
+       --menu-hover-bg: #f8f8f8;
+    }
+
+    .wd40-collection-container { 
+      width: 100%; 
+      max-width: 1500px; 
+      margin: 0 auto; 
+      padding: 20px; 
+      box-sizing: border-box; 
+      background-color: #ffffff; 
+      padding-top: {{ section.settings.padding_top_desktop }}; 
+      padding-bottom: {{ section.settings.padding_bottom_desktop }}; 
+      font-family: Inter, sans-serif; 
+      position: relative; 
+    }
+    
+    .wd40-collection-layout { display: flex; gap: 34px; align-items: flex-start; }
+    
+    /* Toolbar */
+    .wd40-toolbar-container { width: 100%; margin-bottom: 30px; position: relative; z-index: 30; }
+    .wd40-toolbar-inner { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px; position: relative; z-index: 30; }
+    
+    .wd40-tags-scroll-wrapper { flex: 1; position: relative; min-width: 0; display: flex; align-items: center; }
+    .wd40-scroll-arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 32px; height: 32px; background: white; border: 1px solid #e5e5e5; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; box-shadow: 0 2px 6px rgba(0,0,0,0.1); color: #333; opacity: 0; transition: opacity 0.2s; pointer-events: none; }
+    .wd40-scroll-arrow.visible { opacity: 1; pointer-events: auto; }
+    .wd40-scroll-arrow.left { left: 0; }
+    .wd40-scroll-arrow.right { right: 0; }
+
+    .wd40-tags-list { 
+      display: flex; 
+      gap: 8px; 
+      overflow-x: auto; 
+      flex-wrap: nowrap;
+      scrollbar-width: none; 
+      -ms-overflow-style: none;
+      padding: 4px 0;
+      align-items: center;
+      width: 100%;
+      scroll-behavior: smooth;
+      /* Default mask for JS logic to override */
+      mask-image: none;
+      -webkit-mask-image: none;
+    }
+    .wd40-tags-list::-webkit-scrollbar { display: none; }
+
+    .wd40-tag-item { 
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 42px;
+      padding: 0 20px;
+      border-radius: 999px; 
+      background: var(--menu-hover-bg); 
+      border: 1px solid #E5E5E5; 
+      font-size: 13px; 
+      color: #222222; 
+      white-space: nowrap; 
+      cursor: pointer; 
+      text-decoration: none; 
+      transition: 0.2s ease;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    /* Active Tag Styling - Border & Color instead of Fill */
+    .wd40-tag-item.active { 
+       background: #fff; 
+       border: 2px solid #134baa; 
+       color: #134baa; 
+       font-weight: 800;
+    }
+    .wd40-tag-item:hover { background: #f0f0f0; }
+    
+    /* Desktop Sort */
+    .wd40-sort-desktop { position: relative; display: flex; align-items: center; gap: 10px; margin-left: auto; z-index: 50; flex-shrink: 0; }
+    .wd40-sort-trigger { 
+      height: 42px;
+      font-size: 14px; 
+      font-weight: 700; 
+      display: flex; 
+      align-items: center; 
+      gap: 4px; 
+      color: #222; 
+      cursor: pointer; 
+      padding-bottom: 2px; 
+      user-select: none; 
+      background: #fff; 
+      padding: 0 20px; 
+      border-radius: 999px; 
+      border: 1px solid #E5E5E5; 
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      transition: all 0.2s;
+    }
+    .wd40-sort-trigger:hover { border-color: #ccc; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .wd40-sort-label { text-decoration: underline; text-underline-offset: 4px; }
+    .wd40-sort-dropdown { position: absolute; top: 100%; right: 0; margin-top: 10px; background: #fff; border: 1px solid #E5E5E5; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 8px; min-width: 200px; overflow: hidden; display: none; flex-direction: column; padding: 8px 0; z-index: 100; }
+    .wd40-sort-dropdown.show { display: flex; }
+    .wd40-sort-item { padding: 10px 20px; font-size: 14px; color: #333; cursor: pointer; transition: background 0.1s; text-align: left; display: block; text-decoration: none; }
+    .wd40-sort-item:hover { background: #f5f5f5; }
+    .wd40-sort-item.active { background: #f0f0f0; font-weight: 600; }
+
+    /* Mobile Toolbar */
+    .wd40-mobile-bar { display: none; width: 100%; margin-bottom: 20px; justify-content: center; margin-top: 24px; position: relative; z-index: 20; }
+    .wd40-mobile-btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 24px; background: #222222; color: #ffffff; border: none; border-radius: 999px; font-weight: 600; cursor: pointer; font-size: 14px; max-width: 200px; margin: 0 auto; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .wd40-mobile-btn svg { width: 16px; height: 16px; }
+
+    .wd40-drawer { 
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+      background: white; z-index: 2147483647; 
+      transform: translateX(-100%); transition: transform 0.3s ease;
+      display: flex; flex-direction: column;
+      box-shadow: 2px 0 12px rgba(0,0,0,0.2);
+      pointer-events: none; visibility: hidden;
+    }
+    .wd40-drawer.open { transform: translateX(0); pointer-events: auto; visibility: visible; }
+    .wd40-drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2147483646; display: none; }
+    .wd40-drawer-overlay.open { display: block; }
+    .wd40-drawer-header { padding: 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; font-weight: 700; font-size: 16px; background: #fff; }
+    .wd40-drawer-close { background: none; border: none; font-size: 24px; cursor: pointer; }
+    .wd40-drawer-body { padding: 20px; overflow-y: auto; flex: 1; background: #fff; }
+
+    /* Mobile Sort Header (Thinner) */
+    .wd40-sidebar-header.mobile-sort-header { background-color: #F5F5F5; padding: 10px 16px; }
+    .mobile-sort-options { font-size: 13px; }
+    .mobile-sort-options .facet-checkbox { margin-bottom: 6px; font-size: 13px; }
+
+    /* Promo Block */
+    .wd40-promo-card { position: relative; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; min-height: 300px; width: 100%; box-sizing: border-box; border-radius: 15px; }
+    .wd40-promo-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.3); z-index: 1; }
+    .wd40-promo-content { position: relative; z-index: 2; padding: 20px; width: 100%; }
+    .wd40-video-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+    .wd40-promo-title { margin-bottom: 10px; font-weight: 800; line-height: 1.1; }
+    .wd40-promo-subtitle { margin-bottom: 20px; font-weight: 500; }
+    .wd40-promo-btn { display: inline-block; padding: 12px 24px; font-weight: 700; text-decoration: none; border-radius: 4px; transition: opacity 0.2s; border: none; cursor: pointer; font-size: 14px; }
+    .wd40-promo-btn:hover { opacity: 0.9; }
+    .wd40-countdown { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; font-weight: 700; font-size: 18px; }
+    .wd40-timer-box { display: flex; flex-direction: column; align-items: center; line-height: 1; }
+    .wd40-timer-box small { font-size: 10px; opacity: 0.8; margin-top: 2px; }
+
+    /* Sidebar */
+    .wd40-sidebar { width: 340px; min-width: 340px; flex-shrink: 0; display: block; box-sizing: border-box; }
+    
+    /* Category Menu */
+    .wd40-category-menu { margin-bottom: 30px; width: 100%; }
+    .wd40-cat-item { border-bottom: 1px solid #eee; }
+    .wd40-cat-item:last-child { border-bottom: none; }
+    
+    .wd40-cat-header-row {
+       display: flex; align-items: center; justify-content: space-between;
+       transition: background 0.2s;
+       border-left: 4px solid transparent;
+       border-radius: 0 !important;
+    }
+    .wd40-cat-header-row:hover { background-color: var(--menu-hover-bg); }
+    .wd40-cat-header-row.active { background-color: var(--menu-hover-bg); border-left-color: #0056B3; }
+
+    .wd40-cat-link { 
+        padding: 12px 10px; font-weight: 600; font-size: 15px; cursor: pointer; display: flex; align-items: center; color: #111; user-select: none; gap: 10px; text-decoration: none; flex-grow: 1;
+    }
+    .wd40-cat-header-row.active .wd40-cat-link { color: #0056B3; font-weight: 700; }
+    
+    /* Special SALE Animation */
+    @keyframes shineRed {
+       0% { background-position: -100%; }
+       100% { background-position: 200%; }
+    }
+    .wd40-sale-link {
+       color: #E4002B !important;
+       font-weight: 800 !important;
+       background: linear-gradient(110deg, #E4002B 30%, #ff8a8a 50%, #E4002B 70%);
+       background-size: 200% 100%;
+       -webkit-background-clip: text;
+       -webkit-text-fill-color: transparent;
+       animation: shineRed 3s linear infinite;
+       display: flex;
+       align-items: center;
+       gap: 8px;
+    }
+
+    .wd40-cat-toggle-btn {
+       background: none; border: none; cursor: pointer; padding: 12px; display: flex; align-items: center; justify-content: center; color: #555;
+    }
+    .wd40-cat-toggle-btn:hover { color: #000; }
+
+    .wd40-cat-sublist { display: none; padding-bottom: 12px; padding-left: 14px; }
+    .wd40-cat-sublist a { display: block; padding: 6px 0; color: #555; font-size: 14px; text-decoration: none; }
+    .wd40-cat-sublist a:hover { color: #000; text-decoration: underline; }
+    .wd40-cat-sublist a.active { font-weight: 700; color: #0056B3; }
+    
+    .wd40-sidebar-block { border: 1px solid #E5E5E5; border-radius: 11px; margin-bottom: 20px; background: #ffffff; overflow: hidden; box-sizing: border-box; width: 100%; }
+    .wd40-sidebar-header { padding: 16px; font-size: 16px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; box-sizing: border-box; line-height: 1.2; background: #fff; }
+    .wd40-sidebar-icon { font-size: 20px; font-weight: bold; }
+    .wd40-sidebar-content { padding: 16px; padding-top: 0; width: 100%; box-sizing: border-box; background: #fff; }
+    
+    /* Facets */
+    .facets-header { display: flex; justify-content: flex-end; align-items: baseline; margin-bottom: 4px; border-bottom: 1px solid #E5E5E5; padding-bottom: 4px; width: 100%; }
+    .facets-reset { font-size: 12px; text-decoration: underline; color: #111; cursor: pointer; display: inline-block; }
+    .facet-row { padding: 4px 0; border-bottom: 1px solid #f0f0f0; width: 100%; }
+    .facet-row:last-child { border-bottom: none; }
+    .facet-summary { display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 600; cursor: pointer; color: #111; width: 100%; margin-bottom: 4px; }
+    .facet-display { display: none; flex-direction: column; gap: 2px; width: 100%; margin-top: 4px; }
+    .facet-checkbox { display: flex; align-items: center; cursor: pointer; font-size: 14px; color: #444; width: 100%; position: relative; margin-bottom: 2px; }
+    .facet-checkbox input { position: absolute; opacity: 0; width: 0; height: 0; margin: 0 !important; }
+    .custom-checkbox-box { height: 16px; width: 16px; min-width: 16px; min-height: 16px; background-color: #fff; border: 1px solid #ccc; border-radius: 3px; display: flex; align-items: center; justify-content: center; margin-right: 8px; flex-shrink: 0; transition: all 0.2s; }
+    .facet-checkbox:hover .custom-checkbox-box { border-color: #666; }
+    .facet-checkbox input:checked ~ .custom-checkbox-box { background-color: #111; border-color: #111; }
+    .custom-checkbox-box svg { display: none; stroke: white; }
+    .facet-checkbox input:checked ~ .custom-checkbox-box svg { display: block; }
+    .facet-count { color: #888; margin-left: auto; font-size: 0.9em; }
+    .facet-price-inputs { display: flex; gap: 4px; align-items: center; font-size: 14px; width: 100%; flex-wrap: wrap; }
+    .price-input-group { display: flex; align-items: center; border: 1px solid #ccc; border-radius: 4px; padding: 4px 8px; background: #fff; flex: 1; min-width: 70px; }
+    .price-input-group span { color: #666; margin-right: 4px; }
+    .price-input-group input { border: none; width: 100%; outline: none; font-size: 14px; color: #333; min-width: 0; }
+    
+    /* Price Filter UI */
+    .price-filter-container { padding: 10px 4px; }
+    .price-range-visual { height: 4px; background: #e5e5e5; border-radius: 2px; position: relative; margin-bottom: 16px; }
+    .range-bar { position: absolute; height: 100%; background: #111; }
+    .range-handle { width: 14px; height: 14px; background: #fff; border: 2px solid #111; border-radius: 50%; position: absolute; top: 50%; transform: translate(-50%, -50%); cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+    
+    .price-filter-row { display: flex; align-items: center; gap: 8px; }
+    .price-field { display: flex; align-items: center; background: #fff; border: 1px solid #ccc; border-radius: 4px; padding: 0 8px; height: 32px; flex: 1; font-size: 13px; }
+    .price-field:focus-within { border-color: #111; }
+    .currency { color: #888; margin-right: 4px; }
+    .price-field input { border: none; width: 100%; outline: none; font-size: 13px; color: #333; min-width: 0; background: transparent; }
+    .price-separator { color: #888; }
+    .price-apply-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: #f0f0f0; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; color: #333; transition: all 0.2s; }
+    .price-apply-btn:hover { background: #111; color: #fff; border-color: #111; }
+
+    /* Grid */
+    .wd40-product-grid { flex: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-content: start; }
+    
+    
+    
+.wd40-card { 
+  border: 1px solid transparent; 
+  border-radius: 15px; 
+  background: #ffffff; 
+  overflow: hidden; 
+  display: flex; 
+  flex-direction: column; 
+  transition: all 0.3s ease; 
+  box-shadow: 0 0 20px rgba(0,0,0,0.08); 
+  position: relative; 
+  min-width: 0; 
+}
+
+.wd40-card:hover { 
+  box-shadow: 0 0 25px rgba(0,0,0,0.12); 
+  transform: none; 
+}
+
+/* Card Elements */
+.wd40-card-media { 
+  position: relative; 
+  width: 100%; 
+  aspect-ratio: 1; 
+  overflow: hidden; 
+}
+
+/* Imagen principal y de hover */
+.wd40-card-image,
+.wd40-card-image-hover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.35s ease;
+}
+
+.wd40-card-image-hover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
+
+/* 🔹 Solo hay efecto hover cuando NO hay variante activa */
+.wd40-card:not(.active-variant):hover .wd40-card-image-hover {
+  opacity: 1;
+}
+
+.wd40-card:not(.active-variant):hover .wd40-card-image {
+  opacity: 0;
+}
+
+
+    
+    /* Card Elements */
+    .wd40-card-media { position: relative; width: 100%; aspect-ratio: 1; overflow: hidden; }
+    .wd40-card-image, .wd40-card-image-hover { width: 100%; height: 100%; object-fit: cover; transition: opacity 0.35s ease; }
+    .wd40-card-image-hover { position: absolute; top: 0; left: 0; opacity: 0; }
+    .wd40-card:not(.active-variant):hover .wd40-card-image-hover { opacity: 1; }
+    .wd40-card:not(.active-variant):hover .wd40-card-image { opacity: 0; }
+    .wd40-badges { position: absolute; top: 10px; left: 10px; display: flex; flex-direction: column; gap: 4px; z-index: 5; }
+    .wd40-badge { background: #E4002B; color: #ffffff; padding: 3px 9px; font-size: 11px; font-weight: 700; border-radius: 3px; text-transform: uppercase; }
+    .wd40-badge.new-badge { background-color: #0A4A9C; }
+    .wd40-card-body { padding: var(--card-padding); display: flex; flex-direction: column; flex: 1; text-align: left; align-items: flex-start; }
+    .wd40-title { font-size: 18px; font-weight: 800; margin: 0 0 4px; line-height: 1.1; color: #0056B3; }
+    .wd40-title a { color: inherit; text-decoration: none; }
+    .wd40-meta-row { margin-bottom: 10px; font-size: 13px; font-weight: 400; line-height: 1.2; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; color: #9AA0AA; justify-content: flex-start; }
+    .wd40-meta-category { font-weight: 600; color: #4F5F73; text-decoration: none; }
+    .wd40-meta-sku-label { text-transform: uppercase; letter-spacing: 0.02em; color: #9AA0AA; font-weight: 600; }
+    .wd40-reviews { margin-bottom: 6px; justify-content: flex-start; display: flex; }
+    .wd40-subtitle { font-size: 14px; font-weight: 400; color: #4A4A4A; margin-bottom: 6px; line-height: 1.45; }
+    .wd40-metafield-subtitle { font-size: 13px; font-weight: 600; color: #111; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .wd40-price-row { display: flex; align-items: center; justify-content: flex-start; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; width: 100%; }
+    .wd40-price { font-size: 15px; font-weight: 700; color: #222222; }
+    
+    .wd40-swatches { 
+      display: flex; gap: 6px !important; 
+      margin: 0 !important; padding: 0 !important; 
+      list-style: none !important;
+      margin-bottom: 8px !important; 
+      justify-content: flex-start; 
+      flex-wrap: wrap; 
+    }
+    .color-label { cursor: pointer; position: relative; display: block !important; width: auto !important; margin: 0 !important; padding: 0 !important; margin-right: 0 !important; }
+    .color-radio { position: absolute; opacity: 0; width: 0; height: 0; margin: 0 !important; }
+    .color-box { 
+      display: block; width: 24px !important; height: 24px !important; 
+      border-radius: 50%; 
+      border: 1px solid rgba(0,0,0,0.1); 
+      box-sizing: border-box; transition: all 0.2s ease; 
+      box-shadow: inset 0 0 0 2px #fff, 0 0 0 1px rgba(0,0,0,0.1); 
+    }
+    .color-radio:checked + .color-box { border-color: #000; transform: scale(1.1); box-shadow: inset 0 0 0 2px #fff, 0 0 0 1px #000; }
+    
+    .wd40-qty-variants-container { width: 100%; margin-bottom: 6px; }
+    .wd40-option-group { margin-bottom: 4px; }
+    .wd40-option-name { font-size: 12px; font-weight: 600; color: #666; display: block; margin-bottom: 2px; }
+    .wd40-chip-container { display: flex; flex-wrap: wrap; gap: 4px; justify-content: flex-start; }
+    .wd40-chip-label { cursor: pointer; margin: 0; }
+    .wd40-chip-radio { display: none; }
+    .wd40-chip-display {
+       display: inline-block; padding: 4px 10px; font-size: 11px; border-radius: 16px; 
+       background: #F8F9FA; 
+       border: 1px solid #E5E5E5; 
+       color: #444444; 
+       transition: all 0.2s; font-weight: 500;
+    }
+    .wd40-chip-label:hover .wd40-chip-display { opacity: 0.8; }
+    .wd40-chip-radio:checked + .wd40-chip-display { 
+        background: #0056B3; 
+        color: #FFFFFF; 
+        border-color: #0056B3; 
+    }
+
+    .wd40-pagination { margin: 40px auto 0; display: flex; justify-content: center; align-items: center; gap: 8px; grid-column: 1 / -1; width: 100%; }
+    .wd40-pagination-link { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 4px; border: 1px solid #DCDCDC; background: #fff; color: #111; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; text-decoration: none; }
+    .wd40-pagination-link:hover, .wd40-pagination-link.current { border-color: #134baa; background: #134baa; color: #ffffff; }
+    .wd40-pagination-link.disabled { opacity: 0.5; cursor: default; pointer-events: none; border-color: #eee; }
+    .pagination-wrapper { width: 100%; display: flex; justify-content: center; grid-column: 1 / -1; }
+    
+    .wd40-no-products { grid-column: 1 / -1; text-align: center; padding: 60px 20px; }
+    .wd40-no-products h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; color: #111; }
+    .wd40-no-products p { color: #666; margin-bottom: 16px; }
+    .wd40-clear-filters-btn { background: #134baa; color: #ffffff; padding: 8px 16px; border-radius: 4px; text-decoration: none; font-size: 14px; font-weight: 600; }
+
+    .wd40-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
+    .wd40-modal-content { background: #fff; border-radius: 8px; width: 100%; max-width: 550px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative; overflow: hidden; padding: 0; min-height: 520px; display: flex; flex-direction: column; }
+    .wd40-modal-close { position: absolute; top: 12px; right: 12px; background: none; border: none; cursor: pointer; color: #999; z-index: 10; font-size: 24px; line-height: 1; }
+    .wd40-modal-close:hover { color: #333; }
+    .wd40-modal-form { height: 100%; display: flex; flex-direction: column; flex: 1; }
+    .wd40-modal-body { padding: 24px; flex: 1; display: flex; flex-direction: column; }
+    
+    .wd40-modal-success { width: 100%; height: 100%; display: flex; flex-direction: column; }
+    .wd40-success-banner { background-color: #E8FCE8; color: #1f801f; padding: 12px 20px; font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; width: 100%; box-sizing: border-box; }
+    .wd40-success-body { padding: 24px; flex: 1; display: flex; flex-direction: column; }
+
+ @media (max-width: 991px) {
+  .wd40-collection-layout { flex-direction: column; } 
+  .wd40-sidebar { display: none; } 
+  .wd40-sort-desktop { display: none; }
+  .wd40-toolbar-inner { flex-direction: column; align-items: stretch; gap: 15px; }
+
+  /* 🔹 Ocultar product tags en mobile */
+  .wd40-tags-scroll-wrapper {
+    display: none;
+  }
+  
+  .wd40-tags-list { 
+     flex-wrap: nowrap; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; -webkit-overflow-scrolling: touch; 
+     gap: 8px; padding: 4px 0; 
+     mask-image: none;
+     -webkit-mask-image: none;
+    }
+    .wd40-tags-list::-webkit-scrollbar { display: none; }
+    .wd40-tag-item { flex-shrink: 0; }
+    .wd40-scroll-arrow { display: none; }
+
+  .wd40-mobile-bar { display: flex; width: 100%; margin-bottom: 20px; justify-content: center; margin-top: 24px; }
+  .wd40-mobile-btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 24px; background: #222222; color: #ffffff; border: none; border-radius: 999px; font-weight: 600; cursor: pointer; font-size: 14px; max-width: 200px; margin: 0 auto; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+  .wd40-mobile-btn svg { width: 16px; height: 16px; }
+
+}    
+    @media (max-width: 768px) {
+      .wd40-product-grid { grid-template-columns: repeat(1, minmax(0, 1fr)); gap: 16px; }
+    }
+    
+    @media (max-width: 480px) {
+      .wd40-product-grid { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+    }
+  
+    @media (max-width: 767px){
+      .wd40-collection-container {
+        padding-top: {{ section.settings.padding_top_mobile }};
+        padding-bottom: {{ section.settings.padding_bottom_mobile }};
+      }
+    }
+</style>
+
+<div class="wd40-collection-container">
+  <div class="wd40-toolbar-container">
+    <div class="wd40-toolbar-inner">
+      <div class="wd40-tags-scroll-wrapper">
+        <button type="button" class="wd40-scroll-arrow left" onclick="wd40ScrollTags('left')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <div class="wd40-tags-list">
+          <!-- All Products Tag -->
+          {% assign tags_list = linklists['main-menu'].links %}
+          
+          <!-- Default to top level -->
+          {% for link in linklists['main-menu'].links %}
+             {% if link.title == 'Products' %}{% assign tags_list = link.links %}{% endif %}
+          {% endfor %}
+
+          <!-- Drill Down Logic -->
+          {% assign active_found = false %}
+          {% for link in tags_list %}
+             {% if link.active and link.links.size > 0 %}
+                {% assign tags_list = link.links %}
+                {% assign active_found = true %}
+             {% elsif link.child_active %}
+                {% assign tags_list = link.links %}
+                {% assign active_found = true %}
+             {% endif %}
+          {% endfor %}
+          
+          <a href="/collections/all" class="wd40-tag-item {% if search.terms == blank %}active{% endif %}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            <span>All Products</span>
+          </a>
+          
+          {% for tag_link in tags_list %}
+             {% if tag_link.title == 'View All Categories' or tag_link.title contains 'All ' %}{% continue %}{% endif %}
+             {% assign tag_handle = tag_link.url | split: '/' | last %}
+             <a href="{{ tag_link.url }}" class="wd40-tag-item {% if tag_handle == search.terms %}active{% endif %}"><span>{{ tag_link.title }}</span></a>
+          {% endfor %}
+        </div>
+        <button type="button" class="wd40-scroll-arrow right" onclick="wd40ScrollTags('right')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+      </div>
+
+      <!-- Desktop Sort By Dropdown -->
+      <div class="wd40-sort-desktop" id="wd40-sort">
+        <div class="wd40-sort-trigger" onclick="wd40ToggleSort(this)">
+          Sort by: <span class="wd40-sort-label">
+            {{ search.sort_by | default: 'manual' | replace: '-', ' ' | capitalize }}
+          </span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+        <div class="wd40-sort-dropdown">
+          {% for option in search.sort_options %}
+            <div class="wd40-sort-item {% if option.value == search.sort_by %}active{% endif %}" 
+                 onclick="wd40UpdateSort('{{ option.value }}')">
+              {{ option.name }}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    
+    <div class="wd40-mobile-bar">
+       <button type="button" class="wd40-mobile-btn" onclick="wd40ToggleMobileDrawer(true)">
+         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="21" y2="21"/><line x1="4" x2="20" y1="14" y2="14"/><line x1="4" x2="20" y1="7" y2="7"/><circle cx="14" cy="14" r="2"/><circle cx="10" cy="7" r="2"/><circle cx="16" cy="21" r="2"/></svg>
+         Filter & Sort
+       </button>
+    </div>
+  </div>
+
+  <div class="wd40-collection-layout">
+     <div id="wd40-mobile-overlay" class="wd40-drawer-overlay" onclick="wd40ToggleMobileDrawer(false)"></div>
+     <div id="wd40-mobile-drawer" class="wd40-drawer">
+        <div class="wd40-drawer-header">
+           <span>Filter & Sort</span>
+           <button class="wd40-drawer-close" onclick="wd40ToggleMobileDrawer(false)">×</button>
+        </div>
+        <div class="wd40-drawer-body">
+           <div class="wd40-sidebar-block" style="margin-bottom: 15px;">
+             <div class="wd40-sidebar-header mobile-sort-header" onclick="wd40ToggleSidebar(this)"><span>Sort By</span><span class="wd40-sidebar-icon" style="transform: rotate(0deg); transition: transform 0.2s;"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg></span></div>
+             <div class="wd40-sidebar-content" style="display: none;">
+               <div class="facet-display mobile-sort-options" style="display:flex">
+                 {% for option in search.sort_options %}
+                   <label class="facet-checkbox" onclick="wd40UpdateSort('{{ option.value }}')">
+                     <input type="radio" name="mobile_sort" {% if option.value == search.sort_by %}checked{% endif %}>
+                     <span class="custom-checkbox-box" style="border-radius:50%"><div style="width:8px;height:8px;background:white;border-radius:50%;display:{% if option.value == search.sort_by %}block{% else %}none{% endif %}"></div></span>
+                     <span>{{ option.name }}</span>
+                   </label>
+                 {% endfor %}
+               </div>
+             </div>
+           </div>
+
+           <div class="wd40-category-menu">
+             <div class="wd40-cat-item">
+                <div class="wd40-cat-header-row {% if search.terms == blank %}active{% endif %}" style="border-radius: 0 !important;">
+                   <a href="/collections/all" class="wd40-cat-link">
+                      <span class="wd40-cat-text">All Products</span>
+                   </a>
+                </div>
+             </div>
+             
+             {% for link in linklists['main-menu'].links %}
+               {% assign parent_link_title = link.title | handleize | downcase %}
+               {% if parent_link_title == 'products' and link.links.size > 0 %}
+                 {% for sub_link in link.links %}
+                   {% assign is_active = false %}
+                   {% if sub_link.active or sub_link.child_active %}{% assign is_active = true %}{% endif %}
+                   
+                   <div class="wd40-cat-item">
+                     <div class="wd40-cat-header-row {% if is_active %}active{% endif %}" style="display: flex; align-items: center; border-radius: 0 !important;">
+                        <a href="{{ sub_link.url }}" class="wd40-cat-link {% if sub_link.title == 'SALE' and is_active == false %}wd40-sale-link{% endif %}" style="flex: 1;">
+                            {% if sub_link.title == 'SALE' and is_active == false %}
+                               <div class="wd40-cat-icon" style="display:flex;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg></div>
+                            {% endif %}
+                            <span class="wd40-cat-text">{{ sub_link.title }}</span>
+                        </a>
+                        {% if sub_link.links.size > 0 %}
+                          <button type="button" class="wd40-cat-toggle-btn" onclick="event.preventDefault(); event.stopPropagation(); wd40ToggleCategory(this)">
+                            <svg class="chevron-down" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: {% if is_active %}none{% else %}block{% endif %}"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                            <svg class="chevron-up" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: {% if is_active %}block{% else %}none{% endif %}"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                          </button>
+                        {% endif %}
+                     </div>
+                     {% assign has_sub = false %}{% if sub_link.links.size > 0 %}{% assign has_sub = true %}{% endif %}
+                     {% if has_sub %}
+                       <div class="wd40-cat-sublist" style="display: {% if is_active %}block{% else %}none{% endif %}">
+                         {% for grand_sub_link in sub_link.links %}
+                           {% if grand_sub_link.title contains 'All ' %}{% continue %}{% endif %}
+                           <a href="{{ grand_sub_link.url }}" class="{% if grand_sub_link.active %}active{% endif %}" style="{% if grand_sub_link.active %}font-weight:700;{% endif %}">{{ grand_sub_link.title }}</a>
+                         {% endfor %}
+                       </div>
+                     {% endif %}
+                   </div>
+                 {% endfor %}
+               {% endif %}
+             {% endfor %}
+           </div>
+
+           <form class="wd40-sidebar-block">
+             <div class="wd40-sidebar-header" onclick="wd40ToggleSidebar(this)"><span>Filter</span><span class="wd40-sidebar-icon">–</span></div>
+             <div class="wd40-sidebar-content" style="padding-top: 16px;">
+               <div class="facets-mock-wrapper">
+                 <div class="facets-header"><span class="facets-reset" onclick="window.location.href='#'">Remove all</span></div>
+                 {% comment %} Mocking filters. In a real scenario, this would loop through search.filters {% endcomment %}
+                   <div class="facet-row">
+                     <div class="facet-summary" onclick="wd40ToggleFacet(this)">
+                       <span>Availability</span>
+                       <span class="facet-icon">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                       </span>
+                     </div>
+                     <div class="facet-display" style="display: flex;">
+                       <label class="facet-checkbox">
+                         <input type="checkbox" disabled>
+                         <span class="custom-checkbox-box">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                         </span>
+                         <span>In stock</span>
+                         <span class="facet-count">(10)</span>
+                       </label>
+                       <label class="facet-checkbox">
+                         <input type="checkbox" disabled>
+                         <span class="custom-checkbox-box">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                         </span>
+                         <span>Out of stock</span>
+                         <span class="facet-count">(2)</span>
+                       </label>
+                     </div>
+                   </div>
+                   <div class="facet-row">
+                     <div class="facet-summary" onclick="wd40ToggleFacet(this)">
+                       <span>Price</span>
+                       <span class="facet-icon">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                       </span>
+                     </div>
+                     <div class="facet-display" style="display: flex;">
+                       <div class="price-filter-container">
+                            <div class="price-range-visual">
+                               <div class="range-track"></div>
+                               <div class="range-bar" style="left: 0%; right: 0%;"></div>
+                               <div class="range-handle" style="left: 0%"></div>
+                               <div class="range-handle" style="right: 0%"></div>
+                            </div>
+                            <div class="price-filter-row">
+                               <div class="price-field">
+                                  <span class="currency">$</span>
+                                  <input type="number" placeholder="0" min="0" max="1000" disabled>
+                               </div>
+                               <span class="price-separator">—</span>
+                               <div class="price-field">
+                                  <span class="currency">$</span>
+                                  <input type="number" placeholder="1000" min="0" max="1000" disabled>
+                               </div>
+                               <button type="submit" class="price-apply-btn" disabled><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+                            </div>
+                         </div>
+                     </div>
+                   </div>
+               </div>
+             </div>
+           </form>
+         </div>
+         <div style="padding: 20px; border-top: 1px solid #eee;">
+           <button onclick="wd40ToggleMobileDrawer(false)" style="width: 100%; padding: 12px; background: #222222; color: #fff; font-weight: 700; border-radius: 4px; border: none; cursor: pointer;">APPLY</button>
+        </div>
+     </div>
+
+     <aside class="wd40-sidebar">
+       <div class="wd40-category-menu">
+         <div class="wd40-cat-item">
+            <div class="wd40-cat-header-row {% if search.terms == blank %}active{% endif %}" style="border-radius: 0 !important;">
+               <a href="/collections/all" class="wd40-cat-link">
+                  <span class="wd40-cat-text">All Products</span>
+               </a>
+            </div>
+         </div>
+         
+         {% for link in linklists['main-menu'].links %}
+           {% assign parent_link_title = link.title | handleize | downcase %}
+           {% if parent_link_title == 'products' and link.links.size > 0 %}
+             {% for sub_link in link.links %}
+               {% assign is_active = false %}
+               {% if sub_link.active or sub_link.child_active %}{% assign is_active = true %}{% endif %}
+               
+               <div class="wd40-cat-item">
+                 <div class="wd40-cat-header-row {% if is_active %}active{% endif %}" style="display: flex; align-items: center; border-radius: 0 !important;">
+                    <a href="{{ sub_link.url }}" class="wd40-cat-link {% if sub_link.title == 'SALE' and is_active == false %}wd40-sale-link{% endif %}" style="flex: 1;">
+                        {% if sub_link.title == 'SALE' and is_active == false %}
+                           <div class="wd40-cat-icon" style="display:flex;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg></div>
+                        {% endif %}
+                        <span class="wd40-cat-text">{{ sub_link.title }}</span>
+                    </a>
+                    {% if sub_link.links.size > 0 %}
+                      <button type="button" class="wd40-cat-toggle-btn" onclick="event.preventDefault(); event.stopPropagation(); wd40ToggleCategory(this)">
+                        <svg class="chevron-down" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: {% if is_active %}none{% else %}block{% endif %}"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        <svg class="chevron-up" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: {% if is_active %}block{% else %}none{% endif %}"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                      </button>
+                    {% endif %}
+                 </div>
+                 {% assign has_sub = false %}{% if sub_link.links.size > 0 %}{% assign has_sub = true %}{% endif %}
+                 {% if has_sub %}
+                   <div class="wd40-cat-sublist" style="display: {% if is_active %}block{% else %}none{% endif %}">
+                     {% for grand_sub_link in sub_link.links %}
+                       {% if grand_sub_link.title contains 'All ' %}{% continue %}{% endif %}
+                       <a href="{{ grand_sub_link.url }}" class="{% if grand_sub_link.active %}active{% endif %}" style="{% if grand_sub_link.active %}font-weight:700;{% endif %}">{{ grand_sub_link.title }}</a>
+                     {% endfor %}
+                   </div>
+                 {% endif %}
+               </div>
+             {% endfor %}
+           {% endif %}
+         {% endfor %}
+       </div>
+
+       <form class="wd40-sidebar-block">
+         <div class="wd40-sidebar-header" onclick="wd40ToggleSidebar(this)"><span>Filter</span><span class="wd40-sidebar-icon">–</span></div>
+         <div class="wd40-sidebar-content" style="padding-top: 16px;">
+           <div class="facets-mock-wrapper">
+             <div class="facets-header"><span class="facets-reset" onclick="window.location.href='#'">Remove all</span></div>
+             {% comment %} Mocking filters. In a real scenario, this would loop through search.filters {% endcomment %}
+               <div class="facet-row">
+                 <div class="facet-summary" onclick="wd40ToggleFacet(this)">
+                   <span>Availability</span>
+                   <span class="facet-icon">
+                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                   </span>
+                 </div>
+                 <div class="facet-display" style="display: flex;">
+                   <label class="facet-checkbox">
+                     <input type="checkbox" disabled>
+                     <span class="custom-checkbox-box">
+                       <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                     </span>
+                     <span>In stock</span>
+                     <span class="facet-count">(10)</span>
+                   </label>
+                   <label class="facet-checkbox">
+                     <input type="checkbox" disabled>
+                     <span class="custom-checkbox-box">
+                       <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                     </span>
+                     <span>Out of stock</span>
+                     <span class="facet-count">(2)</span>
+                   </label>
+                 </div>
+               </div>
+               <div class="facet-row">
+                 <div class="facet-summary" onclick="wd40ToggleFacet(this)">
+                   <span>Price</span>
+                   <span class="facet-icon">
+                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                   </span>
+                 </div>
+                 <div class="facet-display" style="display: flex;">
+                   <div class="price-filter-container">
+                        <div class="price-range-visual">
+                           <div class="range-track"></div>
+                           <div class="range-bar" style="left: 0%; right: 0%;"></div>
+                           <div class="range-handle" style="left: 0%"></div>
+                           <div class="range-handle" style="right: 0%"></div>
+                        </div>
+                        <div class="price-filter-row">
+                           <div class="price-field">
+                              <span class="currency">$</span>
+                              <input type="number" placeholder="0" min="0" max="1000" disabled>
+                           </div>
+                           <span class="price-separator">—</span>
+                           <div class="price-field">
+                              <span class="currency">$</span>
+                              <input type="number" placeholder="1000" min="0" max="1000" disabled>
+                           </div>
+                           <button type="submit" class="price-apply-btn" disabled><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+                        </div>
+                     </div>
+                 </div>
+               </div>
+           </div>
+         </div>
+       </form>
+     </aside>
+
+     <div class="wd40-product-grid">
+       {% paginate search.results by 24 %}
+         {%- if search.results.size == 0 -%}
+           <div class="wd40-no-products">
+              <h3>No products found for "{{ search.terms }}"</h3>
+              <p>Try refining your search or <a href="/collections/all" class="wd40-clear-filters-btn" style="display:inline; background:none; color:#134baa; text-decoration:underline;">view all products</a>.</p>
+           </div>
+         {%- else -%}
+           {% for item in search.results %}
+             {% case item.object_type %}
+               {% when 'product' %}
+                 <div class="wd40-card">
+                    {%- if item.tags contains 'bestseller' or item.tags contains 'best-seller' -%}<div class="wd40-badges"><span class="wd40-badge">BEST SELLER</span></div>{%- endif -%}
+                    {%- if item.tags contains 'new' -%}<div class="wd40-badges"><span class="wd40-badge new-badge">NEW ARRIVAL</span></div>{%- endif -%}
+                    {%- if item.compare_at_price > item.price -%}
+                      {%- assign discount = item.compare_at_price | minus: item.price | times: 100.0 | divided_by: item.compare_at_price | round -%}
+                      <div class="wd40-badges"><span class="wd40-badge">Save up to {{ discount }}%</span></div>
+                    {%- endif -%}
+
+<div class="wd40-card-media">
+  <a href="{{ item.url }}" class="js-product-link">
+    {% assign main_image = item.featured_image | default: item.images.first %}
+
+    <img
+      src="{{ main_image | img_url: '500x' }}"
+      alt="{{ item.title | escape }}"
+      class="wd40-card-image js-product-image-main">
+
+    {% if item.images.size > 1 %}
+      <img
+        src="{{ item.images[1] | img_url: '500x' }}"
+        alt="{{ item.title | escape }}"
+        class="wd40-card-image-hover js-product-image-hover">
+    {% endif %}
+  </a>
+
+  <button 
+    class="wd40-quick-view-btn"
+    onclick="wd40OpenModal({{ item.id }})"
+    title="Quick View"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+  </button>
+</div>
+
+
+
+
+
+
+
+
+
+<div class="wd40-card-body">
+  {%- comment -%}
+    BASIC PRODUCT VARS
+  {%- endcomment -%}
+  {%- assign primary_variant   = item.selected_or_first_available_variant -%}
+  {%- assign display_category  = item.type | default: 'Product' -%}
+  {%- assign custom_sub_title  = item.metafields.custom.sub_title -%}
+
+  {%- comment -%}
+    1. TITLE (Shopify default title)
+  {%- endcomment -%}
+  <h3 class="wd40-title">
+    <a href="{{ item.url }}" class="js-product-link">
+      {{ item.title }}
+    </a>
+  </h3>
+
+  {%- comment -%}
+    1B. CUSTOM SUB TITLE (metafield) – ALL CAPS
+  {%- endcomment -%}
+  {% if custom_sub_title != blank %}
+    <div class="wd40-metafield-subtitle">
+      {{ custom_sub_title | upcase }}
+    </div>
+  {% endif %}
+
+  {%- comment -%}
+    2. MAIN CATEGORY + SKU
+  {%- endcomment -%}
+  <div class="wd40-meta-row">
+    <span class="wd40-meta-category">{{ display_category }}</span>
+    <span class="wd40-meta-separator">/</span>
+    {%- if primary_variant.sku != blank -%}
+      <span class="wd40-meta-sku-label">SKU:</span>
+      <span class="wd40-meta-sku-value js-product-sku">
+        {{ primary_variant.sku }}
+      </span>
+    {%- endif -%}
+  </div>
+
+{%- comment -%}
+  3. PRICE + JUNIP RATING (WITH "FROM")
+{%- endcomment -%}
+<div class="wd40-price-row" style="width: 100%; display:flex; align-items:center; gap:8px;">
+
+  <div class="wd40-price-group" style="display:flex; align-items:baseline; gap:4px;">
+    <span class="wd40-price wd40-price-prefix">
+      From
+    </span>
+
+    <span class="wd40-price js-product-price">
+      {{ item.price_min | money }}
+    </span>
+
+    {%- if item.compare_at_price > item.price -%}
+      <span class="wd40-price price-item--compare">
+        {{ item.compare_at_price | money }}
+      </span>
+    {%- endif -%}
+  </div>
+
+  <div class="wd40-reviews">
+    {% render 'junip-product-summary', product: item %}
+  </div>
+</div>
+
+
+
+
+
+
+  {%- comment -%}
+    4. OPTIONS / SWATCHES
+       - Build blacklist from section setting
+       - Loop options
+       - If option is "color" → render color swatches
+       - Else → render chip variants
+  {%- endcomment -%}
+
+  {%- assign option_blacklist_raw = section.settings.filter_options_blacklist | downcase | default: '' -%}
+  {%- assign option_blacklist      = option_blacklist_raw | split: ',' -%}
+
+  {%- for option in item.options_with_values -%}
+    {%- assign option_name_downcase = option.name | downcase -%}
+    {%- assign is_blacklisted       = false -%}
+
+    {%- comment -%}
+      Check if this option is in the blacklist
+    {%- endcomment -%}
+    {%- for blacklist_option in option_blacklist -%}
+      {%- assign blacklist_clean = blacklist_option | strip -%}
+      {%- if blacklist_clean != '' and option_name_downcase == blacklist_clean -%}
+        {%- assign is_blacklisted = true -%}
+      {%- endif -%}
+    {%- endfor -%}
+
+    {%- unless is_blacklisted -%}
+      {%- if option_name_downcase == 'color' -%}
+        {%- comment -%}
+          4A. COLOR SWATCHES
+        {%- endcomment -%}
+        <div class="wd40-swatches">
+          {%- for value in option.values -%}
+            {%- assign pcolor      = value | downcase | escape | handleize -%}
+            {%- assign pcolor_code = pcolor -%}
+
+            {%- comment -%}
+              Map known color names to hex codes
+            {%- endcomment -%}
+{%- if   pcolor == 'carbon-black' or pcolor == 'carbon black' -%}{%- assign pcolor_code = '#0B0B0B' -%}
+{%- elsif pcolor == 'black'                                      -%}{%- assign pcolor_code = '#000000' -%}
+{%- elsif pcolor == 'blue'                                       -%}{%- assign pcolor_code = '#0A5BA6' -%}
+{%- elsif pcolor == 'light-blue' or pcolor == 'light blue'       -%}{%- assign pcolor_code = '#4DA3FF' -%}
+{%- elsif pcolor == 'green'                                      -%}{%- assign pcolor_code = '#34E159' -%}
+{%- elsif pcolor == 'orange'                                     -%}{%- assign pcolor_code = '#ECBC1E' -%}
+{%- elsif pcolor == 'gray' or pcolor == 'grey'                   -%}{%- assign pcolor_code = '#EFEFEF' -%}
+{%- elsif pcolor == 'hi-vis-lime' or pcolor == 'hi-vis lime'     -%}{%- assign pcolor_code = '#C7EA46' -%}
+{%- elsif pcolor == 'red'                                        -%}{%- assign pcolor_code = '#E4002B' -%}
+{%- elsif pcolor == 'white'                                      -%}{%- assign pcolor_code = '#FFFFFF' -%}
+{%- elsif pcolor == 'yellow'                                     -%}{%- assign pcolor_code = '#FFFF00' -%}
+{%- elsif pcolor == 'purple'                                     -%}{%- assign pcolor_code = '#800080' -%}
+{%- elsif pcolor == 'pink'                                       -%}{%- assign pcolor_code = '#FFC0CB' -%}
+{%- else -%}
+  {%- assign pcolor_code = value | downcase -%}
+{%- endif -%}
+
+
+            <label
+              class="color-label"
+              data-product-id="{{ item.id }}"
+              title="{{ value }}"
+              style="margin: 0 !important; width: auto !important;"
+            >
+              <input
+                type="radio"
+                name="color-{{- item.id -}}"
+                value="{{- value | escape -}}"
+                class="color-radio js-variant-radio"
+                data-product-id="{{- item.id -}}"
+                data-option-name="Color"
+                {%- if forloop.first -%}checked{%- endif -%}
+                style="margin: 0 !important;"
+              >
+              <span
+                class="color-box"
+                style="background-color: {{- pcolor_code -}};"
+              ></span>
+            </label>
+          {%- endfor -%}
+        </div>
+
+      {%- else -%}
+        {%- comment -%}
+          4B. NON-COLOR OPTIONS → CHIPS
+        {%- endcomment -%}
+        <div class="wd40-qty-variants-container">
+          <div class="wd40-option-group">
+            <span class="wd40-option-name">{{ option.name }}:</span>
+
+            <div class="wd40-chip-container">
+              {%- for value in option.values -%}
+                <label class="wd40-chip-label">
+                  <input
+                    type="radio"
+                    name="{{ option.name | handleize }}-{{ item.id }}"
+                    value="{{ value | escape }}"
+                    class="wd40-chip-radio js-variant-radio"
+                    data-product-id="{{ item.id }}"
+                    data-option-name="{{ option.name }}"
+                    {%- if forloop.first -%}checked{%- endif -%}
+                  >
+                  <span class="wd40-chip-display">
+                    {{ value }}
+                  </span>
+                </label>
+              {%- endfor -%}
+            </div>
+          </div>
+        </div>
+      {%- endif -%}
+    {%- endunless -%}
+  {%- endfor -%}
+
+
+
+
+
+
+
+
+<script type="application/json" id="variants-data-{{ item.id }}">
+[
+  {% for variant in item.variants %}
+    {
+      "id": {{ variant.id }},
+      "sku": "{{ variant.sku }}",
+      "price": "{{ variant.price | money }}",
+      "image": "{% if variant.featured_media %}{{ variant.featured_media | img_url: '500x' }}{% else %}{{ item.featured_image | img_url: '500x' }}{% endif %}",
+      "url": "{{ variant.url }}",
+      "options": {
+        {% for opt in item.options %}
+          "{{ opt | escape }}": "{{ variant.options[forloop.index0] | escape }}"{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      }
+    }{% unless forloop.last %},{% endunless %}
+  {% endfor %}
+]
+</script>     
+                      <template id="wd40-modal-template-{{ item.id }}">
+                         <div class="wd40-modal-form" id="wd40-modal-form-{{ item.id }}">
+                           <div class="wd40-modal-body">
+                              <button class="wd40-modal-close" onclick="wd40CloseModal()">×</button>
+                              <div class="flex flex-col gap-4 h-full">
+                                 <div class="flex gap-4 items-start">
+                                    <img src="{{ item.featured_media | img_url: '500x' }}" alt="" class="w-24 h-24 object-contain rounded bg-gray-50 js-modal-img" />
+                                    <div>
+                                       <h3 class="font-bold text-xl mb-1">{{ item.title }}</h3>
+                                       <div class="text-lg font-semibold text-gray-800 mb-1 js-modal-price">{{ item.price_min | money }}</div>
+                                       <div class="flex items-center gap-1 mb-2">
+                                          <span class="text-xs text-gray-500">Reviews</span>
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <div class="space-y-3 pt-2 border-t border-gray-100 js-modal-options flex-1">
+                                    {%- assign option_blacklist = section.settings.filter_options_blacklist | split: ',' | map: 'strip' | map: 'downcase' -%}
+                                    {%- for option in item.options_with_values -%}
+                                       {%- assign option_name_downcase = option.name | downcase -%}
+                                       {%- unless option_blacklist contains option_name_downcase -%}
+                                          {%- if option_name_downcase == 'color' -%}
+                                             <div class="wd40-swatches">
+                                                {%- for value in option.values -%}
+                                                  {%- assign pcolor = value | downcase | escape | handleize -%}
+                                                  {%- assign pcolor_code = pcolor -%}
+                                                  {%- if pcolor == 'carbon-black' or pcolor == 'carbon black' -%}{%- assign pcolor_code = '#0B0B0B' -%}{%- elsif pcolor == 'black' or pcolor == 'black' -%}{%- assign pcolor_code = '#000000' -%}{%- elsif pcolor == 'blue' or pcolor == 'blue' -%}{%- assign pcolor_code = '#0A5BA6' -%}{%- elsif pcolor == 'green' or pcolor == 'green' -%}{%- assign pcolor_code = '#34E159' -%}{%- elsif pcolor == 'orange' or pcolor == 'orange' -%}{%- assign pcolor_code = '#ECBC1E' -%}{%- elsif pcolor == 'gray' or pcolor == 'gray' -%}{%- assign pcolor_code = '#EFEFEF' -%}{%- elsif pcolor == 'grey' or pcolor == 'grey' -%}{%- assign pcolor_code = '#EFEFEF' -%}{%- elsif pcolor == 'hi-vis-lime' or pcolor == 'hi-vis lime' -%}{%- assign pcolor_code = '#C7EA46' -%}{%- elsif pcolor == 'red' or pcolor == 'red' -%}{%- assign pcolor_code = '#E4002B' -%}{%- elsif pcolor == 'white' or pcolor == 'white' -%}{%- assign pcolor_code = '#FFFFFF' -%}{%- elsif pcolor == 'yellow' or pcolor == 'yellow' -%}{%- assign pcolor_code = '#FFFF00' -%}{%- elsif pcolor == 'purple' or pcolor == 'purple' -%}{%- assign pcolor_code = '#800080' -%}{%- elsif pcolor == 'pink' or pcolor == 'pink' -%}{%- assign pcolor_code = '#FFC0CB' -%}{%- else -%}{%- assign pcolor_code = value | downcase -%}{%- endif -%}
+                                                  
+                                                  <label class="color-label" data-product-id="{{ item.id }}" title="{{ value }}" style="margin: 0 !important; width: auto !important;">
+                                                    <input 
+                                                      type="radio" 
+                                                      name="color-{{- item.id -}}" 
+                                                      value="{{- value | escape -}}" 
+                                                      class="color-radio js-variant-radio" 
+                                                      data-product-id="{{- item.id -}}" 
+                                                      data-option-name="Color"
+                                                      {%- if forloop.first -%}checked{%- endif -%}
+                                                      style="margin: 0 !important;"
+                                                    >
+                                                    <span style="background-color: {{- pcolor_code -}};" class="color-box"></span>
+                                                  </label>
+                                                {%- endfor -%}
+                                             </div>
+                                          {%- else -%}
+                                             <div class="wd40-qty-variants-container">
+                                                <div class="wd40-option-group">
+                                                   <span class="wd40-option-name">{{ option.name }}:</span>
+                                                   <div class="wd40-chip-container">
+                                                     {%- for value in option.values -%}
+                                                        <label class="wd40-chip-label">
+                                                           <input type="radio" name="{{ option.name | handleize }}-{{ item.id }}" value="{{ value | escape }}" class="wd40-chip-radio js-variant-radio" data-product-id="{{ item.id }}" data-option-name="{{ option.name }}" {%- if forloop.first -%}checked{%- endif -%}>
+                                                           <span class="wd40-chip-display">{{ value }}</span>
+                                                        </label>
+                                                     {%- endfor -%}
+                                                   </div>
+                                                </div>
+                                             </div>
+                                          {%- endif -%}
+                                       {%- endunless -%}
+                                    {%- endfor -%}
+                                 </div>
+                                 <div class="pt-4 mt-auto">
+                                    <button class="w-full py-3 text-white font-bold rounded hover:opacity-90 transition-opacity uppercase" style="background-color: #134baa; color: #ffffff;" onclick="wd40AddToCartInModal({{ item.id }})">Add to Cart</button>
+                                 </div>
+                              </div>
+                           </div>
+                         </div>
+                         <div class="wd40-modal-success" id="wd40-modal-success-{{ item.id }}" style="display:none;">
+                             <div class="wd40-success-banner">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                Added to your cart!
+                             </div>
+                             <div class="wd40-success-body">
+                                <button class="wd40-modal-close" onclick="wd40CloseModal()">×</button>
+                                <div class="flex items-center gap-4 mb-6">
+                                   <img src="{{ item.featured_media | img_url: '500x' }}" alt="" class="w-20 h-20 object-cover rounded border js-modal-success-img" />
+                                   <div>
+                                      <h4 class="font-bold text-lg">{{ item.title }}</h4>
+                                      <p class="text-gray-600 js-modal-success-price">{{ item.price_min | money }}</p>
+                                      <p class="text-xs text-gray-500 mt-1 js-modal-success-options"></p>
+                                   </div>
+                                </div>
+                                <div class="flex gap-3 mt-auto">
+                                   <a href="/cart" class="flex-1 py-3 text-white font-bold rounded hover:opacity-90 transition-colors uppercase text-sm text-center flex items-center justify-content-center" style="background-color: #FF6600;">View Cart</a>
+                                   <a href="/checkout" class="flex-1 py-3 text-[#FF6600] bg-white border border-[#FF6600] font-bold rounded hover:bg-orange-50 transition-colors uppercase text-sm text-center flex items-center justify-content-center">Checkout</a>
+                                </div>
+                             </div>
+                         </div>
+                      </template>
+                    </div>
+                 </div>
+               {% when 'article' %}
+                  <div class="wd40-card">
+
+
+
+                     <div class="wd40-card-media">
+                       <a href="{{ item.url }}">
+                         <img src="{{ item.image | img_url: '500x' }}" alt="{{ item.title | escape }}" class="wd40-card-image">
+                       </a>
+                     </div>
+                     <div class="wd40-card-body">
+                       <h3 class="wd40-title"><a href="{{ item.url }}">{{ item.title | escape }}</a></h3>
+                       <div class="wd40-meta-row">
+                         <span class="wd40-meta-category">Article</span>
+                         <span class="wd40-meta-separator">/</span>
+                         <span>{{ item.published_at | date: "%b %d, %Y" }}</span>
+                       </div>
+                     </div>
+                  </div>
+               {% when 'page' %}
+                  <div class="wd40-card">
+                     <div class="wd40-card-media">
+                       <a href="{{ item.url }}">
+                         <img src="https://cdn.shopify.com/s/files/1/0533/2085/files/page-placeholder.png?v=1685000000" alt="{{ item.title | escape }}" class="wd40-card-image">
+                       </a>
+                     </div>
+                     <div class="wd40-card-body">
+                       <h3 class="wd40-title"><a href="{{ item.url }}">{{ item.title | escape }}</a></h3>
+                       <div class="wd40-meta-row">
+                         <span class="wd40-meta-category">Page</span>
+                       </div>
+                     </div>
+                  </div>
+             {% endcase %}
+           {% endfor %}
+         {%- endif -%}
+         
+         {% if paginate.pages > 1 %}
+           <div class="pagination-wrapper">
+              <nav class="wd40-pagination">
+                {% if paginate.previous %}<a href="{{ paginate.previous.url }}" class="wd40-pagination-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></a>{% else %}<span class="wd40-pagination-link disabled"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></span>{% endif %}
+                {% for part in paginate.parts %}{% if part.is_link %}<a href="{{ part.url }}" class="wd40-pagination-link">{{ part.title }}</a>{% else %}{% if part.title == paginate.current_page %}<span class="wd40-pagination-link current">{{ part.title }}</span>{% else %}<span class="wd40-pagination-link disabled">{{ part.title }}</span>{% endif %}{% endif %}{% endfor %}
+                {% if paginate.next %}<a href="{{ paginate.next.url }}" class="wd40-pagination-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></a>{% else %}<span class="wd40-pagination-link disabled"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></span>{% endif %}
+              </nav>
+           </div>
+         {% endif %}
+       {% endpaginate %}
+     </div>
+  </div>
+</div>
+
+<!-- Modal HTML -->
+<div id="wd40-modal-overlay" class="wd40-modal" style="display:none; opacity:0; transition: opacity 0.3s ease;">
+   <div class="wd40-modal-content" id="wd40-modal-content"></div>
+</div>
+
+
+<script>
+  // WD-40 Collection Logic
+  (function() {
+    // Helper: Toggle Sidebar Sections
+    window.wd40ToggleSidebar = function(header) {
+       const content = header.nextElementSibling;
+       const icon = header.querySelector('.wd40-sidebar-icon');
+       const isHidden = content.style.display === 'none';
+       content.style.display = isHidden ? 'block' : 'none';
+       if(icon) {
+         if(icon.tagName === 'SPAN' && (icon.textContent === '+' || icon.textContent === '-')) {
+            icon.textContent = isHidden ? '-' : '+';
+         } else {
+            icon.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+         }
+       }
+    };
+
+    // Helper: Toggle Filter Facets
+    window.wd40ToggleFacet = function(summary) {
+       const display = summary.nextElementSibling;
+       const icon = summary.querySelector('.facet-icon svg');
+       const isHidden = display.style.display === 'none';
+       display.style.display = isHidden ? 'flex' : 'none';
+    };
+
+    // Helper: Toggle Categories
+    window.wd40ToggleCategory = function(btn) {
+       const row = btn.closest('.wd40-cat-header-row');
+       const sublist = row.nextElementSibling;
+       const downIcon = btn.querySelector('.chevron-down');
+       const upIcon = btn.querySelector('.chevron-up');
+       
+       if(sublist && sublist.classList.contains('wd40-cat-sublist')) {
+          const isHidden = sublist.style.display === 'none' || getComputedStyle(sublist).display === 'none';
+          sublist.style.display = isHidden ? 'block' : 'none';
+          if(downIcon) downIcon.style.display = isHidden ? 'none' : 'block';
+          if(upIcon) upIcon.style.display = isHidden ? 'block' : 'none';
+       }
+    };
+    
+    // Helper: Sort Dropdown
+    window.wd40ToggleSort = function(trigger) {
+       const dropdown = trigger.nextElementSibling;
+       dropdown.classList.toggle('show');
+       
+       const closeHandler = (e) => {
+          if(!trigger.contains(e.target) && !dropdown.contains(e.target)) {
+             dropdown.classList.remove('show');
+             document.removeEventListener('click', closeHandler);
+          }
+       };
+       setTimeout(() => document.addEventListener('click', closeHandler), 0);
+    };
+
+    window.wd40UpdateSort = function(value) {
+       const url = new URL(window.location.href);
+       url.searchParams.set('sort_by', value);
+       window.location.href = url.toString();
+    };
+
+    // Helper: Tags Scroll
+    window.wd40ScrollTags = function(direction) {
+       const container = document.querySelector('.wd40-tags-list');
+       if(container) {
+          const amount = 200;
+          container.scrollBy({ left: direction === 'left' ? -amount : amount, behavior: 'smooth' });
+       }
+    };
+    
+    // Tag Scroll Buttons Visibility & Dynamic Mask
+    const tagsWrap = document.querySelector('.wd40-tags-list');
+    if(tagsWrap) {
+       const updateScrollUI = () => {
+          const leftBtn = document.querySelector('.wd40-scroll-arrow.left');
+          const rightBtn = document.querySelector('.wd40-scroll-arrow.right');
+          
+          const showLeft = tagsWrap.scrollLeft > 10;
+          const showRight = tagsWrap.scrollWidth - tagsWrap.clientWidth - tagsWrap.scrollLeft > 10;
+
+          if(leftBtn) leftBtn.classList.toggle('visible', showLeft);
+          if(rightBtn) rightBtn.classList.toggle('visible', showRight);
+          
+          // Dynamic Mask Logic
+          const fadeSize = '60px';
+          let mask = 'none';
+          if (showLeft && showRight) {
+             mask = 'linear-gradient(to right, transparent 0%, black ' + fadeSize + ', black calc(100% - ' + fadeSize + '), transparent 100%)';
+          } else if (!showLeft && showRight) {
+             // Start: Clean left edge, fade right
+             mask = 'linear-gradient(to right, black 0%, black calc(100% - ' + fadeSize + '), transparent 100%)';
+          } else if (showLeft && !showRight) {
+             // End: Fade left, clean right edge
+             mask = 'linear-gradient(to right, transparent 0%, black ' + fadeSize + ', black 100%)';
+          }
+          tagsWrap.style.maskImage = mask;
+          tagsWrap.style.webkitMaskImage = mask;
+       };
+       tagsWrap.addEventListener('scroll', updateScrollUI);
+       window.addEventListener('resize', updateScrollUI);
+       setTimeout(updateScrollUI, 100);
+    }
+
+    // Helper: Mobile Drawer
+    window.wd40ToggleMobileDrawer = function(show) {
+       const drawer = document.getElementById('wd40-mobile-drawer');
+       const overlay = document.getElementById('wd40-mobile-overlay');
+       if(show) {
+          drawer.classList.add('open');
+          overlay.classList.add('open');
+          document.body.style.overflow = 'hidden';
+       } else {
+          drawer.classList.remove('open');
+          overlay.classList.remove('open');
+          document.body.style.overflow = '';
+       }
+    };
+
+    // Helper: Modal
+    window.wd40OpenModal = function(productId) {
+       const modal = document.getElementById('wd40-modal-overlay');
+       const content = document.getElementById('wd40-modal-content');
+       const template = document.getElementById('wd40-modal-template-' + productId);
+       
+       if(template) {
+          content.innerHTML = template.innerHTML;
+          // After injecting template, parse its script tags if any, and initialize variant options
+          // Find the first variant radio button inside the newly injected modal content
+          const firstRadioInModal = content.querySelector('.js-variant-radio[data-product-id="' + productId + '"][checked]');
+          if (firstRadioInModal) {
+            const changeEvent = new Event('change', { bubbles: true });
+            firstRadioInModal.dispatchEvent(changeEvent);
+          } else {
+            // Fallback: if no initially checked radio, dispatch change on first available one
+            const anyRadioInModal = content.querySelector('.js-variant-radio[data-product-id="' + productId + '"]');
+            if(anyRadioInModal) {
+              const changeEvent = new Event('change', { bubbles: true });
+              anyRadioInModal.dispatchEvent(changeEvent);
+            }
+          }
+       }
+       
+       modal.style.display = 'flex';
+       requestAnimationFrame(() => { modal.style.opacity = '1'; });
+    };
+
+    window.wd40CloseModal = function() {
+       const modal = document.getElementById('wd40-modal-overlay');
+       modal.style.opacity = '0';
+       setTimeout(() => { modal.style.display = 'none'; }, 300);
+    };
+    
+    window.wd40AddToCartInModal = function(id) {
+        const formView = document.getElementById('wd40-modal-form-' + id);
+        const successView = document.getElementById('wd40-modal-success-' + id);
+        
+        if(formView && successView) {
+           formView.style.display = 'none';
+           successView.style.display = 'flex';
+        }
+    };
+    
+    window.wd40RevealCode = function(btn, code) {
+       btn.textContent = code;
+       btn.classList.add('revealed');
+    };
+
+
+
+
+
+
+
+
+ // Variant Selection Logic
+    document.addEventListener('change', function(e) {
+      if (e.target.matches('.js-variant-radio')) {
+        const productId = e.target.dataset.productId;
+        const container = e.target.closest('.wd40-card') || document.getElementById('wd40-modal-form-' + productId);
+        const dataScript = document.getElementById('variants-data-' + productId);
+
+        if (!container || !dataScript) return;
+
+        const variants = JSON.parse(dataScript.textContent);
+
+        const inputs = container.querySelectorAll('.js-variant-radio[data-product-id="' + productId + '"]');
+        const currentVisibleOptions = {};
+
+        inputs.forEach(input => {
+          if (input.checked) {
+            currentVisibleOptions[input.dataset.optionName] = input.value;
+          }
+        });
+
+        // Buscar variante exacta basada en opciones visibles
+        let selectedVariant = variants.find(v => {
+          return Object.keys(currentVisibleOptions).every(k => v.options[k] === currentVisibleOptions[k]);
+        });
+
+        // Fallback si no hay match exacto (por blacklist u otros casos)
+        if (!selectedVariant) {
+          selectedVariant = variants.find(v => {
+            const visibleSelectedOptionsKeys = Object.keys(currentVisibleOptions);
+            return visibleSelectedOptionsKeys.every(k => v.options[k] === currentVisibleOptions[k]);
+          });
+        }
+
+        // Último fallback: primera variante
+        if (!selectedVariant) {
+          selectedVariant = variants[0];
+        }
+
+        if (selectedVariant) {
+          // 🔹 Marca la card como "tiene variante activa" para apagar el hover flip
+          if (container.classList.contains('wd40-card')) {
+            container.classList.add('active-variant');
+          }
+
+          // Precio
+          const priceEl = container.querySelector('.js-product-price');
+          if (priceEl) priceEl.textContent = selectedVariant.price;
+
+          // Imágenes (solo cambiamos la principal, NO tocamos el hover del card)
+          const mainImgEl  = container.querySelector('.js-product-image-main') || container.querySelector('.wd40-card-image');
+          const modalImgEl = container.querySelector('.js-modal-img');
+          const modalSuccessImgEl = document
+            .getElementById('wd40-modal-success-' + productId)
+            ?.querySelector('.js-modal-success-img');
+
+          if (selectedVariant.image) {
+            if (mainImgEl) mainImgEl.src = selectedVariant.image;
+            if (modalImgEl) modalImgEl.src = selectedVariant.image;
+            if (modalSuccessImgEl) modalSuccessImgEl.src = selectedVariant.image;
+          }
+
+          // SKU
+          const skuEl = container.querySelector('.wd40-meta-sku-value');
+          if (skuEl) skuEl.textContent = selectedVariant.sku;
+
+          // Enlaces (grid + modal)
+          const links = container.querySelectorAll('.js-product-link');
+          links.forEach(a => {
+            if (selectedVariant.url) a.href = selectedVariant.url;
+          });
+
+          // Modal: estado success
+          const successPriceEl = document
+            .getElementById('wd40-modal-success-' + productId)
+            ?.querySelector('.js-modal-success-price');
+          const successOptionsEl = document
+            .getElementById('wd40-modal-success-' + productId)
+            ?.querySelector('.js-modal-success-options');
+
+          if (successPriceEl) successPriceEl.textContent = selectedVariant.price;
+          if (successOptionsEl) successOptionsEl.textContent = Object.values(selectedVariant.options).join(' / ');
+        }
+      }
+    });
+
+    // Ensure default sort check
+    const currentSort = new URLSearchParams(window.location.search).get('sort_by');
+    if(!currentSort) {
+       const manualSortRadio = document.querySelector('input[name="mobile_sort"][value="manual"]');
+       if(manualSortRadio) manualSortRadio.checked = true;
+       
+       const desktopSortLabel = document.querySelector('.wd40-sort-label');
+       if(desktopSortLabel) desktopSortLabel.textContent = 'Featured';
+    }
+
+    // Countdown
+    const timers = document.querySelectorAll('.wd40-countdown');
+    timers.forEach(timer => {
+       const targetDate = timer.dataset.date;
+       if(!targetDate) return;
+       const target = new Date(targetDate).getTime();
+       
+       const update = () => {
+           const now = new Date().getTime();
+           const distance = target - now;
+           if(distance < 0) {
+               timer.style.display = 'none';
+               return;
+           }
+           const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+           const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+           const m = Math.floor((distance % (1000 * 60)) / (1000 * 60));
+           const s = Math.floor((distance % (1000 * 60)) / 1000);
+           
+           const dEl = timer.querySelector('.d'); if(dEl) dEl.innerText = d;
+           const hEl = timer.querySelector('.h'); if(hEl) hEl.innerText = h;
+           const mEl = timer.querySelector('.m'); if(mEl) mEl.innerText = m;
+           const sEl = timer.querySelector('.s'); if(sEl) sEl.innerText = s;
+       };
+       setInterval(update, 1000);
+       update();
+    });
+
+    // Initial dispatch for radios on page load
+    document.querySelectorAll('.js-variant-radio[checked]').forEach(radio => {
+      const event = new Event('change', { bubbles: true });
+      radio.dispatchEvent(event);
+    });
+
+  })();
+</script>
+  
+{% schema %}
+{
+  "name": "Main Search",
+  "settings": [
+    { "type": "text", "id": "padding_top_desktop", "default": "80px", "label": "Padding Desktop Top" },
+    { "type": "text", "id": "padding_bottom_desktop", "default": "80px", "label": "Padding Desktop Bottom" },
+    { "type": "text", "id": "padding_top_mobile", "default": "40px", "label": "Padding Mobile Top" },
+    { "type": "text", "id": "padding_bottom_mobile", "default": "40px", "label": "Padding Mobile Bottom" },
+    { "type": "text", "id": "filter_options_blacklist", "label": "Hide Variant Options (comma separated)" , "info": "Example: 'Color, Size'"}
+  ]
+}
+{% endschema %}
