@@ -1,1 +1,120 @@
-{"sections":{"17619293389a4d982b":{"type":"_blocks","blocks":{"ai_gen_block_3967038_rVjYNa":{"type":"ai_gen_block_3967038","settings":{"title":"Collection name","description":"<p>Browse our curated selection of products<\/p>","show_breadcrumbs":true,"show_description":false,"show_product_count":true,"button_text":"","button_link":"#","show_products":true,"background_color":"#e0e4e7","use_collection_image":false,"image_opacity":100,"overlay_color":"#000000","overlay_opacity":0,"text_color":"#44515d","button_bg_color":"#44515d","button_text_color":"#ffffff","button_hover_bg_color":"#44515d","card_bg_color":"#ffffff","card_text_color":"#44515d","heading_size":58,"description_size":15,"container_width":1450,"padding_top":20,"padding_bottom":32,"padding_horizontal":0,"button_radius":4,"card_radius":14,"image_radius":4},"blocks":{}}},"block_order":["ai_gen_block_3967038_rVjYNa"],"settings":{}},"premium_grid_NxBLDF":{"type":"premium-grid","name":"Premium Grid","settings":{"section_padding_top":20,"section_padding_bottom":20,"products_per_page":12,"mobile_columns":"1","show_categories":true,"show_filters":true,"filter_blacklist":"Product Sub Category","card_content_order":"title,subtitle,custom_subtitle,category_sku,reviews,price,swatches,variants","card_padding":18,"show_hover":true,"show_sku":true,"show_reviews":true,"show_subtitle":false,"show_custom_subtitle":true,"show_swatches":true,"show_quantity_variants":true,"chip_options_whitelist":"Dead","show_chip_option_name":true,"badge_text":"BEST SELLER","show_new_badge":true,"new_badge_text":"NEW ARRIVAL","show_discount_badge":true,"show_promo":false,"promo_position":2,"promo_bg_type":"image","promo_bg_color":"#111111","promo_video_url":"https:\/\/cdn.shopify.com\/videos\/c\/o\/v\/fbb140a46d3b46c784f11cc372d2f693.mp4","promo_gradient":"linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d)","promo_text_color":"#ffffff","promo_title":"Special Offer","promo_subtitle":"Get 20% off select items","show_countdown":false,"countdown_date":"2025-12-31T23:59","promo_action":"link","promo_btn_text":"SHOP NOW","promo_link":"","promo_code":"SAVE20","promo_btn_bg":"#ff6600","promo_btn_text_color":"#ffffff","show_quick_view":true}}},"order":["17619293389a4d982b","premium_grid_NxBLDF"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "17619293389a4d982b": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_3967038_rVjYNa": {
+          "type": "ai_gen_block_3967038",
+          "settings": {
+            "title": "Collection name",
+            "description": "<p>Browse our curated selection of products</p>",
+            "show_breadcrumbs": true,
+            "show_description": false,
+            "show_product_count": true,
+            "button_text": "",
+            "button_link": "#",
+            "show_products": true,
+            "background_color": "#e0e4e7",
+            "use_collection_image": false,
+            "image_opacity": 100,
+            "overlay_color": "#000000",
+            "overlay_opacity": 0,
+            "text_color": "#44515d",
+            "button_bg_color": "#44515d",
+            "button_text_color": "#ffffff",
+            "button_hover_bg_color": "#44515d",
+            "card_bg_color": "#ffffff",
+            "card_text_color": "#44515d",
+            "heading_size": 58,
+            "description_size": 15,
+            "container_width": 1450,
+            "padding_top": 20,
+            "padding_bottom": 32,
+            "padding_horizontal": 0,
+            "button_radius": 4,
+            "card_radius": 14,
+            "image_radius": 4
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_3967038_rVjYNa"
+      ],
+      "settings": {}
+    },
+    "premium_grid_NxBLDF": {
+      "type": "premium-grid",
+      "name": "Premium Grid",
+      "settings": {
+        "section_padding_top": 20,
+        "section_padding_bottom": 20,
+        "products_per_page": 12,
+        "mobile_columns": "1",
+        "show_categories": true,
+        "show_filters": true,
+        "filter_blacklist": "Product Sub Category",
+        "card_content_order": "title,subtitle,custom_subtitle,category_sku,reviews,price,swatches,variants",
+        "card_padding": 18,
+        "show_hover": true,
+        "show_sku": true,
+        "show_reviews": true,
+        "show_subtitle": false,
+        "show_custom_subtitle": true,
+        "show_swatches": true,
+        "color_carbon_black": "#0b0b0b",
+        "color_black": "#000000",
+        "color_blue": "#0a5ba6",
+        "color_light_blue": "#add8e6",
+        "color_green": "#34e159",
+        "color_orange": "#ecbc1e",
+        "color_gray": "#efefef",
+        "color_hi_vis_lime": "#c7ea46",
+        "color_red": "#e4002b",
+        "color_white": "#ffffff",
+        "color_yellow": "#ffff00",
+        "color_purple": "#800080",
+        "color_pink": "#ffc0cb",
+        "custom_swatch_definitions": "Sample: #123456",
+        "show_quantity_variants": true,
+        "chip_options_whitelist": "Dead",
+        "show_chip_option_name": true,
+        "badge_text": "BEST SELLER",
+        "show_new_badge": true,
+        "new_badge_text": "NEW ARRIVAL",
+        "show_discount_badge": true,
+        "show_promo": false,
+        "promo_position": 2,
+        "promo_bg_type": "image",
+        "promo_bg_color": "#111111",
+        "promo_video_url": "https://cdn.shopify.com/videos/c/o/v/fbb140a46d3b46c784f11cc372d2f693.mp4",
+        "promo_gradient": "linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d)",
+        "promo_text_color": "#ffffff",
+        "promo_title": "Special Offer",
+        "promo_subtitle": "Get 20% off select items",
+        "show_countdown": false,
+        "countdown_date": "2025-12-31T23:59",
+        "promo_action": "link",
+        "promo_btn_text": "SHOP NOW",
+        "promo_link": "",
+        "promo_code": "SAVE20",
+        "promo_btn_bg": "#ff6600",
+        "promo_btn_text_color": "#ffffff",
+        "show_quick_view": false
+      }
+    }
+  },
+  "order": [
+    "17619293389a4d982b",
+    "premium_grid_NxBLDF"
+  ]
+}

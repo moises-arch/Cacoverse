@@ -650,6 +650,8 @@
        display: inline-flex;
        align-items: center;
     }
+    .wd40-sale-link svg { color: #d7182b; }
+    .wd40-cat-header-row.sale-active.active { border-left-color: #d7182b; }
 
     .wd40-cat-toggle-btn {
        background: none; border: none; cursor: pointer; padding: 12px; display: flex; align-items: center; justify-content: center; color: #555;
@@ -1089,14 +1091,14 @@
                         </a>
                         {% if sub_link.links.size > 0 %}
                           <button type="button" class="wd40-cat-toggle-btn" onclick="event.preventDefault(); event.stopPropagation(); wd40ToggleCategory(this)">
-                            <svg class="chevron-down" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: {% if is_active %}none{% else %}block{% endif %}"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                            <svg class="chevron-up" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: {% if is_active %}block{% else %}none{% endif %}"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                            <svg class="chevron-down" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: {% if is_sale_active %}none{% else %}block{% endif %}"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                            <svg class="chevron-up" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: {% if is_sale_active %}block{% else %}none{% endif %}"><polyline points="18 15 12 9 6 15"></polyline></svg>
                           </button>
                         {% endif %}
                      </div>
                      {% assign has_sub = false %}{% if sub_link.links.size > 0 %}{% assign has_sub = true %}{% endif %}
                      {% if has_sub %}
-                       <div class="wd40-cat-sublist" style="display: {% if is_active %}block{% else %}none{% endif %}">
+                       <div class="wd40-cat-sublist" style="display: {% if is_sale_active %}block{% else %}none{% endif %}">
                          {% for grand_sub_link in sub_link.links %}
                            {% if grand_sub_link.title contains 'All ' %}{% continue %}{% endif %}
                            <a href="{{ grand_sub_link.url }}" class="{% if grand_sub_link.active %}active{% endif %}" style="{% if grand_sub_link.active %}font-weight:700;{% endif %}">{{ grand_sub_link.title }}</a>
