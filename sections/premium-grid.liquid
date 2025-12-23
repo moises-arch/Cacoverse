@@ -706,6 +706,22 @@
     .wd40-badges { position: absolute; top: 10px; left: 10px; display: flex; flex-direction: column; gap: 4px; z-index: 5; }
     .wd40-badge { background: #E4002B; color: #ffffff; padding: 3px 9px; font-size: 11px; font-weight: 700; border-radius: 3px; text-transform: uppercase; }
     .wd40-badge.new-badge { background-color: #0A4A9C; }
+    .wd40-badge-bestseller {
+      background: linear-gradient(135deg, #f7f7f7 0%, #d6d8dc 40%, #c0c2c7 100%);
+      color: #2c2f36;
+      border-radius: 999px;
+      padding: 6px 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12), 0 1px 0 rgba(255,255,255,0.35) inset;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: 0.02em;
+    }
+    .wd40-badge-bestseller::before {
+      content: "✦";
+      font-size: 12px;
+      color: #969aa3;
+    }
     .wd40-sale-badge { 
       background: linear-gradient(120deg, #ff7a92, #d7182b 70%);
       color: #fff;
@@ -1282,7 +1298,7 @@
            
               <div class="wd40-card">
               <div class="wd40-badges">
-                {% if product.tags contains 'bestseller' or product.tags contains 'best-seller' %}<span class="wd40-badge">{{ section.settings.badge_text }}</span>{% endif %}
+                {% if product.tags contains 'bestseller' or product.tags contains 'best-seller' %}<span class="wd40-badge wd40-badge-bestseller">{{ section.settings.badge_text }}</span>{% endif %}
                 {% if section.settings.show_new_badge and product.tags contains 'new' %}<span class="wd40-badge new-badge">{{ section.settings.new_badge_text }}</span>{% endif %}
                 {% if section.settings.show_discount_badge and product.compare_at_price > product.price %}
                   {% assign discount = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round %}
