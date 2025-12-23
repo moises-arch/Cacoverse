@@ -1341,7 +1341,8 @@
                       {% endif %}
                     {%- when 'price' -%}
                       <div class="wd40-price-row" style="width:100%">
-                        {%- assign has_compare = product.compare_at_price > product.price -%}
+                        {% assign has_compare = false %}
+                        {% if product.compare_at_price > product.price %}{% assign has_compare = true %}{% endif %}
                         <div class="wd40-price js-product-price">
                           <span class="wd40-price-current">
                             {{ product.price | money }}
