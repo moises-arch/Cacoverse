@@ -621,6 +621,7 @@
         padding: 12px 10px; font-weight: 600; font-size: 15px; cursor: pointer; display: flex; align-items: center; color: #111; user-select: none; gap: 10px; text-decoration: none; flex-grow: 1;
     }
     .wd40-cat-header-row.active .wd40-cat-link { color: #0056B3; font-weight: 700; }
+    .wd40-cat-header-row.active:not(.sale-active) { border-left-color: #0056B3; }
     
     .wd40-sale-link {
        color: #d7182b !important;
@@ -1043,11 +1044,11 @@
                    {% assign sale_handle = sub_link.url | split: '/' | last | handleize %}
                    {% assign is_sale_link = false %}
                    {% if sub_link.title == 'SALE' or sale_handle == 'sale' %}{% assign is_sale_link = true %}{% endif %}
-                   {% assign is_sale_active = is_active %}
-                   {% if is_sale_link and collection.handle == sale_handle %}{% assign is_sale_active = true %}{% endif %}
+                   {% assign is_sale_active = false %}
+                   {% if is_sale_link and (is_active or collection.handle == sale_handle) %}{% assign is_sale_active = true %}{% endif %}
                    
                    <div class="wd40-cat-item">
-                     <div class="wd40-cat-header-row {% if is_sale_active %}active sale-active{% endif %}" style="display: flex; align-items: center; border-radius: 0 !important;">
+                     <div class="wd40-cat-header-row {% if is_active %}active{% endif %} {% if is_sale_active %}sale-active{% endif %}" style="display: flex; align-items: center; border-radius: 0 !important;">
                         <a href="{{ sub_link.url }}" class="wd40-cat-link {% if is_sale_link %}wd40-sale-link{% endif %}" style="flex: 1;">
                             {% if is_sale_link %}
                                <div class="wd40-cat-icon" style="display:flex;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg></div>
@@ -1163,11 +1164,11 @@
                {% assign sale_handle = sub_link.url | split: '/' | last | handleize %}
                {% assign is_sale_link = false %}
                {% if sub_link.title == 'SALE' or sale_handle == 'sale' %}{% assign is_sale_link = true %}{% endif %}
-               {% assign is_sale_active = is_active %}
-               {% if is_sale_link and collection.handle == sale_handle %}{% assign is_sale_active = true %}{% endif %}
+               {% assign is_sale_active = false %}
+               {% if is_sale_link and (is_active or collection.handle == sale_handle) %}{% assign is_sale_active = true %}{% endif %}
                
                <div class="wd40-cat-item">
-                 <div class="wd40-cat-header-row {% if is_sale_active %}active sale-active{% endif %}" style="display: flex; align-items: center; border-radius: 0 !important;">
+                 <div class="wd40-cat-header-row {% if is_active %}active{% endif %} {% if is_sale_active %}sale-active{% endif %}" style="display: flex; align-items: center; border-radius: 0 !important;">
                     <a href="{{ sub_link.url }}" class="wd40-cat-link {% if is_sale_link %}wd40-sale-link{% endif %}" style="flex: 1;">
                         {% if is_sale_link %}
                            <div class="wd40-cat-icon" style="display:flex;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg></div>
