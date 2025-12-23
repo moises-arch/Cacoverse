@@ -1045,7 +1045,8 @@
                    {% assign is_sale_link = false %}
                    {% if sub_link.title == 'SALE' or sale_handle == 'sale' %}{% assign is_sale_link = true %}{% endif %}
                    {% assign is_sale_active = false %}
-                   {% if is_sale_link and (is_active or collection.handle == sale_handle) %}{% assign is_sale_active = true %}{% endif %}
+                   {% if is_sale_link and is_active %}{% assign is_sale_active = true %}{% endif %}
+                   {% if is_sale_link and collection.handle == sale_handle %}{% assign is_sale_active = true %}{% endif %}
                    
                    <div class="wd40-cat-item">
                      <div class="wd40-cat-header-row {% if is_active %}active{% endif %} {% if is_sale_active %}sale-active{% endif %}" style="display: flex; align-items: center; border-radius: 0 !important;">
@@ -1165,7 +1166,8 @@
                {% assign is_sale_link = false %}
                {% if sub_link.title == 'SALE' or sale_handle == 'sale' %}{% assign is_sale_link = true %}{% endif %}
                {% assign is_sale_active = false %}
-               {% if is_sale_link and (is_active or collection.handle == sale_handle) %}{% assign is_sale_active = true %}{% endif %}
+               {% if is_sale_link and is_active %}{% assign is_sale_active = true %}{% endif %}
+               {% if is_sale_link and collection.handle == sale_handle %}{% assign is_sale_active = true %}{% endif %}
                
                <div class="wd40-cat-item">
                  <div class="wd40-cat-header-row {% if is_active %}active{% endif %} {% if is_sale_active %}sale-active{% endif %}" style="display: flex; align-items: center; border-radius: 0 !important;">
