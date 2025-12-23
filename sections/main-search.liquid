@@ -367,8 +367,9 @@
     .wd40-subtitle { font-size: 14px; font-weight: 400; color: #4A4A4A; margin-bottom: 6px; line-height: 1.45; }
     .wd40-metafield-subtitle { font-size: 13px; font-weight: 600; color: #111; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
     .wd40-price-row { display: flex; align-items: center; justify-content: flex-start; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; width: 100%; }
-    .wd40-price { font-size: 18px; font-weight: 800; color: #d7182b; }
+    .wd40-price { font-size: 18px; font-weight: 800; color: #222222; }
     .wd40-price.price-item--compare { color: #8f96a3; text-decoration: line-through; font-size: 14px; font-weight: 700; }
+    .wd40-price--sale { color: #d7182b; }
     
     .wd40-swatches { 
       display: flex; gap: 6px !important; 
@@ -904,7 +905,10 @@
 
   <div class="wd40-price-group" style="display:flex; align-items:baseline; gap:4px;">
 
-    <span class="wd40-price js-product-price">
+    {%- assign has_compare = false -%}
+    {%- if item.compare_at_price > item.price -%}{%- assign has_compare = true -%}{%- endif -%}
+
+    <span class="wd40-price js-product-price {% if has_compare %}wd40-price--sale{% endif %}">
       {{ item.price | money }}
     </span>
 
