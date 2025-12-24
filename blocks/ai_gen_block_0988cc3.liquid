@@ -1,0 +1,1314 @@
+{% doc %}
+  @prompt
+    Generate a 5 columns  small banners to display the technology behind our helmets.    with a background image an small heading  short sub heading and button.  everything gotta be fully customizable. , just in mobile:  make it slider. , section padding top and bottom are not working , add a foreground logo in each card with position controls.   add some hover effects ( b/w, blur, etc) 
+    
+    add the option for b7w image and color in hover. 
+    
+    add 40px margin from top of the section and 40px  bottom. 
+    
+    add option for background color , remove the round effect from the foreground logo image 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-tech-banners-{{ ai_gen_id }} {
+    width: 100%;
+    padding-top: {{ block.settings.section_padding_top }}px;
+    padding-bottom: {{ block.settings.section_padding_bottom }}px;
+    margin-top: {{ block.settings.section_margin_top }}px;
+    margin-bottom: {{ block.settings.section_margin_bottom }}px;
+    background-color: {{ block.settings.section_background_color }};
+
+  }
+
+  .ai-tech-banners__container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.container_width }}px;
+    margin: 0 auto;
+
+    padding-top: 40px;
+    padding-bottom: 0px;
+  }
+
+  .ai-tech-banners__grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: {{ block.settings.gap }}px;
+  }
+
+  .ai-tech-banner-{{ ai_gen_id }} {
+    position: relative;
+    overflow: hidden;
+    border-radius: {{ block.settings.border_radius }}px;
+    height: {{ block.settings.banner_height }}px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: {{ block.settings.content_padding }}px;
+    text-align: {{ block.settings.text_alignment }};
+    cursor: pointer;
+  }
+
+  .ai-tech-banner__image-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+    transition: all 0.4s ease;
+  }
+
+  {% if block.settings.hover_effect == 'grayscale' %}
+    .ai-tech-banner-{{ ai_gen_id }}:hover .ai-tech-banner__image-{{ ai_gen_id }} {
+      filter: grayscale(100%);
+    }
+  {% elsif block.settings.hover_effect == 'blur' %}
+    .ai-tech-banner-{{ ai_gen_id }}:hover .ai-tech-banner__image-{{ ai_gen_id }} {
+      filter: blur(4px);
+    }
+  {% elsif block.settings.hover_effect == 'zoom' %}
+    .ai-tech-banner-{{ ai_gen_id }}:hover .ai-tech-banner__image-{{ ai_gen_id }} {
+      transform: scale(1.1);
+    }
+  {% elsif block.settings.hover_effect == 'grayscale_zoom' %}
+    .ai-tech-banner-{{ ai_gen_id }}:hover .ai-tech-banner__image-{{ ai_gen_id }} {
+      filter: grayscale(100%);
+      transform: scale(1.1);
+    }
+  {% endif %}
+
+  .ai-tech-banner__placeholder-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    background-color: #f4f4f4;
+  }
+
+  .ai-tech-banner__placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-tech-banner__overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: {{ block.settings.overlay_color }};
+    opacity: {{ block.settings.overlay_opacity | divided_by: 100.0 }};
+    z-index: 2;
+    transition: all 0.4s ease;
+  }
+
+  {% if block.settings.hover_overlay_enabled %}
+    .ai-tech-banner-{{ ai_gen_id }}:hover .ai-tech-banner__overlay-{{ ai_gen_id }} {
+      background-color: {{ block.settings.hover_overlay_color }};
+      opacity: {{ block.settings.hover_overlay_opacity | divided_by: 100.0 }};
+    }
+  {% endif %}
+
+  .ai-tech-banner__logo-{{ ai_gen_id }} {
+    position: absolute;
+    z-index: 3;
+    width: {{ block.settings.logo_width }}px;
+    height: auto;
+    transition: all 0.4s ease;
+    {% if block.settings.logo_position == 'top_left' %}
+      top: {{ block.settings.logo_offset_vertical }}px;
+      left: {{ block.settings.logo_offset_horizontal }}px;
+    {% elsif block.settings.logo_position == 'top_center' %}
+      top: {{ block.settings.logo_offset_vertical }}px;
+      left: 50%;
+      transform: translateX(-50%);
+    {% elsif block.settings.logo_position == 'top_right' %}
+      top: {{ block.settings.logo_offset_vertical }}px;
+      right: {{ block.settings.logo_offset_horizontal }}px;
+    {% elsif block.settings.logo_position == 'center_left' %}
+      top: 50%;
+      left: {{ block.settings.logo_offset_horizontal }}px;
+      transform: translateY(-50%);
+    {% elsif block.settings.logo_position == 'center' %}
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    {% elsif block.settings.logo_position == 'center_right' %}
+      top: 50%;
+      right: {{ block.settings.logo_offset_horizontal }}px;
+      transform: translateY(-50%);
+    {% elsif block.settings.logo_position == 'bottom_left' %}
+      bottom: {{ block.settings.logo_offset_vertical }}px;
+      left: {{ block.settings.logo_offset_horizontal }}px;
+    {% elsif block.settings.logo_position == 'bottom_center' %}
+      bottom: {{ block.settings.logo_offset_vertical }}px;
+      left: 50%;
+      transform: translateX(-50%);
+    {% elsif block.settings.logo_position == 'bottom_right' %}
+      bottom: {{ block.settings.logo_offset_vertical }}px;
+      right: {{ block.settings.logo_offset_horizontal }}px;
+    {% endif %}
+  }
+
+  {% if block.settings.logo_hover_effect == 'grayscale' %}
+    .ai-tech-banner-{{ ai_gen_id }}:hover .ai-tech-banner__logo-{{ ai_gen_id }} {
+      filter: grayscale(100%);
+    }
+  {% elsif block.settings.logo_hover_effect == 'scale' %}
+    .ai-tech-banner-{{ ai_gen_id }}:hover .ai-tech-banner__logo-{{ ai_gen_id }} {
+      {% if block.settings.logo_position == 'top_center' %}
+        transform: translateX(-50%) scale(1.2);
+      {% elsif block.settings.logo_position == 'center_left' or block.settings.logo_position == 'center_right' %}
+        transform: translateY(-50%) scale(1.2);
+      {% elsif block.settings.logo_position == 'center' %}
+        transform: translate(-50%, -50%) scale(1.2);
+      {% elsif block.settings.logo_position == 'bottom_center' %}
+        transform: translateX(-50%) scale(1.2);
+      {% else %}
+        transform: scale(1.2);
+      {% endif %}
+    }
+  {% elsif block.settings.logo_hover_effect == 'fade' %}
+    .ai-tech-banner-{{ ai_gen_id }}:hover .ai-tech-banner__logo-{{ ai_gen_id }} {
+      opacity: 0.5;
+    }
+  {% endif %}
+
+  .ai-tech-banner__content-{{ ai_gen_id }} {
+    position: relative;
+    z-index: 3;
+  }
+
+  .ai-tech-banner__heading-{{ ai_gen_id }} {
+    color: {{ block.settings.heading_color }};
+    font-size: {{ block.settings.heading_size }}px;
+    font-weight: {{ block.settings.heading_weight }};
+    margin: 0 0 {{ block.settings.heading_spacing }}px;
+    line-height: 1.2;
+  }
+
+  .ai-tech-banner__subheading-{{ ai_gen_id }} {
+    color: {{ block.settings.subheading_color }};
+    font-size: {{ block.settings.subheading_size }}px;
+    margin: 0 0 {{ block.settings.subheading_spacing }}px;
+    line-height: 1.4;
+  }
+
+  .ai-tech-banner__button-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: {{ block.settings.button_padding_vertical }}px {{ block.settings.button_padding_horizontal }}px;
+    background-color: {{ block.settings.button_bg_color }};
+    color: {{ block.settings.button_text_color }};
+    text-decoration: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: {{ block.settings.button_font_size }}px;
+    font-weight: {{ block.settings.button_font_weight }};
+    transition: all 0.3s ease;
+    border: {{ block.settings.button_border_width }}px solid {{ block.settings.button_border_color }};
+  }
+
+  .ai-tech-banner__button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_bg_hover_color }};
+    color: {{ block.settings.button_text_hover_color }};
+    border-color: {{ block.settings.button_border_hover_color }};
+  }
+
+  .ai-tech-banners__slider-wrapper-{{ ai_gen_id }} {
+    display: none;
+  }
+
+  @media screen and (max-width: 1200px) {
+    .ai-tech-banners__grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-tech-banners__container-{{ ai_gen_id }} {
+      padding: 0;
+    }
+
+    .ai-tech-banners__grid-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    .ai-tech-banners__slider-wrapper-{{ ai_gen_id }} {
+      display: block;
+      position: relative;
+      overflow: hidden;
+      padding: 0 20px;
+    }
+
+    .ai-tech-banners__slider-{{ ai_gen_id }} {
+      display: flex;
+      gap: {{ block.settings.gap }}px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 10px;
+    }
+
+    .ai-tech-banners__slider-{{ ai_gen_id }}::-webkit-scrollbar {
+      display: none;
+    }
+
+    .ai-tech-banners__slider-{{ ai_gen_id }} .ai-tech-banner-{{ ai_gen_id }} {
+      flex: 0 0 85%;
+      scroll-snap-align: start;
+      height: {{ block.settings.banner_height_mobile }}px;
+    }
+
+    .ai-tech-banner__heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 0.8 }}px;
+    }
+
+    .ai-tech-banner__subheading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subheading_size | times: 0.85 }}px;
+    }
+
+    .ai-tech-banner__button-{{ ai_gen_id }} {
+      font-size: {{ block.settings.button_font_size | times: 0.9 }}px;
+      padding: {{ block.settings.button_padding_vertical | times: 0.8 }}px {{ block.settings.button_padding_horizontal | times: 0.8 }}px;
+    }
+
+    .ai-tech-banner__logo-{{ ai_gen_id }} {
+      width: {{ block.settings.logo_width | times: 0.8 }}px;
+    }
+
+    .ai-tech-banners__dots-{{ ai_gen_id }} {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .ai-tech-banners__dot-{{ ai_gen_id }} {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: {{ block.settings.dot_color }};
+      opacity: 0.3;
+      transition: opacity 0.3s ease;
+    }
+
+    .ai-tech-banners__dot-{{ ai_gen_id }}.active {
+      opacity: 1;
+    }
+  }
+
+
+  /* Force square logo — override any global img rules */
+.ai-tech-banner__logo-{{ ai_gen_id }} {
+  position: absolute;
+  z-index: 3;
+  width: {{ block.settings.logo_width }}px;
+  height: auto;
+  transition: all 0.4s ease;
+
+  /* ----- the important lines ----- */
+  border-radius: 0 !important;
+  -webkit-border-radius: 0 !important;
+  clip-path: none !important;
+  overflow: visible !important;
+  object-fit: contain;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+
+@media screen and (max-width: 749px) {
+  /* Mobile: 40px top padding only */
+  .ai-tech-banners__container-{{ ai_gen_id }} {
+    padding-top: 40px;
+    padding-right: 0;
+    padding-left: 0;
+    padding-bottom: 0px;
+  }
+
+  /* keep slider wrapper horizontal padding as-is, but if you want full-bleed remove side padding */
+  .ai-tech-banners__slider-wrapper-{{ ai_gen_id }} {
+    padding: 0 20px; /* deja esto si quieres margen lateral para el slider en mobile */
+  }
+}
+
+{% endstyle %}
+
+<tech-banners-slider-{{ ai_gen_id }} class="ai-tech-banners-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-tech-banners__container-{{ ai_gen_id }}">
+    <div class="ai-tech-banners__grid-{{ ai_gen_id }}">
+      {% for i in (1..5) %}
+        {% liquid
+          assign banner_enabled_key = 'banner_' | append: i | append: '_enabled'
+          assign banner_image_key = 'banner_' | append: i | append: '_image'
+          assign banner_logo_key = 'banner_' | append: i | append: '_logo'
+          assign banner_heading_key = 'banner_' | append: i | append: '_heading'
+          assign banner_subheading_key = 'banner_' | append: i | append: '_subheading'
+          assign banner_button_text_key = 'banner_' | append: i | append: '_button_text'
+          assign banner_button_link_key = 'banner_' | append: i | append: '_button_link'
+
+          assign banner_enabled = block.settings[banner_enabled_key]
+          assign banner_image = block.settings[banner_image_key]
+          assign banner_logo = block.settings[banner_logo_key]
+          assign banner_heading = block.settings[banner_heading_key]
+          assign banner_subheading = block.settings[banner_subheading_key]
+          assign banner_button_text = block.settings[banner_button_text_key]
+          assign banner_button_link = block.settings[banner_button_link_key]
+        %}
+
+        {% if banner_enabled %}
+          <div class="ai-tech-banner-{{ ai_gen_id }}">
+            {% if banner_image %}
+              <img
+                src="{{ banner_image | image_url: width: 600 }}"
+                alt="{{ banner_image.alt | escape }}"
+                class="ai-tech-banner__image-{{ ai_gen_id }}"
+                loading="lazy"
+                width="{{ banner_image.width }}"
+                height="{{ banner_image.height }}"
+              >
+            {% else %}
+              <div class="ai-tech-banner__placeholder-{{ ai_gen_id }}">
+                {{ 'image' | placeholder_svg_tag }}
+              </div>
+            {% endif %}
+
+            <div class="ai-tech-banner__overlay-{{ ai_gen_id }}"></div>
+
+            {% if banner_logo %}
+              <img
+                src="{{ banner_logo | image_url: width: 400 }}"
+                alt="Logo"
+                class="ai-tech-banner__logo-{{ ai_gen_id }}"
+                loading="lazy"
+              >
+            {% endif %}
+
+            <div class="ai-tech-banner__content-{{ ai_gen_id }}">
+              {% if banner_heading != blank %}
+                <h3 class="ai-tech-banner__heading-{{ ai_gen_id }}">{{ banner_heading }}</h3>
+              {% endif %}
+
+              {% if banner_subheading != blank %}
+                <p class="ai-tech-banner__subheading-{{ ai_gen_id }}">{{ banner_subheading }}</p>
+              {% endif %}
+
+              {% if banner_button_text != blank %}
+                <a
+                  href="{{ banner_button_link | default: '#' }}"
+                  class="ai-tech-banner__button-{{ ai_gen_id }}"
+                >
+                  {{ banner_button_text }}
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="ai-tech-banners__slider-wrapper-{{ ai_gen_id }}">
+      <div class="ai-tech-banners__slider-{{ ai_gen_id }}">
+        {% for i in (1..5) %}
+          {% liquid
+            assign banner_enabled_key = 'banner_' | append: i | append: '_enabled'
+            assign banner_image_key = 'banner_' | append: i | append: '_image'
+            assign banner_logo_key = 'banner_' | append: i | append: '_logo'
+            assign banner_heading_key = 'banner_' | append: i | append: '_heading'
+            assign banner_subheading_key = 'banner_' | append: i | append: '_subheading'
+            assign banner_button_text_key = 'banner_' | append: i | append: '_button_text'
+            assign banner_button_link_key = 'banner_' | append: i | append: '_button_link'
+
+            assign banner_enabled = block.settings[banner_enabled_key]
+            assign banner_image = block.settings[banner_image_key]
+            assign banner_logo = block.settings[banner_logo_key]
+            assign banner_heading = block.settings[banner_heading_key]
+            assign banner_subheading = block.settings[banner_subheading_key]
+            assign banner_button_text = block.settings[banner_button_text_key]
+            assign banner_button_link = block.settings[banner_button_link_key]
+          %}
+
+          {% if banner_enabled %}
+            <div class="ai-tech-banner-{{ ai_gen_id }}" data-slide-index="{{ forloop.index0 }}">
+              {% if banner_image %}
+                <img
+                  src="{{ banner_image | image_url: width: 600 }}"
+                  alt="{{ banner_image.alt | escape }}"
+                  class="ai-tech-banner__image-{{ ai_gen_id }}"
+                  loading="lazy"
+                  width="{{ banner_image.width }}"
+                  height="{{ banner_image.height }}"
+                >
+              {% else %}
+                <div class="ai-tech-banner__placeholder-{{ ai_gen_id }}">
+                  {{ 'image' | placeholder_svg_tag }}
+                </div>
+              {% endif %}
+
+              <div class="ai-tech-banner__overlay-{{ ai_gen_id }}"></div>
+
+              {% if banner_logo %}
+                <img
+                  src="{{ banner_logo | image_url: width: 400 }}"
+                  alt="Logo"
+                  class="ai-tech-banner__logo-{{ ai_gen_id }}"
+                  loading="lazy"
+                >
+              {% endif %}
+
+              <div class="ai-tech-banner__content-{{ ai_gen_id }}">
+                {% if banner_heading != blank %}
+                  <h3 class="ai-tech-banner__heading-{{ ai_gen_id }}">{{ banner_heading }}</h3>
+                {% endif %}
+
+                {% if banner_subheading != blank %}
+                  <p class="ai-tech-banner__subheading-{{ ai_gen_id }}">{{ banner_subheading }}</p>
+                {% endif %}
+
+                {% if banner_button_text != blank %}
+                  <a
+                    href="{{ banner_button_link | default: '#' }}"
+                    class="ai-tech-banner__button-{{ ai_gen_id }}"
+                  >
+                    {{ banner_button_text }}
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <div class="ai-tech-banners__dots-{{ ai_gen_id }}"></div>
+    </div>
+  </div>
+</tech-banners-slider-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class TechBannersSlider{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.slider = null;
+        this.dotsContainer = null;
+        this.slides = [];
+        this.currentIndex = 0;
+      }
+
+      connectedCallback() {
+        if (window.innerWidth <= 749) {
+          this.init();
+        }
+
+        window.addEventListener('resize', () => {
+          if (window.innerWidth <= 749 && !this.slider) {
+            this.init();
+          }
+        });
+      }
+
+      init() {
+        this.slider = this.querySelector('.ai-tech-banners__slider-{{ ai_gen_id }}');
+        this.dotsContainer = this.querySelector('.ai-tech-banners__dots-{{ ai_gen_id }}');
+        this.slides = Array.from(this.slider.querySelectorAll('.ai-tech-banner-{{ ai_gen_id }}'));
+
+        if (this.slides.length === 0) return;
+
+        this.createDots();
+        this.setupScrollListener();
+      }
+
+      createDots() {
+        this.dotsContainer.innerHTML = '';
+        this.slides.forEach((slide, index) => {
+          const dot = document.createElement('div');
+          dot.className = 'ai-tech-banners__dot-{{ ai_gen_id }}';
+          if (index === 0) dot.classList.add('active');
+          this.dotsContainer.appendChild(dot);
+        });
+      }
+
+      setupScrollListener() {
+        let scrollTimeout;
+        this.slider.addEventListener('scroll', () => {
+          clearTimeout(scrollTimeout);
+          scrollTimeout = setTimeout(() => {
+            this.updateActiveDot();
+          }, 100);
+        });
+      }
+
+      updateActiveDot() {
+        const scrollLeft = this.slider.scrollLeft;
+        const slideWidth = this.slides[0].offsetWidth;
+        const gap = parseInt(getComputedStyle(this.slider).gap) || 0;
+        const newIndex = Math.round(scrollLeft / (slideWidth + gap));
+
+        if (newIndex !== this.currentIndex) {
+          this.currentIndex = newIndex;
+          const dots = this.dotsContainer.querySelectorAll('.ai-tech-banners__dot-{{ ai_gen_id }}');
+          dots.forEach((dot, index) => {
+            if (index === this.currentIndex) {
+              dot.classList.add('active');
+            } else {
+              dot.classList.remove('active');
+            }
+          });
+        }
+      }
+    }
+
+    customElements.define('tech-banners-slider-{{ ai_gen_id }}', TechBannersSlider{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Technology banners",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "color",
+      "id": "section_background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "section_margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "section_margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin bottom",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "min": 1000,
+      "max": 1600,
+      "step": 50,
+      "unit": "px",
+      "label": "Container width",
+      "default": 1500
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "label": "Gap between banners",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "banner_height",
+      "min": 200,
+      "max": 600,
+      "step": 20,
+      "unit": "px",
+      "label": "Banner height",
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "banner_height_mobile",
+      "min": 150,
+      "max": 800,
+      "step": 10,
+      "unit": "px",
+      "label": "Banner height on mobile",
+      "default": 300
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "content_padding",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Content padding",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Section padding top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Section padding bottom",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "select",
+      "id": "logo_position",
+      "label": "Position",
+      "options": [
+        {
+          "value": "top_left",
+          "label": "Top left"
+        },
+        {
+          "value": "top_center",
+          "label": "Top center"
+        },
+        {
+          "value": "top_right",
+          "label": "Top right"
+        },
+        {
+          "value": "center_left",
+          "label": "Center left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "center_right",
+          "label": "Center right"
+        },
+        {
+          "value": "bottom_left",
+          "label": "Bottom left"
+        },
+        {
+          "value": "bottom_center",
+          "label": "Bottom center"
+        },
+        {
+          "value": "bottom_right",
+          "label": "Bottom right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 40,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "label": "Width",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "logo_offset_horizontal",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Horizontal offset",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "logo_offset_vertical",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Vertical offset",
+      "default": 20
+    },
+    {
+      "type": "select",
+      "id": "logo_hover_effect",
+      "label": "Hover effect",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "grayscale",
+          "label": "Grayscale"
+        },
+        {
+          "value": "scale",
+          "label": "Scale"
+        },
+        {
+          "value": "fade",
+          "label": "Fade"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "header",
+      "content": "Hover effects"
+    },
+    {
+      "type": "select",
+      "id": "hover_effect",
+      "label": "Image effect",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "grayscale",
+          "label": "Grayscale"
+        },
+        {
+          "value": "blur",
+          "label": "Blur"
+        },
+        {
+          "value": "zoom",
+          "label": "Zoom"
+        },
+        {
+          "value": "grayscale_zoom",
+          "label": "Grayscale + Zoom"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "checkbox",
+      "id": "hover_overlay_enabled",
+      "label": "Enable overlay color change",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "hover_overlay_color",
+      "label": "Hover overlay color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "hover_overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Hover overlay opacity",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Mobile slider"
+    },
+    {
+      "type": "color",
+      "id": "dot_color",
+      "label": "Dot color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Overlay"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Overlay opacity",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 12,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 20
+    },
+    {
+      "type": "select",
+      "id": "heading_weight",
+      "label": "Heading weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "range",
+      "id": "heading_spacing",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading spacing",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Subheading"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Subheading size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "subheading_spacing",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Subheading spacing",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_hover_color",
+      "label": "Hover background color",
+      "default": "#242833"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_text_hover_color",
+      "label": "Hover text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "button_font_weight",
+      "label": "Font weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "range",
+      "id": "button_padding_vertical",
+      "min": 4,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding vertical",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "button_padding_horizontal",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding horizontal",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "button_border_width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "label": "Border width",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "button_border_color",
+      "label": "Border color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_border_hover_color",
+      "label": "Hover border color",
+      "default": "#242833"
+    },
+    {
+      "type": "header",
+      "content": "Banner 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "banner_1_enabled",
+      "label": "Enable banner 1",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_1_image",
+      "label": "Background image"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_1_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "banner_1_heading",
+      "label": "Heading",
+      "default": "Impact Protection"
+    },
+    {
+      "type": "text",
+      "id": "banner_1_subheading",
+      "label": "Subheading",
+      "default": "Advanced shock absorption"
+    },
+    {
+      "type": "text",
+      "id": "banner_1_button_text",
+      "label": "Button text",
+      "default": "Learn more"
+    },
+    {
+      "type": "url",
+      "id": "banner_1_button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Banner 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "banner_2_enabled",
+      "label": "Enable banner 2",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_2_image",
+      "label": "Background image"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_2_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "banner_2_heading",
+      "label": "Heading",
+      "default": "Ventilation System"
+    },
+    {
+      "type": "text",
+      "id": "banner_2_subheading",
+      "label": "Subheading",
+      "default": "Maximum airflow design"
+    },
+    {
+      "type": "text",
+      "id": "banner_2_button_text",
+      "label": "Button text",
+      "default": "Learn more"
+    },
+    {
+      "type": "url",
+      "id": "banner_2_button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Banner 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "banner_3_enabled",
+      "label": "Enable banner 3",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_3_image",
+      "label": "Background image"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_3_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "banner_3_heading",
+      "label": "Heading",
+      "default": "Lightweight Shell"
+    },
+    {
+      "type": "text",
+      "id": "banner_3_subheading",
+      "label": "Subheading",
+      "default": "Carbon fiber construction"
+    },
+    {
+      "type": "text",
+      "id": "banner_3_button_text",
+      "label": "Button text",
+      "default": "Learn more"
+    },
+    {
+      "type": "url",
+      "id": "banner_3_button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Banner 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "banner_4_enabled",
+      "label": "Enable banner 4",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_4_image",
+      "label": "Background image"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_4_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "banner_4_heading",
+      "label": "Heading",
+      "default": "Comfort Liner"
+    },
+    {
+      "type": "text",
+      "id": "banner_4_subheading",
+      "label": "Subheading",
+      "default": "Moisture-wicking fabric"
+    },
+    {
+      "type": "text",
+      "id": "banner_4_button_text",
+      "label": "Button text",
+      "default": "Learn more"
+    },
+    {
+      "type": "url",
+      "id": "banner_4_button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Banner 5"
+    },
+    {
+      "type": "checkbox",
+      "id": "banner_5_enabled",
+      "label": "Enable banner 5",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_5_image",
+      "label": "Background image"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_5_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "banner_5_heading",
+      "label": "Heading",
+      "default": "Safety Standards"
+    },
+    {
+      "type": "text",
+      "id": "banner_5_subheading",
+      "label": "Subheading",
+      "default": "Certified protection"
+    },
+    {
+      "type": "text",
+      "id": "banner_5_button_text",
+      "label": "Button text",
+      "default": "Learn more"
+    },
+    {
+      "type": "url",
+      "id": "banner_5_button_link",
+      "label": "Button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Technology banners"
+    }
+  ]
+}
+{% endschema %}
