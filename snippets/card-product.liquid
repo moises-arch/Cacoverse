@@ -8,28 +8,58 @@
   {% render 'card-product', show_vendor: section.settings.show_vendor %}
 {% endcomment %}
 
+{%- liquid
+  assign discounted_variants = '' | split: '' 
+  assign first_available_discount_variant = nil
+  assign first_discount_variant = nil
+
+  for variant in product.variants
+    if variant.compare_at_price > variant.price
+      assign discounted_variants = discounted_variants | push: variant
+
+      if first_discount_variant == nil
+        assign first_discount_variant = variant
+      endif
+
+      if first_available_discount_variant == nil and variant.available
+        assign first_available_discount_variant = variant
+      endif
+    endif
+  endfor
+
+  assign featured_variant = first_available_discount_variant | default: first_discount_variant | default: product.selected_or_first_available_variant
+  assign featured_image = featured_variant.featured_image | default: product.featured_image
+  assign featured_url = featured_variant.url | default: product.url
+  assign has_discounted_variants = discounted_variants.size > 0
+  assign badge_limit = 3
+-%}
+
 <div class="card-wraper d-flex flex-column gap-2">
-  <div class="card-media" onclick="location.href = '{{ product.url }}';">
-    <a href="{{ product.url }}">
+  <div class="card-media" onclick="location.href = '{{ featured_url }}';">
+    <a href="{{ featured_url }}">
       <div class="loader" data-product-id="{{ product.id }}"></div>
       <img
-        src="{{ product.featured_image.src | img_url : '500x' }}"
+        src="{{ featured_image.src | img_url : '500x' }}"
         class="img-fluid product-image"
         loading="lazy"
-        width="{{ product.featured_image.width }}"
-        height="{{ product.featured_image.height }}"
-        alt="{{  product.featured_image.alt }}"
+        width="{{ featured_image.width }}"
+        height="{{ featured_image.height }}"
+        alt="{{ featured_image.alt | default: product.title }}"
         data-product-id="{{ product.id }}"
       >
     </a>
   </div>
 
-  
   <div class="descp">
     <p class="sp-20">
-      <a href="{{ product.url }}">{{ product.title }}</a>
+      <a href="{{ featured_url }}">{{ product.title }}</a>
     </p>
     <p class="sp-14">{{ product.metafields.custom.sub_title }}</p>
+    {% if has_discounted_variants and featured_variant.sku != blank %}
+      <p class="sp-12 product-card__sku">
+        SKU: {{ featured_variant.sku }}
+      </p>
+    {% endif %}
   </div>
 
 
@@ -54,7 +84,7 @@
         {{- 'products.product.sold_out' | t -}}
         
       </span>
-    {%- elsif product.compare_at_price > product.price and product.available -%}
+    {%- elsif has_discounted_variants and product.available -%}
       <span
         id="NoMediaStandardBadge-{{ section_id }}-{{ product.id }}"
         class="badge badge--bottom-left color-{{ settings.sale_badge_color_scheme }}"
@@ -65,7 +95,51 @@
   </div>
 
   <!-- Pricing -->
-  {% render 'price', product: product, price_class: '', show_compare_at_price: true %}
+  <div class="product-card__price-row">
+    {% if has_discounted_variants %}
+      {% render 'price',
+        product: product,
+        target_variant: featured_variant,
+        use_variant: true,
+        price_class: '',
+        show_compare_at_price: true
+      %}
+    {% else %}
+      {% render 'price', product: product, price_class: '', show_compare_at_price: true %}
+    {% endif %}
+
+    {% if has_discounted_variants %}
+      <div class="product-card__discount-badges" aria-label="Variantes en descuento">
+        {% assign hidden_tooltip = '' %}
+        {% for variant in discounted_variants %}
+          {% assign discount_amount = variant.compare_at_price | minus: variant.price %}
+          {% assign discount_percent = discount_amount | times: 100 | divided_by: variant.compare_at_price | round %}
+          {% assign tooltip_copy = 'Ahorra ' | append: discount_percent | append: '% en ' | append: variant.title %}
+
+          {% if forloop.index0 < badge_limit %}
+            <span class="product-card__discount-badge" data-tooltip="{{ tooltip_copy | escape }}">
+              {{- variant.title | replace: '/', ' · ' -}}
+            </span>
+          {% else %}
+            {% assign hidden_tooltip = hidden_tooltip | append: variant.title %}
+            {% unless forloop.last %}
+              {% assign hidden_tooltip = hidden_tooltip | append: ' • ' %}
+            {% endunless %}
+          {% endif %}
+        {% endfor %}
+
+        {% if discounted_variants.size > badge_limit %}
+          {% assign remaining = discounted_variants.size | minus: badge_limit %}
+          <span
+            class="product-card__discount-badge product-card__discount-badge--more"
+            data-tooltip="{{ hidden_tooltip | escape }}"
+          >
+            +{{ remaining }}
+          </span>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
   {% assign has_color = false %}
   {% assign has_series = false %}
 
@@ -95,11 +169,20 @@
                       value="{{- value | downcase -}}"
                       class="color-radio"
                       data-product-id="{{- product.id -}}"
-                      {% comment %}
-                        {%- if forloop.first -%}
-                          checked
-                        {%- endif -%}
-                      {% endcomment %}
+                      {% liquid
+                        assign selected_value = ''
+                        case option.position
+                          when 1
+                            assign selected_value = featured_variant.option1
+                          when 2
+                            assign selected_value = featured_variant.option2
+                          when 3
+                            assign selected_value = featured_variant.option3
+                        endcase
+                      %}
+                      {%- if selected_value != blank and selected_value | downcase == value | downcase -%}
+                        checked
+                      {%- endif -%}
                     >
                     {%- assign pcolor = value | downcase | escape | handleize -%}
                     {%- assign pcolor_code = pcolor -%}
