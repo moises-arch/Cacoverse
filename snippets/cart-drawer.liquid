@@ -312,8 +312,13 @@
 
   .scd-item__price-unit {
     font-size: 13px;
-    color: #ef4444;
+    color: var(--scd-ink-subtle);
     opacity: 1;
+  }
+
+  .scd-item__price-unit--sale {
+    color: #ef4444;
+    font-weight: 800;
   }
 
   .scd-item__price-subtotal {
@@ -324,11 +329,11 @@
   }
 
   .scd-item__price-compare {
-     color: #ef4444;
+     color: var(--scd-ink-subtle);
      text-decoration: line-through;
      font-size: 12.8px;
      margin-left: 6px;
-     font-weight: 700;
+     font-weight: 600;
   }
 
   /* Options */
@@ -1199,14 +1204,14 @@
 
                           <!-- PRICE BLOCK: UNIT + SUBTOTAL -->
                           <div class="scd-item__price-block">
-                             <div class="scd-item__price-unit">
-                               {{ item.original_price | money }} each
+                             <div class="scd-item__price-unit{% if item.original_price != item.final_price %} scd-item__price-unit--sale{% endif %}">
+                               {{ item.final_price | money }} each
+                               {%- if item.original_price != item.final_price -%}
+                                  <s class="scd-item__price-compare">{{ item.original_price | money }}</s>
+                               {%- endif -%}
                              </div>
                              <div class="scd-item__price-subtotal">
                                {{ item.final_line_price | money }}
-                               {%- if item.original_line_price != item.final_line_price -%}
-                                  <s class="scd-item__price-compare">{{ item.original_line_price | money }}</s>
-                               {%- endif -%}
                              </div>
                           </div>
 
