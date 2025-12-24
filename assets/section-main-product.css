@@ -274,21 +274,62 @@ a.product__text {
 }
 
 .product .price .badge {
-  margin-bottom:0;
-  font-size: 14px;
-  line-height: 100%;
-  font-weight: 600;
-   margin-bottom: 0.5rem;
-
+  margin-bottom: 0;
+  font-size: 12px;
+  line-height: 1.05;
+  font-weight: 700;
+  vertical-align: middle;
 }
 
 .product .price__container {
   margin-bottom: 0.5rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid #e7ecf3;
+}
+
+.product__info-container {
+  background: #ffffff;
+  border: 1px solid #e6ebf2;
+  border-radius: 16px;
+  padding: 18px 18px 20px;
+}
+
+@media screen and (min-width: 990px) {
+  .product__info-container {
+    padding: 22px 24px 24px;
+  }
+}
+
+.product__info-container > * + * {
+  margin-top: 0.7rem;
+}
+
+.product__text.caption-with-letter-spacing {
+  letter-spacing: 0.24em;
+  color: #8b97a7;
+}
+
+.product__title h1,
+.product__title .h1 {
+  color: #0a4f8a;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.product .price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
 }
 
 .product .price dl {
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
+  margin-top: 0.2rem;
+  margin-bottom: 0.2rem;
 }
 
 .product .price--sold-out .price__badge-sale {
@@ -306,6 +347,175 @@ a.product__text {
 .product--no-media .product__sku,
 .product--no-media shopify-payment-terms {
   text-align: center;
+}
+
+.product__description {
+  background: #f7f9fc;
+  border: 1px solid #e3ebf5;
+  border-radius: 12px;
+  padding: 12px 14px;
+  line-height: 1.7;
+  color: #4d5b68;
+}
+
+.product__accordion .accordion {
+  border: none;
+}
+
+.product__accordion details {
+  border: 1px solid #e6ebf2;
+  border-radius: 12px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.product__accordion summary {
+  padding: 13px 15px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: linear-gradient(90deg, rgba(13, 107, 166, 0.06) 0%, rgba(13, 107, 166, 0.02) 100%);
+  color: #0a4f8a;
+  font-weight: 700;
+}
+
+.product__accordion summary .accordion__title {
+  color: inherit;
+  letter-spacing: 0.01em;
+}
+
+.product__accordion .accordion__content {
+  padding: 12px 15px 16px;
+  color: #4d5b68;
+}
+
+.product__accordion details[open] summary {
+  box-shadow: inset 0 -1px 0 #e6ebf2;
+}
+
+.product__description-title {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #0a4f8a;
+}
+
+.product__info-container .product__inventory,
+.product__info-container .product__sku {
+  color: #6c7787;
+  letter-spacing: 0.01em;
+}
+
+.product-form__input {
+  row-gap: 6px;
+}
+
+.product-form__input input[type="radio"] + label:not([class*="color"]):not([class*="swatch"]):not([class*="thumbnail"]) {
+  border: 1.5px solid #dfe6ee !important;
+  min-height: 42px;
+  padding: 9px 14px;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+  box-shadow: none !important;
+  border-radius: 999px !important;
+  background: #f5f7fa !important;
+  color: #4d5b68 !important;
+  font-weight: 600;
+}
+
+.product-form__input input[type="radio"] + label:not([class*="color"]):not([class*="swatch"]):not([class*="thumbnail"]):hover {
+  transform: translateY(-1px);
+  border-color: #cfd9e6 !important;
+}
+
+.product-form__input input[type="radio"]:checked + label:not([class*="color"]):not([class*="swatch"]):not([class*="thumbnail"]) {
+  border-color: #0d6ba6 !important;
+  background: #ffffff !important;
+  color: #0d6ba6 !important;
+  border-width: 2px !important;
+  font-weight: 700;
+  box-shadow: none !important;
+}
+
+.product-form__input input[type="radio"] + label .pack-discount,
+.product-form__input input[type="radio"] + label [class*="discount"],
+.product-form__input input[type="radio"] + label [class*="percent"] {
+  background: #e95a57 !important;
+  box-shadow: none !important;
+}
+
+.product__info-wrapper .quantity {
+  border-radius: 26px !important;
+  border: 1px solid #d0d7e2;
+  padding: 8px 12px;
+  background: #ffffff;
+  gap: 8px;
+  min-height: 46px;
+  box-shadow: none;
+  width: auto;
+}
+
+.product__info-wrapper .quantity__button {
+  border-radius: 50% !important;
+  border: none;
+  background: transparent;
+  color: #505c70;
+  width: 30px;
+  height: 30px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.product__info-wrapper .quantity__button:hover {
+  background: #f2f6fb;
+  color: #0a4f8a;
+}
+
+.product__info-wrapper .quantity__input {
+  font-weight: 800;
+  font-size: 1.2rem;
+  color: #0b1526;
+  min-width: 42px;
+  background: transparent;
+  border: none;
+}
+
+.product__info-wrapper .product-form__submit {
+  background: #0d6ba6 !important;
+  border: 1px solid #0d6ba6 !important;
+  color: #ffffff !important;
+  border-radius: 999px !important;
+  padding: 17px 28px !important;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  box-shadow: 0 8px 18px rgba(13, 107, 166, 0.16) !important;
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 54px;
+  font-weight: 800;
+  width: 100%;
+}
+
+.product__info-wrapper .product-form__submit:hover {
+  background: #fa650c !important;
+  border-color: #fa650c !important;
+}
+
+.product-form__buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.product-form__buttons .product-form__quantity {
+  flex: 0 0 auto;
+}
+
+.product-form__buttons .product-form__submit {
+  flex: 1 1 auto;
 }
 
 .product--no-media .product__media-wrapper,
@@ -2869,13 +3079,3 @@ label.quantity__label.form__label {
 .product-breadcrumbs .breadcrumbs{ margin:0 !important; padding:0 !important; }
 
 /* FIN — CACO HOTFIX PACK */
-
-
-
-
-
-
-
-
-
-
