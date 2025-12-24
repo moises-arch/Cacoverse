@@ -497,6 +497,11 @@ a.product__text {
   min-height: 54px;
   font-weight: 800;
   width: 100%;
+  min-width: 0;
+}
+
+.product__info-wrapper .product-form__submit::before {
+  content: none !important;
 }
 
 .product__info-wrapper .product-form__submit:hover {
@@ -516,6 +521,13 @@ a.product__text {
 
 .product-form__buttons .product-form__submit {
   flex: 1 1 auto;
+  min-width: 0;
+}
+
+@media (max-width: 749px) {
+  .product-form__buttons {
+    flex-wrap: nowrap;
+  }
 }
 
 .product--no-media .product__media-wrapper,
