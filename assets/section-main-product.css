@@ -285,7 +285,7 @@ a.product__text {
   margin-bottom: 0.5rem;
   display: flex;
   align-items: baseline;
-  gap: 0.4rem;
+  gap: 0.3rem;
   flex-wrap: wrap;
   justify-content: flex-start;
 }
@@ -304,7 +304,7 @@ a.product__text {
 }
 
 .product__info-container > * + * {
-  margin-top: 1rem;
+  margin-top: 0.85rem;
 }
 
 .product__text.caption-with-letter-spacing {
@@ -404,7 +404,7 @@ a.product__text {
 }
 
 .product-form__input {
-  row-gap: 10px;
+  row-gap: 8px;
 }
 
 .product-form__input input[type="radio"] + label:not([class*="color"]):not([class*="swatch"]):not([class*="thumbnail"]) {
@@ -435,9 +435,9 @@ a.product__text {
 .product__info-wrapper .quantity {
   border-radius: 14px !important;
   border: 1px solid #e5ebf2;
-  padding: 8px 12px;
+  padding: 10px 14px;
   background: #f9fbfd;
-  gap: 10px;
+  gap: 12px;
 }
 
 .product__info-wrapper .quantity__button {
@@ -445,8 +445,8 @@ a.product__text {
   border: 1px solid #dfe5ed;
   background: #ffffff;
   color: #0d2d4a;
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
 }
 
 .product__info-wrapper .quantity__button:hover {
@@ -462,17 +462,29 @@ a.product__text {
 }
 
 .product__info-wrapper .product-form__submit {
-  background: linear-gradient(90deg, #0f6cad 0%, #0a5b9c 100%) !important;
-  border: 2px solid #0a5b9c !important;
+  background: linear-gradient(90deg, #0f73ba 0%, #0a5b9c 100%) !important;
+  border: 1px solid #0a5b9c !important;
   color: #ffffff !important;
   border-radius: 14px !important;
-  padding: 14px 22px !important;
+  padding: 15px 24px !important;
   letter-spacing: 0.01em;
   text-transform: none;
+  box-shadow: none !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.product__info-wrapper .product-form__submit::before {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0));
+  pointer-events: none;
 }
 
 .product__info-wrapper .product-form__submit:hover {
-  background: linear-gradient(90deg, #0a5b9c 0%, #084c82 100%) !important;
+  background: linear-gradient(90deg, #0d65a7 0%, #094f88 100%) !important;
   border-color: #084c82 !important;
 }
 
@@ -3037,8 +3049,6 @@ label.quantity__label.form__label {
 .product-breadcrumbs .breadcrumbs{ margin:0 !important; padding:0 !important; }
 
 /* FIN — CACO HOTFIX PACK */
-
-
 
 
 
