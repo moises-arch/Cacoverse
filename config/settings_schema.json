@@ -3,7 +3,9 @@
     "name": "theme_info",
     "theme_name": "Cacoverse",
     "theme_version": "2.0",
-    "theme_author": "Caco America LLC."
+    "theme_author": "Caco America LLC.",
+    "theme_documentation_url": "https://www.cacoamerica.com/",
+    "theme_support_email": "sales@cacoamerica.com"
   },
   {
     "name": "t:settings_schema.logo.name",
