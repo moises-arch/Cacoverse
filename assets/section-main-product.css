@@ -284,8 +284,8 @@ a.product__text {
 .product .price__container {
   margin-bottom: 0.5rem;
   display: flex;
-  align-items: center;
-  gap: 0.75rem;
+  align-items: baseline;
+  gap: 0.6rem;
   flex-wrap: wrap;
   justify-content: flex-start;
 }
@@ -2873,7 +2873,6 @@ label.quantity__label.form__label {
 .product-breadcrumbs .breadcrumbs{ margin:0 !important; padding:0 !important; }
 
 /* FIN — CACO HOTFIX PACK */
-
 
 
 
