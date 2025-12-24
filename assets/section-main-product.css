@@ -274,16 +274,56 @@ a.product__text {
 }
 
 .product .price .badge {
-  margin-bottom:0;
-  font-size: 14px;
-  line-height: 100%;
-  font-weight: 600;
-   margin-bottom: 0.5rem;
-
+  margin-bottom: 0;
+  font-size: 12px;
+  line-height: 1.05;
+  font-weight: 700;
+  vertical-align: middle;
 }
 
 .product .price__container {
   margin-bottom: 0.5rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.product__info-container {
+  background: #ffffff;
+  border: 1px solid #e6ebf2;
+  box-shadow: 0 14px 50px rgba(10, 26, 52, 0.08);
+  border-radius: 18px;
+  padding: 22px 22px 26px;
+}
+
+@media screen and (min-width: 990px) {
+  .product__info-container {
+    padding: 28px 30px 32px;
+  }
+}
+
+.product__info-container > * + * {
+  margin-top: 1.2rem;
+}
+
+.product__text.caption-with-letter-spacing {
+  letter-spacing: 0.24em;
+  color: #8b97a7;
+}
+
+.product__title h1,
+.product__title .h1 {
+  color: #0a4f8a;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.product .price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
 }
 
 .product .price dl {
@@ -306,6 +346,103 @@ a.product__text {
 .product--no-media .product__sku,
 .product--no-media shopify-payment-terms {
   text-align: center;
+}
+
+.product__description {
+  background: linear-gradient(180deg, #f7f9fc 0%, #f2f6fb 100%);
+  border: 1px solid #e3ebf5;
+  border-radius: 14px;
+  padding: 14px 16px;
+  line-height: 1.7;
+  color: #4d5b68;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.product__accordion .accordion {
+  border: none;
+}
+
+.product__accordion details {
+  border: 1px solid #e6ebf2;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(10, 26, 52, 0.06);
+  overflow: hidden;
+}
+
+.product__accordion summary {
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: linear-gradient(90deg, rgba(13, 107, 166, 0.06) 0%, rgba(13, 107, 166, 0.02) 100%);
+  color: #0a4f8a;
+  font-weight: 700;
+}
+
+.product__accordion summary .accordion__title {
+  color: inherit;
+  letter-spacing: 0.01em;
+}
+
+.product__accordion .accordion__content {
+  padding: 16px;
+  color: #4d5b68;
+}
+
+.product__accordion details[open] summary {
+  box-shadow: inset 0 -1px 0 #e6ebf2;
+}
+
+.product__description-title {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #0a4f8a;
+}
+
+.product__info-container .product__inventory,
+.product__info-container .product__sku {
+  color: #6c7787;
+  letter-spacing: 0.01em;
+}
+
+.product-form__input {
+  row-gap: 10px;
+}
+
+.product-form__input input[type="radio"] + label:not([class*="color"]):not([class*="swatch"]):not([class*="thumbnail"]) {
+  box-shadow: 0 10px 30px rgba(15, 29, 47, 0.08);
+  border: 1.5px solid #e8eef5 !important;
+  min-height: 46px;
+  padding: 10px 14px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product-form__input input[type="radio"] + label:not([class*="color"]):not([class*="swatch"]):not([class*="thumbnail"]):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 30px rgba(15, 29, 47, 0.1);
+}
+
+.product-form__input input[type="radio"]:checked + label:not([class*="color"]):not([class*="swatch"]):not([class*="thumbnail"]) {
+  border-color: #0d6ba6 !important;
+  box-shadow: 0 14px 26px rgba(13, 107, 166, 0.22);
+}
+
+.product-form__input input[type="radio"] + label .pack-discount,
+.product-form__input input[type="radio"] + label [class*="discount"],
+.product-form__input input[type="radio"] + label [class*="percent"] {
+  background: #f85c3a !important;
+  box-shadow: 0 10px 20px rgba(248, 92, 58, 0.25);
+}
+
+.product__info-wrapper .quantity {
+  border-radius: 14px !important;
+  border: 1px solid #e5ebf2;
+  padding: 6px 10px;
+}
+
+.product__info-wrapper .quantity__button {
+  border-radius: 12px !important;
 }
 
 .product--no-media .product__media-wrapper,
@@ -2869,10 +3006,6 @@ label.quantity__label.form__label {
 .product-breadcrumbs .breadcrumbs{ margin:0 !important; padding:0 !important; }
 
 /* FIN — CACO HOTFIX PACK */
-
-
-
-
 
 
 

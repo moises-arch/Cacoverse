@@ -95,6 +95,10 @@
         {%- endif -%}
       </div>
       <div class="price__sale">
+        <span class="visually-hidden visually-hidden--inline">{{ 'products.product.price.sale_price' | t }}</span>
+        <span class="price-item price-item--sale price-item--last">
+          {{ money_price }}
+        </span>
         {%- unless product.price_varies == false and product.compare_at_price_varies %}
           <span class="visually-hidden visually-hidden--inline">{{ 'products.product.price.regular_price' | t }}</span>
           <span>
@@ -107,10 +111,6 @@
             </s>
           </span>
         {%- endunless -%}
-        <span class="visually-hidden visually-hidden--inline">{{ 'products.product.price.sale_price' | t }}</span>
-        <span class="price-item price-item--sale price-item--last">
-          {{ money_price }}
-        </span>
       </div>
       <small class="unit-price caption{% if product.selected_or_first_available_variant.unit_price_measurement == nil %} hidden{% endif %}">
         <span class="visually-hidden">{{ 'products.product.price.unit_price' | t }}</span>
@@ -126,23 +126,17 @@
           </span>
         </span>
       </small>
+      {%- if show_badges and compare_at_price > price -%}
+        <span class="badge price__badge-sale color-{{ settings.sale_badge_color_scheme }}">
+          {% assign discount_amount = compare_at_price | minus: price %}
+          {% assign discount_percent = discount_amount
+            | times: 100
+            | divided_by: compare_at_price
+            | round
+          %}
+          <span style="color:rgb(255, 255, 255);">{{ discount_percent }}% OFF</span>
+        </span>
+      {%- endif -%}
     </div>
-    {%- if show_badges -%}
-      <span class="badge price__badge-sale color-{{ settings.sale_badge_color_scheme }}">
-         {% if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price %}
-        {% assign discount_amount = product.selected_or_first_available_variant.compare_at_price | minus: product.selected_or_first_available_variant.price %}
-        {% assign discount_percent = discount_amount
-          | times: 100
-          | divided_by: product.selected_or_first_available_variant.compare_at_price
-          | round
-        %}
-        <span style="color:rgb(255, 255, 255);">{{ discount_percent }}% OFF</span>
-      {% endif %}
-      </span>
-
-      <span class="badge price__badge-sold-out color-{{ settings.sold_out_badge_color_scheme }}">
-        {{ 'products.product.sold_out' | t }}
-      </span>
-    {%- endif -%}
   </div>
 {% endunless %}
