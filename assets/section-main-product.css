@@ -445,11 +445,12 @@ a.product__text {
 .product__info-wrapper .quantity {
   border-radius: 26px !important;
   border: 1px solid #d0d7e2;
-  padding: 10px 14px;
+  padding: 8px 12px;
   background: #ffffff;
-  gap: 10px;
-  min-height: 50px;
+  gap: 8px;
+  min-height: 46px;
   box-shadow: none;
+  width: auto;
 }
 
 .product__info-wrapper .quantity__button {
@@ -457,8 +458,8 @@ a.product__text {
   border: none;
   background: transparent;
   color: #505c70;
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   font-weight: 700;
   display: grid;
   place-items: center;
@@ -496,15 +497,6 @@ a.product__text {
   min-height: 54px;
   font-weight: 800;
   width: 100%;
-}
-
-.product__info-wrapper .product-form__submit::before {
-  content: '';
-  position: absolute;
-  inset: 3px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0));
-  pointer-events: none;
 }
 
 .product__info-wrapper .product-form__submit:hover {
