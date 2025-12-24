@@ -316,7 +316,10 @@
                               {%- assign child_title_down = childlink.title | strip | downcase -%}
                               {%- assign child_handle_down = childlink.handle | strip | downcase -%}
                               {%- assign is_sale_link = false -%}
-                              {%- assign has_panel_content = childlink.links != blank -%}
+                              {%- assign has_panel_content = false -%}
+                              {%- if childlink.links != blank -%}
+                                {%- assign has_panel_content = true -%}
+                              {%- endif -%}
                               {%- if child_title_down == 'sale' or child_handle_down == 'sale' -%}
                                 {%- assign is_sale_link = true -%}
                               {%- endif -%}
