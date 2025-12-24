@@ -906,16 +906,16 @@ button::after,
 .product-form__input input[type="radio"] + label [class*="discount"],
 .product-form__input input[type="radio"] + label [class*="percent"] {
   position: absolute;
-  top: -6px;
-  right: -6px;
+  top: -8px;
+  right: -8px;
   background-color: #f65b3c !important;
   color: #ffffff !important;
   font-weight: 700 !important;           /* extra bold for better contrast */
   font-size: 11px !important;
   text-align: center;
   border-radius: 999px !important;
-  min-width: 42px;
-  height: 22px;
+  min-width: 44px;
+  height: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1050,7 +1050,6 @@ button::after,
 /* Avoid third-party smooth scroll & dampen bounce */
 html { scroll-behavior: auto !important; }
 html, body { overscroll-behavior: contain; }
-
 
 
 

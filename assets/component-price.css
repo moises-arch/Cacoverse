@@ -81,7 +81,7 @@
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: baseline;
-  gap: 0.35rem;
+  gap: 0.28rem;
 }
 
 .price--center {
@@ -92,7 +92,7 @@
 .price--on-sale .price-item--regular {
   text-decoration: line-through;
   color: rgba(var(--color-foreground), 0.45);
-  font-size: 1rem;
+  font-size: 0.95rem;
 }
 
 .price--on-sale .price-item--sale {
@@ -121,7 +121,7 @@
 .price .badge {
   background-color: #fa521e !important; /* orange background */
   font-weight: 700;
-  padding: 4px 10px !important;
+  padding: 4px 11px !important;
   border-radius: 999px !important;
   letter-spacing: 0.15px;
   text-transform: uppercase;
@@ -129,8 +129,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 60px;
-  line-height: 1;
+  min-width: 58px;
+  line-height: 1.05;
   border: none !important;
   white-space: nowrap;
 }
