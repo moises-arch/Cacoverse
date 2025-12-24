@@ -297,6 +297,17 @@
 
 
 
+                      {%- assign first_panel_handle = '' -%}
+                      {%- for childlink in link.links -%}
+                        {%- if first_panel_handle == '' and childlink.links != blank -%}
+                          {%- assign first_panel_handle = childlink.handle -%}
+                        {%- endif -%}
+                      {%- endfor -%}
+
+
+
+
+
 
                       <!-- Sidebar -->
                       <div class="caco-mega-sidebar">
@@ -305,14 +316,21 @@
                               {%- assign child_title_down = childlink.title | strip | downcase -%}
                               {%- assign child_handle_down = childlink.handle | strip | downcase -%}
                               {%- assign is_sale_link = false -%}
+                              {%- assign has_panel_content = childlink.links != blank -%}
                               {%- if child_title_down == 'sale' or child_handle_down == 'sale' -%}
                                 {%- assign is_sale_link = true -%}
+                              {%- endif -%}
+                              {%- assign is_default_active = false -%}
+                              {%- if first_panel_handle != '' and childlink.handle == first_panel_handle -%}
+                                {%- assign is_default_active = true -%}
+                              {%- elsif first_panel_handle == '' and forloop.first -%}
+                                {%- assign is_default_active = true -%}
                               {%- endif -%}
                             <li>
                               <a
                                 href="{{ childlink.url }}"
-                                class="caco-mega-sidebar-link {% if forloop.first %}active{% endif %}{% if is_sale_link %} caco-mega-sidebar-link--sale{% endif %}"
-                                data-target="{{ childlink.handle }}"
+                                class="caco-mega-sidebar-link {% if is_default_active %}active{% endif %}{% if is_sale_link %} caco-mega-sidebar-link--sale{% endif %}{% unless has_panel_content %} caco-mega-sidebar-link--no-panel{% endunless %}"
+                                {% if has_panel_content %}data-target="{{ childlink.handle }}"{% endif %}
                               >
                                 <span class="caco-mega-sidebar-link__label{% if is_sale_link %} caco-mega-sidebar-link__label--sale{% endif %}">
                                   {% if is_sale_link %}
@@ -345,8 +363,11 @@
                       <!-- Main content panels -->
                       <div class="caco-mega-content">
                         {%- for childlink in link.links -%}
+                          {%- if childlink.links == blank -%}
+                            {%- continue -%}
+                          {%- endif -%}
                           {%- assign child_title_down = childlink.title | strip | downcase -%}
-                          <div class="caco-mega-panel {% if forloop.first %}active{% endif %}" id="panel-{{ childlink.handle }}">
+                          <div class="caco-mega-panel {% if childlink.handle == first_panel_handle %}active{% endif %}" id="panel-{{ childlink.handle }}">
                             <a href="{{ childlink.url }}" class="caco-mega-panel-title-link">
                               <h3 class="caco-mega-panel-title">
                                 {{ childlink.title }}
@@ -2081,6 +2102,13 @@
     width:940px;max-width:90vw;
     border-radius:0 0 12px 12px;
     border:none;
+  }
+
+  .caco-mega-sidebar-link--no-panel{
+    cursor:default;
+  }
+  .caco-mega-sidebar-link--no-panel .caco-chevron{
+    display:none;
   }
 
   .caco-simple-list{padding:10px 0;}
