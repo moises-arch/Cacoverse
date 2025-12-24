@@ -285,7 +285,7 @@ a.product__text {
   margin-bottom: 0.5rem;
   display: flex;
   align-items: baseline;
-  gap: 0.6rem;
+  gap: 0.4rem;
   flex-wrap: wrap;
   justify-content: flex-start;
 }
@@ -293,19 +293,18 @@ a.product__text {
 .product__info-container {
   background: #ffffff;
   border: 1px solid #e6ebf2;
-  box-shadow: 0 14px 50px rgba(10, 26, 52, 0.08);
-  border-radius: 18px;
-  padding: 22px 22px 26px;
+  border-radius: 16px;
+  padding: 20px 20px 22px;
 }
 
 @media screen and (min-width: 990px) {
   .product__info-container {
-    padding: 28px 30px 32px;
+    padding: 24px 26px 26px;
   }
 }
 
 .product__info-container > * + * {
-  margin-top: 1.2rem;
+  margin-top: 1rem;
 }
 
 .product__text.caption-with-letter-spacing {
@@ -349,13 +348,12 @@ a.product__text {
 }
 
 .product__description {
-  background: linear-gradient(180deg, #f7f9fc 0%, #f2f6fb 100%);
+  background: #f7f9fc;
   border: 1px solid #e3ebf5;
   border-radius: 14px;
   padding: 14px 16px;
   line-height: 1.7;
   color: #4d5b68;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
 .product__accordion .accordion {
@@ -366,7 +364,6 @@ a.product__text {
   border: 1px solid #e6ebf2;
   border-radius: 12px;
   background: #ffffff;
-  box-shadow: 0 8px 24px rgba(10, 26, 52, 0.06);
   overflow: hidden;
 }
 
@@ -411,38 +408,72 @@ a.product__text {
 }
 
 .product-form__input input[type="radio"] + label:not([class*="color"]):not([class*="swatch"]):not([class*="thumbnail"]) {
-  box-shadow: 0 10px 30px rgba(15, 29, 47, 0.08);
   border: 1.5px solid #e8eef5 !important;
-  min-height: 46px;
-  padding: 10px 14px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  min-height: 44px;
+  padding: 9px 12px;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+  box-shadow: none !important;
 }
 
 .product-form__input input[type="radio"] + label:not([class*="color"]):not([class*="swatch"]):not([class*="thumbnail"]):hover {
   transform: translateY(-1px);
-  box-shadow: 0 16px 30px rgba(15, 29, 47, 0.1);
+  border-color: #cfd9e6 !important;
 }
 
 .product-form__input input[type="radio"]:checked + label:not([class*="color"]):not([class*="swatch"]):not([class*="thumbnail"]) {
   border-color: #0d6ba6 !important;
-  box-shadow: 0 14px 26px rgba(13, 107, 166, 0.22);
+  box-shadow: none !important;
 }
 
 .product-form__input input[type="radio"] + label .pack-discount,
 .product-form__input input[type="radio"] + label [class*="discount"],
 .product-form__input input[type="radio"] + label [class*="percent"] {
   background: #f85c3a !important;
-  box-shadow: 0 10px 20px rgba(248, 92, 58, 0.25);
+  box-shadow: none !important;
 }
 
 .product__info-wrapper .quantity {
   border-radius: 14px !important;
   border: 1px solid #e5ebf2;
-  padding: 6px 10px;
+  padding: 8px 12px;
+  background: #f9fbfd;
+  gap: 10px;
 }
 
 .product__info-wrapper .quantity__button {
-  border-radius: 12px !important;
+  border-radius: 10px !important;
+  border: 1px solid #dfe5ed;
+  background: #ffffff;
+  color: #0d2d4a;
+  width: 38px;
+  height: 38px;
+}
+
+.product__info-wrapper .quantity__button:hover {
+  background: #e8f2fb;
+  color: #0a4f8a;
+}
+
+.product__info-wrapper .quantity__input {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #0a4f8a;
+  min-width: 42px;
+}
+
+.product__info-wrapper .product-form__submit {
+  background: linear-gradient(90deg, #0f6cad 0%, #0a5b9c 100%) !important;
+  border: 2px solid #0a5b9c !important;
+  color: #ffffff !important;
+  border-radius: 14px !important;
+  padding: 14px 22px !important;
+  letter-spacing: 0.01em;
+  text-transform: none;
+}
+
+.product__info-wrapper .product-form__submit:hover {
+  background: linear-gradient(90deg, #0a5b9c 0%, #084c82 100%) !important;
+  border-color: #084c82 !important;
 }
 
 .product--no-media .product__media-wrapper,
@@ -3006,7 +3037,6 @@ label.quantity__label.form__label {
 .product-breadcrumbs .breadcrumbs{ margin:0 !important; padding:0 !important; }
 
 /* FIN — CACO HOTFIX PACK */
-
 
 
 
