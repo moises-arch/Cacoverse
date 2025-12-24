@@ -288,6 +288,8 @@ a.product__text {
   gap: 0.25rem;
   flex-wrap: wrap;
   justify-content: flex-start;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid #e7ecf3;
 }
 
 .product__info-container {
@@ -304,7 +306,7 @@ a.product__text {
 }
 
 .product__info-container > * + * {
-  margin-top: 0.75rem;
+  margin-top: 0.7rem;
 }
 
 .product__text.caption-with-letter-spacing {
@@ -322,7 +324,7 @@ a.product__text {
 .product .price {
   display: flex;
   align-items: baseline;
-  gap: 0.6rem;
+  gap: 0.55rem;
 }
 
 .product .price dl {
@@ -414,6 +416,9 @@ a.product__text {
   transition: transform 0.2s ease, border-color 0.2s ease;
   box-shadow: none !important;
   border-radius: 999px !important;
+  background: #f5f7fa !important;
+  color: #4d5b68 !important;
+  font-weight: 600;
 }
 
 .product-form__input input[type="radio"] + label:not([class*="color"]):not([class*="swatch"]):not([class*="thumbnail"]):hover {
@@ -423,7 +428,8 @@ a.product__text {
 
 .product-form__input input[type="radio"]:checked + label:not([class*="color"]):not([class*="swatch"]):not([class*="thumbnail"]) {
   border-color: #0d6ba6 !important;
-  background: #f2f7ff !important;
+  background: #ffffff !important;
+  color: #0d6ba6 !important;
   box-shadow: none !important;
 }
 
@@ -441,6 +447,7 @@ a.product__text {
   background: #f9fbfd;
   gap: 12px;
   min-height: 52px;
+  box-shadow: none;
 }
 
 .product__info-wrapper .quantity__button {
@@ -450,6 +457,9 @@ a.product__text {
   color: #0d2d4a;
   width: 42px;
   height: 42px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
 }
 
 .product__info-wrapper .quantity__button:hover {
@@ -462,6 +472,8 @@ a.product__text {
   font-size: 1.2rem;
   color: #0a4f8a;
   min-width: 42px;
+  background: transparent;
+  border: none;
 }
 
 .product__info-wrapper .product-form__submit {
@@ -492,16 +504,16 @@ a.product__text {
 }
 
 .product__info-wrapper .product-form__submit::after {
-  content: "🛒";
+  content: "👜";
   position: absolute;
-  left: 18px;
+  left: 20px;
   top: 50%;
   transform: translateY(-50%);
   font-size: 16px;
 }
 
 .product__info-wrapper .product-form__submit span {
-  margin-left: 12px;
+  margin-left: 14px;
 }
 
 .product--no-media .product__media-wrapper,
@@ -3065,4 +3077,3 @@ label.quantity__label.form__label {
 .product-breadcrumbs .breadcrumbs{ margin:0 !important; padding:0 !important; }
 
 /* FIN — CACO HOTFIX PACK */
-
