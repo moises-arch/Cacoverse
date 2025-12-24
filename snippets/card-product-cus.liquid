@@ -208,7 +208,12 @@
             {% assign tooltip_copy = 'Ahorra ' | append: discount_percent | append: '% en ' | append: variant.title %}
 
             {% if forloop.index0 < badge_limit %}
-              <span class="product-card__discount-badge" data-tooltip="{{ tooltip_copy | escape }}">
+              <span
+                class="product-card__discount-badge"
+                data-tooltip="{{ tooltip_copy | escape }}"
+                title="{{ tooltip_copy | escape }}"
+                aria-label="{{ tooltip_copy | escape }}"
+              >
                 {{- variant.title | replace: '/', ' · ' -}}
               </span>
             {% else %}
@@ -224,6 +229,8 @@
             <span
               class="product-card__discount-badge product-card__discount-badge--more"
               data-tooltip="{{ hidden_tooltip | escape }}"
+              title="{{ hidden_tooltip | escape }}"
+              aria-label="{{ hidden_tooltip | escape }}"
             >
               +{{ remaining }}
             </span>
