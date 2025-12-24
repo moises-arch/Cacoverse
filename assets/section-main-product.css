@@ -438,7 +438,7 @@ a.product__text {
 .product-form__input input[type="radio"] + label .pack-discount,
 .product-form__input input[type="radio"] + label [class*="discount"],
 .product-form__input input[type="radio"] + label [class*="percent"] {
-  background: #f85c3a !important;
+  background: #e95a57 !important;
   box-shadow: none !important;
 }
 
@@ -458,8 +458,8 @@ a.product__text {
   border: none;
   background: transparent;
   color: #505c70;
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   font-weight: 700;
   display: grid;
   place-items: center;
@@ -488,7 +488,7 @@ a.product__text {
   padding: 17px 28px !important;
   letter-spacing: 0.01em;
   text-transform: none;
-  box-shadow: 0 10px 24px rgba(13, 107, 166, 0.18) !important;
+  box-shadow: 0 8px 18px rgba(13, 107, 166, 0.16) !important;
   position: relative;
   overflow: hidden;
   display: inline-flex;
@@ -502,6 +502,20 @@ a.product__text {
 .product__info-wrapper .product-form__submit:hover {
   background: #fa650c !important;
   border-color: #fa650c !important;
+}
+
+.product-form__buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.product-form__buttons .product-form__quantity {
+  flex: 0 0 auto;
+}
+
+.product-form__buttons .product-form__submit {
+  flex: 1 1 auto;
 }
 
 .product--no-media .product__media-wrapper,
