@@ -312,23 +312,28 @@
 
   .scd-item__price-unit {
     font-size: 13px;
-    color: #6b7280;
-    opacity: 0.95;
+    color: var(--scd-ink-subtle) !important;
+    opacity: 1;
+  }
+
+  .scd-item__price-unit--sale {
+    color: #ef4444 !important;
+    font-weight: 800;
   }
 
   .scd-item__price-subtotal {
     font-size: 17px;
     font-weight: 800;
-    color: var(--scd-ink);
+    color: var(--scd-ink) !important;
     text-align: right;
   }
 
   .scd-item__price-compare {
-     color: #94a3b8;
+     color: var(--scd-ink-subtle) !important;
      text-decoration: line-through;
      font-size: 12.8px;
      margin-left: 6px;
-     font-weight: 500;
+     font-weight: 600;
   }
 
   /* Options */
@@ -1198,16 +1203,24 @@
                           </a>
 
                           <!-- PRICE BLOCK: UNIT + SUBTOTAL -->
+                          {%- liquid
+                            assign item_compare_at = item.variant.compare_at_price
+                            assign item_is_on_sale = false
+                            if item_compare_at > item.final_price
+                              assign item_is_on_sale = true
+                            endif
+                          -%}
+
                           <div class="scd-item__price-block">
-                             <div class="scd-item__price-unit">
-                               {{ item.original_price | money }} each
-                             </div>
-                             <div class="scd-item__price-subtotal">
-                               {{ item.final_line_price | money }}
-                               {%- if item.original_line_price != item.final_line_price -%}
-                                  <s class="scd-item__price-compare">{{ item.original_line_price | money }}</s>
-                               {%- endif -%}
-                             </div>
+                            <div class="scd-item__price-unit{% if item_is_on_sale %} scd-item__price-unit--sale{% endif %}">
+                              {{ item.final_price | money }} each
+                              {%- if item_is_on_sale -%}
+                                <s class="scd-item__price-compare">{{ item_compare_at | money }}</s>
+                              {%- endif -%}
+                            </div>
+                            <div class="scd-item__price-subtotal">
+                              {{ item.final_line_price | money }}
+                            </div>
                           </div>
 
                           {%- if item.product.has_only_default_variant == false
