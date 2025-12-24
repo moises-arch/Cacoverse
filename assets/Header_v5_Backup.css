@@ -1,0 +1,694 @@
+.section-header {
+  background: var(--secondary-color);
+  border-bottom: 2px solid #ebf0f5;
+  z-index: 200;
+  
+}
+
+.section-header .nav-item a {
+  font-family: 'Barlow', sans-serif;
+  font-weight: 600; 
+  font-size: 16px; 
+color: #1c1d1e;
+  
+
+
+}
+
+/* === Mega Menu Overrides === */
+.nav-item.dropdown.position-static {
+  position: static;
+}
+
+.dropdown-menu.mega-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  width: 99vw;
+  border: none;
+  border-top: 1px solid #eee;
+  border-radius: 0;
+  background: #fff;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  padding: 2rem 0;
+  margin-top: 0 !important;
+}
+
+/* .dropdown:hover > .dropdown-menu {
+  display: block;
+} */
+
+
+/****** Other menu **********/
+
+.navbar-expand-lg .navbar-nav .nav-link{
+  text-transform: uppercase;
+}
+
+.section-header .navbar .dropdown-menu-item:last-child {
+  border-right: 0;
+  padding-right: 0;
+}
+
+.section-header .navbar .dropdown-menu-item h3 {
+  margin: 0;
+  padding: 0;
+  
+  /* Button */
+  font-family: 'Barlow';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 32px;
+  /* identical to box height, or 200% */
+  
+  color: #222222;
+
+  
+}
+
+.section-header .navbar .dropdown-menu-item h3 a {
+  /* Button */
+  font-family: 'Barlow';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 32px;
+  /* identical to box height, or 200% */
+  
+  color: #222222;
+  text-decoration: none !important;
+}
+
+/* .section-header .navbar .dropdown-menu-item h3 a:hover {
+  text-decoration: underline;
+  color: var(--primary-color);
+  
+} */
+
+.section-header .navbar .dropdown-menu-item a, .section-header .navbar .dropdown-menu-item p {
+  font-family: 'Barlow';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 22px;
+  color: #222222;
+  text-decoration: none;
+}
+
+.section-header .navbar .dropdown-menu-item a:hover {
+  text-decoration: underline;
+
+}
+
+.section-header .navbar .dropdown-menu-item ul li {
+  padding-bottom: 5px;
+}
+
+.brands-dropdown-menu .imager img {
+        height: 125px !important;
+   }
+
+.section-header .dropdown-item:focus, .dropdown-item:hover {
+    background-color: transparent !important;
+}
+
+@media(min-width: 993px){
+  .border-right{
+    border-right: 1px solid #EBF0F5;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    height: 100%;
+  }
+
+   .industries-dropdown-menu .border-right{
+    border-right: 1px solid #EBF0F5;
+  }
+
+  .border-right:last-child {
+    border-right: 0;
+  }
+  
+}
+
+
+
+/****** Other End **********/
+
+/********** Product Menu********/
+
+/* .products-dropdown-menu .dropdown-menu-item {
+  flex: 1 1 13.5%;
+  box-sizing: border-box;
+  padding: 0 5px;
+  border: 0px solid #ebf0f5;
+  border-radius: 0 0 0px 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 5px;
+
+}
+
+.products-dropdown-menu .dropdown-menu-item h3 a{
+  color: #0a5ba6 !important;
+}
+
+.products-dropdown-menu .view_all_categories svg{
+  width: 16px;
+  height: 16px;
+}
+
+.products-dropdown-menu .view_all_categories a{
+  text-decoration: none;
+}
+
+.products-dropdown-menu .round-image {
+  border-radius: 50%;
+  width: 180px;
+  height: auto;
+    object-fit: cover;
+}
+ */
+
+
+/***** PPE Menu End **********/
+
+
+.resources-dropdown-menu .dropdown-menu-item {
+    flex: 1 0 auto;
+}
+
+.section-header .icon.icon-caret {
+  height: 8px;
+  margin-left: 5px;
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.section-header .navbar-toggler {
+  background-color: var(--primary-color);
+  border-radius: 0;
+  box-shadow: unset;
+  border: 0;
+}
+.section-header .navbar-light .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30' width='30' height='30'%3E%3Cpath stroke='white' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+ .icosn .header__icon {
+  width: 40px;
+  height: 4.4rem;
+}
+
+.header__icon .svg-wrapper {
+  width: 25px;
+  height: 25px;
+}
+
+.header__icon--cart .svg-wrapper {
+  width: 48px;
+}
+
+.section-header .nav-item.dropdown:hover .icon.icon-caret {
+  transform: rotate(180deg);
+}
+
+
+.menu-slug-sale a{
+  color: #b92234 !important;
+  text-transform: uppercase;
+}
+@media (min-width: 992px) {
+  .navbar-expand-lg .navbar-nav {
+        gap:1.5rem;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1150px) {
+
+  .section-header .navbar .dropdown-menu-item h3 a {
+    font-size: 14px;
+    line-height: 130%;
+  }
+
+  .section-header .navbar .ppe-dropdown-menu .dropdown-menu-item a {
+    font-size: 12px;
+  }
+  
+}
+
+
+@media (max-width: 992px) {
+
+  .dropdown-menu.mega-menu {
+    position: unset;
+    width: 100%;
+    border: none;
+    border-top: 1px solid #eee;
+    border-radius: 0;
+    background: #fff;
+    box-shadow: 0 5px 15px #0000001a;
+    z-index: 1000;
+    padding: 1rem 0;
+    margin-top: 0 !important;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .products-dropdown-menu .dropdown-menu-item {
+    flex: 1 0 auto;
+  }
+
+  .resources-dropdown-menu .dropdown-menu-item {
+    flex: 1 0 auto;
+  }
+
+
+  
+  
+  .section-header .navbar-toggler {
+    background-color: var(--primary-color);
+    border-radius: 0;
+    box-shadow: unset;
+    border: 0;
+  }
+
+  .section-header .navbar-light .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30' width='30' height='30'%3E%3Cpath stroke='white' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+  }
+
+  /* Change to 'X' icon when the navbar is open */
+  .navbar-toggler:not(.collapsed) .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30' width='30' height='30'%3E%3Cpath stroke='white' stroke-width='2' d='M5 5L25 25M25 5L5 25'/%3E%3C/svg%3E");
+  }
+
+  .section-header ul.navbar-nav li {
+    border-bottom: 2px solid #ebf0f5;
+    padding: 10px 5px;
+  }
+
+  .section-header ul.navbar-nav li:last-child {
+    border-bottom: 0;
+  }
+
+  .section-header .nav-item a {
+    position: relative;
+  }
+
+  .section-header .icon.icon-caret {
+    position: absolute;
+    top: 50%;
+    right: 0;
+  }
+
+  .section-header .navbar .dropdown-menu.show {
+    margin-top: 0;
+    display: flex;
+    opacity: 1;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+
+  .section-header .icon-caret.rotated {
+    transform: rotate(180deg); /* Rotate 180 degrees when active */
+  }
+
+  .section-header ul.navbar-nav li ul.list-unstyled li {
+    border-bottom: 0;
+    padding: 0;
+    line-height: 120%;
+    
+  }
+
+  .section-header .navbar-collapse {
+    position: fixed;
+    top: 94px; /* Top position when the header is not sticky */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #fff; /* Darken background */
+    z-index: 1050; /* Make sure it stays on top of other content */
+    overflow-y: auto; /* Enable vertical scrolling */
+  }
+
+  /* When the header is sticky, this class will be added */
+  .section-header .navbar-collapse.sticky-header {
+    top: 57px; /* Top position when the header becomes sticky */
+  }
+
+  .section-header .navbar-nav {
+    width: 95%; /* Make the menu items take full width */
+        margin-left: -600px; /* Move left */
+
+  }
+
+  .section-header .brands-dropdown-menu .dropdown-menu-item {
+    max-width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+ 
+
+  .section-header .navbar .ppe-dropdown-menu {
+    min-width: 100%;
+    padding: 5px;
+    gap: 10px;
+    border: 0;
+    
+  }
+}
+
+@media (max-width:420px){
+   .products-dropdown-menu .dropdown-menu-item {
+    flex: 1 0 47%;
+  }
+}
+
+
+
+
+/* ===== Sticky Mode ===== */
+:root{ --hyx-offset:56px; } /* default mobile height */
+
+@media (max-width: 991.98px){
+  .hyx .hyx-topbar{
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1200;
+  }
+  .hyx .navbar-collapse{
+    position: fixed !important;
+    top: var(--hyx-offset) !important;
+    left: 0; right: 0; bottom: 0;
+    background: #fff; z-index: 1190; overflow-y: auto; border: 0;
+  }
+  body.hyx-stuck { padding-top: var(--hyx-offset) !important; }
+}
+
+@media (min-width: 992px){
+  /* Keep desktop navbar stuck at top, full width */
+  .hyx .navbar{
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1200;
+    background: #fff; /* match your desktop header background */
+    border-bottom: 2px solid #ebf0f5;
+  }
+  /* Mega menu should render over content */
+  .hyx .dropdown-menu.mega-menu{
+    top: 100%;
+    z-index: 1210;
+  }
+  /* Push page content down by computed desktop header height */
+  body.hyx-stuck { padding-top: var(--hyx-offset) !important; }
+}
+
+
+/* ===== 100% Sticky Mobile Header ===== */
+@media (max-width: 991.98px){
+  .hyx .hyx-topbar{
+    position: fixed !important;
+    top: 0; left: 0; right: 0;
+    z-index: 1200;
+    background: rgba(16,20,24,0.7);
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+    backdrop-filter: blur(10px) saturate(140%);
+  }
+
+  /* Push body content below the fixed header */
+  body.has-hyx-topbar{
+    padding-top: 56px !important; /* same as bar height */
+  }
+
+  /* Ensure mobile menu sits below sticky bar */
+  .hyx .navbar-collapse{
+    top: 56px !important;
+    position: fixed !important;
+    z-index: 1100;
+  }
+}
+
+
+
+@media (max-width: 991.98px){
+  .hyx .hyx-topbar.scrolled {
+    background: rgba(16,20,24,0.9);
+    transition: background 0.3s ease;
+  }
+}
+
+
+
+
+/* ===== Mobile header: blanco inicial → oscuro con blur al scrollear ===== */
+@media (max-width: 991.98px){
+  header.site-header{
+    z-index: 2100;                     /* por encima del contenido */
+    background: #fff;                  /* blanco inicial */
+    color: #1c1d1e;
+    border-bottom: 1px solid rgba(0,0,0,.06);
+    transition: background .25s ease, color .25s ease, box-shadow .25s ease, border-color .25s ease;
+  }
+
+  /* íconos y logo sobre fondo blanco */
+  header.site-header .navbar-toggler,
+  header.site-header .header__icon,
+  header.site-header .svg-wrapper{ color:#1c1d1e; }
+  header.site-header .header__heading-logo-wrapper img{ filter:none; }
+
+  /* estado scrolleado (oscuro + blur) */
+  header.site-header.scrolled{
+    background: rgba(16,20,24,.55);
+    color:#fff;
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+    backdrop-filter: blur(10px) saturate(140%);
+    border-bottom: 1px solid rgba(255,255,255,.12);
+    box-shadow: 0 6px 18px rgba(0,0,0,.18);
+  }
+  header.site-header.scrolled .navbar-toggler,
+  header.site-header.scrolled .header__icon,
+  header.site-header.scrolled .svg-wrapper{ color:#fff; }
+  header.site-header.scrolled .header__heading-logo-wrapper img{ filter: brightness(0) invert(1); }
+}
+
+/* (Opcional) elimina cualquier gap entre header y la barra de anuncios */
+.shopify-section.section-header,
+header.site-header{ margin:0 !important; }
+
+
+
+
+
+
+/* ===== Mobile header layout ===== */
+.m-header{
+  position: sticky; top: 0; z-index: 2100;
+  display: grid;
+  grid-template-columns: auto 1fr auto;  /* left cluster | center | right */
+  align-items: center;
+  height: 56px; padding: 0 10px;
+  background: #fff; color:#1c1d1e;
+  border-bottom: 1px solid rgba(0,0,0,.06);
+  transition: background .25s, color .25s, box-shadow .25s, border-color .25s;
+}
+.m-left{ display:inline-flex; gap:10px; align-items:center; }
+.m-btn{ background:transparent; border:0; color:inherit; width:36px; height:36px; display:inline-grid; place-items:center; position:relative; }
+.m-brand{ justify-self:center; text-decoration:none; }
+.m-logo{ max-height:26px; filter:none; }
+.m-logo-text{ font-weight:700; color:inherit; }
+.m-cart{ justify-self:end; }
+.m-bubble{
+  position:absolute; top:2px; right:2px; min-width:16px; height:16px;
+  border-radius:999px; background:#ff3b30; color:#fff; font-size:11px; line-height:16px; text-align:center; padding:0 4px;
+}
+
+/* Dark + blur on scroll (same look as before) */
+.m-header.scrolled{
+  background: rgba(16,20,24,.55);
+  color:#fff;
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  backdrop-filter: blur(10px) saturate(140%);
+  border-bottom: 1px solid rgba(255,255,255,.12);
+  box-shadow: 0 6px 18px rgba(0,0,0,.18);
+}
+.m-header.scrolled .m-logo{ filter: brightness(0) invert(1); }
+
+/* Oculta duplicados del header desktop en mobile */
+@media (max-width: 991.98px){
+  header.site-header .navbar-brand,
+  header.site-header .navbar-toggler{ display:none !important; }
+  header.site-header .icosn{ display:none !important; }
+  /* el collapse ocupa toda la pantalla por debajo de la barra */
+  #navbarNav.collapse{
+    position: fixed; top: 56px; left:0; right:0; bottom:0;
+    background:#fff; z-index: 2000; overflow-y:auto; border:0;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Desktop: oculta la barra mobile */
+@media (min-width: 992px){
+  .m-header{ display:none; }
+}
+
+
+
+
+/* ==== Fix: logo sin deformación en el header mobile ==== */
+.m-brand{ min-width: 0; display: inline-flex; align-items: center; justify-content: center; }
+
+/* No estirar nunca el logo, solo limitar altura */
+.m-logo{
+  max-height: 26px;          /* ajusta si quieres 28/30px */
+  height: auto !important;
+  width: auto !important;     /* ignora width del HTML */
+  max-width: 50vw;            /* evita que se coma el header */
+  object-fit: contain !important;
+  aspect-ratio: auto !important;
+  display: block;
+}
+
+/* Algunos themes ponen width:100% al img dentro del header */
+.m-brand img{ width: auto !important; height: auto !important; }
+
+/* Si el modo oscuro aplica filtros, que no afecten proporción */
+.m-header.scrolled .m-logo{ filter: brightness(0) invert(1); }
+
+
+
+/* ==== MOBILE COLLAPSE LAYER & BEHAVIOR ==== */
+@media (max-width: 991.98px) {
+  .section-header { z-index: 1020; }              /* your sticky header */
+  .navbar { position: relative; z-index: 1025; }  /* ensure stacking context */
+
+  /* Turn the collapse into a full-screen panel */
+  .navbar .navbar-collapse.collapse {
+    position: fixed;
+    top: 56px;               /* height of .m-header; adjust if needed */
+    left: 0;
+    right: 0;
+    height: calc(100vh - 56px);
+    overflow-y: auto;
+    background: #fff;
+    padding: 12px 16px 32px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.12);
+    z-index: 1050;
+  }
+
+  /* When shown (Bootstrap adds .show) keep the same geometry */
+  .navbar .navbar-collapse.show {
+    display: block;
+  }
+
+  /* Optional: dim the page when menu is open */
+  body.nav-open::after {
+    content: "";
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.35);
+    z-index: 1040;
+    pointer-events: none;
+  }
+
+  /* Make sure the top mobile bar is above the overlay */
+  .m-header { position: sticky; top: 0; z-index: 1060; background:#fff; }
+}
+
+
+
+
+
+
+
+
+
+/* === Remove unwanted white gap under mobile header === */
+@media (max-width: 991.98px) {
+  body, html {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  header.site-header {
+    margin: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  .m-header {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+    border-bottom: none !important;
+  }
+
+  /* If your navbar adds spacing, reset it */
+  .navbar {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Prevent collapse panel from pushing content down */
+  .navbar-collapse {
+    margin: 0 !important;
+    padding-top: 0 !important;
+  }
+}
+
+
+/* Scroll lock cuando el menú está abierto */
+html.nav-locked, body.nav-locked { overflow: hidden; }
+
+/* Quita espacios fantasmas bajo el header en móvil */
+@media (max-width: 991.98px){
+  header.site-header, .m-header, .navbar { margin:0!important; padding:0!important; border-bottom:none!important; }
+  main { margin-top:0!important; padding-top:0!important; }
+}
+
+
+
+
+/* Quitar el oscurecido cuando el menú móvil está abierto */
+@media (max-width: 991.98px){
+  body.nav-open::after { content: none !important; }
+}
+
+
+
+
+
+/* ===== Forzar visibilidad del header cuando el menú está abierto ===== */
+@media (max-width: 991.98px){
+  header.site-header.force-visible {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1100 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    pointer-events: auto !important;
+  }
+
+  /* Si tu tema “sube” el header, anula transiciones que lo empujan fuera */
+  header.site-header.force-visible,
+  .m-header.nav-open {
+    transition: none !important;
+  }
+
+
+
+
+
+
+  /* Panel del menú anclado bajo el header real */
+  .navbar .navbar-collapse.collapse {
+    position: fixed !important;
+    top: var(--mbar-h, 56px) !important;
+    left: 0; right: 0;
+    height: calc(100vh - var(--mbar-h, 56px)) !important;
+    overflow-y: auto !important;
+    background: #fff;
+    z-index: 1090 !important; /* debajo del header */
+  }
+}
+
