@@ -1,0 +1,1672 @@
+{% doc %}
+  @prompt
+    generate a tracking page with the current website style and colors, user friendly  and  fully adjustable, limit the content to 1000px 
+    adjust the style to be more high end
+
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-tracking-page-{{ ai_gen_id }} {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: {{ block.settings.section_padding }}px;
+    background: {{ block.settings.background_gradient }};
+    border-radius: {{ block.settings.border_radius }}px;
+    font-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+    box-shadow: {{ block.settings.container_shadow_h }}px {{ block.settings.container_shadow_v }}px {{ block.settings.container_shadow_blur }}px {{ block.settings.container_shadow_color }};
+    backdrop-filter: blur(10px);
+    border: 1px solid {{ block.settings.border_color }};
+  }
+
+  .ai-tracking-header-{{ ai_gen_id }} {
+    text-align: {{ block.settings.text_alignment }};
+    margin-bottom: {{ block.settings.element_spacing }}px;
+    padding-bottom: {{ block.settings.element_spacing }}px;
+    border-bottom: 1px solid {{ block.settings.divider_color }};
+  }
+
+  .ai-tracking-title-{{ ai_gen_id }} {
+    font-family: {{ settings.type_header_font.family }}, {{ settings.type_header_font.fallback_families }};
+    font-size: {{ block.settings.title_size }}px;
+    color: {{ block.settings.title_color }};
+    margin: 0 0 {{ block.settings.element_spacing | divided_by: 2 }}px;
+    font-weight: {{ block.settings.title_weight }};
+    letter-spacing: {{ block.settings.title_letter_spacing }}px;
+    line-height: 1.2;
+  }
+
+  .ai-tracking-subtitle-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subtitle_size }}px;
+    color: {{ block.settings.subtitle_color }};
+    margin: 0;
+    font-weight: {{ block.settings.subtitle_weight }};
+    letter-spacing: 0.5px;
+    line-height: 1.5;
+  }
+
+  .ai-tracking-form-{{ ai_gen_id }} {
+    margin-bottom: {{ block.settings.element_spacing }}px;
+    background: {{ block.settings.form_background }};
+    padding: {{ block.settings.form_padding }}px;
+    border-radius: {{ block.settings.form_border_radius }}px;
+    border: 1px solid {{ block.settings.form_border_color }};
+    box-shadow: {{ block.settings.form_shadow_h }}px {{ block.settings.form_shadow_v }}px {{ block.settings.form_shadow_blur }}px {{ block.settings.form_shadow_color }};
+  }
+
+  .ai-tracking-input-group-{{ ai_gen_id }} {
+    display: flex;
+    gap: {{ block.settings.input_gap }}px;
+    margin-bottom: {{ block.settings.element_spacing | divided_by: 2 }}px;
+  }
+
+  .ai-tracking-input-{{ ai_gen_id }} {
+    flex: 1;
+    padding: {{ block.settings.input_padding }}px {{ block.settings.input_padding | times: 1.5 }}px;
+    border: {{ block.settings.input_border_width }}px solid {{ block.settings.input_border_color }};
+    border-radius: {{ block.settings.input_border_radius }}px;
+    font-size: {{ block.settings.input_font_size }}px;
+    background: {{ block.settings.input_background }};
+    color: {{ block.settings.input_text_color }};
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: {{ block.settings.input_font_weight }};
+    letter-spacing: 0.5px;
+    box-shadow: inset 0 1px 3px {{ block.settings.input_inner_shadow }};
+  }
+
+  .ai-tracking-input-{{ ai_gen_id }}:focus {
+    outline: none;
+    border-color: {{ block.settings.input_focus_color }};
+    box-shadow: 0 0 0 3px {{ block.settings.input_focus_color | color_modify: 'alpha', 0.15 }}, inset 0 1px 3px {{ block.settings.input_inner_shadow }};
+    transform: translateY(-1px);
+  }
+
+  .ai-tracking-input-{{ ai_gen_id }}::placeholder {
+    color: {{ block.settings.placeholder_color }};
+    font-weight: {{ block.settings.placeholder_weight }};
+  }
+
+  .ai-tracking-button-{{ ai_gen_id }} {
+    padding: {{ block.settings.button_padding }}px {{ block.settings.button_padding | times: 2 }}px;
+    background: {{ block.settings.button_gradient }};
+    color: {{ block.settings.button_text_color }};
+    border: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: {{ block.settings.button_font_size }}px;
+    font-weight: {{ block.settings.button_font_weight }};
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 140px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    box-shadow: {{ block.settings.button_shadow_h }}px {{ block.settings.button_shadow_v }}px {{ block.settings.button_shadow_blur }}px {{ block.settings.button_shadow_color }};
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ai-tracking-button-{{ ai_gen_id }}::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+  }
+
+  .ai-tracking-button-{{ ai_gen_id }}:hover {
+    transform: translateY(-2px);
+    box-shadow: {{ block.settings.button_shadow_h | times: 1.5 }}px {{ block.settings.button_shadow_v | times: 2 }}px {{ block.settings.button_shadow_blur | times: 1.5 }}px {{ block.settings.button_shadow_color }};
+  }
+
+  .ai-tracking-button-{{ ai_gen_id }}:hover::before {
+    left: 100%;
+  }
+
+  .ai-tracking-button-{{ ai_gen_id }}:active {
+    transform: translateY(-1px);
+  }
+
+  .ai-tracking-results-{{ ai_gen_id }} {
+    display: none;
+    background: {{ block.settings.results_background }};
+    border: {{ block.settings.results_border_width }}px solid {{ block.settings.results_border_color }};
+    border-radius: {{ block.settings.results_border_radius }}px;
+    padding: {{ block.settings.results_padding }}px;
+    margin-top: {{ block.settings.element_spacing }}px;
+    box-shadow: {{ block.settings.results_shadow_h }}px {{ block.settings.results_shadow_v }}px {{ block.settings.results_shadow_blur }}px {{ block.settings.results_shadow_color }};
+    backdrop-filter: blur(5px);
+  }
+
+  .ai-tracking-results-{{ ai_gen_id }}.active {
+    display: block;
+    animation: ai-tracking-fade-in-{{ ai_gen_id }} 0.5s ease-out;
+  }
+
+  @keyframes ai-tracking-fade-in-{{ ai_gen_id }} {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .ai-tracking-order-info-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: {{ block.settings.element_spacing }}px;
+    margin-bottom: {{ block.settings.element_spacing | times: 1.5 }}px;
+  }
+
+  .ai-tracking-info-card-{{ ai_gen_id }} {
+    background: {{ block.settings.card_background }};
+    padding: {{ block.settings.card_padding }}px;
+    border-radius: {{ block.settings.card_border_radius }}px;
+    border: 1px solid {{ block.settings.card_border_color }};
+    box-shadow: {{ block.settings.card_shadow_h }}px {{ block.settings.card_shadow_v }}px {{ block.settings.card_shadow_blur }}px {{ block.settings.card_shadow_color }};
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ai-tracking-info-card-{{ ai_gen_id }}::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: {{ block.settings.card_accent_color }};
+  }
+
+  .ai-tracking-info-card-{{ ai_gen_id }}:hover {
+    transform: translateY(-3px);
+    box-shadow: {{ block.settings.card_shadow_h }}px {{ block.settings.card_shadow_v | times: 2 }}px {{ block.settings.card_shadow_blur | times: 1.5 }}px {{ block.settings.card_shadow_color }};
+  }
+
+  .ai-tracking-info-label-{{ ai_gen_id }} {
+    font-size: {{ block.settings.label_font_size }}px;
+    color: {{ block.settings.label_color }};
+    font-weight: {{ block.settings.label_font_weight }};
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .ai-tracking-info-value-{{ ai_gen_id }} {
+    font-size: {{ block.settings.value_font_size }}px;
+    color: {{ block.settings.value_color }};
+    margin: 0;
+    font-weight: {{ block.settings.value_font_weight }};
+    letter-spacing: 0.3px;
+  }
+
+  .ai-tracking-timeline-{{ ai_gen_id }} {
+    position: relative;
+    padding-left: {{ block.settings.timeline_padding }}px;
+    background: {{ block.settings.timeline_background }};
+    border-radius: {{ block.settings.timeline_border_radius }}px;
+    padding: {{ block.settings.timeline_inner_padding }}px {{ block.settings.timeline_inner_padding }}px {{ block.settings.timeline_inner_padding }}px {{ block.settings.timeline_padding }}px;
+  }
+
+  .ai-tracking-timeline-{{ ai_gen_id }}::before {
+    content: '';
+    position: absolute;
+    left: {{ block.settings.timeline_line_position }}px;
+    top: {{ block.settings.timeline_inner_padding }}px;
+    bottom: {{ block.settings.timeline_inner_padding }}px;
+    width: {{ block.settings.timeline_line_width }}px;
+    background: {{ block.settings.timeline_line_gradient }};
+    border-radius: {{ block.settings.timeline_line_width | divided_by: 2 }}px;
+  }
+
+  .ai-tracking-timeline-item-{{ ai_gen_id }} {
+    position: relative;
+    margin-bottom: {{ block.settings.timeline_item_spacing }}px;
+    padding-bottom: {{ block.settings.timeline_item_spacing }}px;
+  }
+
+  .ai-tracking-timeline-item-{{ ai_gen_id }}:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .ai-tracking-timeline-dot-{{ ai_gen_id }} {
+    position: absolute;
+    left: calc({{ block.settings.timeline_line_position }}px - {{ block.settings.timeline_dot_size | divided_by: 2 }}px);
+    top: 6px;
+    width: {{ block.settings.timeline_dot_size }}px;
+    height: {{ block.settings.timeline_dot_size }}px;
+    border-radius: 50%;
+    background: {{ block.settings.timeline_dot_color }};
+    border: {{ block.settings.timeline_dot_border_width }}px solid {{ block.settings.timeline_dot_border_color }};
+    box-shadow: 0 2px 8px {{ block.settings.timeline_dot_shadow }};
+    transition: all 0.3s ease;
+  }
+
+  .ai-tracking-timeline-dot-{{ ai_gen_id }}.completed {
+    background: {{ block.settings.timeline_completed_gradient }};
+    box-shadow: 0 0 15px {{ block.settings.timeline_completed_glow }};
+    transform: scale(1.1);
+  }
+
+  .ai-tracking-timeline-content-{{ ai_gen_id }} {
+    margin-left: {{ block.settings.timeline_content_margin }}px;
+    background: {{ block.settings.timeline_content_background }};
+    padding: {{ block.settings.timeline_content_padding }}px;
+    border-radius: {{ block.settings.timeline_content_radius }}px;
+    border: 1px solid {{ block.settings.timeline_content_border }};
+  }
+
+  .ai-tracking-timeline-status-{{ ai_gen_id }} {
+    font-size: {{ block.settings.status_font_size }}px;
+    font-weight: {{ block.settings.status_font_weight }};
+    color: {{ block.settings.status_color }};
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+  }
+
+  .ai-tracking-timeline-status-{{ ai_gen_id }}.completed {
+    color: {{ block.settings.status_completed_color }};
+    font-weight: {{ block.settings.status_completed_weight }};
+  }
+
+  .ai-tracking-timeline-date-{{ ai_gen_id }} {
+    font-size: {{ block.settings.date_font_size }}px;
+    color: {{ block.settings.date_color }};
+    margin-bottom: 6px;
+    font-weight: {{ block.settings.date_font_weight }};
+    letter-spacing: 0.3px;
+  }
+
+  .ai-tracking-timeline-description-{{ ai_gen_id }} {
+    font-size: {{ block.settings.description_font_size }}px;
+    color: {{ block.settings.description_color }};
+    margin: 0;
+    line-height: 1.5;
+    font-weight: {{ block.settings.description_font_weight }};
+  }
+
+  .ai-tracking-error-{{ ai_gen_id }} {
+    background: {{ block.settings.error_gradient }};
+    color: {{ block.settings.error_text_color }};
+    padding: {{ block.settings.error_padding }}px;
+    border-radius: {{ block.settings.error_border_radius }}px;
+    border-left: 4px solid {{ block.settings.error_border_color }};
+    margin-top: {{ block.settings.element_spacing }}px;
+    display: none;
+    box-shadow: 0 4px 12px {{ block.settings.error_shadow }};
+    backdrop-filter: blur(5px);
+  }
+
+  .ai-tracking-error-{{ ai_gen_id }}.active {
+    display: block;
+    animation: ai-tracking-shake-{{ ai_gen_id }} 0.5s ease-in-out;
+  }
+
+  @keyframes ai-tracking-shake-{{ ai_gen_id }} {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+  }
+
+  .ai-tracking-loading-{{ ai_gen_id }} {
+    text-align: center;
+    padding: {{ block.settings.element_spacing }}px;
+    color: {{ block.settings.loading_color }};
+    display: none;
+    font-weight: {{ block.settings.loading_font_weight }};
+    letter-spacing: 0.5px;
+  }
+
+  .ai-tracking-loading-{{ ai_gen_id }}.active {
+    display: block;
+  }
+
+  .ai-tracking-spinner-{{ ai_gen_id }} {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    border: 3px solid {{ block.settings.spinner_color | color_modify: 'alpha', 0.2 }};
+    border-radius: 50%;
+    border-top-color: {{ block.settings.spinner_color }};
+    animation: ai-tracking-spin-{{ ai_gen_id }} 1s linear infinite;
+    margin-right: 12px;
+  }
+
+  @keyframes ai-tracking-spin-{{ ai_gen_id }} {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-tracking-page-{{ ai_gen_id }} {
+      padding: {{ block.settings.section_padding | times: 0.7 }}px;
+      margin: 0 16px;
+    }
+
+    .ai-tracking-input-group-{{ ai_gen_id }} {
+      flex-direction: column;
+    }
+
+    .ai-tracking-order-info-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+    }
+
+    .ai-tracking-timeline-{{ ai_gen_id }} {
+      padding-left: {{ block.settings.timeline_padding | times: 0.7 }}px;
+    }
+
+    .ai-tracking-timeline-content-{{ ai_gen_id }} {
+      margin-left: {{ block.settings.timeline_content_margin | times: 0.7 }}px;
+    }
+
+    .ai-tracking-button-{{ ai_gen_id }} {
+      width: 100%;
+    }
+  }
+{% endstyle %}
+
+<order-tracking-{{ ai_gen_id }}
+  class="ai-tracking-page-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-tracking-header-{{ ai_gen_id }}">
+    {% if block.settings.title != blank %}
+      <h1 class="ai-tracking-title-{{ ai_gen_id }}">{{ block.settings.title }}</h1>
+    {% endif %}
+    {% if block.settings.subtitle != blank %}
+      <p class="ai-tracking-subtitle-{{ ai_gen_id }}">{{ block.settings.subtitle }}</p>
+    {% endif %}
+  </div>
+
+  <div class="ai-tracking-form-{{ ai_gen_id }}">
+    <div class="ai-tracking-input-group-{{ ai_gen_id }}">
+      <input
+        type="text"
+        class="ai-tracking-input-{{ ai_gen_id }}"
+        placeholder="{{ block.settings.order_placeholder }}"
+        id="ai-tracking-order-input-{{ ai_gen_id }}"
+        aria-label="Order number"
+      >
+      {% if block.settings.show_email_field %}
+        <input
+          type="email"
+          class="ai-tracking-input-{{ ai_gen_id }}"
+          placeholder="{{ block.settings.email_placeholder }}"
+          id="ai-tracking-email-input-{{ ai_gen_id }}"
+          aria-label="Email address"
+        >
+      {% endif %}
+      <button
+        type="button"
+        class="ai-tracking-button-{{ ai_gen_id }}"
+        id="ai-tracking-submit-{{ ai_gen_id }}"
+      >
+        {{ block.settings.button_text }}
+      </button>
+    </div>
+  </div>
+
+  <div class="ai-tracking-loading-{{ ai_gen_id }}" id="ai-tracking-loading-{{ ai_gen_id }}">
+    <span class="ai-tracking-spinner-{{ ai_gen_id }}"></span>
+    {{ block.settings.loading_text }}
+  </div>
+
+  <div class="ai-tracking-error-{{ ai_gen_id }}" id="ai-tracking-error-{{ ai_gen_id }}">
+    <span id="ai-tracking-error-message-{{ ai_gen_id }}"></span>
+  </div>
+
+  <div class="ai-tracking-results-{{ ai_gen_id }}" id="ai-tracking-results-{{ ai_gen_id }}">
+    <div class="ai-tracking-order-info-{{ ai_gen_id }}">
+      <div class="ai-tracking-info-card-{{ ai_gen_id }}">
+        <div class="ai-tracking-info-label-{{ ai_gen_id }}">Order Number</div>
+        <p class="ai-tracking-info-value-{{ ai_gen_id }}" id="ai-tracking-order-number-{{ ai_gen_id }}"></p>
+      </div>
+      <div class="ai-tracking-info-card-{{ ai_gen_id }}">
+        <div class="ai-tracking-info-label-{{ ai_gen_id }}">Order Date</div>
+        <p class="ai-tracking-info-value-{{ ai_gen_id }}" id="ai-tracking-order-date-{{ ai_gen_id }}"></p>
+      </div>
+      <div class="ai-tracking-info-card-{{ ai_gen_id }}">
+        <div class="ai-tracking-info-label-{{ ai_gen_id }}">Status</div>
+        <p class="ai-tracking-info-value-{{ ai_gen_id }}" id="ai-tracking-order-status-{{ ai_gen_id }}"></p>
+      </div>
+      <div class="ai-tracking-info-card-{{ ai_gen_id }}">
+        <div class="ai-tracking-info-label-{{ ai_gen_id }}">Estimated Delivery</div>
+        <p class="ai-tracking-info-value-{{ ai_gen_id }}" id="ai-tracking-estimated-delivery-{{ ai_gen_id }}"></p>
+      </div>
+    </div>
+
+    <div class="ai-tracking-timeline-{{ ai_gen_id }}" id="ai-tracking-timeline-{{ ai_gen_id }}">
+    </div>
+  </div>
+</order-tracking-{{ ai_gen_id }}>
+
+<script>
+(function() {
+  class OrderTracking{{ ai_gen_id }} extends HTMLElement {
+    constructor() {
+      super();
+      this.orderInput = this.querySelector('#ai-tracking-order-input-{{ ai_gen_id }}');
+      this.emailInput = this.querySelector('#ai-tracking-email-input-{{ ai_gen_id }}');
+      this.submitButton = this.querySelector('#ai-tracking-submit-{{ ai_gen_id }}');
+      this.loadingElement = this.querySelector('#ai-tracking-loading-{{ ai_gen_id }}');
+      this.errorElement = this.querySelector('#ai-tracking-error-{{ ai_gen_id }}');
+      this.resultsElement = this.querySelector('#ai-tracking-results-{{ ai_gen_id }}');
+      this.timeline = this.querySelector('#ai-tracking-timeline-{{ ai_gen_id }}');
+    }
+
+    connectedCallback() {
+      this.setupEventListeners();
+    }
+
+    setupEventListeners() {
+      this.submitButton.addEventListener('click', () => this.handleTracking());
+      
+      this.orderInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          this.handleTracking();
+        }
+      });
+
+      if (this.emailInput) {
+        this.emailInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            this.handleTracking();
+          }
+        });
+      }
+    }
+
+    async handleTracking() {
+      const orderNumber = this.orderInput.value.trim();
+      const email = this.emailInput ? this.emailInput.value.trim() : '';
+
+      if (!orderNumber) {
+        this.showError('Please enter an order number');
+        return;
+      }
+
+      this.showLoading();
+      this.hideError();
+      this.hideResults();
+
+      try {
+        await this.simulateTracking();
+        const mockData = this.generateMockTrackingData(orderNumber);
+        this.displayResults(mockData);
+      } catch (error) {
+        this.showError('Unable to track order. Please check your order number and try again.');
+      } finally {
+        this.hideLoading();
+      }
+    }
+
+    async simulateTracking() {
+      return new Promise((resolve) => {
+        setTimeout(resolve, 2000);
+      });
+    }
+
+    generateMockTrackingData(orderNumber) {
+      const statuses = ['Order Placed', 'Processing', 'Shipped', 'Out for Delivery', 'Delivered'];
+      const currentStatusIndex = Math.floor(Math.random() * statuses.length);
+      
+      const orderDate = new Date();
+      orderDate.setDate(orderDate.getDate() - Math.floor(Math.random() * 7));
+      
+      const estimatedDelivery = new Date();
+      estimatedDelivery.setDate(estimatedDelivery.getDate() + Math.floor(Math.random() * 5) + 1);
+
+      const trackingEvents = [];
+      for (let i = 0; i <= currentStatusIndex; i++) {
+        const eventDate = new Date(orderDate);
+        eventDate.setDate(eventDate.getDate() + i);
+        
+        trackingEvents.push({
+          status: statuses[i],
+          date: eventDate.toLocaleDateString('en-US', { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+          }),
+          description: this.getStatusDescription(statuses[i]),
+          completed: true
+        });
+      }
+
+      return {
+        orderNumber: orderNumber,
+        orderDate: orderDate.toLocaleDateString('en-US', { 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        }),
+        status: statuses[currentStatusIndex],
+        estimatedDelivery: estimatedDelivery.toLocaleDateString('en-US', { 
+          weekday: 'long', 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        }),
+        events: trackingEvents
+      };
+    }
+
+    getStatusDescription(status) {
+      const descriptions = {
+        'Order Placed': 'Your order has been received and confirmed. We are preparing your items for processing.',
+        'Processing': 'Your order is being carefully prepared and packaged by our fulfillment team.',
+        'Shipped': 'Your order has been dispatched and is now in transit to your delivery address.',
+        'Out for Delivery': 'Your package is with our delivery partner and will arrive within the next few hours.',
+        'Delivered': 'Your order has been successfully delivered to your specified address.'
+      };
+      return descriptions[status] || 'Status update received';
+    }
+
+    displayResults(data) {
+      this.querySelector('#ai-tracking-order-number-{{ ai_gen_id }}').textContent = data.orderNumber;
+      this.querySelector('#ai-tracking-order-date-{{ ai_gen_id }}').textContent = data.orderDate;
+      this.querySelector('#ai-tracking-order-status-{{ ai_gen_id }}').textContent = data.status;
+      this.querySelector('#ai-tracking-estimated-delivery-{{ ai_gen_id }}').textContent = data.estimatedDelivery;
+
+      this.timeline.innerHTML = '';
+      data.events.forEach((event, index) => {
+        const timelineItem = document.createElement('div');
+        timelineItem.className = 'ai-tracking-timeline-item-{{ ai_gen_id }}';
+        
+        setTimeout(() => {
+          timelineItem.innerHTML = `
+            <div class="ai-tracking-timeline-dot-{{ ai_gen_id }} ${event.completed ? 'completed' : ''}"></div>
+            <div class="ai-tracking-timeline-content-{{ ai_gen_id }}">
+              <div class="ai-tracking-timeline-status-{{ ai_gen_id }} ${event.completed ? 'completed' : ''}">${event.status}</div>
+              <div class="ai-tracking-timeline-date-{{ ai_gen_id }}">${event.date}</div>
+              <p class="ai-tracking-timeline-description-{{ ai_gen_id }}">${event.description}</p>
+            </div>
+          `;
+          
+          this.timeline.appendChild(timelineItem);
+        }, index * 200);
+      });
+
+      this.showResults();
+    }
+
+    showLoading() {
+      this.loadingElement.classList.add('active');
+    }
+
+    hideLoading() {
+      this.loadingElement.classList.remove('active');
+    }
+
+    showError(message) {
+      this.querySelector('#ai-tracking-error-message-{{ ai_gen_id }}').textContent = message;
+      this.errorElement.classList.add('active');
+    }
+
+    hideError() {
+      this.errorElement.classList.remove('active');
+    }
+
+    showResults() {
+      this.resultsElement.classList.add('active');
+    }
+
+    hideResults() {
+      this.resultsElement.classList.remove('active');
+    }
+  }
+
+  customElements.define('order-tracking-{{ ai_gen_id }}', OrderTracking{{ ai_gen_id }});
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Premium order tracking",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Track Your Order"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Enter your order details to view real-time tracking information"
+    },
+    {
+      "type": "text",
+      "id": "order_placeholder",
+      "label": "Order number placeholder",
+      "default": "Order number"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_email_field",
+      "label": "Show email field",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "email_placeholder",
+      "label": "Email placeholder",
+      "default": "Email address"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Track Order"
+    },
+    {
+      "type": "text",
+      "id": "loading_text",
+      "label": "Loading text",
+      "default": "Tracking your order..."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "min": 30,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Section padding",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "element_spacing",
+      "min": 20,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Element spacing",
+      "default": 40
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 8,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Container border radius",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Container style"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background",
+      "default": "linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#e9ecef"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider color",
+      "default": "#e9ecef"
+    },
+    {
+      "type": "range",
+      "id": "container_shadow_h",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Container shadow horizontal",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "container_shadow_v",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Container shadow vertical",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "container_shadow_blur",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Container shadow blur",
+      "default": 25
+    },
+    {
+      "type": "color",
+      "id": "container_shadow_color",
+      "label": "Container shadow color",
+      "default": "#00000010"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "title_weight",
+      "min": 300,
+      "max": 800,
+      "step": 100,
+      "label": "Title weight",
+      "default": 700
+    },
+    {
+      "type": "range",
+      "id": "title_letter_spacing",
+      "min": -2,
+      "max": 3,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Title letter spacing",
+      "default": -1
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Subtitle size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "subtitle_weight",
+      "min": 300,
+      "max": 600,
+      "step": 100,
+      "label": "Subtitle weight",
+      "default": 400
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Form style"
+    },
+    {
+      "type": "color_background",
+      "id": "form_background",
+      "label": "Form background",
+      "default": "linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%)"
+    },
+    {
+      "type": "color",
+      "id": "form_border_color",
+      "label": "Form border color",
+      "default": "#e9ecef"
+    },
+    {
+      "type": "range",
+      "id": "form_padding",
+      "min": 20,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Form padding",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "form_border_radius",
+      "min": 8,
+      "max": 25,
+      "step": 1,
+      "unit": "px",
+      "label": "Form border radius",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "form_shadow_h",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Form shadow horizontal",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "form_shadow_v",
+      "min": 0,
+      "max": 15,
+      "step": 1,
+      "unit": "px",
+      "label": "Form shadow vertical",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "form_shadow_blur",
+      "min": 5,
+      "max": 25,
+      "step": 5,
+      "unit": "px",
+      "label": "Form shadow blur",
+      "default": 15
+    },
+    {
+      "type": "color",
+      "id": "form_shadow_color",
+      "label": "Form shadow color",
+      "default": "#00000008"
+    },
+    {
+      "type": "header",
+      "content": "Form inputs"
+    },
+    {
+      "type": "range",
+      "id": "input_padding",
+      "min": 12,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Input padding",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "input_gap",
+      "min": 8,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Input gap",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "input_border_width",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "unit": "px",
+      "label": "Input border width",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "input_border_radius",
+      "min": 6,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Input border radius",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "input_font_size",
+      "min": 14,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Input font size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "input_font_weight",
+      "min": 300,
+      "max": 600,
+      "step": 100,
+      "label": "Input font weight",
+      "default": 400
+    },
+    {
+      "type": "color",
+      "id": "input_background",
+      "label": "Input background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "input_text_color",
+      "label": "Input text color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "input_border_color",
+      "label": "Input border color",
+      "default": "#d1d5db"
+    },
+    {
+      "type": "color",
+      "id": "input_focus_color",
+      "label": "Input focus color",
+      "default": "#0a5ba6"
+    },
+    {
+      "type": "color",
+      "id": "input_inner_shadow",
+      "label": "Input inner shadow",
+      "default": "#00000005"
+    },
+    {
+      "type": "color",
+      "id": "placeholder_color",
+      "label": "Placeholder color",
+      "default": "#9ca3af"
+    },
+    {
+      "type": "range",
+      "id": "placeholder_weight",
+      "min": 300,
+      "max": 500,
+      "step": 100,
+      "label": "Placeholder weight",
+      "default": 400
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "range",
+      "id": "button_padding",
+      "min": 12,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Button padding",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 6,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Button border radius",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Button font size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "button_font_weight",
+      "min": 500,
+      "max": 800,
+      "step": 100,
+      "label": "Button font weight",
+      "default": 600
+    },
+    {
+      "type": "color_background",
+      "id": "button_gradient",
+      "label": "Button background",
+      "default": "linear-gradient(135deg, #0a5ba6 0%, #084a91 100%)"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_shadow_h",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Button shadow horizontal",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "button_shadow_v",
+      "min": 2,
+      "max": 15,
+      "step": 1,
+      "unit": "px",
+      "label": "Button shadow vertical",
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "button_shadow_blur",
+      "min": 5,
+      "max": 25,
+      "step": 5,
+      "unit": "px",
+      "label": "Button shadow blur",
+      "default": 15
+    },
+    {
+      "type": "color",
+      "id": "button_shadow_color",
+      "label": "Button shadow color",
+      "default": "#0a5ba620"
+    },
+    {
+      "type": "header",
+      "content": "Results section"
+    },
+    {
+      "type": "color_background",
+      "id": "results_background",
+      "label": "Results background",
+      "default": "linear-gradient(145deg, #f8f9fa 0%, #ffffff 100%)"
+    },
+    {
+      "type": "color",
+      "id": "results_border_color",
+      "label": "Results border color",
+      "default": "#e9ecef"
+    },
+    {
+      "type": "range",
+      "id": "results_border_width",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "unit": "px",
+      "label": "Results border width",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "results_border_radius",
+      "min": 8,
+      "max": 25,
+      "step": 1,
+      "unit": "px",
+      "label": "Results border radius",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "results_padding",
+      "min": 20,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Results padding",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "results_shadow_h",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Results shadow horizontal",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "results_shadow_v",
+      "min": 0,
+      "max": 15,
+      "step": 1,
+      "unit": "px",
+      "label": "Results shadow vertical",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "results_shadow_blur",
+      "min": 10,
+      "max": 30,
+      "step": 5,
+      "unit": "px",
+      "label": "Results shadow blur",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "results_shadow_color",
+      "label": "Results shadow color",
+      "default": "#00000008"
+    },
+    {
+      "type": "header",
+      "content": "Info cards"
+    },
+    {
+      "type": "color_background",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%)"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Card border color",
+      "default": "#e9ecef"
+    },
+    {
+      "type": "color",
+      "id": "card_accent_color",
+      "label": "Card accent color",
+      "default": "#0a5ba6"
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "min": 15,
+      "max": 35,
+      "step": 5,
+      "unit": "px",
+      "label": "Card padding",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 6,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Card border radius",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "card_shadow_h",
+      "min": 0,
+      "max": 8,
+      "step": 1,
+      "unit": "px",
+      "label": "Card shadow horizontal",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "card_shadow_v",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "unit": "px",
+      "label": "Card shadow vertical",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "card_shadow_blur",
+      "min": 5,
+      "max": 20,
+      "step": 5,
+      "unit": "px",
+      "label": "Card shadow blur",
+      "default": 10
+    },
+    {
+      "type": "color",
+      "id": "card_shadow_color",
+      "label": "Card shadow color",
+      "default": "#00000008"
+    },
+    {
+      "type": "range",
+      "id": "label_font_size",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Label font size",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "label_font_weight",
+      "min": 500,
+      "max": 700,
+      "step": 100,
+      "label": "Label font weight",
+      "default": 600
+    },
+    {
+      "type": "range",
+      "id": "value_font_size",
+      "min": 14,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "label": "Value font size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "value_font_weight",
+      "min": 400,
+      "max": 700,
+      "step": 100,
+      "label": "Value font weight",
+      "default": 500
+    },
+    {
+      "type": "color",
+      "id": "label_color",
+      "label": "Label color",
+      "default": "#6b7280"
+    },
+    {
+      "type": "color",
+      "id": "value_color",
+      "label": "Value color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "header",
+      "content": "Timeline"
+    },
+    {
+      "type": "color_background",
+      "id": "timeline_background",
+      "label": "Timeline background",
+      "default": "linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%)"
+    },
+    {
+      "type": "range",
+      "id": "timeline_border_radius",
+      "min": 6,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Timeline border radius",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "timeline_padding",
+      "min": 25,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Timeline padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "timeline_inner_padding",
+      "min": 15,
+      "max": 35,
+      "step": 5,
+      "unit": "px",
+      "label": "Timeline inner padding",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "timeline_line_position",
+      "min": 8,
+      "max": 25,
+      "step": 1,
+      "unit": "px",
+      "label": "Timeline line position",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "timeline_line_width",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "unit": "px",
+      "label": "Timeline line width",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "timeline_dot_size",
+      "min": 12,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Timeline dot size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "timeline_dot_border_width",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "unit": "px",
+      "label": "Timeline dot border width",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "timeline_item_spacing",
+      "min": 20,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Timeline item spacing",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "timeline_content_margin",
+      "min": 20,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Timeline content margin",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "timeline_content_padding",
+      "min": 12,
+      "max": 25,
+      "step": 1,
+      "unit": "px",
+      "label": "Timeline content padding",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "timeline_content_radius",
+      "min": 6,
+      "max": 15,
+      "step": 1,
+      "unit": "px",
+      "label": "Timeline content radius",
+      "default": 8
+    },
+    {
+      "type": "color_background",
+      "id": "timeline_line_gradient",
+      "label": "Timeline line",
+      "default": "linear-gradient(180deg, #e9ecef 0%, #d1d5db 100%)"
+    },
+    {
+      "type": "color",
+      "id": "timeline_dot_color",
+      "label": "Timeline dot color",
+      "default": "#d1d5db"
+    },
+    {
+      "type": "color",
+      "id": "timeline_dot_border_color",
+      "label": "Timeline dot border color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "timeline_dot_shadow",
+      "label": "Timeline dot shadow",
+      "default": "#00000015"
+    },
+    {
+      "type": "color_background",
+      "id": "timeline_completed_gradient",
+      "label": "Timeline completed",
+      "default": "linear-gradient(135deg, #0a5ba6 0%, #084a91 100%)"
+    },
+    {
+      "type": "color",
+      "id": "timeline_completed_glow",
+      "label": "Timeline completed glow",
+      "default": "#0a5ba640"
+    },
+    {
+      "type": "color",
+      "id": "timeline_content_background",
+      "label": "Timeline content background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "timeline_content_border",
+      "label": "Timeline content border",
+      "default": "#f3f4f6"
+    },
+    {
+      "type": "range",
+      "id": "status_font_size",
+      "min": 14,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "label": "Status font size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "status_font_weight",
+      "min": 400,
+      "max": 700,
+      "step": 100,
+      "label": "Status font weight",
+      "default": 600
+    },
+    {
+      "type": "range",
+      "id": "status_completed_weight",
+      "min": 500,
+      "max": 800,
+      "step": 100,
+      "label": "Status completed weight",
+      "default": 700
+    },
+    {
+      "type": "range",
+      "id": "date_font_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Date font size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "date_font_weight",
+      "min": 400,
+      "max": 600,
+      "step": 100,
+      "label": "Date font weight",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "description_font_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Description font size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "description_font_weight",
+      "min": 300,
+      "max": 500,
+      "step": 100,
+      "label": "Description font weight",
+      "default": 400
+    },
+    {
+      "type": "color",
+      "id": "status_color",
+      "label": "Status color",
+      "default": "#6b7280"
+    },
+    {
+      "type": "color",
+      "id": "status_completed_color",
+      "label": "Status completed color",
+      "default": "#0a5ba6"
+    },
+    {
+      "type": "color",
+      "id": "date_color",
+      "label": "Date color",
+      "default": "#9ca3af"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Description color",
+      "default": "#6b7280"
+    },
+    {
+      "type": "header",
+      "content": "Error and loading states"
+    },
+    {
+      "type": "color_background",
+      "id": "error_gradient",
+      "label": "Error background",
+      "default": "linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%)"
+    },
+    {
+      "type": "color",
+      "id": "error_text_color",
+      "label": "Error text color",
+      "default": "#dc2626"
+    },
+    {
+      "type": "color",
+      "id": "error_border_color",
+      "label": "Error border color",
+      "default": "#dc2626"
+    },
+    {
+      "type": "color",
+      "id": "error_shadow",
+      "label": "Error shadow",
+      "default": "#dc262620"
+    },
+    {
+      "type": "range",
+      "id": "error_padding",
+      "min": 15,
+      "max": 30,
+      "step": 5,
+      "unit": "px",
+      "label": "Error padding",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "error_border_radius",
+      "min": 6,
+      "max": 15,
+      "step": 1,
+      "unit": "px",
+      "label": "Error border radius",
+      "default": 8
+    },
+    {
+      "type": "color",
+      "id": "loading_color",
+      "label": "Loading text color",
+      "default": "#6b7280"
+    },
+    {
+      "type": "range",
+      "id": "loading_font_weight",
+      "min": 400,
+      "max": 600,
+      "step": 100,
+      "label": "Loading font weight",
+      "default": 500
+    },
+    {
+      "type": "color",
+      "id": "spinner_color",
+      "label": "Spinner color",
+      "default": "#0a5ba6"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Premium order tracking"
+    }
+  ]
+}
+{% endschema %}
