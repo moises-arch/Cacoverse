@@ -427,8 +427,8 @@ button[name="add"]:hover,
   #shopify-section-{{ section.id }} .product--stacked .thumbnail-slider .slider--tablet-up {
     display: grid;
     grid-auto-flow: column;
-    grid-auto-columns: calc((100% - 36px) / 4);
-    gap: 12px;
+    grid-auto-columns: 88px;
+    gap: 10px;
     width: 100%;
     margin: 0;
     padding: 0;
@@ -538,19 +538,25 @@ button[name="add"]:hover,
   }
 
   /* Mostrar solo la imagen activa en desktop */
-  #shopify-section-{{ section.id }} .product--stacked .product__media-list {
-    display: flex;
+  #shopify-section-{{ section.id }} .product--stacked #Slider-Gallery-{{ section.id }} {
+    display: flex !important;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 0;
     overflow: hidden;
+    padding: 0;
+    margin: 0;
   }
 
-  #shopify-section-{{ section.id }} .product--stacked .product__media-list .product__media-item {
-    display: none;
+  #shopify-section-{{ section.id }} .product--stacked #Slider-Gallery-{{ section.id }} .product__media-item {
+    display: none !important;
     flex: 0 0 100%;
+    max-width: 100%;
+    margin: 0;
   }
 
-  #shopify-section-{{ section.id }} .product--stacked .product__media-list .product__media-item.is-active {
-    display: block;
-    flex: 0 0 100%;
+  #shopify-section-{{ section.id }} .product--stacked #Slider-Gallery-{{ section.id }} .product__media-item.is-active {
+    display: block !important;
   }
 }
 
