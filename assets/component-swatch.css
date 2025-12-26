@@ -6,8 +6,8 @@
 .product-form__input--swatch{
   --sw-radius: 8px;                  /* 👈 redondeo exterior */
   --sw-size: 35px;                    /* tamaño del color */
-  --sw-pad: 1px;                      /* padding del marco */
-  --sw-bw: 4px;                       /* borde minimalista */
+  --sw-pad: 4px;                      /* padding del marco */
+  --sw-bw: 1.5px;                       /* borde minimalista */
   --sw-border: rgba(17,24,39,.18);
   --sw-active: #0d6ba6;
 
