@@ -25,6 +25,27 @@
     %}
 {% endcomment %}
 
+{%- liquid
+  assign tooltip_bg = '#4b5563'
+  assign tooltip_text = '#ffffff'
+
+  if swatch.color
+    assign rgb_parts = swatch.color.rgb | split: ','
+    assign r = rgb_parts[0] | plus: 0
+    assign g = rgb_parts[1] | plus: 0
+    assign b = rgb_parts[2] | plus: 0
+    assign r_weighted = r | times: 299
+    assign g_weighted = g | times: 587
+    assign b_weighted = b | times: 114
+    assign brightness = r_weighted | plus: g_weighted | plus: b_weighted | divided_by: 1000
+
+    assign tooltip_bg = 'rgb(' | append: swatch.color.rgb | append: ')'
+    if brightness > 150
+      assign tooltip_text = '#0b0b0b'
+    endif
+  endif
+-%}
+
 <input
   type="{{ type | default: 'radio' }}"
   id="{{ id }}"
@@ -44,8 +65,10 @@
 >
 <label
   for="{{ id }}"
-  title="{{ value }}"
   class="swatch-input__label{% if shape == 'square' %} swatch-input__label--square{% endif %}"
+  data-tooltip="{{ value | escape }}"
+  aria-label="{{ value | escape }}"
+  style="--swatch-tooltip-bg: {{ tooltip_bg }}; --swatch-tooltip-text: {{ tooltip_text }};"
 >
   {% render 'swatch', swatch: swatch, shape: shape %}
   {{ help_text }}
