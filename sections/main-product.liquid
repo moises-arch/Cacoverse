@@ -1727,8 +1727,15 @@ body.template-product .product__media-modal * {
                   {%- assign pill_state_class = 'is-in-stock' -%}
                   {%- capture stock_pill -%}
                     {%- if variant_available -%}
-                      {%- assign tracked_inventory = variant_mgmt == 'shopify' -%}
-                      {%- assign continue_selling = variant_policy == 'continue' -%}
+                      {%- assign tracked_inventory = false -%}
+                      {%- if variant_mgmt == 'shopify' -%}
+                        {%- assign tracked_inventory = true -%}
+                      {%- endif -%}
+
+                      {%- assign continue_selling = false -%}
+                      {%- if variant_policy == 'continue' -%}
+                        {%- assign continue_selling = true -%}
+                      {%- endif -%}
 
                       {%- if tracked_inventory and variant_qty <= 0 and continue_selling -%}
                         {%- assign pill_state_modifier = 'stock-pill--green' -%}
