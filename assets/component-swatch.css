@@ -1,7 +1,7 @@
 /* swatch lives in its own file for reusability of the swatch in swatch-input and dropdown */
 .swatch {
   --swatch--size: var(--swatch-input--size, 4.4rem);
-  --swatch--border-radius: var(--swatch-input--border-radius, 50%);
+  --swatch--border-radius: var(--swatch-input--border-radius, 20px);
 
   display: block;
   width: var(--swatch--size);
@@ -24,4 +24,39 @@
   border-color: rgba(var(--color-foreground), 0.5);
 }
 
+/* PDP swatch pill polish: rounded pills, thicker hover/active borders, readable text */
+.product-form__input--swatch .swatch-input__input + .swatch-input__label {
+  --swatch-input--border-radius: 20px;
+  --swatch-border-width: 1.6px;
+  color: var(--swatch-text-color, #111827);
+  padding: 0.28rem;
+  background: #ffffff;
+  border: var(--swatch-border-width) solid rgba(17, 24, 39, 0.18);
+  border-radius: var(--swatch-input--border-radius);
+  box-shadow: none;
+  transition: border-color 0.16s ease, background-color 0.16s ease;
+}
+
+.product-form__input--swatch .swatch-input__input + .swatch-input__label .swatch {
+  border: 0;
+  border-radius: calc(var(--swatch-input--border-radius) * 0.9);
+}
+
+.product-form__input--swatch .swatch-input__input + .swatch-input__label:hover,
+.product-form__input--swatch .swatch-input__input:hover + .swatch-input__label {
+  --swatch-border-width: 2.2px;
+  border-color: #0d6ba6;
+  background: #f8fafc;
+}
+
+.product-form__input--swatch .swatch-input__input:checked + .swatch-input__label {
+  --swatch-border-width: 2.2px;
+  border-color: #0d6ba6;
+  background: #f0f7fb;
+}
+
+.product-form__input--swatch .swatch-input__input:focus-visible + .swatch-input__label {
+  outline: 2px solid #0d6ba6;
+  outline-offset: 2px;
+}
 
