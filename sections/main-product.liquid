@@ -538,26 +538,21 @@ button[name="add"]:hover,
   }
 
   /* Mostrar solo la imagen activa en desktop */
-  #shopify-section-{{ section.id }} #Slider-Gallery-{{ section.id }} {
+  #shopify-section-{{ section.id }} .product--stacked #Slider-Gallery-{{ section.id }} {
     display: flex !important;
     flex-wrap: nowrap;
     align-items: stretch;
+    gap: 0;
     overflow: hidden;
     padding: 0;
     margin: 0;
-    gap: 0;
   }
 
-  #shopify-section-{{ section.id }} #Slider-Gallery-{{ section.id }} .product__media-item {
-    display: none !important;
+  #shopify-section-{{ section.id }} .product--stacked #Slider-Gallery-{{ section.id }} .product__media-item {
+    display: block !important;
     flex: 0 0 100%;
     max-width: 100%;
     margin: 0;
-  }
-
-  #shopify-section-{{ section.id }} #Slider-Gallery-{{ section.id }} .product__media-item.is-active {
-    display: block !important;
-    flex: 0 0 100%;
   }
 }
 
