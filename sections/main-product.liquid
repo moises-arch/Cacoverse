@@ -1125,17 +1125,17 @@ body.template-product .product__media-modal * {
    ============================ */
 #shopify-section-{{ section.id }} .product-form__input--swatch {
   --swatch-input--size: 3.2rem;
-  --swatch-input--border-radius: 50%;
+  --swatch-input--border-radius: 14px;
   --swatch-border-width: 1.4px;
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 6px;
   align-items: center;
-  margin-top: 14px;
+  margin-top: 18px;
 }
 
 #shopify-section-{{ section.id }} .product-form__input--swatch legend {
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 #shopify-section-{{ section.id }} .swatch-input__input + .swatch-input__label {
@@ -1148,9 +1148,9 @@ body.template-product .product__media-modal * {
 }
 
 #shopify-section-{{ section.id }} .swatch-input__input + .swatch-input__label .swatch {
-  border: 0;
+  border: 0 !important;
   border-radius: calc(var(--swatch-input--border-radius) * 0.9);
-  box-shadow: none;
+  box-shadow: none !important;
 }
 
 #shopify-section-{{ section.id }} .swatch-input__input + .swatch-input__label:hover,
@@ -1158,6 +1158,7 @@ body.template-product .product__media-modal * {
   border-color: #0d6ba6;
   background: #f8fafc;
   box-shadow: none;
+  outline: none;
 }
 
 #shopify-section-{{ section.id }} .swatch-input__input:checked + .swatch-input__label {
