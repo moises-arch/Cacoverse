@@ -1120,75 +1120,6 @@ body.template-product .product__media-modal * {
   }
 }
 
-/* ============================
-   SWATCHES — POLISHED LOOK
-   ============================ */
-#shopify-section-{{ section.id }} .product-form__input--swatch {
-  --swatch-input--size: 3.2rem;
-  --swatch-input--border-radius: 20px;
-  --swatch-border-width: 1.6px;
-  --swatch-outline-width: 0px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  align-items: center;
-  margin-top: 6px;
-}
-
-#shopify-section-{{ section.id }} .product-form__input--swatch legend {
-  margin-bottom: 2px;
-}
-
-#shopify-section-{{ section.id }} .swatch-input__input + .swatch-input__label {
-  --swatch-input--border-radius: 20px !important;
-  --swatch-outline-width: 0px !important;
-  color: var(--swatch-text-color, #111827);
-  padding: 0.28rem;
-  background: #ffffff;
-  border: var(--swatch-border-width) solid rgba(17, 24, 39, 0.18);
-  border-radius: var(--swatch-input--border-radius);
-  box-shadow: none;
-  transition: border-color 0.16s ease, background-color 0.16s ease;
-  outline: none !important;
-}
-
-#shopify-section-{{ section.id }} .swatch-input__input + .swatch-input__label .swatch {
-  border: 0 !important;
-  border-radius: calc(var(--swatch-input--border-radius) * 0.9);
-  box-shadow: none !important;
-}
-
-#shopify-section-{{ section.id }} .swatch-input__input + .swatch-input__label:hover,
-#shopify-section-{{ section.id }} .swatch-input__input:hover + .swatch-input__label {
-  --swatch-border-width: 2.2px;
-  border-color: #0d6ba6;
-  background: #f8fafc;
-  box-shadow: none;
-  outline: none !important;
-}
-
-#shopify-section-{{ section.id }} .swatch-input__input:checked + .swatch-input__label {
-  --swatch-border-width: 2.2px;
-  border-color: #0d6ba6;
-  background: #f0f7fb;
-  outline: none;
-  box-shadow: none;
-}
-
-#shopify-section-{{ section.id }} .swatch-input__input:focus-visible + .swatch-input__label {
-  outline: 2px solid #0d6ba6;
-  outline-offset: 2px;
-  border-color: #0d6ba6;
-  box-shadow: none;
-}
-
-#shopify-section-{{ section.id }} .swatch-input__input.visually-disabled + .swatch-input__label {
-  cursor: not-allowed;
-  opacity: 0.55;
-  background: #f3f4f6;
-}
-
-
 {%- endstyle -%}
 
 
@@ -1557,41 +1488,6 @@ body.template-product .product__media-modal * {
     rebuildGallery();
     bindSlides();
     syncCounter();
-
-    /* Swatch text contrast helper */
-    const applySwatchContrast = () => {
-      const root = document.getElementById(`shopify-section-${SECTION_ID}`);
-      if (!root) return;
-
-      const labels = root.querySelectorAll('.product-form__input--swatch .swatch-input__label');
-      const rgbToLuminance = (rgbString) => {
-        const parts = (rgbString.match(/[\d.]+/g) || [])
-          .slice(0, 3)
-          .map((v) => parseFloat(v))
-          .filter((v) => !Number.isNaN(v));
-        if (parts.length < 3) return 1; // fallback to dark text
-        const [r, g, b] = parts;
-        const channel = (v) => {
-          const c = v / 255;
-          return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
-        };
-        return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
-      };
-
-      labels.forEach((label) => {
-        const swatch = label.querySelector('.swatch');
-        if (!swatch) return;
-        const bg = window.getComputedStyle(swatch).getPropertyValue('background-color');
-        const lum = rgbToLuminance(bg);
-        const textColor = lum > 0.55 ? '#0f172a' : '#f8fafc';
-        label.style.setProperty('--swatch-text-color', textColor);
-      });
-    };
-
-    applySwatchContrast();
-    document.addEventListener('shopify:section:load', applySwatchContrast);
-    document.addEventListener('variant:change', applySwatchContrast);
-    document.addEventListener('variant:changed', applySwatchContrast);
   });
 </script>
 
@@ -1614,7 +1510,6 @@ body.template-product .product__media-modal * {
      
 
         {%- assign product_form_id = 'product-form-' | append: section.id -%}
-        {%- assign primary_actions_open = false -%}
 
         {%- for block in section.blocks -%}
           {%- case block.type -%}
@@ -1629,12 +1524,18 @@ body.template-product .product__media-modal * {
               </p>
             {%- when 'title' -%}
               <div class="product__title" {{ block.shopify_attributes }}>
-                <h1 class="h1">
+                <h1>
                   {{ product.title | escape }}
-                  {%- if product.metafields.custom.sub_title != blank -%}
-                    <span class="product__subtitle"> - {{ product.metafields.custom.sub_title }}</span>
-                  {%- endif -%}
+                  -
+                  {%- if product.metafields.custom.sub_title != blank %}
+                    {{ product.metafields.custom.sub_title }}
+                  {% endif %}
                 </h1>
+                <a href="{{ product.url }}" class="product__title">
+                  <h2 class="h1">
+                    {{ product.title | escape }}
+                  </h2>
+                </a>
               </div>
             {%- when 'price' -%}
               <div id="price-{{ section.id }}" role="status" {{ block.shopify_attributes }}>
@@ -1715,15 +1616,36 @@ body.template-product .product__media-modal * {
                   {{ product.description }}
                 </div>
               {%- endif -%}
-            {%- when 'sku' -%}
-              <div class="product__meta d-flex align-items-center justify-content-between flex-wrap">
-                {% render 'junip-product-summary', product: product %}
 
-                {% if product.selected_or_first_available_variant.metafields.custom.standards_logo %}
-                  <div id="varilogo-{{ section.id }}" class="variant-standard-logo">
-                    <ul class="list-unstyled d-flex flex-wrap align-items-center justify-content-end gap-3 mb-0" role="list">
+
+
+
+
+
+            {%- when 'sku' -%}
+
+
+   
+
+
+
+
+
+
+           <div class="d-flex align-items-center justify-content-between flex-wrap">
+             
+                  {% render 'junip-product-summary', product: product %} 
+ 
+
+
+
+
+                <!-- varaint Logos -->
+                <div id="varilogo-{{ section.id }}" class="variant-standard-logo ">
+                  {% if product.selected_or_first_available_variant.metafields.custom.standards_logo %}
+                    <ul class="list-unstyled d-flex flex-wrap align-items-center justify-content-end gap-3 ">
                       {% for logos in product.selected_or_first_available_variant.metafields.custom.standards_logo.value %}
-                        <li class="imager" role="listitem">
+                        <li class="imager">
                           <img
                             src="{{ logos | img_url: 'master' }}"
                             width="{{ logos.width }}"
@@ -1735,9 +1657,17 @@ body.template-product .product__media-modal * {
                         </li>
                       {% endfor %}
                     </ul>
-                  </div>
-                {% endif %}
+                  {% endif %}
+                </div>
               </div>
+
+
+
+
+
+
+
+
 
             {%- when 'custom_liquid' -%}
               {{ block.settings.custom_liquid }}
@@ -1761,11 +1691,7 @@ body.template-product .product__media-modal * {
                 </details>
               </div>
             {%- when 'quantity_selector' -%}
-              {%- unless primary_actions_open -%}
-                <div class="product-primary-actions">
-                {%- assign primary_actions_open = true -%}
-              {%- endunless -%}
-              <div class="product-primary-actions__quantity{% if product.selected_or_first_available_variant.available == false or product.selected_or_first_available_variant.price == 0 %} d-none{% endif %}">
+              <div class="d-flex align-items-start justify-content-start gap-4 flex-wrap mt-4 {% if product.selected_or_first_available_variant.available == false or product.selected_or_first_available_variant.price == 0 %} d-none {% endif %}">
                 <div
                   id="Quantity-Form-{{ section.id }}"
                   class="product-form__input product-form__quantity{% if settings.inputs_shadow_vertical_offset != 0 and settings.inputs_shadow_vertical_offset < 0 %} product-form__quantity-top{% endif %}"
@@ -1780,7 +1706,8 @@ body.template-product .product__media-modal * {
                   -%}
                   {% # theme-check-enable %}
                   <label class="quantity__label form__label" for="Quantity-{{ section.id }}">
-                    {{ 'products.product.quantity.label' | t }}
+
+
                     <span class="quantity__rules-cart{% if cart_qty == 0 %} hidden{% endif %}">
                       {%- render 'loading-spinner' -%}
                       <span
@@ -1992,10 +1919,6 @@ body.template-product .product__media-modal * {
             {%- when 'variant_picker' -%}
               {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
             {%- when 'buy_buttons' -%}
-              {%- unless primary_actions_open -%}
-                <div class="product-primary-actions">
-                {%- assign primary_actions_open = true -%}
-              {%- endunless -%}
               {%- render 'buy-buttons',
                 block: block,
                 product: product,
@@ -2003,10 +1926,7 @@ body.template-product .product__media-modal * {
                 section_id: section.id,
                 show_pickup_availability: true
               -%}
-              {%- if primary_actions_open -%}
-                </div>
-                {%- assign primary_actions_open = false -%}
-              {%- endif -%}
+              </div>
             {%- when 'rating' -%}
               {%- if product.metafields.reviews.rating.value != blank -%}
                 <div class="rating-wrapper">
@@ -2198,10 +2118,6 @@ body.template-product .product__media-modal * {
               {% render 'icon-with-text', block: block %}
           {%- endcase -%}
         {%- endfor -%}
-        {%- if primary_actions_open -%}
-          </div>
-          {%- assign primary_actions_open = false -%}
-        {%- endif -%}
         <a href="{{ product.url }}" class="link product__view-details animate-arrow">
           {{ 'products.product.view_full_details' | t }}
           {{- 'icon-arrow.svg' | inline_asset_content -}}
@@ -4268,3 +4184,5 @@ body.template-product .product__media-modal * {
   ]
 }
 {% endschema %}
+
+
