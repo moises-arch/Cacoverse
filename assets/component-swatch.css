@@ -4,7 +4,7 @@
    ========================================= */
 
 .product-form__input--swatch{
-  --sw-radius: 20px;                  /* 👈 redondeo exterior */
+  --sw-radius: 14px;                  /* 👈 redondeo exterior */
   --sw-size: 44px;                    /* tamaño del color */
   --sw-pad: 4px;                      /* padding del marco */
   --sw-bw: 1px;                       /* borde minimalista */
