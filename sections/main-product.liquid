@@ -1125,8 +1125,8 @@ body.template-product .product__media-modal * {
    ============================ */
 #shopify-section-{{ section.id }} .product-form__input--swatch {
   --swatch-input--size: 3.2rem;
-  --swatch-input--border-radius: 999px;
-  --swatch-border-width: 1.4px;
+  --swatch-input--border-radius: 14px;
+  --swatch-border-width: 1.6px;
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
@@ -1139,6 +1139,7 @@ body.template-product .product__media-modal * {
 }
 
 #shopify-section-{{ section.id }} .swatch-input__input + .swatch-input__label {
+  color: var(--swatch-text-color, #111827);
   padding: 0.28rem;
   background: #ffffff;
   border: var(--swatch-border-width) solid rgba(17, 24, 39, 0.18);
@@ -1156,6 +1157,7 @@ body.template-product .product__media-modal * {
 
 #shopify-section-{{ section.id }} .swatch-input__input + .swatch-input__label:hover,
 #shopify-section-{{ section.id }} .swatch-input__input:hover + .swatch-input__label {
+  --swatch-border-width: 2.2px;
   border-color: #0d6ba6;
   background: #f8fafc;
   box-shadow: none;
@@ -1606,6 +1608,39 @@ body.template-product .product__media-modal * {
     rebuildGallery();
     bindSlides();
     syncCounter();
+
+    /* Swatch text contrast helper */
+    const applySwatchContrast = () => {
+      const root = document.getElementById(`shopify-section-${SECTION_ID}`);
+      if (!root) return;
+
+      const labels = root.querySelectorAll('.product-form__input--swatch .swatch-input__label');
+      const rgbToLuminance = (rgbString) => {
+        const parts = (rgbString.match(/[\d.]+/g) || [])
+          .slice(0, 3)
+          .map((v) => parseFloat(v))
+          .filter((v) => !Number.isNaN(v));
+        if (parts.length < 3) return 1; // fallback to dark text
+        const [r, g, b] = parts;
+        const channel = (v) => {
+          const c = v / 255;
+          return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+        };
+        return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
+      };
+
+      labels.forEach((label) => {
+        const swatch = label.querySelector('.swatch');
+        if (!swatch) return;
+        const bg = window.getComputedStyle(swatch).getPropertyValue('background-color');
+        const lum = rgbToLuminance(bg);
+        const textColor = lum > 0.55 ? '#0f172a' : '#f8fafc';
+        label.style.setProperty('--swatch-text-color', textColor);
+      });
+    };
+
+    applySwatchContrast();
+    document.addEventListener('shopify:section:load', applySwatchContrast);
   });
 </script>
 
