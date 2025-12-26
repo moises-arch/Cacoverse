@@ -1642,18 +1642,12 @@ body.template-product .product__media-modal * {
               </p>
             {%- when 'title' -%}
               <div class="product__title" {{ block.shopify_attributes }}>
-                <h1>
+                <h1 class="h1">
                   {{ product.title | escape }}
-                  -
-                  {%- if product.metafields.custom.sub_title != blank %}
-                    {{ product.metafields.custom.sub_title }}
-                  {% endif %}
+                  {%- if product.metafields.custom.sub_title != blank -%}
+                    <span class="product__subtitle"> - {{ product.metafields.custom.sub_title }}</span>
+                  {%- endif -%}
                 </h1>
-                <a href="{{ product.url }}" class="product__title">
-                  <h2 class="h1">
-                    {{ product.title | escape }}
-                  </h2>
-                </a>
               </div>
             {%- when 'price' -%}
               <div id="price-{{ section.id }}" role="status" {{ block.shopify_attributes }}>
@@ -1734,36 +1728,15 @@ body.template-product .product__media-modal * {
                   {{ product.description }}
                 </div>
               {%- endif -%}
-
-
-
-
-
-
             {%- when 'sku' -%}
+              <div class="product__meta d-flex align-items-center justify-content-between flex-wrap">
+                {% render 'junip-product-summary', product: product %}
 
-
-   
-
-
-
-
-
-
-           <div class="d-flex align-items-center justify-content-between flex-wrap">
-             
-                  {% render 'junip-product-summary', product: product %} 
- 
-
-
-
-
-                <!-- varaint Logos -->
-                <div id="varilogo-{{ section.id }}" class="variant-standard-logo ">
-                  {% if product.selected_or_first_available_variant.metafields.custom.standards_logo %}
-                    <ul class="list-unstyled d-flex flex-wrap align-items-center justify-content-end gap-3 ">
+                {% if product.selected_or_first_available_variant.metafields.custom.standards_logo %}
+                  <div id="varilogo-{{ section.id }}" class="variant-standard-logo">
+                    <ul class="list-unstyled d-flex flex-wrap align-items-center justify-content-end gap-3 mb-0" role="list">
                       {% for logos in product.selected_or_first_available_variant.metafields.custom.standards_logo.value %}
-                        <li class="imager">
+                        <li class="imager" role="listitem">
                           <img
                             src="{{ logos | img_url: 'master' }}"
                             width="{{ logos.width }}"
@@ -1775,17 +1748,9 @@ body.template-product .product__media-modal * {
                         </li>
                       {% endfor %}
                     </ul>
-                  {% endif %}
-                </div>
+                  </div>
+                {% endif %}
               </div>
-
-
-
-
-
-
-
-
 
             {%- when 'custom_liquid' -%}
               {{ block.settings.custom_liquid }}
@@ -1824,8 +1789,7 @@ body.template-product .product__media-modal * {
                   -%}
                   {% # theme-check-enable %}
                   <label class="quantity__label form__label" for="Quantity-{{ section.id }}">
-
-
+                    {{ 'products.product.quantity.label' | t }}
                     <span class="quantity__rules-cart{% if cart_qty == 0 %} hidden{% endif %}">
                       {%- render 'loading-spinner' -%}
                       <span
