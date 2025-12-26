@@ -40,6 +40,7 @@
     assign brightness = r_weighted | plus: g_weighted | plus: b_weighted | divided_by: 1000
 
     assign tooltip_bg = 'rgb(' | append: swatch.color.rgb | append: ')'
+    assign tooltip_text = '#ffffff'
     if brightness > 150
       assign tooltip_text = '#0b0b0b'
     endif
