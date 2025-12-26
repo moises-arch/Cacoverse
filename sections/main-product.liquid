@@ -2591,6 +2591,25 @@ body.template-product .product__media-modal * {
         }
       };
 
+      const enrichVariant = async (variantLike) => {
+        if (!variantLike) return null;
+
+        const candidateId = variantLike.id;
+        const isPartial =
+          variantLike.inventory_management === undefined ||
+          variantLike.inventory_quantity === undefined ||
+          variantLike.inventory_policy === undefined ||
+          variantLike.available === undefined;
+
+        if (!isPartial) return variantLike;
+
+        if (candidateId && variantMap.has(String(candidateId))) {
+          return variantMap.get(String(candidateId));
+        }
+
+        return candidateId ? await getVariantById(candidateId) : null;
+      };
+
       const getCurrentVariantId = () => {
         const idInput = productInfo ? productInfo.querySelector('form [name="id"]') : null;
         return idInput ? idInput.value : null;
@@ -2605,6 +2624,11 @@ body.template-product .product__media-modal * {
           typeof variantLike === 'object' && variantLike !== null ? variantLike : null;
 
         const currentVariantId = variantId || getCurrentVariantId();
+
+        if (variant) {
+          variant = await enrichVariant(variant);
+        }
+
         if (!variant && currentVariantId) {
           variant = await getVariantById(currentVariantId);
         }
