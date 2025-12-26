@@ -1125,8 +1125,9 @@ body.template-product .product__media-modal * {
    ============================ */
 #shopify-section-{{ section.id }} .product-form__input--swatch {
   --swatch-input--size: 3.2rem;
-  --swatch-input--border-radius: 14px;
+  --swatch-input--border-radius: 20px;
   --swatch-border-width: 1.6px;
+  --swatch-outline-width: 0px;
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
@@ -1139,6 +1140,8 @@ body.template-product .product__media-modal * {
 }
 
 #shopify-section-{{ section.id }} .swatch-input__input + .swatch-input__label {
+  --swatch-input--border-radius: 20px !important;
+  --swatch-outline-width: 0px !important;
   color: var(--swatch-text-color, #111827);
   padding: 0.28rem;
   background: #ffffff;
@@ -1641,6 +1644,8 @@ body.template-product .product__media-modal * {
 
     applySwatchContrast();
     document.addEventListener('shopify:section:load', applySwatchContrast);
+    document.addEventListener('variant:change', applySwatchContrast);
+    document.addEventListener('variant:changed', applySwatchContrast);
   });
 </script>
 
