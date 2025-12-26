@@ -618,6 +618,16 @@ a.product__text {
   margin: 0;
 }
 
+.product__info-container .product__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  margin: 8px 0 0;
+}
+
 .product--no-media .product__media-wrapper,
 .product--no-media .product__info-wrapper {
   padding: 0;
