@@ -2654,26 +2654,21 @@ label.quantity__label.form__label {
   }
 
   .caco-media-gallery .product__media-list {
-    display: grid !important;
-    grid-auto-flow: column;
-    grid-auto-columns: minmax(0, 100%);
-    column-gap: 0;
+    display: flex !important;
+    flex-wrap: nowrap;
+    width: 100%;
+    gap: 0;
     margin: 0;
     padding: 0;
-    overflow-x: auto;
+    align-items: stretch;
+    overflow-x: hidden;
     overflow-y: hidden;
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-
-  .caco-media-gallery .product__media-list::-webkit-scrollbar {
-    display: none;
   }
 
   .caco-media-gallery .product__media-list .slider__slide {
-    width: 100%;
+    flex: 0 0 100%;
     max-width: 100%;
     scroll-snap-align: center;
     scroll-snap-stop: always;
