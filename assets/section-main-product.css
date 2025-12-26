@@ -542,6 +542,7 @@ a.product__text {
   flex-direction: column;
   gap: 12px;
   flex-wrap: nowrap;
+  width: 100%;
 }
 
 .product-form__buttons .product-form__quantity {
@@ -566,7 +567,7 @@ a.product__text {
 .product-primary-actions {
   display: flex;
   gap: 12px;
-  align-items: flex-start;
+  align-items: stretch;
   flex-wrap: nowrap;
   width: 100%;
   margin: 16px 0 0;
@@ -586,11 +587,14 @@ a.product__text {
   flex: 1 1 auto;
   min-width: 0;
   display: flex;
+  align-items: stretch;
 }
 
 .product-primary-actions .product-form {
   width: 100%;
   margin: 0;
+  display: flex;
+  align-items: stretch;
 }
 
 @media (max-width: 749px) {
