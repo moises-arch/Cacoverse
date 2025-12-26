@@ -1614,7 +1614,6 @@ body.template-product .product__media-modal * {
      
 
         {%- assign product_form_id = 'product-form-' | append: section.id -%}
-        {%- assign primary_actions_open = false -%}
 
         {%- for block in section.blocks -%}
           {%- case block.type -%}
@@ -1761,11 +1760,7 @@ body.template-product .product__media-modal * {
                 </details>
               </div>
             {%- when 'quantity_selector' -%}
-              {%- unless primary_actions_open -%}
-                <div class="product-primary-actions">
-                {%- assign primary_actions_open = true -%}
-              {%- endunless -%}
-              <div class="product-primary-actions__quantity{% if product.selected_or_first_available_variant.available == false or product.selected_or_first_available_variant.price == 0 %} d-none{% endif %}">
+              <div class="d-flex align-items-start justify-content-start gap-4 flex-wrap mt-4 {% if product.selected_or_first_available_variant.available == false or product.selected_or_first_available_variant.price == 0 %} d-none {% endif %}">
                 <div
                   id="Quantity-Form-{{ section.id }}"
                   class="product-form__input product-form__quantity{% if settings.inputs_shadow_vertical_offset != 0 and settings.inputs_shadow_vertical_offset < 0 %} product-form__quantity-top{% endif %}"
@@ -1992,10 +1987,6 @@ body.template-product .product__media-modal * {
             {%- when 'variant_picker' -%}
               {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
             {%- when 'buy_buttons' -%}
-              {%- unless primary_actions_open -%}
-                <div class="product-primary-actions">
-                {%- assign primary_actions_open = true -%}
-              {%- endunless -%}
               {%- render 'buy-buttons',
                 block: block,
                 product: product,
@@ -2003,10 +1994,7 @@ body.template-product .product__media-modal * {
                 section_id: section.id,
                 show_pickup_availability: true
               -%}
-              {%- if primary_actions_open -%}
-                </div>
-                {%- assign primary_actions_open = false -%}
-              {%- endif -%}
+              </div>
             {%- when 'rating' -%}
               {%- if product.metafields.reviews.rating.value != blank -%}
                 <div class="rating-wrapper">
@@ -2198,10 +2186,6 @@ body.template-product .product__media-modal * {
               {% render 'icon-with-text', block: block %}
           {%- endcase -%}
         {%- endfor -%}
-        {%- if primary_actions_open -%}
-          </div>
-          {%- assign primary_actions_open = false -%}
-        {%- endif -%}
         <a href="{{ product.url }}" class="link product__view-details animate-arrow">
           {{ 'products.product.view_full_details' | t }}
           {{- 'icon-arrow.svg' | inline_asset_content -}}
