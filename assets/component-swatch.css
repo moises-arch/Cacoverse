@@ -4,10 +4,10 @@
    ========================================= */
 
 .product-form__input--swatch{
-  --sw-radius: 14px;                  /* 👈 redondeo exterior */
-  --sw-size: 44px;                    /* tamaño del color */
-  --sw-pad: 2px;                      /* padding del marco */
-  --sw-bw: 2px;                       /* borde minimalista */
+  --sw-radius: 10px;                  /* 👈 redondeo exterior */
+  --sw-size: 35px;                    /* tamaño del color */
+  --sw-pad: 1.5px;                      /* padding del marco */
+  --sw-bw: 3px;                       /* borde minimalista */
   --sw-border: rgba(17,24,39,.18);
   --sw-active: #0d6ba6;
 
