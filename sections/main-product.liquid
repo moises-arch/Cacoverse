@@ -1692,6 +1692,13 @@ body.template-product .product__media-modal * {
 
         {%- assign product_form_id = 'product-form-' | append: section.id -%}
         {%- assign stock_badge_rendered = false -%}
+        {%- assign stock_low_threshold = 5 -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'inventory' and block.settings.inventory_threshold != blank -%}
+            {%- assign stock_low_threshold = block.settings.inventory_threshold -%}
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
 
         {%- for block in section.blocks -%}
           {%- case block.type -%}
@@ -1714,20 +1721,87 @@ body.template-product .product__media-modal * {
                   {%- assign variant_available = product.selected_or_first_available_variant.available -%}
                   {%- assign variant_qty = product.selected_or_first_available_variant.inventory_quantity | default: 0 -%}
                   {%- assign variant_mgmt = product.selected_or_first_available_variant.inventory_management -%}
-                  {%- assign low_stock_threshold = 5 -%}
+                  {%- assign variant_policy = product.selected_or_first_available_variant.inventory_policy -%}
+                  {%- assign low_stock_threshold = stock_low_threshold | default: 5 -%}
+                  {%- assign pill_state_modifier = 'stock-pill--green' -%}
+                  {%- assign pill_state_class = 'is-in-stock' -%}
                   {%- capture stock_pill -%}
                     {%- if variant_available -%}
-                      {%- if variant_mgmt == 'shopify' and variant_qty <= low_stock_threshold -%}
-                        <span class="stock-pill stock-pill--orange">
+                      {%- assign tracked_inventory = variant_mgmt == 'shopify' -%}
+                      {%- assign continue_selling = variant_policy == 'continue' -%}
+
+                      {%- if tracked_inventory and variant_qty <= 0 and continue_selling -%}
+                        {%- assign pill_state_modifier = 'stock-pill--green' -%}
+                        {%- assign pill_state_class = 'is-in-stock' -%}
+                        <span
+                          class="stock-pill {{ pill_state_modifier }} {{ pill_state_class }}"
+                          data-stock-indicator
+                          data-status-in-stock="{{ 'products.product.inventory_in_stock' | t | default: 'En stock' | escape }}"
+                          data-status-low-stock="{{ 'products.product.inventory_low_stock' | t | default: 'Bajo stock' | escape }}"
+                          data-status-out-of-stock="{{ 'products.product.inventory_out_of_stock' | t | default: 'Agotado' | escape }}"
+                          data-low-stock-threshold="{{ low_stock_threshold }}"
+                          role="status"
+                          aria-live="polite"
+                        >
+                          {{- 'products.product.inventory_in_stock' | t | default: 'En stock' -}}
+                        </span>
+                      {%- elsif tracked_inventory and variant_qty <= 0 -%}
+                        {%- assign pill_state_modifier = 'stock-pill--red' -%}
+                        {%- assign pill_state_class = 'is-out-of-stock' -%}
+                        <span
+                          class="stock-pill {{ pill_state_modifier }} {{ pill_state_class }}"
+                          data-stock-indicator
+                          data-status-in-stock="{{ 'products.product.inventory_in_stock' | t | default: 'En stock' | escape }}"
+                          data-status-low-stock="{{ 'products.product.inventory_low_stock' | t | default: 'Bajo stock' | escape }}"
+                          data-status-out-of-stock="{{ 'products.product.inventory_out_of_stock' | t | default: 'Agotado' | escape }}"
+                          data-low-stock-threshold="{{ low_stock_threshold }}"
+                          role="status"
+                          aria-live="polite"
+                        >
+                          {{- 'products.product.inventory_out_of_stock' | t | default: 'Agotado' -}}
+                        </span>
+                      {%- elsif tracked_inventory and variant_qty <= low_stock_threshold -%}
+                        {%- assign pill_state_modifier = 'stock-pill--orange' -%}
+                        {%- assign pill_state_class = 'is-low-stock' -%}
+                        <span
+                          class="stock-pill {{ pill_state_modifier }} {{ pill_state_class }}"
+                          data-stock-indicator
+                          data-status-in-stock="{{ 'products.product.inventory_in_stock' | t | default: 'En stock' | escape }}"
+                          data-status-low-stock="{{ 'products.product.inventory_low_stock' | t | default: 'Bajo stock' | escape }}"
+                          data-status-out-of-stock="{{ 'products.product.inventory_out_of_stock' | t | default: 'Agotado' | escape }}"
+                          data-low-stock-threshold="{{ low_stock_threshold }}"
+                          role="status"
+                          aria-live="polite"
+                        >
                           {{- 'products.product.inventory_low_stock' | t | default: 'Bajo stock' -}}
                         </span>
                       {%- else -%}
-                        <span class="stock-pill stock-pill--green">
+                        <span
+                          class="stock-pill {{ pill_state_modifier }} {{ pill_state_class }}"
+                          data-stock-indicator
+                          data-status-in-stock="{{ 'products.product.inventory_in_stock' | t | default: 'En stock' | escape }}"
+                          data-status-low-stock="{{ 'products.product.inventory_low_stock' | t | default: 'Bajo stock' | escape }}"
+                          data-status-out-of-stock="{{ 'products.product.inventory_out_of_stock' | t | default: 'Agotado' | escape }}"
+                          data-low-stock-threshold="{{ low_stock_threshold }}"
+                          role="status"
+                          aria-live="polite"
+                        >
                           {{- 'products.product.inventory_in_stock' | t | default: 'En stock' -}}
                         </span>
                       {%- endif -%}
                     {%- else -%}
-                      <span class="stock-pill stock-pill--red">
+                      {%- assign pill_state_modifier = 'stock-pill--red' -%}
+                      {%- assign pill_state_class = 'is-out-of-stock' -%}
+                      <span
+                        class="stock-pill {{ pill_state_modifier }} {{ pill_state_class }}"
+                        data-stock-indicator
+                        data-status-in-stock="{{ 'products.product.inventory_in_stock' | t | default: 'En stock' | escape }}"
+                        data-status-low-stock="{{ 'products.product.inventory_low_stock' | t | default: 'Bajo stock' | escape }}"
+                        data-status-out-of-stock="{{ 'products.product.inventory_out_of_stock' | t | default: 'Agotado' | escape }}"
+                        data-low-stock-threshold="{{ low_stock_threshold }}"
+                        role="status"
+                        aria-live="polite"
+                      >
                         {{- 'products.product.inventory_out_of_stock' | t | default: 'Agotado' -}}
                       </span>
                     {%- endif -%}
@@ -2401,6 +2475,174 @@ body.template-product .product__media-modal * {
   <script>
     window.__productVariants = window.__productVariants || {};
     window.__productVariants[{{ product.id }}] = {{ product.variants | json }};
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const sectionId = '{{ section.id }}';
+      const productId = {{ product.id }};
+      const root = document.getElementById(`shopify-section-${sectionId}`) || document;
+      const stockPill = root.querySelector('[data-stock-indicator]');
+
+      if (!stockPill) return;
+
+      const productInfo = document.getElementById(`MainProduct-${sectionId}`) || root;
+      const parsedThreshold = parseInt(stockPill.dataset.lowStockThreshold, 10);
+      const LOW_STOCK_THRESHOLD = Number.isFinite(parsedThreshold) ? parsedThreshold : 5;
+
+      const labels = {
+        in: (stockPill.dataset.statusInStock || '').trim() || 'In stock',
+        low: (stockPill.dataset.statusLowStock || '').trim() || 'Low stock',
+        out: (stockPill.dataset.statusOutOfStock || '').trim() || 'Out of stock',
+      };
+
+      const liveRegion = stockPill.hasAttribute('aria-live')
+        ? stockPill
+        : stockPill.closest('[aria-live]');
+      if (liveRegion && !liveRegion.hasAttribute('aria-live')) {
+        liveRegion.setAttribute('aria-live', 'polite');
+      }
+
+      const variantSource =
+        window.__productVariants && window.__productVariants[productId];
+      const variantCache = Array.isArray(variantSource) ? variantSource : [];
+      const variantMap = new Map(
+        variantCache.map((variant) => [String(variant.id), variant])
+      );
+
+      const determineStatus = (variant) => {
+        if (!variant || variant.available === false) return 'out';
+
+        const tracked =
+          variant.inventory_management !== null && variant.inventory_management !== '';
+        const quantity = Number(
+          variant.inventory_quantity == null ? 0 : variant.inventory_quantity
+        );
+        const continueSelling = variant.inventory_policy === 'continue';
+
+        if (!tracked) return 'in';
+        if (continueSelling && variant.available) return 'in';
+        if (quantity <= 0) return 'out';
+        if (quantity <= LOW_STOCK_THRESHOLD) return 'low';
+        return 'in';
+      };
+
+      const applyStatus = (status) => {
+        const classList = stockPill.classList;
+
+        classList.remove(
+          'stock-pill--green',
+          'stock-pill--orange',
+          'stock-pill--red',
+          'is-in-stock',
+          'is-low-stock',
+          'is-out-of-stock'
+        );
+
+        let text = labels.in;
+
+        if (status === 'low') {
+          classList.add('stock-pill--orange', 'is-low-stock');
+          text = labels.low;
+        } else if (status === 'out') {
+          classList.add('stock-pill--red', 'is-out-of-stock');
+          text = labels.out;
+        } else {
+          classList.add('stock-pill--green', 'is-in-stock');
+          text = labels.in;
+        }
+
+        stockPill.textContent = text;
+        stockPill.dataset.stockState = status;
+
+        if (liveRegion && liveRegion !== stockPill) {
+          liveRegion.textContent = text;
+        }
+      };
+
+      const updateIndicator = (variant) => {
+        const status = determineStatus(variant);
+        applyStatus(status);
+      };
+
+      const getVariantById = async (variantId) => {
+        if (!variantId) return null;
+
+        const key = String(variantId);
+        if (variantMap.has(key)) {
+          return variantMap.get(key);
+        }
+
+        try {
+          const response = await fetch(`/variants/${variantId}.js`);
+          if (!response.ok) return null;
+
+          const variant = await response.json();
+          variantMap.set(key, variant);
+          return variant;
+        } catch (error) {
+          return null;
+        }
+      };
+
+      const getCurrentVariantId = () => {
+        const idInput = productInfo ? productInfo.querySelector('form [name="id"]') : null;
+        return idInput ? idInput.value : null;
+      };
+
+      const handleVariantUpdate = async (variantLike) => {
+        const variantId = typeof variantLike === 'object' && variantLike !== null
+          ? variantLike.id
+          : variantLike;
+
+        let variant =
+          typeof variantLike === 'object' && variantLike !== null ? variantLike : null;
+
+        const currentVariantId = variantId || getCurrentVariantId();
+        if (!variant && currentVariantId) {
+          variant = await getVariantById(currentVariantId);
+        }
+
+        if (variant) {
+          updateIndicator(variant);
+        }
+      };
+
+      const handleVariantEvent = (event) => {
+        const detail = event && event.detail ? event.detail : {};
+        const variantFromEvent = detail.variant;
+        const variantIdFromEvent =
+          (detail.variant && detail.variant.id) ||
+          detail.variantId ||
+          detail.id;
+
+        handleVariantUpdate(variantFromEvent || variantIdFromEvent);
+      };
+
+      ['variant:change', 'variant:changed', 'product:variant-change'].forEach(
+        (eventName) => {
+          document.addEventListener(eventName, handleVariantEvent);
+        }
+      );
+
+      if (productInfo) {
+        productInfo.addEventListener('change', (event) => {
+          if (event.target && event.target.name === 'id') {
+            handleVariantUpdate(event.target.value);
+          }
+        });
+
+        const idInput = productInfo.querySelector('form [name="id"]');
+        if (idInput) {
+          const observer = new MutationObserver(() => {
+            handleVariantUpdate(idInput.value);
+          });
+
+          observer.observe(idInput, { attributes: true, attributeFilter: ['value'] });
+        }
+      }
+
+      handleVariantUpdate(getCurrentVariantId());
+    });
   </script>
 </product-info>
 
