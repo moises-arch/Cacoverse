@@ -406,6 +406,162 @@ button[name="add"]:hover,
 }
 
 
+/* ============================
+   DESKTOP: STRIP DE THUMBS
+   ============================ */
+@media (min-width: 750px) {
+
+  #shopify-section-{{ section.id }} .product__media-wrapper {
+    position: relative;
+  }
+
+  #shopify-section-{{ section.id }} .product--stacked .thumbnail-slider {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 52px;
+    margin-top: 16px;
+  }
+
+  #shopify-section-{{ section.id }} .product--stacked .thumbnail-slider .slider--tablet-up {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 88px;
+    gap: 10px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+  }
+
+  #shopify-section-{{ section.id }} .product--stacked .thumbnail-list__item.slider__slide {
+    width: auto;
+    max-width: none;
+    scroll-snap-align: start;
+  }
+
+  #shopify-section-{{ section.id }} .product--stacked .thumbnail {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 6px;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    height: 100%;
+  }
+
+  #shopify-section-{{ section.id }} .product--stacked .thumbnail__media {
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  #shopify-section-{{ section.id }} .product--stacked .thumbnail__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  #shopify-section-{{ section.id }} .product--stacked .thumbnail.is-active {
+    box-shadow: 0 0 0 2px #0d6ba6;
+  }
+
+  #shopify-section-{{ section.id }} .product--stacked .thumbnail-slider .slider-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    background: #ffffff;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.16);
+    color: #0d6ba6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #shopify-section-{{ section.id }} .product--stacked .thumbnail-slider .slider-button svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  #shopify-section-{{ section.id }} .product--stacked .thumbnail-slider .slider-button--prev {
+    left: 10px;
+  }
+
+  #shopify-section-{{ section.id }} .product--stacked .thumbnail-slider .slider-button--next {
+    right: 10px;
+  }
+
+  #shopify-section-{{ section.id }} .product--stacked .slider-mobile-gutter .slider-button {
+    display: flex;
+  }
+
+  /* Flechas sobre la imagen principal (solo desktop, visibles al hover) */
+  #shopify-section-{{ section.id }} .product--stacked .slider-buttons--main {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 12px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.18s ease;
+  }
+
+  #shopify-section-{{ section.id }} .product--stacked .product__media-wrapper:hover .slider-buttons--main {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  #shopify-section-{{ section.id }} .product--stacked .slider-buttons--main .slider-button {
+    pointer-events: auto;
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    border: 1px solid rgba(0,0,0,0.08);
+    background: #ffffff;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.18);
+    color: #0d6ba6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #shopify-section-{{ section.id }} .product--stacked .slider-buttons--main .slider-button svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Mostrar solo la imagen activa en desktop */
+  #shopify-section-{{ section.id }} .product--stacked #Slider-Gallery-{{ section.id }} {
+    display: flex !important;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    gap: 0;
+  }
+
+  #shopify-section-{{ section.id }} .product--stacked #Slider-Gallery-{{ section.id }} .product__media-item {
+    display: none !important;
+    flex: 0 0 100%;
+    max-width: 100%;
+    margin: 0;
+  }
+
+  #shopify-section-{{ section.id }} .product--stacked #Slider-Gallery-{{ section.id }} .product__media-item.is-active {
+    display: block !important;
+    flex: 0 0 100%;
+  }
+}
+
+
 
 /* ==== KILL SWITCH UI "OPEN GALLERY" ==== */
 
