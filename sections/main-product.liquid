@@ -1126,6 +1126,7 @@ body.template-product .product__media-modal * {
 #shopify-section-{{ section.id }} .product-form__input--swatch {
   --swatch-input--size: 3.2rem;
   --swatch-input--border-radius: 1.1rem;
+  --swatch-border-width: 1.4px;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -1139,7 +1140,7 @@ body.template-product .product__media-modal * {
 #shopify-section-{{ section.id }} .swatch-input__input + .swatch-input__label {
   padding: 0.28rem;
   background: #ffffff;
-  border: 1.4px solid rgba(17, 24, 39, 0.16);
+  border: var(--swatch-border-width) solid rgba(17, 24, 39, 0.18);
   border-radius: var(--swatch-input--border-radius);
   box-shadow: none;
   transition: border-color 0.16s ease, background-color 0.16s ease;
@@ -1153,12 +1154,13 @@ body.template-product .product__media-modal * {
 
 #shopify-section-{{ section.id }} .swatch-input__input + .swatch-input__label:hover,
 #shopify-section-{{ section.id }} .swatch-input__input:hover + .swatch-input__label {
-  border-color: rgba(13, 107, 166, 0.4);
+  border-color: #0d6ba6;
   background: #f8fafc;
   box-shadow: none;
 }
 
 #shopify-section-{{ section.id }} .swatch-input__input:checked + .swatch-input__label {
+  --swatch-border-width: 2.2px;
   border-color: #0d6ba6;
   background: #f0f7fb;
   outline: none;
@@ -1196,11 +1198,12 @@ body.template-product .product__media-modal * {
 
 #shopify-section-{{ section.id }} .swatch-input__label[data-tooltip]::after {
   content: attr(data-tooltip);
-  bottom: calc(100% + 10px);
-  padding: 6px 10px;
+  bottom: calc(100% + 8px);
+  padding: 4px 8px;
   background: var(--swatch-tooltip-bg, #4b5563);
   color: var(--swatch-tooltip-text, #ffffff);
-  font-size: 12px;
+  font-size: 11px;
+  font-weight: 700;
   border-radius: 8px;
   box-shadow: none;
   white-space: nowrap;
@@ -1208,9 +1211,9 @@ body.template-product .product__media-modal * {
 
 #shopify-section-{{ section.id }} .swatch-input__label[data-tooltip]::before {
   content: '';
-  bottom: calc(100% + 4px);
-  width: 10px;
-  height: 10px;
+  bottom: calc(100% + 2px);
+  width: 9px;
+  height: 9px;
   background: var(--swatch-tooltip-bg, #4b5563);
   clip-path: polygon(50% 100%, 0 0, 100% 0);
 }
