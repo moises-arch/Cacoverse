@@ -1,11 +1,10 @@
 /* =========================================
-   SWATCHES — MINIMAL ROUNDED (HARD OVERRIDE)
-   Paste at the VERY END of your CSS
+   SWATCHES — MINIMAL ROUNDED 
    ========================================= */
 
 .product-form__input--swatch{
   --sw-radius: 8px;                  /* 👈 redondeo exterior */
-  --sw-size: 35px;                    /* tamaño del color */
+  --sw-size: 40px;                    /* tamaño del color */
   --sw-pad: 4px;                      /* padding del marco */
   --sw-bw: 1.5px;                       /* borde minimalista */
   --sw-border: rgba(17,24,39,.18);
