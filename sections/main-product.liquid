@@ -51,6 +51,187 @@ button[name="add"]:hover,
 }
 
 /* ============================
+   1.A EYEBROW ROW (BRAND + STOCK)
+   ============================ */
+#shopify-section-{{ section.id }} .product__eyebrow-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+}
+
+#shopify-section-{{ section.id }} .product__eyebrow-row .product__text {
+  margin: 0;
+}
+
+#shopify-section-{{ section.id }} .stock-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+#shopify-section-{{ section.id }} .stock-pill svg {
+  width: 14px;
+  height: 14px;
+}
+
+#shopify-section-{{ section.id }} .stock-pill--green {
+  background: #e5f7ed;
+  color: #1c8b43;
+}
+
+#shopify-section-{{ section.id }} .stock-pill--orange {
+  background: #fff3e8;
+  color: #d76b00;
+}
+
+#shopify-section-{{ section.id }} .stock-pill--red {
+  background: #ffecec;
+  color: #c23a3a;
+}
+
+/* ============================
+   1.B PDP INFO + CTA LAYOUT
+   ============================ */
+#shopify-section-{{ section.id }} .product__title h1,
+#shopify-section-{{ section.id }} .product__title h2 {
+  font-size: clamp(26px, 3.4vw, 32px);
+  line-height: 1.18;
+  margin: 0 0 10px;
+}
+
+#shopify-section-{{ section.id }} #price-{{ section.id }} {
+  width: 100%;
+  border-bottom: 1px solid #d9d9d9;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+}
+
+#shopify-section-{{ section.id }} #price-{{ section.id }} .price__container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+#shopify-section-{{ section.id }} #price-{{ section.id }} .price__regular,
+#shopify-section-{{ section.id }} #price-{{ section.id }} .price__sale {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+#shopify-section-{{ section.id }} #price-{{ section.id }} .price-item--regular {
+  color: #8f8f8f;
+}
+
+#shopify-section-{{ section.id }} #price-{{ section.id }} .price__badge-sale {
+  margin-left: 6px;
+}
+
+#shopify-section-{{ section.id }} #price-{{ section.id }} .price--on-sale .price__regular s {
+  display: none;
+}
+
+#shopify-section-{{ section.id }} .product__info-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 18px;
+}
+
+#shopify-section-{{ section.id }} .product__info-container > * {
+  grid-column: 1 / -1;
+}
+
+#shopify-section-{{ section.id }} .product__info-container .product-form__input {
+  margin-top: 0;
+}
+
+#shopify-section-{{ section.id }} .product-form__input.product-form__quantity,
+#shopify-section-{{ section.id }} .product-form__buttons {
+  width: 100%;
+}
+
+#shopify-section-{{ section.id }} .product-form__input.product-form__quantity quantity-input {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+#shopify-section-{{ section.id }} .product-form__input.product-form__quantity .quantity {
+  width: 100%;
+  min-height: 60px;
+  border-radius: 999px;
+  border: 1px solid #d7d7d7;
+  padding: 0 12px;
+}
+
+#shopify-section-{{ section.id }} .product-form__input.product-form__quantity .quantity__button {
+  width: 48px;
+  height: 48px;
+}
+
+#shopify-section-{{ section.id }} .product-form__input.product-form__quantity .quantity__input {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+#shopify-section-{{ section.id }} .product-form__buttons {
+  display: flex;
+  align-items: stretch;
+  gap: 16px;
+  flex-wrap: wrap;
+  flex-direction: row;
+  height: 100%;
+}
+
+#shopify-section-{{ section.id }} .product-form__buttons .product-form__submit,
+#shopify-section-{{ section.id }} .product-form__buttons .shopify-payment-button__button {
+  border-radius: 999px !important;
+  min-height: 60px;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 16px 32px;
+  width: 100%;
+}
+
+@media (min-width: 750px) {
+  #shopify-section-{{ section.id }} .product__info-container {
+    grid-template-columns: 1fr 1.05fr;
+    column-gap: 18px;
+  }
+
+  #shopify-section-{{ section.id }} .product-form__input.product-form__quantity {
+    grid-column: 1 / 2;
+    align-self: stretch;
+  }
+
+  #shopify-section-{{ section.id }} .product-form__buttons {
+    grid-column: 2 / 3;
+    align-self: stretch;
+  }
+}
+
+@media (max-width: 749px) {
+  #shopify-section-{{ section.id }} .product-form__buttons {
+    margin-top: 4px;
+  }
+}
+
+/* ============================
    2. PADDING SECCIÓN + FONDO PDP
    ============================ */
 .section-{{ section.id }}-padding {
@@ -1510,18 +1691,50 @@ body.template-product .product__media-modal * {
      
 
         {%- assign product_form_id = 'product-form-' | append: section.id -%}
+        {%- assign stock_badge_rendered = false -%}
 
         {%- for block in section.blocks -%}
           {%- case block.type -%}
             {%- when '@app' -%}
               {% render block %}
             {%- when 'text' -%}
-              <p
-                class="product__text inline-richtext{% if block.settings.text_style == 'uppercase' %} caption-with-letter-spacing{% elsif block.settings.text_style == 'subtitle' %} subtitle{% endif %}"
-                {{ block.shopify_attributes }}
-              >
-                {{- block.settings.text -}}
-              </p>
+              {%- assign show_stock_badge = false -%}
+              {%- if stock_badge_rendered == false -%}
+                {%- assign show_stock_badge = true -%}
+                {%- assign stock_badge_rendered = true -%}
+              {%- endif -%}
+              <div class="product__eyebrow-row">
+                <p
+                  class="product__text inline-richtext{% if block.settings.text_style == 'uppercase' %} caption-with-letter-spacing{% elsif block.settings.text_style == 'subtitle' %} subtitle{% endif %}"
+                  {{ block.shopify_attributes }}
+                >
+                  {{- block.settings.text -}}
+                </p>
+                {%- if show_stock_badge -%}
+                  {%- assign variant_available = product.selected_or_first_available_variant.available -%}
+                  {%- assign variant_qty = product.selected_or_first_available_variant.inventory_quantity | default: 0 -%}
+                  {%- assign variant_mgmt = product.selected_or_first_available_variant.inventory_management -%}
+                  {%- assign low_stock_threshold = 5 -%}
+                  {%- capture stock_pill -%}
+                    {%- if variant_available -%}
+                      {%- if variant_mgmt == 'shopify' and variant_qty <= low_stock_threshold -%}
+                        <span class="stock-pill stock-pill--orange">
+                          {{- 'products.product.inventory_low_stock' | t | default: 'Bajo stock' -}}
+                        </span>
+                      {%- else -%}
+                        <span class="stock-pill stock-pill--green">
+                          {{- 'products.product.inventory_in_stock' | t | default: 'En stock' -}}
+                        </span>
+                      {%- endif -%}
+                    {%- else -%}
+                      <span class="stock-pill stock-pill--red">
+                        {{- 'products.product.inventory_out_of_stock' | t | default: 'Agotado' -}}
+                      </span>
+                    {%- endif -%}
+                  {%- endcapture -%}
+                  {{ stock_pill }}
+                {%- endif -%}
+              </div>
             {%- when 'title' -%}
               <div class="product__title" {{ block.shopify_attributes }}>
                 <h1>
@@ -4184,5 +4397,3 @@ body.template-product .product__media-modal * {
   ]
 }
 {% endschema %}
-
-
