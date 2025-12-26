@@ -61,7 +61,7 @@
 
     <ul
       id="Slider-Gallery-{{ section.id }}"
-      class="product__media-list contains-media grid grid--peek list-unstyled slider slider--mobile"
+      class="product__media-list contains-media grid grid--peek list-unstyled slider slider--mobile slider--tablet-up"
       role="list"
     >
 
@@ -222,6 +222,29 @@
 {%- endfor -%}
 
     </ul>
+
+    <div class="slider-buttons slider-buttons--main quick-add-hidden small-hide">
+      <button
+        type="button"
+        class="slider-button slider-button--prev"
+        name="previous"
+        aria-label="{{ 'general.slider.previous_slide' | t }}"
+        aria-controls="GalleryViewer-{{ section.id }}"
+        data-step="1"
+      >
+        <span class="svg-wrapper">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
+      </button>
+      <button
+        type="button"
+        class="slider-button slider-button--next"
+        name="next"
+        aria-label="{{ 'general.slider.next_slide' | t }}"
+        aria-controls="GalleryViewer-{{ section.id }}"
+        data-step="1"
+      >
+        <span class="svg-wrapper">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
+      </button>
+    </div>
 
     <div class="slider-buttons caco-media-nav quick-add-hidden{% if hide_mobile_slider %} small-hide{% endif %}">
       <button type="button" class="slider-button slider-button--prev" name="previous" aria-label="{{ 'general.slider.previous_slide' | t }}">
