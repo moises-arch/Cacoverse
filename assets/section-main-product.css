@@ -603,6 +603,21 @@ a.product__text {
   }
 }
 
+.product-primary-actions .product-form__buttons {
+  flex-direction: row;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  gap: 12px;
+}
+
+.product-primary-actions .product-form__submit {
+  width: auto;
+}
+
+.product-primary-actions__quantity .product-form__quantity {
+  margin: 0;
+}
+
 .product--no-media .product__media-wrapper,
 .product--no-media .product__info-wrapper {
   padding: 0;
