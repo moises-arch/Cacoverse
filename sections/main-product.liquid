@@ -1021,6 +1021,126 @@ body.template-product .product__media-modal * {
 }
 
 
+#shopify-section-{{ section.id }} .product-form__input--swatch {
+  --swatch-input--size: 48px;
+  --swatch-input--border-radius: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  margin: 16px 0 10px;
+  background: #ffffff;
+  border: 1px solid #e4e7ed;
+  border-radius: 18px;
+  box-shadow: 0 12px 32px rgba(13, 107, 166, 0.08);
+}
+
+#shopify-section-{{ section.id }} .product-form__input--swatch legend {
+  width: 100%;
+  margin-bottom: 6px;
+  color: #1f2a44;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#shopify-section-{{ section.id }} .product-form__input--swatch legend [data-selected-value] {
+  color: #0d6ba6;
+}
+
+#shopify-section-{{ section.id }} .product-form__input--swatch .swatch-input__label {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 86px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f4f9 100%);
+  border: 1px solid transparent;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+  outline: none !important;
+}
+
+#shopify-section-{{ section.id }} .product-form__input--swatch .swatch-input__label::after {
+  content: attr(title);
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  letter-spacing: 0.01em;
+  color: #394764;
+  text-transform: capitalize;
+}
+
+#shopify-section-{{ section.id }} .product-form__input--swatch .swatch {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.95), 0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+
+#shopify-section-{{ section.id }} .product-form__input--swatch .swatch-input__label:hover {
+  transform: translateY(-2px);
+  background: #ffffff;
+  border-color: #cfe1f1;
+  box-shadow: 0 16px 38px rgba(13, 107, 166, 0.14);
+}
+
+#shopify-section-{{ section.id }} .product-form__input--swatch .swatch-input__input:focus-visible + .swatch-input__label {
+  transform: translateY(-2px);
+  background: #ffffff;
+  border-color: #0d6ba6;
+  box-shadow: 0 0 0 2px rgba(13, 107, 166, 0.15), 0 16px 38px rgba(13, 107, 166, 0.16);
+}
+
+#shopify-section-{{ section.id }} .product-form__input--swatch .swatch-input__input:checked + .swatch-input__label {
+  background: #ffffff;
+  border-color: #0d6ba6;
+  box-shadow: 0 18px 40px rgba(13, 107, 166, 0.18);
+}
+
+#shopify-section-{{ section.id }} .product-form__input--swatch .swatch-input__input:checked + .swatch-input__label .swatch {
+  box-shadow: 0 0 0 3px rgba(13, 107, 166, 0.18), 0 0 0 1px #0d6ba6;
+}
+
+#shopify-section-{{ section.id }} .product-form__input--swatch .swatch-input__input:checked + .swatch-input__label::before {
+  content: 'Selected';
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(13, 107, 166, 0.08);
+  color: #0d6ba6;
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+#shopify-section-{{ section.id }} .product-form__input--swatch .swatch-input__input.visually-disabled + .swatch-input__label,
+#shopify-section-{{ section.id }} .product-form__input--swatch .swatch-input__input:disabled + .swatch-input__label {
+  opacity: 0.6;
+  filter: grayscale(0.4);
+  cursor: not-allowed;
+}
+
+@media (max-width: 749px) {
+  #shopify-section-{{ section.id }} .product-form__input--swatch {
+    gap: 10px;
+    padding: 12px 12px;
+    margin: 12px 0 6px;
+  }
+
+  #shopify-section-{{ section.id }} .product-form__input--swatch .swatch-input__label {
+    min-width: 74px;
+    padding: 8px 10px;
+  }
+}
+
 /* ============================
    INLINE ZOOM LENS CUSTOM
    ============================ */
@@ -4184,5 +4304,4 @@ body.template-product .product__media-modal * {
   ]
 }
 {% endschema %}
-
 
