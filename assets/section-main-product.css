@@ -2648,6 +2648,32 @@ label.quantity__label.form__label {
   filter: saturate(1.05);
 }
 
+@media screen and (min-width: 990px) {
+  .caco-media-gallery .product__media-list {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 14px;
+    margin: 0;
+  }
+
+  .caco-media-gallery .product__media-item {
+    width: 100% !important;
+    grid-column: span 3;
+  }
+
+  .caco-media-gallery .product__media-item:nth-child(1) {
+    grid-column: 1 / -1;
+  }
+
+  .caco-media-gallery .product__media-item:nth-child(n + 2):nth-child(-n + 4) {
+    grid-column: span 4;
+  }
+
+  .caco-media-gallery .product__media-item .caco-square-box {
+    height: 100%;
+  }
+}
+
 @media (hover: none) {
   .caco-zoomable {
     cursor: default;
