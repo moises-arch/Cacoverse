@@ -1,110 +1,82 @@
-/* swatch lives in its own file for reusability of the swatch in swatch-input and dropdown */
-.swatch {
-  --swatch--size: var(--swatch-input--size, 4.4rem);
-  --swatch--border-radius: var(--swatch-input--border-radius, 999px);
+/* =========================================
+   SWATCHES — MINIMAL ROUNDED 
+   ========================================= */
 
-  display: block;
-  width: var(--swatch--size);
-  max-width: 100%;
-  aspect-ratio: 1 / 1;
-  background: var(--swatch--background);
-  background-position: var(--swatch-focal-point, initial);
-  background-size: cover;
-  background-origin: border-box;
-  border: 0.1rem solid rgba(var(--color-foreground), 0.15);
-  border-radius: var(--swatch--border-radius);
+.product-form__input--swatch{
+  --sw-radius: 8px;                  /* 👈 redondeo exterior */
+  --sw-size: 40px;                    /* tamaño del color */
+  --sw-pad: 4px;                      /* padding del marco */
+  --sw-bw: 1px;                       /* borde minimalista */
+  --sw-border: rgba(17,24,39,.18);
+  --sw-active: #0d6ba6;
+
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0px !important;
 }
 
-.swatch--square {
-  --swatch--border-radius: var(--swatch-input--border-radius, 0.2rem);
+/* 1) Si existe wrapper (muchos themes lo usan), también lo redondeamos */
+.product-form__input--swatch .swatch-input{
+  border-radius: var(--sw-radius) !important;
+  overflow: hidden !important;
 }
 
-.swatch--unavailable {
-  border-style: dashed;
-  border-color: rgba(var(--color-foreground), 0.5);
+/* 2) El marco REAL: el label */
+.product-form__input--swatch .swatch-input__input + .swatch-input__label{
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  padding: var(--sw-pad) !important;
+  background: #fff !important;
+
+  border: var(--sw-bw) solid var(--sw-border) !important;
+  border-radius: var(--sw-radius) !important;
+  overflow: hidden !important;
+
+  box-shadow: none !important;
+  outline: 0 !important;
 }
 
-/* PDP swatch pill polish: rounded pills, thicker hover/active borders, readable text */
-.product-form__input--swatch .swatch-input__input + .swatch-input__label {
-  --swatch-input--border-radius: 999px;
-  --swatch-border-width: 1.6px;
-  color: var(--swatch-text-color, #111827);
-  padding: 0.32rem;
-  background: #ffffff;
-  border: var(--swatch-border-width) solid rgba(17, 24, 39, 0.18);
-  border-radius: var(--swatch-input--border-radius);
-  box-shadow: none;
-  transition: border-color 0.16s ease, background-color 0.16s ease, box-shadow 0.16s ease;
-  position: relative;
+/* 3) Muchos themes dibujan el borde con pseudo-elementos cuadrados.
+      Los apagamos para que no “pisen” el borde redondeado. */
+.product-form__input--swatch .swatch-input__input + .swatch-input__label::before,
+.product-form__input--swatch .swatch-input__input + .swatch-input__label::after{
+  content: none !important;
 }
 
-.product-form__input--swatch .swatch-input__input + .swatch-input__label .swatch {
-  border: 0;
-  border-radius: calc(var(--swatch-input--border-radius) * 0.9);
+/* 4) El color/imagen adentro */
+.product-form__input--swatch .swatch{
+  width: var(--sw-size) !important;
+  aspect-ratio: 1 / 1 !important;
+  display: block !important;
+
+  border: 0 !important;
+  border-radius: calc(var(--sw-radius) - var(--sw-pad)) !important;
+
+  background: var(--swatch--background) !important;
+  background-position: var(--swatch-focal-point, center) !important;
+  background-size: cover !important;
 }
 
-.product-form__input--swatch .swatch-input__input + .swatch-input__label:hover,
-.product-form__input--swatch .swatch-input__input:hover + .swatch-input__label {
-  --swatch-border-width: 2.2px;
-  border-color: #0d6ba6;
-  background: #f8fafc;
-  box-shadow: 0 0 0 1px rgba(13, 107, 166, 0.08);
+/* 5) Aunque el theme fuerce “square”, seguimos redondeando */
+.product-form__input--swatch .swatch--square{
+  border-radius: calc(var(--sw-radius) - var(--sw-pad)) !important;
 }
 
-.product-form__input--swatch .swatch-input__input:checked + .swatch-input__label {
-  --swatch-border-width: 2.2px;
-  border-color: #0d6ba6;
-  background: #f0f7fb;
-  box-shadow: 0 0 0 1px rgba(13, 107, 166, 0.12);
+/* 6) Estados minimalistas */
+@media (hover:hover) and (pointer:fine){
+  .product-form__input--swatch .swatch-input__input + .swatch-input__label:hover{
+    border-color: rgba(17,24,39,.32) !important;
+  }
 }
 
-.product-form__input--swatch .swatch-input__input:focus-visible + .swatch-input__label {
-  outline: 2px solid #0d6ba6;
-  outline-offset: 2px;
+.product-form__input--swatch .swatch-input__input:checked + .swatch-input__label{
+  border-color: var(--sw-active) !important;
 }
 
-/* Tooltip: rounded, centered, legible */
-.product-form__input--swatch .swatch-input__label[data-tooltip]::after,
-.product-form__input--swatch .swatch-input__label[data-tooltip]::before {
-  position: absolute;
-  left: 50%;
-  transform: translate(-50%, 6px);
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.15s ease, transform 0.18s ease;
-  pointer-events: none;
-  z-index: 5;
-}
-
-.product-form__input--swatch .swatch-input__label[data-tooltip]::after {
-  content: attr(data-tooltip);
-  bottom: calc(100% + 10px);
-  padding: 4px 10px;
-  background: var(--swatch-tooltip-bg, #4b5563);
-  color: var(--swatch-tooltip-text, #ffffff);
-  font-size: 11px;
-  font-weight: 700;
-  border-radius: 999px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
-  white-space: nowrap;
-  line-height: 1.1;
-  text-decoration: none;
-}
-
-.product-form__input--swatch .swatch-input__label[data-tooltip]::before {
-  content: '';
-  bottom: calc(100% + 2px);
-  width: 10px;
-  height: 10px;
-  background: var(--swatch-tooltip-bg, #4b5563);
-  clip-path: polygon(50% 100%, 0 0, 100% 0);
-}
-
-.product-form__input--swatch .swatch-input__label[data-tooltip]:hover::after,
-.product-form__input--swatch .swatch-input__label[data-tooltip]:hover::before,
-.product-form__input--swatch .swatch-input__label[data-tooltip]:focus-visible::after,
-.product-form__input--swatch .swatch-input__label[data-tooltip]:focus-visible::before {
-  opacity: 1;
-  visibility: visible;
-  transform: translate(-50%, 0);
+.product-form__input--swatch .swatch-input__input:focus-visible + .swatch-input__label{
+  border-color: var(--sw-active) !important;
+  outline: 2px solid color-mix(in srgb, var(--sw-active) 25%, transparent) !important;
+  outline-offset: 2px !important;
 }
