@@ -99,14 +99,6 @@ button[name="add"]:hover,
   color: #c23a3a;
 }
 
-#shopify-section-{{ section.id }} .product-form__buttons .product-form__submit.is-disabled,
-#shopify-section-{{ section.id }} .product-form__buttons .product-form__submit.is-disabled:hover {
-  background: #d7dde3 !important;
-  color: #7a8187 !important;
-  cursor: not-allowed;
-  box-shadow: none !important;
-}
-
 /* ============================
    1.B PDP INFO + CTA LAYOUT
    ============================ */
@@ -1414,73 +1406,6 @@ body.template-product .product__media-modal * {
     >
   {%- endif -%}
 
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const sectionId = '{{ section.id }}';
-    const badge = document.getElementById(`StockPill-${sectionId}`);
-    const atcButton = document.getElementById(`ProductSubmitButton-${sectionId}`);
-    const atcLabel = atcButton ? atcButton.querySelector('span') : null;
-    const addLabel = atcLabel ? atcLabel.textContent.trim() : '{{ "products.product.add_to_cart" | t }}';
-    const soldLabel = '{{ "products.product.sold_out" | t }}';
-
-    const lowStockThreshold = badge
-      ? parseInt(badge.getAttribute('data-low-stock-threshold'), 10) || 5
-      : 5;
-
-    const applyBadgeState = (variant) => {
-      if (!badge) return;
-      const available = variant && variant.available;
-      const qty = variant && typeof variant.inventory_quantity === 'number'
-        ? variant.inventory_quantity
-        : 0;
-      const mgmt = variant && variant.inventory_management ? variant.inventory_management : null;
-
-      badge.classList.remove('stock-pill--green', 'stock-pill--orange', 'stock-pill--red');
-
-      if (!available) {
-        badge.classList.add('stock-pill--red');
-        badge.textContent = '{{ "products.product.inventory_out_of_stock" | t | default: "Agotado" }}';
-        return;
-      }
-
-      if (mgmt === 'shopify' && qty <= lowStockThreshold) {
-        badge.classList.add('stock-pill--orange');
-        badge.textContent = '{{ "products.product.inventory_low_stock" | t | default: "Bajo stock" }}';
-      } else {
-        badge.classList.add('stock-pill--green');
-        badge.textContent = '{{ "products.product.inventory_in_stock" | t | default: "En stock" }}';
-      }
-    };
-
-    const applyButtonState = (variant) => {
-      if (!atcButton) return;
-      const available = variant && variant.available;
-      atcButton.disabled = !available;
-      atcButton.classList.toggle('is-disabled', !available);
-      if (atcLabel) {
-        atcLabel.textContent = available ? addLabel : soldLabel;
-      }
-    };
-
-    const refreshUI = (variant) => {
-      applyBadgeState(variant);
-      applyButtonState(variant);
-    };
-
-    const initialVariant = {{ product.selected_or_first_available_variant | json }};
-    refreshUI(initialVariant);
-
-    document.addEventListener('variant:change', (event) => {
-      const variant = event && event.detail ? event.detail.variant : null;
-      refreshUI(variant);
-    });
-
-    document.addEventListener('variant:changed', (event) => {
-      const variant = event && event.detail ? event.detail.variant : null;
-      refreshUI(variant);
-    });
-  });
-</script>
 
 
 
@@ -1790,24 +1715,24 @@ body.template-product .product__media-modal * {
                   {%- assign variant_qty = product.selected_or_first_available_variant.inventory_quantity | default: 0 -%}
                   {%- assign variant_mgmt = product.selected_or_first_available_variant.inventory_management -%}
                   {%- assign low_stock_threshold = 5 -%}
-                  <span
-                    id="StockPill-{{ section.id }}"
-                    class="stock-pill {% if variant_available %}{% if variant_mgmt == 'shopify' and variant_qty <= low_stock_threshold %}stock-pill--orange{% else %}stock-pill--green{% endif %}{% else %}stock-pill--red{% endif %}"
-                    data-low-stock-threshold="{{ low_stock_threshold }}"
-                    data-inventory-management="{{ variant_mgmt }}"
-                    data-quantity="{{ variant_qty }}"
-                    data-available="{{ variant_available }}"
-                  >
+                  {%- capture stock_pill -%}
                     {%- if variant_available -%}
                       {%- if variant_mgmt == 'shopify' and variant_qty <= low_stock_threshold -%}
-                        {{- 'products.product.inventory_low_stock' | t | default: 'Bajo stock' -}}
+                        <span class="stock-pill stock-pill--orange">
+                          {{- 'products.product.inventory_low_stock' | t | default: 'Bajo stock' -}}
+                        </span>
                       {%- else -%}
-                        {{- 'products.product.inventory_in_stock' | t | default: 'En stock' -}}
+                        <span class="stock-pill stock-pill--green">
+                          {{- 'products.product.inventory_in_stock' | t | default: 'En stock' -}}
+                        </span>
                       {%- endif -%}
                     {%- else -%}
-                      {{- 'products.product.inventory_out_of_stock' | t | default: 'Agotado' -}}
+                      <span class="stock-pill stock-pill--red">
+                        {{- 'products.product.inventory_out_of_stock' | t | default: 'Agotado' -}}
+                      </span>
                     {%- endif -%}
-                  </span>
+                  {%- endcapture -%}
+                  {{ stock_pill }}
                 {%- endif -%}
               </div>
             {%- when 'title' -%}
