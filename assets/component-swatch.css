@@ -9,8 +9,8 @@
   --sw-size: clamp(34px, 3.2vw, 46px);
   --sw-pad: 4px;
 
-  --sw-radius: 14px;              /* try 18px or 999px for pills */
-  --sw-border: 1.5px;
+  --sw-radius: 20px;              /* try 18px or 999px for pills */
+  --sw-border: 8px;
 
   --sw-ink: rgba(17, 24, 39, 0.9);
   --sw-line: rgba(17, 24, 39, 0.18);
