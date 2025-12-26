@@ -1617,6 +1617,10 @@ body.template-product .product__media-modal * {
         {%- assign primary_actions_open = false -%}
 
         {%- for block in section.blocks -%}
+          {%- if primary_actions_open and block.type != 'quantity_selector' and block.type != 'buy_buttons' -%}
+            </div>
+            {%- assign primary_actions_open = false -%}
+          {%- endif -%}
           {%- case block.type -%}
             {%- when '@app' -%}
               {% render block %}
