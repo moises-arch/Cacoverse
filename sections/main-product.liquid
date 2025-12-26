@@ -1188,6 +1188,57 @@ body.template-product .product__media-modal * {
   background: #f3f4f6;
 }
 
+#shopify-section-{{ section.id }} .swatch-input__label[data-tooltip] {
+  position: relative;
+}
+
+#shopify-section-{{ section.id }} .swatch-input__label[data-tooltip]::after,
+#shopify-section-{{ section.id }} .swatch-input__label[data-tooltip]::before {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 6px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s ease, transform 0.18s ease;
+  pointer-events: none;
+  z-index: 5;
+}
+
+#shopify-section-{{ section.id }} .swatch-input__label[data-tooltip]::after {
+  content: attr(data-tooltip);
+  bottom: calc(100% + 8px);
+  padding: 4px 8px;
+  background: var(--swatch-tooltip-bg, #4b5563);
+  color: var(--swatch-tooltip-text, #ffffff);
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 8px;
+  box-shadow: none;
+  white-space: nowrap;
+  line-height: 1.1;
+  text-decoration: none;
+  color: var(--swatch-tooltip-text, #ffffff) !important;
+  text-shadow: none;
+}
+
+#shopify-section-{{ section.id }} .swatch-input__label[data-tooltip]::before {
+  content: '';
+  bottom: calc(100% + 2px);
+  width: 9px;
+  height: 9px;
+  background: var(--swatch-tooltip-bg, #4b5563);
+  clip-path: polygon(50% 100%, 0 0, 100% 0);
+}
+
+#shopify-section-{{ section.id }} .swatch-input__label[data-tooltip]:hover::after,
+#shopify-section-{{ section.id }} .swatch-input__label[data-tooltip]:hover::before,
+#shopify-section-{{ section.id }} .swatch-input__label[data-tooltip]:focus-visible::after,
+#shopify-section-{{ section.id }} .swatch-input__label[data-tooltip]:focus-visible::before {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
+
 
 {%- endstyle -%}
 
