@@ -13,7 +13,7 @@
 
   display: flex !important;
   flex-wrap: wrap !important;
-  gap: 10px !important;
+  gap: 0px !important;
 }
 
 /* 1) Si existe wrapper (muchos themes lo usan), también lo redondeamos */
