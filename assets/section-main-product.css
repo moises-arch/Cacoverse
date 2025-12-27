@@ -2649,36 +2649,62 @@ label.quantity__label.form__label {
 }
 
 @media screen and (min-width: 990px) {
+  .caco-media-gallery slider-component {
+    position: relative;
+  }
+
+  /* Mostrar solo el slide activo a pantalla completa */
   .caco-media-gallery .product__media-list {
-    display: grid !important;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    gap: 8px;
+    display: block !important;
     margin: 0;
-    grid-auto-rows: 1fr;
-    grid-auto-flow: row dense;
+    padding: 0;
   }
 
-  .caco-media-gallery .product__media-item {
+  .caco-media-gallery .product__media-list .product__media-item {
+    display: none !important;
     width: 100% !important;
-    grid-column: span 4;
-    min-width: 200px;
+    max-width: 100% !important;
   }
 
-  .caco-media-gallery .product__media-item:nth-child(1) {
-    grid-column: 1 / -1;
-  }
-
-  .caco-media-gallery .product__media-item:nth-child(n + 2):nth-child(-n + 4) {
-    grid-column: span 4;
-  }
-
-  .caco-media-gallery .product__media-item:nth-child(n + 5) {
-    grid-column: span 3;
+  .caco-media-gallery .product__media-list .product__media-item.is-active {
+    display: block !important;
   }
 
   .caco-media-gallery .product__media-item .caco-square-box {
-    height: 100%;
-    min-height: 180px;
+    width: 100%;
+    min-height: 320px;
+  }
+
+  .caco-media-gallery .product__media-item img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .caco-media-gallery .slider-buttons--main {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 8px;
+    pointer-events: none;
+  }
+
+  .caco-media-gallery .slider-buttons--main .slider-button {
+    pointer-events: auto;
+    width: 48px;
+    height: 48px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    color: inherit;
+  }
+
+  .caco-media-gallery .slider-buttons--main .slider-button svg {
+    width: 18px;
+    height: 18px;
   }
 }
 
