@@ -1,0 +1,198 @@
+{% style %}
+  #shopify-section-{{ section.id }}{
+    padding-top: {{ section.settings.padding_top_desktop }};
+    padding-bottom: {{ section.settings.padding_bottom_desktop }};
+  }
+
+  .featured-categories-inner .sh-48{
+    max-width: 50rem;
+    margin: 0 auto;
+  }
+
+  .featured-categories-inner .sh-48{
+    max-width: 50rem;
+    margin: 0 auto;
+  }
+
+  .featured-categories-inner .s-btn {
+      padding: 16px 32px;
+      min-height: 56px;
+      font-weight: 600;
+  }
+
+  @media( max-width: 767px){
+     #shopify-section-{{ section.id }}{
+      padding-top: {{ section.settings.padding_top_mobile }};
+      padding-bottom: {{ section.settings.padding_bottom_mobile }};
+    }
+  }
+{% endstyle %}
+{{ 'featured-categories.css' | asset_url | stylesheet_tag }}
+<div class="container-fluid">
+  <div class="featured-categories-inner">
+    <div class="row">
+      <div class="col-12 text-center">
+        <h2 class="sh-48 text-center mb-3">{{ section.settings.heading }}</h2>
+        <p class="sp-16 text-center">{{ section.settings.sub_heading }}</p>
+        <a class="s-btn mt-3" href="{{ section.settings.link }}"
+          ><span>{{ section.settings.link_label }}</span></a
+        >
+      </div>
+    </div>
+
+    <div class="row mt-3 mt-lg-5">
+      <div class="offset-xxl-1 col-xxl-11">
+        <div class="slider">
+          <div class="swiper-container" data-space-between="10" data-slides-desktop="3.5">
+            <div class="swiper-wrapper">
+              {% for block in section.blocks %}
+                {% assign mycategory_url = block.settings.collection_id.url %}
+                <div
+                  class="imghvr-push-up category-item swiper-slide d-flex align-items-start flex-column gap-3 mb-3 mb-sm-5"
+                  onclick="location.href = '{{ mycategory_url }}';"
+                >
+                  
+                    <figure class="imghvr-push-up">
+                      {% if block.settings.custom_image != blank %}
+                      <img
+                        src="{{ block.settings.custom_image.src | img_url: '464x' }}"
+                        width="464"
+                        height="720"
+                        alt="{{ block.settings.custom_image.src.alt }}"
+                        class="img-fluid"
+                        loading="lazy"
+                      >
+                      {% else %}
+                         <img
+                          src="{{ block.settings.collection_id.image.src | img_url: '464x' }}"
+                          width="464"
+                          height="720"
+                          alt="{{ block.settings.collection_id.image.src.alt }}"
+                          class="img-fluid"
+                          loading="lazy"
+                        >
+                      {%  endif %}
+                      <figcaption>
+                        <img
+                          src="{{ block.settings.collection_id.metafields.custom.second_image.value | img_url: '464x' }}"
+                          width="464"
+                          height="720"
+                          alt="{{ block.settings.collection_id.image.src.alt }}-pushup"
+                          class="img-fluid"
+                          loading="lazy"
+                        >
+                      </figcaption>
+                    </figure>
+                  <h3 class="sh-32">
+                    {{ block.settings.custom_heading }}
+                    {% render 'arrow-icon' %}
+                  </h3>
+                  <p class="sp-16">
+                    {{ block.settings.custom_description }}
+                  </p>
+                </div>
+              {% endfor %}
+            </div>
+            <!-- pagination -->
+            <!-- <div class="swiper-pagination"></div> -->
+
+            <!-- scrollbar -->
+            <!-- <div class="swiper-scrollbar"></div> -->
+
+            <!-- buttons -->
+            <!--
+              <div class="swiper-button-prev"></div>
+              <div class="swiper-button-next"></div>
+            -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Featured Categories New",
+  "class": "featured-categories",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+    },
+    {
+      "type": "text",
+      "id": "sub_heading",
+      "label": "Sub Heading",
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "link",
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link label",
+    },
+    {
+      "type": "text",
+      "id": "padding_top_desktop",
+      "label": "Padding Desktop Top",
+      "default": "80px"
+    },
+     {
+      "type": "text",
+      "id": "padding_bottom_desktop",
+      "label": "Padding Desktop Bottom",
+      "default": "80px"
+    },
+     {
+      "type": "text",
+      "id": "padding_top_mobile",
+      "label": "Padding Mobile Top",
+      "default": "40px"
+    },
+     {
+      "type": "text",
+      "id": "padding_bottom_mobile",
+      "label": "Padding Mobile Bottom",
+      "default": "40px"
+    },
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category Name",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection_id",
+          "label": "Select the Category",
+        },
+        {
+          "type": "text",
+          "id": "custom_heading",
+          "label": "Product Type Filter Ex. Safety Helmets",
+        },
+        {
+          "type": "text",
+          "id": "custom_description",
+          "label": "Enter the Custom Discription",
+        },
+         {
+          "type": "image_picker",
+          "id": "custom_image",
+          "label": "Select Image",
+        },
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Categories New",
+    }
+  ]
+}
+{% endschema %}

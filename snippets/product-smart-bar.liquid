@@ -1,0 +1,20 @@
+{{ 'product-smart-bar.css' | asset_url | stylesheet_tag }}
+<section class="product-smart-bar d-flex align-items-center justify-content-center">
+  <div class="page-width container-fluid">
+    <ul class="list-unstyled row">
+      <li class="d-flex align-items-center justify-content-center gap-2 gap-md-3 flex-column flex-md-row flex-wrap flex-md-nowrap col-4 text-center p-0">
+         {{ 'icon-tick-cir-black-new.svg' | inline_asset_content }}
+        <span class="f--1_25rem mf--0_875rem f--black f--regular lh--loose">Easy Ordering</span>
+      </li>
+      <li class="d-flex align-items-center justify-content-center gap-2  gap-md-3 flex-column flex-md-row flex-wrap flex-md-nowrap col-4 text-center p-0">
+        {{ 'icon-tick-cir-black-new.svg' | inline_asset_content }}
+        <span class="f--1_25rem mf--0_875rem f--black f--regular lh--loose">2 Weeks Delivery</span>
+      </li>
+
+      <li class="d-flex align-items-center justify-content-center gap-2  gap-md-3 flex-column flex-md-row flex-wrap flex-md-nowrap col-4 text-center p-0">
+        {{ 'icon-tick-cir-black-new.svg' | inline_asset_content }}
+        <span class="f--1_25rem mf--0_875rem f--black f--regular lh--loose">High Quality Printing</span>
+      </li>
+    </ul>
+  </div>
+</section>

@@ -1,0 +1,1049 @@
+{% doc %}
+  @prompt
+    create an industry news module with the layout of the one in https://www.cacoamerica.com/. but with the style of: https://www.helloprint.es/, display blog section instead of articles , display 4 to 5 cards at a time . 
+    show. 
+    
+    add view all button to the top right in the same row of the title only for desktop 
+    
+    title and sub tiles aligned to left in desktop keep centered in mobile , for the mobile version display only two cards with an slider function , in mobile leave 20px margin left and right , do not show  slide controller only swip with the hand in mobile. 
+    
+    20px left and 20px right  in mobile , add contriols for card spacing in mobile mode
+    
+    do not change anything else 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+
+
+
+
+
+  .ai-industry-news-{{ ai_gen_id }} {
+    padding: {{ block.settings.section_padding_top }}px 0 {{ block.settings.section_padding_bottom }}px;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-industry-news__container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.container_width }}px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .ai-industry-news__header-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    gap: 24px;
+  }
+
+
+
+
+
+  .ai-industry-news__header-content-{{ ai_gen_id }} {
+    flex: 1;
+  }
+
+  .ai-industry-news__title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.heading_size }}px;
+    font-weight: 700;
+    color: {{ block.settings.heading_color }};
+    margin: 0 0 12px;
+    line-height: 1.2;
+  }
+
+  .ai-industry-news__subtitle-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subheading_size }}px;
+    color: {{ block.settings.subheading_color }};
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .ai-industry-news__cta-desktop-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: 14px 32px;
+    background-color: {{ block.settings.cta_background }};
+    color: {{ block.settings.cta_text_color }};
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: {{ block.settings.cta_border_radius }}px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .ai-industry-news__cta-desktop-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.cta_hover_background }};
+    transform: translateY(-2px);
+  }
+
+  .ai-industry-news__grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat({{ block.settings.columns_desktop }}, 1fr);
+    gap: {{ block.settings.grid_gap }}px;
+  }
+
+  .ai-industry-news__card-{{ ai_gen_id }} {
+    background-color: {{ block.settings.card_background }};
+    border-radius: {{ block.settings.card_border_radius }}px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .ai-industry-news__card-{{ ai_gen_id }}:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  .ai-industry-news__image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    padding-top: 60%;
+    overflow: hidden;
+    background-color: #f5f5f5;
+  }
+
+  .ai-industry-news__image-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-industry-news__image-placeholder-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f5f5;
+  }
+
+  .ai-industry-news__image-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .ai-industry-news__badge-{{ ai_gen_id }} {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    background-color: {{ block.settings.badge_background }};
+    color: {{ block.settings.badge_text_color }};
+    padding: 6px 14px;
+    border-radius: {{ block.settings.badge_border_radius }}px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .ai-industry-news__content-{{ ai_gen_id }} {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .ai-industry-news__meta-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    font-size: 13px;
+    color: {{ block.settings.meta_color }};
+  }
+
+  .ai-industry-news__date-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .ai-industry-news__date-icon-{{ ai_gen_id }} {
+    width: 14px;
+    height: 14px;
+  }
+
+  .ai-industry-news__card-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.card_title_size }}px;
+    font-weight: 700;
+    color: {{ block.settings.card_title_color }};
+    margin: 0 0 12px;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .ai-industry-news__excerpt-{{ ai_gen_id }} {
+    font-size: {{ block.settings.excerpt_size }}px;
+    color: {{ block.settings.excerpt_color }};
+    line-height: 1.6;
+    margin: 0 0 20px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex-grow: 1;
+  }
+
+  .ai-industry-news__link-{{ ai_gen_id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: {{ block.settings.link_color }};
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: gap 0.3s ease;
+    margin-top: auto;
+  }
+
+  .ai-industry-news__link-{{ ai_gen_id }}:hover {
+    gap: 12px;
+  }
+
+  .ai-industry-news__link-icon-{{ ai_gen_id }} {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s ease;
+  }
+
+  .ai-industry-news__link-{{ ai_gen_id }}:hover .ai-industry-news__link-icon-{{ ai_gen_id }} {
+    transform: translateX(4px);
+  }
+
+  .ai-industry-news__cta-wrapper-mobile-{{ ai_gen_id }} {
+    display: none;
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .ai-industry-news__cta-mobile-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: 14px 32px;
+    background-color: {{ block.settings.cta_background }};
+    color: {{ block.settings.cta_text_color }};
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: {{ block.settings.cta_border_radius }}px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+
+  .ai-industry-news__cta-mobile-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.cta_hover_background }};
+    transform: translateY(-2px);
+  }
+
+  .ai-industry-news__empty-state-{{ ai_gen_id }} {
+    text-align: center;
+    padding: 60px 20px;
+    color: {{ block.settings.subheading_color }};
+  }
+
+  .ai-industry-news__empty-state-{{ ai_gen_id }} p {
+    font-size: 16px;
+    margin: 0;
+  }
+
+  .ai-industry-news__slider-wrapper-{{ ai_gen_id }} {
+    display: none;
+    position: relative;
+    margin: 0 -20px;
+  }
+
+  .ai-industry-news__slider-{{ ai_gen_id }} {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 0 20px;
+  }
+
+  .ai-industry-news__slider-{{ ai_gen_id }}::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ai-industry-news__slider-track-{{ ai_gen_id }} {
+    display: flex;
+    gap: {{ block.settings.mobile_card_gap }}px;
+  }
+
+  .ai-industry-news__slider-slide-{{ ai_gen_id }} {
+    flex: 0 0 calc(50% - {{ block.settings.mobile_card_gap | divided_by: 2 }}px);
+    min-width: calc(50% - {{ block.settings.mobile_card_gap | divided_by: 2 }}px);
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-industry-news__grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .ai-industry-news__title-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.heading_size }}px * 0.8);
+    }
+
+    .ai-industry-news__header-{{ ai_gen_id }} {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .ai-industry-news__cta-desktop-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    .ai-industry-news__cta-wrapper-mobile-{{ ai_gen_id }} {
+      display: block;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-industry-news-{{ ai_gen_id }} {
+      padding: {{ block.settings.section_padding_top | times: 0.6 }}px 0 {{ block.settings.section_padding_bottom | times: 0.6 }}px;
+    }
+
+    .ai-industry-news__grid-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    .ai-industry-news__slider-wrapper-{{ ai_gen_id }} {
+      display: block;
+    }
+
+    .ai-industry-news__title-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.heading_size }}px * 0.65);
+    }
+
+    .ai-industry-news__header-{{ ai_gen_id }} {
+      margin-bottom: 0px;
+    }
+
+    .ai-industry-news__content-{{ ai_gen_id }} {
+      padding: 20px;
+    }
+  }
+
+
+
+@media (max-width: 749px) {
+  .ai-industry-news__slider-track-{{ ai_gen_id }}{
+    display: flex;
+    gap: {{ block.settings.mobile_card_gap }}px;
+    padding-inline: 2px; /* colchoncito anti-recorte sin tocar los 20px del contenedor */
+  }
+}
+
+
+
+
+
+
+
+/* ===== MOBILE: sombra sin cortes (aire + no-recorte) ===== */
+@media (max-width: 749px) {
+  /* 1) Más “aire” al fondo de la sección para que la sombra quepa */
+  .ai-industry-news-{{ ai_gen_id }}{
+    /* tu padding móvil + 24px extra para la sombra */
+    padding-bottom: calc({{ block.settings.section_padding_bottom | times: 0.6 }}px + 20px) !important;
+    padding-top: calc({{ block.settings.section_padding_bottom | times: 0.6 }}px + 20px) !important;
+
+    position: relative; 
+    z-index: 1; /* por si el siguiente bloque se apila encima */
+  }
+
+  /* 2) Nada debe recortar verticalmente la sombra */
+  .ai-industry-news__container-{{ ai_gen_id }},
+  .ai-industry-news__slider-wrapper-{{ ai_gen_id }},
+  .ai-industry-news__slider-{{ ai_gen_id }},
+  .ai-industry-news__slider-track-{{ ai_gen_id }}{
+    overflow: visible !important;
+  }
+
+  /* 3) Asegura scroll horizontal pero libre en Y */
+  .ai-industry-news__slider-{{ ai_gen_id }}{
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 20px; /* mantén tus 20px laterales */
+    scrollbar-width: none;
+  }
+  .ai-industry-news__slider-{{ ai_gen_id }}::-webkit-scrollbar{ display:none; }
+
+  /* 4) Si el track quedaba justo al borde, dale un micro-colchón */
+  .ai-industry-news__slider-track-{{ ai_gen_id }}{
+    padding-bottom: 15px; /* ayuda a que la sombra inferior no toque el “piso” */
+        padding-top: 40px; /* ayuda a que la sombra inferior no toque el “piso” */
+
+  }
+}
+
+/* Failsafe por si el theme trae overflow:hidden en contenedores globales */
+@media (max-width: 749px){
+  .shopify-section,
+  .page-width,
+  main[role="main"],
+  .content-for-index{
+    overflow: visible !important;
+  }
+}
+
+
+
+/* ===== MINIMAL TEXT CTA STYLE ===== */
+.ai-industry-news__cta-minimal-{{ ai_gen_id }} {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: {{ block.settings.link_color }};
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  background: none;
+  border: none;
+  padding: 0;
+  transition: color 0.25s ease, gap 0.25s ease;
+}
+
+.ai-industry-news__cta-minimal-{{ ai_gen_id }} svg {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.25s ease;
+}
+
+.ai-industry-news__cta-minimal-{{ ai_gen_id }}:hover {
+  color: {{ block.settings.cta_hover_background }};
+  gap: 10px;
+}
+
+.ai-industry-news__cta-minimal-{{ ai_gen_id }}:hover svg {
+  transform: translateX(4px);
+}
+
+
+@media (min-width: 990px){
+  .ai-industry-news__cta-desktop-{{ ai_gen_id }}{
+    background: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: {{ block.settings.link_color }} !important;
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+    line-height: 1;
+    transition: color .25s ease, gap .25s ease;
+  }
+
+  .ai-industry-news__cta-desktop-{{ ai_gen_id }} svg{
+    width: 18px;
+    height: 18px;
+    transition: transform .25s ease;
+  }
+
+  .ai-industry-news__cta-desktop-{{ ai_gen_id }}:hover{
+    color: {{ block.settings.cta_hover_background }} !important;
+    gap: 10px;
+  }
+
+  .ai-industry-news__cta-desktop-{{ ai_gen_id }}:hover svg{
+    transform: translateX(4px);
+  }
+}
+
+
+
+{% endstyle %}
+
+
+{% style %}
+@media (max-width: 749px){
+  /* Make the media area a square */
+  .ai-industry-news__image-wrapper-{{ ai_gen_id }}{
+    padding-top: 100% !important;   /* from 60% → 100% for 1:1 */
+  }
+
+  /* Ensure the image covers the square without distortion */
+  .ai-industry-news__image-{{ ai_gen_id }},
+  .ai-industry-news__image-placeholder-{{ ai_gen_id }}{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;              /* fill the square nicely */
+  }
+}
+
+/* Progressive enhancement: if aspect-ratio is supported, use it */
+@supports (aspect-ratio: 1 / 1){
+  @media (max-width: 749px){
+    .ai-industry-news__image-wrapper-{{ ai_gen_id }}{
+      aspect-ratio: 4 / 3;
+      padding-top: 0 !important;    /* no need for padding hack */
+    }
+  }
+}
+
+
+/* MOBILE: 2 cards, 20px laterales totales, gap 14px */
+@media (max-width: 749px){
+  /* Quita el padding del contenedor para no duplicar */
+
+
+
+  /* Gap exacto entre cards */
+  .ai-industry-news__slider-track-{{ ai_gen_id }}{
+    gap: 18px !important;
+    padding-inline: 0 !important;   /* sin colchón extra */
+    overflow: visible !important;
+  }
+
+  /* Dos cards por vista, calculadas con el gap de 14px */
+  .ai-industry-news__slider-slide-{{ ai_gen_id }}{
+    flex: 0 0 calc((100% - 14px) / 2) !important;
+    min-width: calc((100% - 14px) / 2) !important;
+  }
+}
+
+
+
+{% endstyle %}
+
+
+
+
+<div class="ai-industry-news-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-industry-news__container-{{ ai_gen_id }}">
+    {% if block.settings.heading != blank or block.settings.subheading != blank %}
+      <div class="ai-industry-news__header-{{ ai_gen_id }}">
+        <div class="ai-industry-news__header-content-{{ ai_gen_id }}">
+          {% if block.settings.heading != blank %}
+            <h2 class="ai-industry-news__title-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+          {% endif %}
+          {% if block.settings.subheading != blank %}
+            <p class="ai-industry-news__subtitle-{{ ai_gen_id }}">{{ block.settings.subheading }}</p>
+          {% endif %}
+        </div>
+{% if block.settings.show_cta and block.settings.cta_text != blank and block.settings.blog != blank %}
+  <a href="{{ block.settings.blog.url }}" class="ai-industry-news__cta-desktop-{{ ai_gen_id }}">
+    {{ block.settings.cta_text }}
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+      <line x1="5" y1="12" x2="19" y2="12"/>
+      <polyline points="12 5 19 12 12 19"/>
+    </svg>
+  </a>
+{% endif %}
+
+      </div>
+    {% endif %}
+
+    {% if block.settings.blog != blank %}
+      {% assign articles = block.settings.blog.articles %}
+      {% assign article_limit = block.settings.article_count %}
+
+      {% if articles.size > 0 %}
+        <div class="ai-industry-news__grid-{{ ai_gen_id }}">
+          {% for article in articles limit: article_limit %}
+            <article class="ai-industry-news__card-{{ ai_gen_id }}">
+              <a href="{{ article.url }}" class="ai-industry-news__image-wrapper-{{ ai_gen_id }}">
+                {% if article.image %}
+                  <img
+                    src="{{ article.image | image_url: width: 800 }}"
+                    alt="{{ article.image.alt | escape }}"
+                    class="ai-industry-news__image-{{ ai_gen_id }}"
+                    loading="lazy"
+                    width="800"
+                    height="480"
+                  >
+                {% else %}
+                  <div class="ai-industry-news__image-placeholder-{{ ai_gen_id }}">
+                    {{ 'image' | placeholder_svg_tag }}
+                  </div>
+                {% endif %}
+                {% if block.settings.show_badge and article.tags.size > 0 %}
+                  <span class="ai-industry-news__badge-{{ ai_gen_id }}">{{ article.tags.first }}</span>
+                {% endif %}
+              </a>
+
+              <div class="ai-industry-news__content-{{ ai_gen_id }}">
+                {% if block.settings.show_date %}
+                  <div class="ai-industry-news__meta-{{ ai_gen_id }}">
+                    <div class="ai-industry-news__date-{{ ai_gen_id }}">
+                      <svg class="ai-industry-news__date-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                      </svg>
+                      <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+                        {{ article.published_at | date: '%B %d, %Y' }}
+                      </time>
+                    </div>
+                  </div>
+                {% endif %}
+
+                <h3 class="ai-industry-news__card-title-{{ ai_gen_id }}">
+                  <a href="{{ article.url }}" style="color: inherit; text-decoration: none;">
+                    {{ article.title }}
+                  </a>
+                </h3>
+
+                {% if block.settings.show_excerpt and article.excerpt != blank %}
+                  <div class="ai-industry-news__excerpt-{{ ai_gen_id }}">
+                    {{ article.excerpt | strip_html | truncate: 120 }}
+                  </div>
+                {% endif %}
+
+                <a href="{{ article.url }}" class="ai-industry-news__link-{{ ai_gen_id }}">
+                  {{ block.settings.read_more_text }}
+                  <svg class="ai-industry-news__link-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </a>
+              </div>
+            </article>
+          {% endfor %}
+        </div>
+
+        <div class="ai-industry-news__slider-wrapper-{{ ai_gen_id }}">
+          <div class="ai-industry-news__slider-{{ ai_gen_id }}">
+            <div class="ai-industry-news__slider-track-{{ ai_gen_id }}">
+              {% for article in articles limit: article_limit %}
+                <article class="ai-industry-news__slider-slide-{{ ai_gen_id }}">
+                  <div class="ai-industry-news__card-{{ ai_gen_id }}">
+                    <a href="{{ article.url }}" class="ai-industry-news__image-wrapper-{{ ai_gen_id }}">
+                      {% if article.image %}
+                        <img
+                          src="{{ article.image | image_url: width: 800 }}"
+                          alt="{{ article.image.alt | escape }}"
+                          class="ai-industry-news__image-{{ ai_gen_id }}"
+                          loading="lazy"
+                          width="800"
+                          height="480"
+                        >
+                      {% else %}
+                        <div class="ai-industry-news__image-placeholder-{{ ai_gen_id }}">
+                          {{ 'image' | placeholder_svg_tag }}
+                        </div>
+                      {% endif %}
+                      {% if block.settings.show_badge and article.tags.size > 0 %}
+                        <span class="ai-industry-news__badge-{{ ai_gen_id }}">{{ article.tags.first }}</span>
+                      {% endif %}
+                    </a>
+
+                    <div class="ai-industry-news__content-{{ ai_gen_id }}">
+                      {% if block.settings.show_date %}
+                        <div class="ai-industry-news__meta-{{ ai_gen_id }}">
+                          <div class="ai-industry-news__date-{{ ai_gen_id }}">
+                            <svg class="ai-industry-news__date-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                              <line x1="16" y1="2" x2="16" y2="6"></line>
+                              <line x1="8" y1="2" x2="8" y2="6"></line>
+                              <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+                              {{ article.published_at | date: '%B %d, %Y' }}
+                            </time>
+                          </div>
+                        </div>
+                      {% endif %}
+
+                      <h3 class="ai-industry-news__card-title-{{ ai_gen_id }}">
+                        <a href="{{ article.url }}" style="color: inherit; text-decoration: none;">
+                          {{ article.title }}
+                        </a>
+                      </h3>
+
+                      {% if block.settings.show_excerpt and article.excerpt != blank %}
+                        <div class="ai-industry-news__excerpt-{{ ai_gen_id }}">
+                          {{ article.excerpt | strip_html | truncate: 120 }}
+                        </div>
+                      {% endif %}
+
+                      <a href="{{ article.url }}" class="ai-industry-news__link-{{ ai_gen_id }}">
+                        {{ block.settings.read_more_text }}
+                        <svg class="ai-industry-news__link-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <line x1="5" y1="12" x2="19" y2="12"></line>
+                          <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                      </a>
+                    </div>
+                  </div>
+                </article>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        {% if block.settings.show_cta and block.settings.cta_text != blank %}
+          <div class="ai-industry-news__cta-wrapper-mobile-{{ ai_gen_id }}">
+
+
+            <a href="{{ block.settings.blog.url }}" class="ai-industry-news__cta-minimal-{{ ai_gen_id }}">
+  {{ block.settings.cta_text }}
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+       fill="none" stroke="currentColor" stroke-width="2"
+       stroke-linecap="round" stroke-linejoin="round">
+    <line x1="5" y1="12" x2="19" y2="12"/>
+    <polyline points="12 5 19 12 12 19"/>
+  </svg>
+</a>
+
+          </div>
+        {% endif %}
+      {% else %}
+        <div class="ai-industry-news__empty-state-{{ ai_gen_id }}">
+          <p>No articles found in this blog. Add some articles to get started.</p>
+        </div>
+      {% endif %}
+    {% else %}
+      <div class="ai-industry-news__empty-state-{{ ai_gen_id }}">
+        <p>Select a blog to display articles</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Industry news",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section heading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Industry News"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Stay updated with the latest trends and insights"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Subheading size",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Blog"
+    },
+    {
+      "type": "blog",
+      "id": "blog",
+      "label": "Blog"
+    },
+    {
+      "type": "range",
+      "id": "article_count",
+      "min": 4,
+      "max": 12,
+      "step": 1,
+      "label": "Number of articles",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Card settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "Show category badge",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "label": "Show date",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_excerpt",
+      "label": "Show excerpt",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "card_title_size",
+      "min": 16,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Card title size",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "excerpt_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Excerpt size",
+      "default": 14
+    },
+    {
+      "type": "text",
+      "id": "read_more_text",
+      "label": "Read more text",
+      "default": "Read More"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "columns_desktop",
+      "label": "Columns on desktop",
+      "options": [
+        {
+          "value": "4",
+          "label": "4"
+        },
+        {
+          "value": "5",
+          "label": "5"
+        }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "min": 12,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "label": "Grid gap",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "mobile_card_gap",
+      "min": 8,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile card spacing",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "min": 1000,
+      "max": 1600,
+      "step": 100,
+      "unit": "px",
+      "label": "Container width",
+      "default": 1400
+    },
+    {
+      "type": "header",
+      "content": "Call to action"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cta",
+      "label": "Show call to action button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Button text",
+      "default": "View All News"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading",
+      "default": "#222222"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_title_color",
+      "label": "Card title",
+      "default": "#222222"
+    },
+    {
+      "type": "color",
+      "id": "excerpt_color",
+      "label": "Excerpt",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "meta_color",
+      "label": "Date and meta",
+      "default": "#999999"
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "Read more link",
+      "default": "#0066cc"
+    },
+    {
+      "type": "color",
+      "id": "badge_background",
+      "label": "Badge background",
+      "default": "#0066cc"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "Badge text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "cta_background",
+      "label": "Button background",
+      "default": "#0066cc"
+    },
+    {
+      "type": "color",
+      "id": "cta_hover_background",
+      "label": "Button hover background",
+      "default": "#0052a3"
+    },
+    {
+      "type": "color",
+      "id": "cta_text_color",
+      "label": "Button text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Card border radius",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "badge_border_radius",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Badge border radius",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "cta_border_radius",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Button border radius",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 60
+    }
+  ],
+  "presets": [
+    {
+      "name": "Industry news"
+    }
+  ]
+}
+{% endschema %}

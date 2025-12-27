@@ -1,0 +1,829 @@
+.section-header {
+  background: var(--secondary-color);
+  border-bottom: 2px solid #ebf0f5;
+  z-index: 200;
+  
+}
+
+.section-header .nav-item a {
+  font-family: 'Barlow', sans-serif;
+  font-weight: 600; 
+  font-size: 16px; 
+color: #242833;
+  
+
+
+}
+
+/* === Mega Menu Overrides === */
+.nav-item.dropdown.position-static {
+  position: static;
+}
+
+.dropdown-menu.mega-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  width: 99vw;
+  border: none;
+  border-top: 1px solid #eee;
+  border-radius: 0;
+  background: #fff;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  padding: 2rem 0;
+  margin-top: 0 !important;
+}
+
+/* .dropdown:hover > .dropdown-menu {
+  display: block;
+} */
+
+
+/****** Other menu **********/
+
+.navbar-expand-lg .navbar-nav .nav-link{
+  text-transform: uppercase;
+}
+
+.section-header .navbar .dropdown-menu-item:last-child {
+  border-right: 0;
+  padding-right: 0;
+}
+
+.section-header .navbar .dropdown-menu-item h3 {
+  margin: 0;
+  padding: 0;
+  
+  /* Button */
+  font-family: 'Barlow';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 32px;
+  /* identical to box height, or 200% */
+  
+  color: #242833;
+
+  
+}
+
+.section-header .navbar .dropdown-menu-item h3 a {
+  /* Button */
+  font-family: 'Barlow';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 32px;
+  /* identical to box height, or 200% */
+  
+  color: #242833;
+  text-decoration: none !important;
+}
+
+/* .section-header .navbar .dropdown-menu-item h3 a:hover {
+  text-decoration: underline;
+  color: var(--primary-color);
+  
+} */
+
+.section-header .navbar .dropdown-menu-item a, .section-header .navbar .dropdown-menu-item p {
+  font-family: 'Barlow';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 22px;
+  color: #242833;
+  text-decoration: none;
+}
+
+.section-header .navbar .dropdown-menu-item a:hover {
+  text-decoration: underline;
+
+}
+
+.section-header .navbar .dropdown-menu-item ul li {
+  padding-bottom: 5px;
+}
+
+.brands-dropdown-menu .imager img {
+        height: 125px !important;
+   }
+
+.section-header .dropdown-item:focus, .dropdown-item:hover {
+    background-color: transparent !important;
+}
+
+@media(min-width: 993px){
+  .border-right{
+    border-right: 1px solid #EBF0F5;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    height: 100%;
+  }
+
+   .industries-dropdown-menu .border-right{
+    border-right: 1px solid #EBF0F5;
+  }
+
+  .border-right:last-child {
+    border-right: 0;
+  }
+  
+}
+
+
+
+/****** Other End **********/
+
+/********** Product Menu********/
+
+/* .products-dropdown-menu .dropdown-menu-item {
+  flex: 1 1 13.5%;
+  box-sizing: border-box;
+  padding: 0 5px;
+  border: 0px solid #ebf0f5;
+  border-radius: 0 0 0px 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 5px;
+
+}
+
+.products-dropdown-menu .dropdown-menu-item h3 a{
+  color: #0a5ba6 !important;
+}
+
+.products-dropdown-menu .view_all_categories svg{
+  width: 16px;
+  height: 16px;
+}
+
+.products-dropdown-menu .view_all_categories a{
+  text-decoration: none;
+}
+
+.products-dropdown-menu .round-image {
+  border-radius: 50%;
+  width: 180px;
+  height: auto;
+    object-fit: cover;
+}
+ */
+
+
+/***** PPE Menu End **********/
+
+
+.resources-dropdown-menu .dropdown-menu-item {
+    flex: 1 0 auto;
+}
+
+.section-header .icon.icon-caret {
+  height: 8px;
+  margin-left: 5px;
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.section-header .navbar-toggler {
+  background-color: var(--primary-color);
+  border-radius: 0;
+  box-shadow: unset;
+  border: 0;
+}
+.section-header .navbar-light .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30' width='30' height='30'%3E%3Cpath stroke='white' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+ .icosn .header__icon {
+  width: 40px;
+  height: 4.4rem;
+}
+
+.header__icon .svg-wrapper {
+  width: 25px;
+  height: 25px;
+}
+
+.header__icon--cart .svg-wrapper {
+  width: 48px;
+}
+
+.section-header .nav-item.dropdown:hover .icon.icon-caret {
+  transform: rotate(180deg);
+}
+
+
+.menu-slug-sale a{
+  color: #b92234 !important;
+  text-transform: uppercase;
+}
+@media (min-width: 992px) {
+  .navbar-expand-lg .navbar-nav {
+        gap:1.5rem;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1150px) {
+
+  .section-header .navbar .dropdown-menu-item h3 a {
+    font-size: 14px;
+    line-height: 130%;
+  }
+
+  .section-header .navbar .ppe-dropdown-menu .dropdown-menu-item a {
+    font-size: 12px;
+  }
+  
+}
+
+
+@media (max-width: 992px) {
+
+  .dropdown-menu.mega-menu {
+    position: unset;
+    width: 100%;
+    border: none;
+    border-top: 1px solid #eee;
+    border-radius: 0;
+    background: #fff;
+    box-shadow: 0 5px 15px #0000001a;
+    z-index: 1000;
+    padding: 1rem 0;
+    margin-top: 0 !important;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .products-dropdown-menu .dropdown-menu-item {
+    flex: 1 0 auto;
+  }
+
+  .resources-dropdown-menu .dropdown-menu-item {
+    flex: 1 0 auto;
+  }
+
+
+  
+  
+  .section-header .navbar-toggler {
+    background-color: var(--primary-color);
+    border-radius: 0;
+    box-shadow: unset;
+    border: 0;
+  }
+
+  .section-header .navbar-light .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30' width='30' height='30'%3E%3Cpath stroke='white' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+  }
+
+  /* Change to 'X' icon when the navbar is open */
+  .navbar-toggler:not(.collapsed) .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30' width='30' height='30'%3E%3Cpath stroke='white' stroke-width='2' d='M5 5L25 25M25 5L5 25'/%3E%3C/svg%3E");
+  }
+
+  .section-header ul.navbar-nav li {
+    border-bottom: 2px solid #ebf0f5;
+    padding: 10px 5px;
+  }
+
+  .section-header ul.navbar-nav li:last-child {
+    border-bottom: 0;
+  }
+
+  .section-header .nav-item a {
+    position: relative;
+  }
+
+  .section-header .icon.icon-caret {
+    position: absolute;
+    top: 50%;
+    right: 0;
+  }
+
+  .section-header .navbar .dropdown-menu.show {
+    margin-top: 0;
+    display: flex;
+    opacity: 1;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+
+  .section-header .icon-caret.rotated {
+    transform: rotate(180deg); /* Rotate 180 degrees when active */
+  }
+
+  .section-header ul.navbar-nav li ul.list-unstyled li {
+    border-bottom: 0;
+    padding: 0;
+    line-height: 120%;
+    
+  }
+
+  .section-header .navbar-collapse {
+    position: fixed;
+    top: 94px; /* Top position when the header is not sticky */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #fff; /* Darken background */
+    z-index: 1050; /* Make sure it stays on top of other content */
+    overflow-y: auto; /* Enable vertical scrolling */
+  }
+
+  /* When the header is sticky, this class will be added */
+  .section-header .navbar-collapse.sticky-header {
+    top: 57px; /* Top position when the header becomes sticky */
+  }
+
+  .section-header .navbar-nav {
+    width: 95%; /* Make the menu items take full width */
+        margin-left: -600px; /* Move left */
+
+  }
+
+  .section-header .brands-dropdown-menu .dropdown-menu-item {
+    max-width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+ 
+
+  .section-header .navbar .ppe-dropdown-menu {
+    min-width: 100%;
+    padding: 5px;
+    gap: 10px;
+    border: 0;
+    
+  }
+}
+
+@media (max-width:420px){
+   .products-dropdown-menu .dropdown-menu-item {
+    flex: 1 0 47%;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ===== Desktop: announcement arriba, header sticky debajo, sin huecos ===== */
+@media (min-width: 992px){
+  /* La barra va al tope */
+  #shopify-section-announcement-bar,
+  .shopify-section--announcement,
+  .announcement-bar,
+  .ai-announcement-bar{
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1200 !important;
+  }
+
+  /* El header se “pega” justo debajo de la barra (sin fixed) */
+  header.site-header,
+  .section-header{
+    position: sticky !important;
+    top: var(--annc-h, 0px) !important; /* altura de la barra */
+    z-index: 1190 !important;
+    background: #fff;
+    border-bottom: 2px solid #ebf0f5;
+  }
+
+  /* Mega menu sobre el contenido */
+  .dropdown-menu.mega-menu{
+    position: absolute !important;
+    top: 100% !important;
+    z-index: 1210 !important;
+  }
+
+  /* ❌ Nada de padding-top fijo en el body */
+  body{ padding-top: 0 !important; }
+}
+
+/* Mantén el scroll horizontal oculto en rangos intermedios si quieres */
+@media (max-width: 1150px) and (min-width: 992px){
+  header.site-header .navbar-nav{
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  header.site-header .navbar-nav::-webkit-scrollbar{ display:none; }
+}
+
+
+
+
+
+
+
+
+
+/* === SMART MENU DISTRIBUTION FIX === */
+/* Solución que evita compresión visual sin cambiar el font-size */
+
+@media (min-width: 992px) {
+  /* Contenedor principal del header */
+  .section-header .navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+  }
+
+  /* Menú principal: espacio flexible entre logo y iconos */
+  .section-header .navbar-nav {
+    display: flex;
+    flex: 1 1 auto; /* el menú puede adaptarse */
+    justify-content: center;
+    align-items: center;
+    gap: clamp(0.8rem, 2vw, 2.5rem); /* spacing dinámico */
+    transition: gap 0.25s ease-in-out;
+    min-width: 0; /* evita overflow */
+  }
+
+  /* Ítems del menú: no se colapsan */
+  .section-header .nav-item {
+    flex-shrink: 1; /* se acercan suavemente pero no se deforman */
+    min-width: max-content; /* nunca colapsan el texto */
+  }
+
+  /* Texto del menú: estable */
+  .section-header .nav-item a {
+    font-size: 16px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  /* Si se reduce mucho el ancho, el gap se achica automáticamente */
+  @media (max-width: 1350px) {
+    .section-header .navbar-nav {
+      gap: clamp(0.6rem, 1.2vw, 1.5rem);
+    }
+  }
+
+  @media (max-width: 1150px) {
+    .section-header .navbar-nav {
+      gap: 0.5rem;
+    }
+  }
+
+  /* Previene que aparezca scrollbar horizontal */
+  .section-header .navbar-nav::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* === FIX: Cart drawer under header (desktop). SIEMPRE AL FINAL  === */
+header.site-header,
+.section-header {
+  position: relative;
+  z-index: 30 !important; /* header stays on top but not dominant */
+}
+
+#CartDrawer,
+.cart-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 9999 !important; /* cart always above header */
+}
+.cart-drawer {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* === 🧠 SMART MEGA MENU TRANSITION — smooth in, instant out === */
+
+.dropdown-menu.mega-menu {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition:
+    opacity 0.25s ease-out,
+    transform 0.25s ease-out;
+  pointer-events: none;
+}
+
+/* Al hacer hover o abrir, aparece rápido y limpio */
+.nav-item.dropdown:hover > .dropdown-menu.mega-menu,
+.nav-item.dropdown.show > .dropdown-menu.mega-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* ✅ Cierra instantáneamente cuando se pierde el hover */
+.nav-item.dropdown:not(:hover) > .dropdown-menu.mega-menu {
+  transition: none !important;
+}
+
+
+
+
+/* 1️⃣ El SVG interno de Shopify desaparece completamente */
+#cart-icon-bubble .svg-wrapper {
+  position: relative;
+}
+#cart-icon-bubble .svg-wrapper svg {
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+/* 2️⃣ Tu ícono personalizado fijo y reactivo */
+#cart-icon-bubble .svg-wrapper::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: no-repeat center/contain
+    url('data:image/svg+xml;utf8,\
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">\
+<path d="M4 6h2l2.5 9h9L20 8H7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>\
+<circle cx="10" cy="19" r="1.5" fill="currentColor"/>\
+<circle cx="17" cy="19" r="1.5" fill="currentColor"/>\
+</svg>');
+  color: inherit;
+  pointer-events: none;
+}
+
+/* 3️⃣ Hover dinámico */
+.header__icon:hover {
+  color: #0d6ba6;
+  transform: translateY(-1px);
+}
+
+/* 4️⃣ Uniformiza tamaño y alineación */
+#cart-icon-bubble {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* --- FIX: evitar movimiento del carrito cuando se actualiza el bubble --- */
+.header__icon--cart {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  line-height: 0; /* evita salto por altura de línea */
+}
+
+/* Fija el SVG en el centro exacto */
+.header__icon--cart svg {
+  width: 26px;
+  height: 26px;
+  display: block;
+  transform: translateY(1px); /* pequeño ajuste óptico */
+}
+
+/* Asegura que el bubble no afecte layout */
+.header__icon--cart .cart-count-bubble {
+  position: absolute !important;
+  top: -4px !important;
+  right: -6px !important;
+  background-color: #0d6ba6 !important; /* 💙 fija el azul desde el primer frame */
+  color: #fff !important;
+  border-radius: 999px;
+  min-width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  transition: transform 0.2s ease !important; /* ❌ elimina fade de color */
+  will-change: transform;
+}
+
+
+/* (Opcional) si notas un pequeño shift vertical al reinyectar */
+#cart-icon-bubble {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  width: 30px;
+}
+
+
+
+
+
+
+
+
+
+/* === SEARCH ICON — Forzado de tamaño y grosor === */
+.header__icon--search {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 32px !important;   /* marco fijo del botón */
+  height: 32px !important;
+  line-height: 0;
+}
+
+.header__icon--search svg {
+  width: 20px !important;   /* 🔧 tamaño real del ícono */
+  height: 20px !important;
+  min-width: 20px !important;
+  min-height: 20px !important;
+  stroke: currentColor !important;
+  stroke-width: 1 !important; /* 💪 más grueso */
+  fill: none !important;
+  display: block !important;
+  transform: translateY(1px); /* ajuste visual fino */
+  transition: transform 0.2s ease, stroke 0.2s ease;
+}
+
+.header__icon--search:hover svg {
+  stroke: #0d6ba6 !important;
+  transform: translateY(-1px) scale(1.05);
+}
+
+
+
+/* === 🧽 Limpieza visual del header === */
+header.site-header,
+.section-header,
+.navbar {
+  border-bottom: none !important;
+  box-shadow: none !important;
+  background-color: #fff !important;
+  margin-bottom: 0 !important;
+}
+
+/* Quita la línea azul que Shopify mete al hacer scroll */
+header.site-header.scrolled {
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+/* Elimina cualquier pseudo-elemento decorativo */
+header.site-header::after,
+header.site-header::before {
+  content: none !important;
+}
+
+/* Corrige separación con el contenido */
+main, .shopify-section {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+
+
+
+
+
+
+
+/* === ✨ Sombra sutil en el borde inferior del header === */
+header.site-header,
+.section-header,
+.navbar {
+  box-shadow: 0 0px 0px rgba(0, 0, 0, 0.06) !important;
+  border-bottom: none !important;
+  background-color: #fff !important;
+  transition: box-shadow 0.25s ease;
+}
+
+/* Al hacer scroll, la sombra se intensifica un poquito */
+header.site-header.scrolled {
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08) !important;
+}
+
+
+/* === 🚀 Asegura que la sombra del header quede por encima === */
+header.site-header,
+.section-header,
+.navbar {
+  position: relative;
+  z-index: 9999 !important; /* eleva el header */
+}
+
+/* Evita que la siguiente sección se superponga */
+main,
+.shopify-section:first-of-type {
+  position: relative;
+  z-index: 1;
+}
+
+
+
+/* ===== SOLO UN HEADER EN MOBILE: usar m-header y ocultar el viejo ===== */
+@media (max-width: 991.98px){
+  /* Oculta todo el contenido del header viejo */
+  header.site-header,
+  .shopify-section.section-header {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+  }
+
+  /* La barra de anuncios va arriba */
+  #shopify-section-announcement-bar,
+  .announcement-bar,
+  .ai-announcement-bar,
+  [data-section-type="announcement-bar"]{
+    position: fixed !important;
+    top: 0 !important; left: 0; right: 0; width: 100%;
+    z-index: 10000 !important;
+  }
+
+  /* Tu m-header inmediatamente debajo de la barra */
+  :root{ --annc-h: 52px; } /* ajusta si tu bar es más alta/baja */
+  .m-header{
+    position: sticky !important;
+    top: var(--annc-h) !important;
+    z-index: 9000 !important;
+  }
+
+  /* Empuja el contenido de la página debajo de la barra fija */
+  body{ padding-top: var(--annc-h) !important; }
+}
+
+
+
+
+
+
+
+
+
+

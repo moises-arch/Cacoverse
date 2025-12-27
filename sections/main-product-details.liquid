@@ -1,0 +1,257 @@
+<!-- Product Section Details Meta Fields -->
+{% style %}
+  #shopify-section-{{ section.id }}{
+    padding-top: {{ section.settings.padding_top_desktop }};
+    padding-bottom: {{ section.settings.padding_bottom_desktop }};
+     background-image: url( "{{ section.settings.bg_image | img_url : 'master'  }}" );
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  @media( max-width: 767px){
+     #shopify-section-{{ section.id }}{
+      padding-top: {{ section.settings.padding_top_mobile }};
+      padding-bottom: {{ section.settings.padding_bottom_mobile }};
+    }
+  }
+{% endstyle %}
+
+{% if product.metafields.custom.product_details_title and product.metafields.custom.product_detail_description %}
+  <div class="meta-fields-details">
+    <div class="page-width container-fluid">
+      <div class="section-product-details-title-description text-center ">
+        <h2 class="sh-60 mb-4">{{ product.metafields.custom.product_details_title }}</h2>
+        <p class="sp-16">{{ product.metafields.custom.product_detail_description }}</p>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% if product.metafields.custom.product_details_video %}
+  <!-- Product Video -->
+  {{ 'company-video.css' | asset_url | stylesheet_tag }}
+  <div class="company-video company-video-inner">
+    <div class="video-background">
+      <video autoplay muted loop playsinline>
+        <source src="{{ product.metafields.custom.product_details_video  }}" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </div>
+{% endif %}
+
+{% if product.metafields.custom.product_details_sub_title %}
+  <div class="meta-fields-details">
+    <div class="page-width container-fluid">
+      <div class="row">
+        <div class="col-lg-6">
+          <h2 class="sh-48 mb-3">{{ product.metafields.custom.product_details_sub_title }}</h2>
+          {{ product.metafields.custom.product_details_sub_details | metafield_tag }}
+        </div>
+        <div class="col-lg-6 text-center">
+          <img
+            src="{{ product.metafields.custom.product_details_image  | img_url : 'master' }}"
+            alt="{{  product.metafields.custom.product_details_image.alt }}"
+            width="{{ product.metafields.custom.product_details_image.width }}"
+            height="{{ product.metafields.custom.product_details_image.height }}"
+            loading="lazy"
+            class="img-fluid"
+          >
+        </div>
+      </div>
+    </div>
+{% endif %}
+
+{% if product.metafields.custom.product_details_product_gallery %}
+  <!-- product Gallery -->
+  <div class="meta-fields-details">
+    <div class="product-image-gallery container-fluid mx-auto">
+      <div class="row">
+        {% for gallery in product.metafields.custom.product_details_product_gallery.value %}
+          <div class="col-lg-3 col-md-4 col-sm-6 p-1">
+            <img
+              src="{{ gallery | img_url : 'master' }}"
+              alt="{{  gallery.alt }}"
+              width="{{ gallery.width }}"
+              height="{{ gallery.height }}"
+              loading="lazy"
+              class="img-fluid"
+            >
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% if product.metafields.custom.product_details_features %}
+  <!-- product Features List -->
+  <div class="meta-fields-details">
+    <div class="product-features page-width container-fluid">
+      <h2 class="sh-48 mb-5">Features</h2>
+      <ul class="list-unstyled two-column-list">
+        {% for feature in product.metafields.custom.product_details_features.value %}
+          <li>
+            <img
+              src="{{ 'feature-icon.png' | asset_img_url : 'master' }}"
+              alt="feature Icon"
+              width="32"
+              height="32"
+              loading="lazy"
+              class="img-fluid "
+            >
+            <span>{{ feature }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+{% endif %}
+
+{% if product.metafields.custom.product_details_features_image %}
+  <!-- product Feature Images -->
+  <div class="meta-fields-details">
+    <div class="product-features page-width container-fluid">
+      <div class="row">
+        {% for feature_image in product.metafields.custom.product_details_features_image.value %}
+          <div class="col-lg-6 text-center">
+            <img
+              src="{{ feature_image | img_url : '707x' }}"
+              alt="feature Icon"
+              width="{{ feature_image.width }}"
+              height="{{ feature_image.height }}"
+              loading="lazy"
+              class="img-fluid "
+            >
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% if product.metafields.custom.product_details_specifications_name %}
+  <!-- product Specifications List -->
+  <div class="meta-fields-details">
+    <div class="product-specfication page-width container-fluid">
+      <h2 class="sh-48 mb-5">Specifications</h2>
+      <div class="row">
+        {% assign specification_values = product.metafields.custom.product_details_specification_values.value %}
+        {% for specification in product.metafields.custom.product_details_specifications_name.value %}
+          <div class="col-md-6 col-lg-4 p-2">
+            <div class="spec-item ">
+              <span>{{ specification }}</span>
+              <span>{{ specification_values[forloop.index0] }}</span>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% if product.metafields.custom.product_details_download_title %}
+  <!-- product download documents List -->
+  {{ 'download-resources.css' | asset_url | stylesheet_tag }}
+  <div class="download-resources">
+    <div class="page-width container-fluid ">
+      <div class="row">
+        <div class="col-xl-3">
+          <h2 class="sh-48 mb-4">Download Documents</h2>
+        </div>
+        <div class="col-xl-9">
+          <ul>
+            {% assign document_links = product.metafields.custom.custom.product_details_download_file.value %}
+            {% for document in product.metafields.custom.product_details_download_title.value %}
+              <li>
+                <span
+                  ><a
+                    class="sp-24"
+                    href="{% if document_links[forloop.index0] != blank %}{{ document_links[forloop.index0] }}{% else %}#{% endif %}"
+                  >
+                    {{- document -}}
+                  </a></span
+                >
+                <span
+                  ><a href="{% if document_links[forloop.index0] != blank %}{{ document_links[forloop.index0] }}{% else %}#{% endif %}">
+                    <img
+                      src="{{  'PDF.png' | asset_img_url : 'master' }}"
+                      width="40"
+                      height="40"
+                      alt="pdf icon download"
+                      class="img-fluid"
+                      loading="lazy"
+                    > </a
+                ></span>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% if product.metafields.custom.product_details_buy_logo.value %}
+  <!-- product Features List -->
+  <div class="meta-fields-details">
+    <div class="product-buy-link page-width container-fluid">
+      <h2 class="sh-48 mb-5 text-center">Buy this product at</h2>
+      <ul class="list-unstyled d-flex gap-5 flex-wrap">
+        {% assign buy_link = product.metafields.custom.custom.product_details_buy_link.value %}
+        {% for buy in product.metafields.custom.product_details_buy_logo.value %}
+          <li>
+            <a href="{% if buy_link[forloop.index0] != blank %}{{ buy_link[forloop.index0] }}{% else %}#{% endif %}"
+              ><img
+                src="{{ buy | img_url : 'master' }}"
+                alt="{{ buy.alt }}"
+                width="{{ buy.width }}"
+                height="{{ buy.height }}"
+                loading="lazy"
+                class="img-fluid "
+            ></a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Product Info",
+  "class": "product-info",
+   "settings": [
+    {
+      "type": "text",
+      "id": "padding_top_desktop",
+      "label": "Padding Desktop Top",
+      "default": "80px"
+    },
+     {
+      "type": "text",
+      "id": "padding_bottom_desktop",
+      "label": "Padding Desktop Bottom",
+      "default": "80px"
+    },
+     {
+      "type": "text",
+      "id": "padding_top_mobile",
+      "label": "Padding Mobile Top",
+      "default": "40px"
+    },
+     {
+      "type": "text",
+      "id": "padding_bottom_mobile",
+      "label": "Padding Mobile Bottom",
+      "default": "40px"
+    },
+
+  ],
+   "presets": [
+    {
+      "name": "Product Info",
+    }
+  ]
+}
+{% endschema %}

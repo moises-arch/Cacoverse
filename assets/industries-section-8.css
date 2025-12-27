@@ -1,0 +1,26 @@
+.industries-section-8 .stay-protected-inner {
+    min-height: 296px;
+    background: #FFFFFF;
+    padding: 40px;
+    max-width: 80rem;
+    margin: 0 auto;
+}
+
+.industries-section-8 .stay-protected-inner .sh-32 {
+   
+    max-width: 33rem;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.industries-section-8 .p-btn, .industries-section-8 .s-btn {
+    padding: 16px 32px;
+    min-height: 56px;
+    font-weight: 600;
+}
+
+.template-industries-food-process .industries-section-8 .stay-protected-inner .sh-32 {
+    max-width: 30rem;
+    margin: 0 auto;
+    text-align: center;
+}

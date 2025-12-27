@@ -1,0 +1,94 @@
+{% doc %}
+  @prompt
+    white space area, it's not working
+
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-whitespace-{{ ai_gen_id }} {
+    width: 100%;
+    background-color: {{ block.settings.background_color }};
+    {% if block.settings.background_gradient != blank %}
+      background: {{ block.settings.background_gradient }};
+    {% endif %}
+    height: {{ block.settings.height_desktop }}px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-whitespace-{{ ai_gen_id }} {
+      height: {{ block.settings.height_mobile }}px;
+    }
+  }
+
+  @media screen and (min-width: 750px) and (max-width: 989px) {
+    .ai-whitespace-{{ ai_gen_id }} {
+      height: {{ block.settings.height_tablet }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-whitespace-{{ ai_gen_id }}" {{ block.shopify_attributes }}></div>
+
+{% schema %}
+{
+  "name": "White space area",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "height_desktop",
+      "min": 10,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "label": "Height on desktop",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "height_tablet",
+      "min": 10,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "label": "Height on tablet",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "height_mobile",
+      "min": 10,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "label": "Height on mobile",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient"
+    }
+  ],
+  "presets": [
+    {
+      "name": "White space area"
+    }
+  ],
+  "tag": null
+}
+{% endschema %}

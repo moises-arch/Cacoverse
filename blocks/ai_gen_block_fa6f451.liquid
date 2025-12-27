@@ -1,0 +1,721 @@
+{% doc %}
+  @prompt
+    genera un breadcrumb a la izquierda y un navegador para adelanta y para atras con flecha que navegue por la categoria del producto en cuestión en orden.   generame ajustes para los elementos, diseño limpio., agrega ajuste para encajar  hasta 1500px de ancho  y  hazlo friendly con moviles,    quiero que muestra solo el icono de flacha minimalista.  agrega opción para desactivar o no el navegador de productos, agrega otra opción a la izquierda para colocar el sku del producto que se esta mostrando, dinamicamente, cuando cambio de variante que se actualice., el sku a la derecha, y debe cambiar cuando selecciono cualquier variante, no mostrar los iconos de navegación en mobile , agrega una opción para colocar a la izquierda html  tambien que se pueda apagar, el html a la derecha 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% liquid
+  assign current_product = product
+  assign current_collection = collection
+
+  if current_collection == blank
+    for col in current_product.collections
+      assign current_collection = col
+      break
+    endfor
+  endif
+
+  assign collection_products = current_collection.products
+  assign current_index = -1
+  assign prev_product = null
+  assign next_product = null
+
+  for prod in collection_products
+    if prod.id == current_product.id
+      assign current_index = forloop.index0
+      break
+    endif
+  endfor
+
+  if current_index > 0
+    assign prev_index = current_index | minus: 1
+    assign prev_product = collection_products[prev_index]
+  endif
+
+  assign next_index = current_index | plus: 1
+  if next_index < collection_products.size
+    assign next_product = collection_products[next_index]
+  endif
+%}
+
+{% style %}
+  .ai-breadcrumb-nav-wrapper-{{ ai_gen_id }} {
+    width: 100%;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-breadcrumb-nav-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: {{ block.settings.padding_vertical }}px {{ block.settings.padding_horizontal }}px;
+    gap: 20px;
+    max-width: 1500px;
+    margin: 0 auto;
+  }
+
+  .ai-breadcrumb-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .ai-breadcrumb-link-{{ ai_gen_id }} {
+    color: {{ block.settings.link_color }};
+    text-decoration: none;
+    font-size: {{ block.settings.font_size }}px;
+    transition: color 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .ai-breadcrumb-link-{{ ai_gen_id }}:hover {
+    color: {{ block.settings.link_hover_color }};
+  }
+
+  .ai-breadcrumb-separator-{{ ai_gen_id }} {
+    color: {{ block.settings.separator_color }};
+    font-size: {{ block.settings.font_size }}px;
+    user-select: none;
+  }
+
+  .ai-breadcrumb-current-{{ ai_gen_id }} {
+    color: {{ block.settings.current_color }};
+    font-size: {{ block.settings.font_size }}px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ai-breadcrumb-right-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .ai-custom-html-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+  }
+
+  .ai-product-sku-{{ ai_gen_id }} {
+    color: {{ block.settings.sku_color }};
+    font-size: {{ block.settings.sku_font_size }}px;
+    font-weight: {{ block.settings.sku_font_weight }};
+    white-space: nowrap;
+    padding: {{ block.settings.sku_padding_vertical }}px {{ block.settings.sku_padding_horizontal }}px;
+    background-color: {{ block.settings.sku_bg_color }};
+    border-radius: {{ block.settings.sku_border_radius }}px;
+  }
+
+  .ai-product-nav-{{ ai_gen_id }} {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .ai-nav-button-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: {{ block.settings.button_size }}px;
+    height: {{ block.settings.button_size }}px;
+    background-color: {{ block.settings.button_bg_color }};
+    border: {{ block.settings.button_border_width }}px solid {{ block.settings.button_border_color }};
+    border-radius: {{ block.settings.button_border_radius }}px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    color: {{ block.settings.button_icon_color }};
+    padding: 0;
+  }
+
+  .ai-nav-button-{{ ai_gen_id }}:hover:not(.ai-nav-button-disabled-{{ ai_gen_id }}) {
+    background-color: {{ block.settings.button_hover_bg_color }};
+    color: {{ block.settings.button_hover_icon_color }};
+    border-color: {{ block.settings.button_hover_border_color }};
+  }
+
+  .ai-nav-button-disabled-{{ ai_gen_id }} {
+    opacity: 0.3;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .ai-nav-button-{{ ai_gen_id }} svg {
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    stroke-width: {{ block.settings.icon_stroke_width }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-breadcrumb-nav-{{ ai_gen_id }} {
+      padding: {{ block.settings.padding_vertical_mobile }}px {{ block.settings.padding_horizontal_mobile }}px;
+      flex-wrap: wrap;
+    }
+
+    .ai-breadcrumb-{{ ai_gen_id }} {
+      order: 1;
+      width: 100%;
+    }
+
+    .ai-breadcrumb-right-{{ ai_gen_id }} {
+      order: 2;
+      width: 100%;
+      justify-content: flex-end;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .ai-custom-html-{{ ai_gen_id }} {
+      width: 100%;
+      order: 3;
+    }
+
+    .ai-product-sku-{{ ai_gen_id }} {
+      font-size: {{ block.settings.sku_font_size_mobile }}px;
+      padding: {{ block.settings.sku_padding_vertical_mobile }}px {{ block.settings.sku_padding_horizontal_mobile }}px;
+    }
+
+    .ai-breadcrumb-link-{{ ai_gen_id }},
+    .ai-breadcrumb-separator-{{ ai_gen_id }},
+    .ai-breadcrumb-current-{{ ai_gen_id }} {
+      font-size: {{ block.settings.font_size_mobile }}px;
+    }
+
+    .ai-product-nav-{{ ai_gen_id }} {
+      display: none;
+    }
+  }
+{% endstyle %}
+
+<product-breadcrumb-nav-{{ ai_gen_id }} class="ai-breadcrumb-nav-wrapper-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-breadcrumb-nav-{{ ai_gen_id }}">
+    <nav class="ai-breadcrumb-{{ ai_gen_id }}" aria-label="Breadcrumb">
+      <a href="/" class="ai-breadcrumb-link-{{ ai_gen_id }}">{{ block.settings.home_text }}</a>
+      <span class="ai-breadcrumb-separator-{{ ai_gen_id }}" aria-hidden="true">{{ block.settings.separator }}</span>
+      
+      {% if current_collection %}
+        <a href="{{ current_collection.url }}" class="ai-breadcrumb-link-{{ ai_gen_id }}">{{ current_collection.title }}</a>
+        <span class="ai-breadcrumb-separator-{{ ai_gen_id }}" aria-hidden="true">{{ block.settings.separator }}</span>
+      {% endif %}
+      
+      <span class="ai-breadcrumb-current-{{ ai_gen_id }}" aria-current="page">{{ current_product.title }}</span>
+    </nav>
+
+    <div class="ai-breadcrumb-right-{{ ai_gen_id }}">
+      {% if block.settings.show_sku %}
+        <div class="ai-product-sku-{{ ai_gen_id }}" data-product-sku>
+          {% if current_product.selected_or_first_available_variant.sku != blank %}
+            {{ block.settings.sku_label }}{{ current_product.selected_or_first_available_variant.sku }}
+          {% else %}
+            {{ block.settings.sku_label }}{{ block.settings.sku_placeholder }}
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if block.settings.show_custom_html and block.settings.custom_html != blank %}
+        <div class="ai-custom-html-{{ ai_gen_id }}">
+          {{ block.settings.custom_html }}
+        </div>
+      {% endif %}
+
+      {% if block.settings.show_navigation %}
+        <div class="ai-product-nav-{{ ai_gen_id }}">
+          {% if prev_product %}
+            <a 
+              href="{{ prev_product.url }}" 
+              class="ai-nav-button-{{ ai_gen_id }}"
+              aria-label="Producto anterior"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </a>
+          {% else %}
+            <span class="ai-nav-button-{{ ai_gen_id }} ai-nav-button-disabled-{{ ai_gen_id }}" aria-label="Producto anterior no disponible">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </span>
+          {% endif %}
+
+          {% if next_product %}
+            <a 
+              href="{{ next_product.url }}" 
+              class="ai-nav-button-{{ ai_gen_id }}"
+              aria-label="Producto siguiente"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </a>
+          {% else %}
+            <span class="ai-nav-button-{{ ai_gen_id }} ai-nav-button-disabled-{{ ai_gen_id }}" aria-label="Producto siguiente no disponible">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </span>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</product-breadcrumb-nav-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class ProductBreadcrumbNav{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.skuElement = this.querySelector('[data-product-sku]');
+        this.skuLabel = '{{ block.settings.sku_label }}';
+        this.skuPlaceholder = '{{ block.settings.sku_placeholder }}';
+      }
+
+      connectedCallback() {
+        if (this.skuElement) {
+          this.setupVariantListener();
+        }
+      }
+
+      setupVariantListener() {
+        const productForm = document.querySelector('product-form');
+        if (productForm) {
+          productForm.addEventListener('variant-change', (event) => {
+            if (event.detail && event.detail.variant) {
+              this.updateSKU(event.detail.variant.sku);
+            }
+          });
+        }
+
+        const variantSelects = document.querySelector('variant-selects');
+        if (variantSelects) {
+          variantSelects.addEventListener('change', () => {
+            const currentVariant = variantSelects.currentVariant;
+            if (currentVariant) {
+              this.updateSKU(currentVariant.sku);
+            }
+          });
+        }
+
+        const variantRadios = document.querySelector('variant-radios');
+        if (variantRadios) {
+          variantRadios.addEventListener('change', () => {
+            const currentVariant = variantRadios.currentVariant;
+            if (currentVariant) {
+              this.updateSKU(currentVariant.sku);
+            }
+          });
+        }
+
+        document.addEventListener('change', (event) => {
+          if (event.target.matches('input[name="id"]') || 
+              event.target.matches('select[name="id"]')) {
+            const variantId = event.target.value;
+            this.updateSKUFromVariantId(variantId);
+          }
+        });
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const variantId = urlParams.get('variant');
+        if (variantId) {
+          this.updateSKUFromVariantId(variantId);
+        }
+      }
+
+      updateSKUFromVariantId(variantId) {
+        const scriptTag = document.querySelector('script[type="application/json"][data-product-json]');
+        if (!scriptTag) return;
+
+        try {
+          const product = JSON.parse(scriptTag.textContent);
+          const variant = product.variants.find(v => v.id === parseInt(variantId));
+          if (variant) {
+            this.updateSKU(variant.sku);
+          }
+        } catch (e) {
+          console.error('Error parsing product JSON:', e);
+        }
+      }
+
+      updateSKU(sku) {
+        if (this.skuElement) {
+          if (sku && sku.trim() !== '') {
+            this.skuElement.textContent = this.skuLabel + sku;
+          } else {
+            this.skuElement.textContent = this.skuLabel + this.skuPlaceholder;
+          }
+        }
+      }
+    }
+
+    customElements.define('product-breadcrumb-nav-{{ ai_gen_id }}', ProductBreadcrumbNav{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Breadcrumb con navegación",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "HTML personalizado"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_custom_html",
+      "label": "Mostrar HTML personalizado",
+      "default": false
+    },
+    {
+      "type": "html",
+      "id": "custom_html",
+      "label": "HTML personalizado",
+      "info": "Agrega HTML personalizado a la derecha del breadcrumb"
+    },
+    {
+      "type": "header",
+      "content": "SKU del producto"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sku",
+      "label": "Mostrar SKU",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "sku_label",
+      "label": "Etiqueta SKU",
+      "default": "SKU: "
+    },
+    {
+      "type": "text",
+      "id": "sku_placeholder",
+      "label": "Texto cuando no hay SKU",
+      "default": "N/A"
+    },
+    {
+      "type": "range",
+      "id": "sku_font_size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Tamaño de fuente",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "sku_font_size_mobile",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Tamaño de fuente móvil",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "sku_font_weight",
+      "label": "Peso de fuente",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medio"
+        },
+        {
+          "value": "600",
+          "label": "Semi negrita"
+        },
+        {
+          "value": "700",
+          "label": "Negrita"
+        }
+      ],
+      "default": "500"
+    },
+    {
+      "type": "color",
+      "id": "sku_color",
+      "label": "Color de texto",
+      "default": "#222222"
+    },
+    {
+      "type": "color",
+      "id": "sku_bg_color",
+      "label": "Color de fondo",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "range",
+      "id": "sku_padding_vertical",
+      "min": 0,
+      "max": 16,
+      "step": 2,
+      "unit": "px",
+      "label": "Espaciado vertical",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "sku_padding_horizontal",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Espaciado horizontal",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "sku_padding_vertical_mobile",
+      "min": 0,
+      "max": 12,
+      "step": 2,
+      "unit": "px",
+      "label": "Espaciado vertical móvil",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "sku_padding_horizontal_mobile",
+      "min": 0,
+      "max": 16,
+      "step": 2,
+      "unit": "px",
+      "label": "Espaciado horizontal móvil",
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "sku_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Radio de borde",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Breadcrumb"
+    },
+    {
+      "type": "text",
+      "id": "home_text",
+      "label": "Texto de inicio",
+      "default": "Inicio"
+    },
+    {
+      "type": "text",
+      "id": "separator",
+      "label": "Separador",
+      "default": "/"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Tamaño de fuente",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "font_size_mobile",
+      "min": 11,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Tamaño de fuente móvil",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "Color de enlaces",
+      "default": "#222222"
+    },
+    {
+      "type": "color",
+      "id": "link_hover_color",
+      "label": "Color de enlaces al pasar",
+      "default": "#0a5ba6"
+    },
+    {
+      "type": "color",
+      "id": "separator_color",
+      "label": "Color del separador",
+      "default": "#999999"
+    },
+    {
+      "type": "color",
+      "id": "current_color",
+      "label": "Color del producto actual",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Navegación de productos"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_navigation",
+      "label": "Mostrar navegación",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "button_size",
+      "min": 30,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Tamaño de botones",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 14,
+      "max": 28,
+      "step": 2,
+      "unit": "px",
+      "label": "Tamaño de icono",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "icon_stroke_width",
+      "min": 1,
+      "max": 3,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Grosor de línea",
+      "default": 1.5
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Fondo de botón",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_bg_color",
+      "label": "Fondo de botón al pasar",
+      "default": "#f2f2f2"
+    },
+    {
+      "type": "color",
+      "id": "button_icon_color",
+      "label": "Color de icono",
+      "default": "#222222"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_icon_color",
+      "label": "Color de icono al pasar",
+      "default": "#0a5ba6"
+    },
+    {
+      "type": "color",
+      "id": "button_border_color",
+      "label": "Color de borde",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_border_color",
+      "label": "Color de borde al pasar",
+      "default": "#cccccc"
+    },
+    {
+      "type": "range",
+      "id": "button_border_width",
+      "min": 0,
+      "max": 3,
+      "step": 1,
+      "unit": "px",
+      "label": "Ancho de borde",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Radio de borde",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Diseño"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Color de fondo",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_vertical",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "label": "Espaciado vertical",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Espaciado horizontal",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_vertical_mobile",
+      "min": 0,
+      "max": 32,
+      "step": 4,
+      "unit": "px",
+      "label": "Espaciado vertical móvil",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal_mobile",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "label": "Espaciado horizontal móvil",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "Breadcrumb con navegación"
+    }
+  ]
+}
+{% endschema %}

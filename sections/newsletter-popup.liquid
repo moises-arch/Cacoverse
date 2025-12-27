@@ -1,0 +1,194 @@
+{% comment %}
+Newsletter Popup — Caco America
+(Final fixed schema + Hide 2–5 days + Working Copy + Editor controls)
+{% endcomment %}
+
+<section
+  id="nl-popup-{{ section.id }}"
+  class="nlp"
+  data-delay="{{ section.settings.delay_ms | default: 3000 }}"
+  data-dev="{{ section.settings.development_mode }}"
+  data-hide-days="{{ section.settings.hide_days | default: 3 }}"
+  style="
+    --nlp-width: {{ section.settings.width_px | default: 520 }}px;
+    --nlp-bottom-offset: {{ section.settings.bottom_offset | default: 24 }}px;
+    --nlp-radius: {{ section.settings.border_radius | default: 18 }}px;
+    --nlp-bg: {{ section.settings.bg_color | default: '#ffffff' }};
+    --nlp-btn: {{ section.settings.button_bg | default: '#1760a2' }};
+    --nlp-btn-text: {{ section.settings.button_text_color | default: '#ffffff' }};
+    --close-size: {{ section.settings.x_size | default: 66 }}px;
+    --close-offset: {{ section.settings.x_lift | default: 36 }}px;
+    --close-bg: {{ section.settings.x_bg | default: '#ffffff' }};
+    --close-color: {{ section.settings.x_color | default: '#000000' }};
+  "
+>
+  <iframe name="nlp_iframe_{{ section.id }}" style="display:none"></iframe>
+
+  <div class="nlp__bar" hidden>
+    <button class="nlp__close" type="button" aria-label="Close">×</button>
+
+    <div class="nlp__content">
+      <h2 class="nlp__title">{{ section.settings.title | default: "Join the Caco America Community" }}</h2>
+
+      <form class="nlp__form" method="post" action="/contact" target="nlp_iframe_{{ section.id }}">
+        <input type="hidden" name="form_type" value="customer">
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        <input class="nlp__input" type="email" name="contact[email]" required placeholder="{{ section.settings.input_placeholder | default: 'you@brand.com' }}">
+        <button class="nlp__btn" type="submit">{{ section.settings.button_text | default: "Subscribe" }}</button>
+      </form>
+
+      <div class="nlp__thanks" hidden>
+        <div class="nlp__thanks-title">{{ section.settings.success_title | default: "Thank you for subscribing!" }}</div>
+        <div class="nlp__thanks-text">{{ section.settings.success_text | default: "You’ve unlocked 10% OFF your first order." }}</div>
+        <div class="nlp__code">
+          <code id="nlp-code-text">{{ section.settings.discount_code | default: "WELCOME10" }}</code>
+          <button type="button" class="nlp__copy">Copy</button>
+        </div>
+      </div>
+
+      <p class="nlp__fineprint">Join the <strong>Caco America Community</strong> and get <strong>10% off</strong> your first order.</p>
+    </div>
+  </div>
+
+  <style>
+    .nlp__bar{position:fixed;left:50%;bottom:var(--nlp-bottom-offset);transform:translateX(-50%) translateY(40px);
+      width:min(var(--nlp-width),calc(100vw - 24px));z-index:9999;opacity:0;animation:fadeUp .5s ease forwards}
+    @keyframes fadeUp{from{transform:translateX(-50%) translateY(40px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}
+    .nlp__content{background:var(--nlp-bg);border-radius:var(--nlp-radius);box-shadow:0 8px 24px rgba(0,0,0,.25);
+      padding:22px 18px;position:relative}
+    .nlp__close{position:absolute;top:calc(-1 * var(--close-offset));left:50%;transform:translateX(-50%);
+      width:var(--close-size);height:var(--close-size);border:none;border-radius:50%;background:var(--close-bg);
+      color:var(--close-color);display:flex;align-items:center;justify-content:center;
+      font-size:calc(var(--close-size)*0.65);cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,.25);transition:all .25s ease}
+    .nlp__close:hover{background:#115EA4;color:#fff;transform:translateX(-50%) scale(1.08)}
+
+    .nlp__title{text-align:center;font-weight:800;font-size:22px;margin-bottom:12px}
+    .nlp__input{width:100%;height:48px;border:1px solid rgba(0,0,0,.15);border-radius:14px;padding:0 14px;font-size:15px}
+
+
+
+
+    .nlp__btn{margin-top:10px;width:100%;height:52px;border:none;border-radius:9999px;background:var(--nlp-btn);
+
+
+      color:var(--nlp-btn-text);font-weight:700;font-size:16px;cursor:pointer;transition:.2s}
+
+
+
+      
+    .nlp__btn:hover{filter:brightness(1.1)}
+
+
+
+
+    .nlp__fineprint{color:#6b7280;font-size:14px;text-align:center;margin-top:12px}
+    .nlp__fineprint strong{font-weight:700}
+    .nlp__thanks{text-align:center}
+    .nlp__code{margin-top:12px;display:flex;gap:8px;justify-content:center;align-items:center}
+    .nlp__code code{padding:8px 12px;border-radius:10px;background:rgba(255,255,255,.15);font-weight:700}
+
+
+
+
+.nlp__copy {
+  border:none;
+  border-radius:10px;
+  padding:8px 12px;
+  cursor:pointer;
+  background:#00427d;
+  color:#fff;
+  font-weight:700;
+}
+
+
+
+
+
+
+    .nlp__bar.is-success .nlp__content{background:#115EA4;color:#fff;text-align:center}
+    .nlp__bar.is-success .nlp__content *{color:#fff}
+    .nlp__bar.is-success .nlp__title,.nlp__bar.is-success .nlp__fineprint{display:none!important}
+    .nlp__bar.is-success .nlp__thanks-title{font-size:26px;font-weight:800}
+    .nlp__bar.is-success .nlp__thanks-text{font-size:18px;margin-top:6px}
+  </style>
+
+  <script>
+  window.addEventListener('load',()=>{
+    const root=document.getElementById('nl-popup-{{ section.id }}');
+    if(!root)return;
+    const bar=root.querySelector('.nlp__bar'),
+          form=root.querySelector('.nlp__form'),
+          thanks=root.querySelector('.nlp__thanks'),
+          close=root.querySelector('.nlp__close'),
+          copy=root.querySelector('.nlp__copy'),
+          code=root.querySelector('#nlp-code-text');
+    const delay=parseInt(root.dataset.delay||'3000',10),
+          dev=root.dataset.dev==='true',
+          hideDays=parseInt(root.dataset.hideDays||'3',10),
+          key='nlp_hide_until_{{ section.id }}';
+
+    const hiddenUntil=()=>parseInt(localStorage.getItem(key)||'0',10);
+    const setHide=days=>localStorage.setItem(key,String(Date.now()+days*24*60*60*1000));
+    if(dev||Date.now()>hiddenUntil()){setTimeout(()=>bar.hidden=false,delay);}
+
+    close.addEventListener('click',()=>{if(!dev)setHide(hideDays);bar.remove();});
+
+    form.addEventListener('submit',e=>{
+      e.preventDefault();
+      HTMLFormElement.prototype.submit.call(form);
+      form.hidden=true;thanks.hidden=false;bar.classList.add('is-success');
+    });
+
+    if(copy&&code){
+      copy.addEventListener('click',e=>{
+        e.preventDefault();
+        const txt=(code.textContent||'').trim();
+        if(!txt)return;
+        const ok=()=>{copy.textContent='Copied!';setTimeout(()=>copy.textContent='Copy',1200);};
+        (async()=>{
+          try{
+            if(navigator.clipboard&&window.isSecureContext){
+              await navigator.clipboard.writeText(txt);ok();return;
+            }
+          }catch(_){}
+          try{
+            const ta=document.createElement('textarea');
+            ta.value=txt;ta.style.position='fixed';ta.style.top='-9999px';
+            document.body.appendChild(ta);ta.focus();ta.select();
+            document.execCommand('copy');document.body.removeChild(ta);ok();
+          }catch(_){window.prompt('Copy this code:',txt);}
+        })();
+      });
+    }
+  });
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Newsletter Popup",
+  "settings": [
+    { "type": "checkbox", "id": "development_mode", "label": "Development mode (always show)", "default": false },
+    { "type": "range", "id": "hide_days", "label": "Hide after close (days)", "min": 2, "max": 5, "step": 1, "default": 3 },
+
+    { "type": "text", "id": "title", "label": "Title", "default": "Join the Caco America Community" },
+    { "type": "text", "id": "input_placeholder", "label": "Placeholder", "default": "you@brand.com" },
+    { "type": "text", "id": "button_text", "label": "Button text", "default": "Subscribe" },
+    { "type": "text", "id": "success_title", "label": "Success title", "default": "Thank you for subscribing!" },
+    { "type": "text", "id": "success_text", "label": "Success text", "default": "You’ve unlocked 10% OFF your first order." },
+    { "type": "text", "id": "discount_code", "label": "Discount code", "default": "WELCOME10" },
+
+    { "type": "range", "id": "delay_ms", "label": "Delay (ms)", "min": 0, "max": 9000, "step": 500, "default": 3000 },
+    { "type": "range", "id": "width_px", "label": "Width (px)", "min": 280, "max": 700, "step": 20, "default": 520 },
+    { "type": "range", "id": "bottom_offset", "label": "Bottom offset (px)", "min": 8, "max": 200, "step": 4, "default": 24 },
+    { "type": "range", "id": "border_radius", "label": "Card radius (px)", "min": 8, "max": 28, "step": 2, "default": 18 },
+
+    { "type": "header", "content": "Close (×) Controls" },
+    { "type": "range", "id": "x_size", "label": "X button size (px)", "min": 40, "max": 100, "step": 2, "default": 66 },
+    { "type": "range", "id": "x_lift", "label": "X vertical lift (px)", "min": 0, "max": 80, "step": 2, "default": 36 },
+    { "type": "color", "id": "x_bg", "label": "X background", "default": "#ffffff" },
+    { "type": "color", "id": "x_color", "label": "X color", "default": "#000000" }
+  ],
+  "presets": [{ "name": "Newsletter Popup" }]
+}
+{% endschema %}

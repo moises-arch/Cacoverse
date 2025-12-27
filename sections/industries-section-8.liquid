@@ -1,0 +1,110 @@
+{% style %}
+  #shopify-section-{{ section.id }}{
+   padding-top: {{ section.settings.padding_top_desktop }};
+    padding-bottom: {{ section.settings.padding_bottom_desktop }};
+    background-image: url( "{{ section.settings.bg_image | img_url : '2000x'  }}" );
+    background-repeat: no-repeat;
+    background-position: left center;
+    position: relative;
+  }
+
+
+  @media( max-width: 767px){
+     #shopify-section-{{ section.id }}{
+      padding-top: {{ section.settings.padding_top_mobile }};
+      padding-bottom: {{ section.settings.padding_bottom_mobile }};
+    }
+  }
+{% endstyle %}
+{{ 'industries-section-8.css' | asset_url | stylesheet_tag }}
+<div class="page-width container-fluid">
+  <div class="stay-protected-inner d-flex align-items-center justify-content-center flex-wrap flex-column gap-3">
+    <h1 class="sh-32">{{ section.settings.heading | replace : '|' , '<br>' }}</h1>
+
+    {% if section.blocks.size > 0 %}
+      <div class="hero-banner-buttons d-flex align-items-center justify-content-center gap-2 flex-wrap ">
+      {% for block in section.blocks %}
+        <a class="{% if block.settings.is_outline == false %} p-btn {% else %} s-btn {% endif %}" href="{{ block.settings.link }}"><span>{{ block.settings.link_label }}</span></a>
+      {% endfor %}
+      </div>
+    {% endif %}
+    <p class="sh-16 mt-3">{{ section.settings.sub_heading | replace : '|' , '&emsp;|&emsp;' }}</p>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Industries Section 8",
+  "class": "industries-section-8",
+"settings": [
+     {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background Image",
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+    },
+   {
+      "type": "text",
+      "id": "sub_heading",
+      "label": "Sub Heading",
+    },
+    {
+      "type": "text",
+      "id": "padding_top_desktop",
+      "label": "Padding Desktop Top",
+      "default": "80px"
+    },
+     {
+      "type": "text",
+      "id": "padding_bottom_desktop",
+      "label": "Padding Desktop Bottom",
+      "default": "80px"
+    },
+     {
+      "type": "text",
+      "id": "padding_top_mobile",
+      "label": "Padding Mobile Top",
+      "default": "40px"
+    },
+     {
+      "type": "text",
+      "id": "padding_bottom_mobile",
+      "label": "Padding Mobile Bottom",
+      "default": "40px"
+    },
+
+  ],
+   "blocks": [
+    {
+      "type": "buttons",
+      "name": "BUttons",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link",
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Link Label"
+        },
+        {
+          "type": "checkbox",
+          "id": "is_outline",
+          "label": "Is outline",
+        },
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Industries Section 8",
+    }
+  ]
+}
+{% endschema %}

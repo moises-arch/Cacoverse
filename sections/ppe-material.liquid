@@ -1,0 +1,333 @@
+{% style %}
+  #shopify-section-{{ section.id }}{
+    padding-top: {{ section.settings.padding_top_desktop }};
+    padding-bottom: {{ section.settings.padding_bottom_desktop }};
+  }
+
+
+  @media( max-width: 767px){
+     #shopify-section-{{ section.id }}{
+      padding-top: {{ section.settings.padding_top_mobile }};
+      padding-bottom: {{ section.settings.padding_bottom_mobile }};
+    }
+  }
+{% endstyle %}
+
+{{ 'ppe-material.css' | asset_url | stylesheet_tag }}
+<div class="page-width container-fluid">
+  <div class="safety-standards-inner">
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" id="ppe-material-tabs" role="tablist">
+      {% assign ppe_materials = section.settings.categories | split: '|' %}
+      {% for ppe in ppe_materials %}
+        <li class="nav-item" role="presentation">
+          <a
+            class="nav-link {% if forloop.index == 1 %} active {% endif %}"
+            id="{{- ppe | handleize | downcase -}}-tab"
+            data-bs-toggle="tab"
+            href="#{{- ppe | handleize | downcase -}}"
+            role="tab"
+            aria-controls="{{- ppe | handleize | downcase -}}"
+            aria-selected="true"
+          >
+            {{- ppe | replace: '-', ' ' -}}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+    <!-- Nav tabs End -->
+
+    <!-- Tabs Contents -->
+    <div class="tab-content" id="ppe-material-tabs-content">
+      {% for ppe in ppe_materials %}
+        <div
+          class="tab-pane fade {% if forloop.index == 1 %} show active {% endif %}"
+          id="{{- ppe | handleize | downcase -}}"
+          role="tabpanel"
+          aria-labelledby="{{- ppe | handleize | downcase -}}-tab"
+        >
+          {% assign my_ppe = ppe | handleize | downcase %}
+          {% if my_ppe == 'gloves' %}
+            <div class="row">
+              <div class="col-md-12"><h2 class="sh-48 mb-3">Gloves</h2></div>
+            </div>
+            <div class="row">
+              {% for block in section.blocks %}
+                {%- case block.type -%}
+                  {%- when 'gloves' -%}
+                    <div class="col-md-6 {{ block.type }}-section-{{ forloop.index }}">
+                      {% render 'ppe-material-gloves', block: block %}
+                    </div>
+                {% endcase %}
+              {% endfor %}
+            </div>
+          {% elsif my_ppe == 'protective-coveralls' %}
+            <div class="row">
+              {% for block in section.blocks %}
+                {%- case block.type -%}
+                  {%- when 'protective-coveralls' -%}
+                    {% render 'ppe-material-protective-coveralls', block: block %}
+                {% endcase %}
+              {% endfor %}
+            </div>
+          {% elsif my_ppe == 'sms-spunbound-meltbound-spunbound' %}
+            <div class="row">
+              {% for block in section.blocks %}
+                {%- case block.type -%}
+                  {%- when 'sms-spunbound-meltbound' -%}
+                    {% render 'ppe-material-protective-coveralls', block: block %}
+                {% endcase %}
+              {% endfor %}
+            </div>
+          {% elsif my_ppe == 'microporous' %}
+            <div class="row">
+              {% for block in section.blocks %}
+                {%- case block.type -%}
+                  {%- when 'microporous' -%}
+                    {% render 'ppe-material-microporous', block: block %}
+                {% endcase %}
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+    <!-- Tabs  End -->
+  </div>
+</div>
+
+{% style %}
+  #ppe-material-tabs-content .gloves-section-1 h4:first-of-type:before {
+    content: "";
+    background: url(' {{ 'nitrile-gloves.png' | asset_img_url : 'master' }}');
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    position: relative;
+    top: 10px;
+    margin-right: 15px;
+  }
+
+  #ppe-material-tabs-content .gloves-section-1 ul {
+      padding-left: 4.5rem;
+  }
+
+  #ppe-material-tabs-content .gloves-section-1 h4:nth-of-type(2):before {
+     content: "";
+    background: url(' {{ 'polyurethane-gloves.png' | asset_img_url : 'master' }}');
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    position: relative;
+    top: 10px;
+    margin-right: 15px;
+
+  }
+
+   #ppe-material-tabs-content .gloves-section-1 h4:nth-of-type(3):before {
+     content: "";
+    background: url(' {{ 'latex-gloves.png' | asset_img_url : 'master' }}');
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    position: relative;
+    top: 10px;
+    margin-right: 15px;
+
+  }
+
+    #ppe-material-tabs-content .gloves-section-2 h4:first-of-type:before {
+      content: "";
+      background: url(' {{ 'cow-grain-leather-gloves.png' | asset_img_url : 'master' }}');
+      width: 40px;
+      height: 40px;
+      display: inline-block;
+      position: relative;
+      top: 10px;
+      margin-right: 15px;
+
+    }
+
+     #ppe-material-tabs-content .gloves-section-2 ul {
+        padding-left: 4.5rem;
+    }
+
+   #ppe-material-tabs-content .gloves-section-2 h4:nth-of-type(2):before {
+      content: "";
+      background: url(' {{ 'cow-split-leather-gloves.png' | asset_img_url : 'master' }}');
+      width: 40px;
+      height: 40px;
+      display: inline-block;
+      position: relative;
+      top: 10px;
+      margin-right: 15px;
+
+    }
+
+
+
+
+
+
+{% endstyle %}
+
+
+
+
+
+
+
+
+{% schema %}
+{
+    "name": "PPE Material",
+    "class": "ppe-material",
+    "disabled_on": {
+        "groups": [
+            "header",
+            "footer"
+        ]
+    },
+    "settings": [
+        {
+            "type": "text",
+            "id": "categories",
+            "label": "Categories add by pipline seperated",
+            "default": "Gloves|Protective Coveralls|SMS (Spunbound, Meltbound, Spunbound)|Microporous"
+        },
+        {
+            "type": "text",
+            "id": "padding_top_desktop",
+            "label": "Padding Desktop Top",
+            "default": "80px"
+        },
+        {
+            "type": "text",
+            "id": "padding_bottom_desktop",
+            "label": "Padding Desktop Bottom",
+            "default": "80px"
+        },
+        {
+            "type": "text",
+            "id": "padding_top_mobile",
+            "label": "Padding Mobile Top",
+            "default": "40px"
+        },
+        {
+            "type": "text",
+            "id": "padding_bottom_mobile",
+            "label": "Padding Mobile Bottom",
+            "default": "40px"
+        },
+
+    ],
+    "blocks": [
+        {
+            "type": "gloves",
+            "name": "Gloves",
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image",
+
+                },
+                {
+                    "type": "text",
+                    "id": "heading",
+                    "label": "Heading",
+
+                },
+                {
+                    "type": "richtext",
+                    "id": "description",
+                    "label": "Sub Heading",
+
+                },
+
+            ]
+        },
+       {
+        "type": "sms-spunbound-meltbound",
+        "name": "Sms Spunbound Meltbound",
+        "settings": [
+            {
+                "type": "image_picker",
+                "id": "image",
+                "label": "Image",
+
+            },
+            {
+                "type": "text",
+                "id": "heading",
+                "label": "Heading",
+
+            },
+            {
+                "type": "richtext",
+                "id": "description",
+                "label": "Sub Heading",
+
+            },
+
+        ]
+      },
+      {
+        "type": "protective-coveralls",
+        "name": "Protective Coveralls",
+        "settings": [
+            {
+                "type": "image_picker",
+                "id": "image",
+                "label": "Image",
+
+            },
+            {
+                "type": "text",
+                "id": "heading",
+                "label": "Heading",
+
+            },
+            {
+                "type": "richtext",
+                "id": "description",
+                "label": "Sub Heading",
+
+            },
+
+        ]
+      },
+      {
+        "type": "microporous",
+        "name": "Microporous",
+        "settings": [
+            {
+                "type": "image_picker",
+                "id": "image",
+                "label": "Image",
+
+            },
+            {
+                "type": "text",
+                "id": "heading",
+                "label": "Heading",
+
+            },
+            {
+                "type": "richtext",
+                "id": "description",
+                "label": "Sub Heading",
+
+            },
+
+        ]
+      },
+    ],
+    "presets": [
+        {
+            "name": "PPE Material",
+
+        }
+    ]
+}
+{% endschema %}

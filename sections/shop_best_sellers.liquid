@@ -1,0 +1,215 @@
+{% style %}
+  #shopify-section-{{ section.id }}{
+    padding-top: {{ section.settings.padding_top_desktop }};
+    padding-bottom: {{ section.settings.padding_bottom_desktop }};
+  }
+
+  @media( max-width: 767px){
+     #shopify-section-{{ section.id }}{
+      padding-top: {{ section.settings.padding_top_mobile }};
+      padding-bottom: {{ section.settings.padding_bottom_mobile }};
+    }
+  }
+{% endstyle %}
+{{ 'shop_best_sellers.css' | asset_url | stylesheet_tag }}
+{{ 'main-product.css' | asset_url | stylesheet_tag }}
+{{ 'trending_products.css' | asset_url | stylesheet_tag }}
+<div class="page-width container-fluid">
+
+  <div class="row">
+      <div class="col-md-12 mb-5">
+        <h2 class="sh-48">{{ section.settings.heading }}</h2>
+      </div>
+    </div>
+
+  <div class="shop-best-sellers-inner">
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" id="shop-best-sellers-tabs" role="tablist">
+      {% for block in section.blocks %}
+        <li class="nav-item" role="presentation">
+          <a
+            class="nav-link {% if forloop.index == 1 %} active {% endif %}"
+            id="{%- if block.settings.show_type == 'no' -%}{{- block.settings.collection_id.handle | escape | downcase | handle -}}-tab{%- else -%}{{- block.settings.type_filter | escape | downcase | handle -}}-tab{%- endif -%}"
+            data-bs-toggle="tab"
+            href="#{%- if block.settings.show_type == 'no' -%}{{- block.settings.collection_id.handle | escape | downcase | handle -}}{%- else -%}{{- block.settings.type_filter | escape | downcase | handle -}}{%- endif -%}"
+            role="tab"
+            aria-controls="{%- if block.settings.show_type == 'no' -%}{{- block.settings.collection_id.handle | escape | downcase | handle -}}{%- else -%}{{- block.settings.type_filter | escape | downcase | handle -}}{%- endif -%}"
+            aria-selected="true"
+          >
+            {%- if block.settings.show_type == 'no' -%}
+              {{- block.settings.collection_id.title -}}
+            {%- else -%}
+              {{- block.settings.type_filter -}}
+            {%- endif -%}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+    <!-- Nav tabs End -->
+
+    <!-- Tabs Contents -->
+    <div class="tab-content" id="shop-best-sellers-tabs-content">
+      {% for block in section.blocks %}
+        <div
+          class="tab-pane fade {% if forloop.index == 1 %} show active {% endif %}"
+          id="{%- if block.settings.show_type == 'no' -%}{{- block.settings.collection_id.handle | escape | downcase | handle -}}{%- else -%}{{- block.settings.type_filter | escape | downcase | handle -}}{%- endif -%}"
+          role="tabpanel"
+          aria-labelledby="{%- if block.settings.show_type == 'no' -%}{{- block.settings.collection_id.handle | escape | downcase | handle -}}-tab{%- else -%}{{- block.settings.type_filter | escape | downcase | handle -}}-tab{%- endif -%}"
+        >
+          <div class="row">
+            {%- if block.settings.show_type == 'yes' -%}
+              {% for product in block.settings.collection_id.products %}
+                {% if product.type == block.settings.type_filter and product.tags contains 'best-seller' %}
+                  <div class="col-sm-6 col-md-3">
+                    {% render 'card-product', product: product %}
+                  </div>
+                {% endif %}
+              {% endfor %}
+            {% else %}
+              {% for product in block.settings.collection_id.products %}
+                {% if product.tags contains 'best-seller' %}
+                  <div class="col-sm-6 col-md-3">
+                    {% render 'card-product', product: product %}
+                  </div>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+
+      <script>
+        // Create a map for each product's color options and images
+        const productColorImageMap = {};
+        {% for block in section.blocks %}
+           {% for product in block.settings.collection_id.products %}
+            productColorImageMap["{{ product.id }}"] = {
+              {% for variant in product.variants %}
+                "{{ variant.option1 | downcase }}": "{{ variant.featured_image | img_url: '342x' }}"{% unless forloop.last %},{% endunless %}
+              {% endfor %}
+            };
+             {% endfor %}
+        {% endfor %}
+      
+        // Listen for color changes on each product
+        document.querySelectorAll('.color-radio').forEach(radio => {
+          radio.addEventListener('change', function () {
+            const productId = this.dataset.productId; // Get product ID
+            const selectedColor = this.value; // Get the selected color
+            const newImageSrc = productColorImageMap[productId][selectedColor]; // Get the corresponding image URL
+      
+            // Check if the newImageSrc is a placeholder image
+            if (newImageSrc && !newImageSrc.includes('/assets/no-image')) {
+              // Update the image for the selected product
+              const productImage = document.querySelector(`.card-media img[data-product-id="${productId}"]`);
+              const loader = document.querySelector(`.loader[data-product-id="${productId}"]`);
+              
+              if (productImage) {
+                // Show loader
+                loader.style.display = 'block';
+                productImage.style.opacity = 0;
+      
+                // Change the image source
+                productImage.src = newImageSrc;
+      
+                // Wait for the image to load
+                productImage.onload = () => {
+                  loader.style.display = 'none'; // Hide loader
+                  productImage.style.opacity = 1; // Show the image
+                };
+      
+                // Handle image load failure
+                productImage.onerror = () => {
+                  loader.style.display = 'none'; // Hide loader
+                  console.error(`Failed to load image for color: ${selectedColor}`);
+                };
+              }
+            } else {
+              console.log(`Placeholder image detected for color: ${selectedColor} of product ID: ${productId}. Image update skipped.`);
+            }
+          });
+        });
+      </script>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Shop Best Sellers",
+  "class": "shop-best-sellers",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+     {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+       "default" : "Shop Our Best Sellers"
+    },
+    {
+      "type": "text",
+      "id": "padding_top_desktop",
+      "label": "Padding Desktop Top",
+      "default": "80px"
+    },
+     {
+      "type": "text",
+      "id": "padding_bottom_desktop",
+      "label": "Padding Desktop Bottom",
+      "default": "80px"
+    },
+     {
+      "type": "text",
+      "id": "padding_top_mobile",
+      "label": "Padding Mobile Top",
+      "default": "40px"
+    },
+     {
+      "type": "text",
+      "id": "padding_bottom_mobile",
+      "label": "Padding Mobile Bottom",
+      "default": "40px"
+    },
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category Name",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection_id",
+          "label": "Select the Category",
+        },
+        {
+          "type": "select",
+          "id": "show_type",
+          "options": [
+        	{
+        	  "value": "yes",
+        	  "label": "Yes"
+        	},
+        	{
+        	  "value": "no",
+        	  "label": "No"
+        	},
+          ],
+          "default": "no",
+          "label": "Show Category Product Type"
+        },
+         {
+          "type": "text",
+          "id": "type_filter",
+          "label": "Product Type Filter Ex. Safety Helmet",
+        },
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop Best Sellers",
+    }
+  ]
+}
+{% endschema %}

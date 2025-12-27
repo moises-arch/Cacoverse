@@ -1,0 +1,31 @@
+.product-smart-bar{
+
+  max-width: 60rem;
+  margin: 0 auto;
+  min-height: 5.5rem;
+  background: #fff;
+}
+
+.f--1_25rem{
+  
+  font-family: 'Barlow';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  color: #222222;
+}
+
+@media(max-width: 767px){
+
+  .product-smart-bar{
+     min-height: 6.5rem;
+  }
+
+  .f--1_25rem{
+    font-size: 14px;
+    line-height: 18px;
+    color: #222222;
+  }
+ 
+}

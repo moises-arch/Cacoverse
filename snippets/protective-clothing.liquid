@@ -1,0 +1,126 @@
+<!-- section 1 -->
+<div class="row section-1">
+  <div class="col-lg-6 d-flex align-items-center flex-column justify-content-center">
+    <h2 class="sh-48 mb-40 text-center">{{ block.settings.heading }}</h2>
+    {{ block.settings.description }}
+    <img
+      class="img-fluid"
+      src="{{ block.settings.image1 | img_url : '637x' }}"
+      loading="lazy"
+      width="{{ block.settings.image1.width }}"
+      height="{{ block.settings.image1.height }}"
+      alt="{{ block.settings.image1.alt }}"
+    >
+  </div>
+  <div class="col-lg-6 text-center">
+    <img
+      class="img-fluid"
+      src="{{ block.settings.image | img_url : '710x' }}"
+      loading="lazy"
+      width="{{ block.settings.image.width }}"
+      height="{{ block.settings.image.height }}"
+      alt="{{ block.settings.image.alt }}"
+    >
+  </div>
+</div>
+<div class="row mt-80 ">
+  <div class="col-md-12">
+    <h3>{{ block.settings.heading1 }}</h3>
+  </div>
+</div>
+<div class="row section-1-1 mb-80">
+  <div class="col-md-6 ul-1">
+    {{ block.settings.description1 }}
+  </div>
+  <div class="col-md-6 ul-2">
+    {{ block.settings.description2 }}
+  </div>
+</div>
+
+<div class="bb"></div>
+
+<!-- section 2 -->
+<div class="row section-2 mt-80">
+  <div class="col-md-4 text-center">
+    <img
+      class="img-fluid"
+      src="{{ block.settings.image2 | img_url : '462x' }}"
+      loading="lazy"
+      width="{{ block.settings.image2.width }}"
+      height="{{ block.settings.image2.height }}"
+      alt="{{ block.settings.image2.alt }}"
+    >
+  </div>
+  <div class="col-md-8 d-flex flex-column justify-content-center">
+    <h2 class="sh-48">{{ block.settings.heading2 }}</h2>
+    {{ block.settings.description3 }}
+  </div>
+</div>
+
+<div class="row section-1-1 section-2 mt-80">
+  <div class="col-md-6 ul-3">
+    {{ block.settings.description4 }}
+  </div>
+  <div class="col-md-6 ul-3">
+    {{ block.settings.description5 }}
+  </div>
+</div>
+<div class="row section-2 mt-80 mb-3">
+  <div class="col-12">
+    <h3>{{ block.settings.heading3 }}</h3>
+  </div>
+</div>
+<div class="row section-2 mb-80">
+  <div class="col-md-6 text-center text-md-start">
+    <img
+      class="img-fluid mb-3"
+      src="{{ block.settings.image3 | img_url : '340x' }}"
+      loading="lazy"
+      width="{{ block.settings.image3.width }}"
+      height="{{ block.settings.image3.height }}"
+      alt="{{ block.settings.image3.alt }}"
+    >
+    {{ block.settings.description6 }}
+  </div>
+  <div class="col-md-6 text-center text-md-start">
+    <img
+      class="img-fluid"
+      src="{{ block.settings.image4 | img_url : '340x' }}"
+      loading="lazy"
+      width="{{ block.settings.image4.width }}"
+      height="{{ block.settings.image4.height }}"
+      alt="{{ block.settings.image4.alt }}"
+    >
+    {{ block.settings.description7 }}
+  </div>
+</div>
+
+{% style %}
+  #protective-clothing .ul-1 ul li:first-child::before {
+    background-image: url("{{ 'class-0.png' | asset_img_url : 'original' }}");
+  }
+
+   #protective-clothing .ul-1 ul li:nth-child(2)::before {
+    background-image: url("{{ 'class-3.png' | asset_img_url : 'original' }}");
+  }
+
+   #protective-clothing .ul-1 ul li:nth-child(3)::before {
+    background-image: url("{{ 'class-2.png' | asset_img_url : 'original' }}");
+  }
+
+   #protective-clothing .ul-2 ul li:first-child::before {
+    background-image: url("{{ 'class-1.png' | asset_img_url : 'original' }}");
+  }
+
+   #protective-clothing .ul-2 ul li:nth-child(2)::before {
+    background-image: url("{{ 'class-R.png' | asset_img_url : 'original' }}");
+  }
+
+   #protective-clothing .ul-2 ul li:nth-child(3)::before {
+    background-image: url("{{ 'class-E.png' | asset_img_url : 'original' }}");
+  }
+
+   #protective-clothing .ul-3 ul li::before {
+    background-image: url("{{ 'tick.png' | asset_img_url : 'original' }}");
+  }
+{% endstyle %}

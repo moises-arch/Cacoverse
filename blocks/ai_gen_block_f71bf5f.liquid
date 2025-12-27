@@ -1,0 +1,338 @@
+{% comment %}
+HELMET COMPARE — stable & working
+- Admin selects up to 6 products.
+- Robust product resolve: section.settings.product_X → product ref or handle → all_products[handle].
+- Image fix: uses prod.featured_image with image_url (reliable across themes).
+- Traits: up to 8 per product (enable, label, score 0–10, icon).
+- Bars: gray track; green if score >= threshold, orange otherwise.
+- "Compare" button filters to only checked cards (toggles to "Remove filter").
+{% endcomment %}
+
+{% assign hc_id = section.id | replace:'_','' | downcase %}
+
+{% style %}
+  .hc-{{ hc_id }}{padding:40px 20px;background:{{ section.settings.bg }};}
+  .hc-{{ hc_id }} .hc-inner{max-width:1200px;margin:0 auto;}
+  .hc-{{ hc_id }} .hc-head{text-align:center;margin-bottom:28px;}
+  .hc-{{ hc_id }} .hc-title{margin:0 0 6px;color:{{ section.settings.text }};font-size:clamp(22px,3vw,34px);font-weight:700;}
+  .hc-{{ hc_id }} .hc-sub{color:{{ section.settings.text }};opacity:.8;}
+
+  .hc-{{ hc_id }} .hc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin:16px 0 26px;}
+  .hc-{{ hc_id }} .hc-card{background:{{ section.settings.card_bg }};border-radius:10px;padding:18px;position:relative;box-shadow:0 4px 10px rgba(0,0,0,.04);}
+  .hc-{{ hc_id }} .hc-card--hidden{display:none;}
+  .hc-{{ hc_id }} .hc-check{position:absolute;top:14px;right:14px;z-index:2;}
+  .hc-{{ hc_id }} .hc-check input{width:20px;height:20px;accent-color:{{ section.settings.accent }};cursor:pointer;}
+
+  .hc-{{ hc_id }} .hc-img{width:100%;display:block;aspect-ratio:4/3;object-fit:contain;border-radius:6px;background:#f3f4f6;margin-bottom:10px;}
+  .hc-{{ hc_id }} .hc-title-sm{margin:6px 0 6px;color:{{ section.settings.text }};font-weight:600;font-size:16px;}
+  .hc-{{ hc_id }} .hc-price{color:{{ section.settings.text }};opacity:.9;margin-bottom:10px;}
+
+  .hc-{{ hc_id }} .hc-traits{display:flex;flex-direction:column;gap:10px;}
+  .hc-{{ hc_id }} .hc-trait{display:flex;align-items:center;gap:8px;}
+  .hc-{{ hc_id }} .hc-icon{width:18px;height:18px;color:{{ section.settings.accent }};flex:0 0 18px;}
+  .hc-{{ hc_id }} .hc-label{min-width:80px;font-size:12px;color:{{ section.settings.text }};flex:0 0 auto;}
+  .hc-{{ hc_id }} .hc-track{position:relative;flex:1;height:8px;background:#d1d5db;border-radius:4px;overflow:hidden;}
+  .hc-{{ hc_id }} .hc-fill{position:absolute;inset:0 auto 0 0;width:0;background:#10b981;transition:width .3s ease,background-color .2s ease;}
+  .hc-{{ hc_id }} .hc-fill--orange{background:#f97316;}
+  .hc-{{ hc_id }} .hc-val{position:absolute;right:6px;top:-18px;font-size:10px;color:{{ section.settings.text }};opacity:.75;}
+
+  .hc-{{ hc_id }} .hc-btn{display:block;margin:0 auto;padding:16px 44px;background:#f97316;color:#fff;border:none;border-radius:10px;font-weight:800;letter-spacing:.4px;cursor:pointer;}
+  .hc-{{ hc_id }} .hc-btn:disabled{opacity:.5;cursor:not-allowed;}
+  .hc-{{ hc_id }} .hc-btn:not(:disabled):hover{background:#ea580c;}
+
+  @media (max-width:768px){
+    .hc-{{ hc_id }} .hc-label{min-width:60px;font-size:11px;}
+    .hc-{{ hc_id }} .hc-btn{padding:14px 36px;}
+  }
+{% endstyle %}
+
+<div class="hc-{{ hc_id }}">
+  <div class="hc-inner">
+    {% if section.settings.title != blank %}
+      <div class="hc-head">
+        <h2 class="hc-title">{{ section.settings.title }}</h2>
+        {% if section.settings.sub != blank %}<div class="hc-sub">{{ section.settings.sub }}</div>{% endif %}
+      </div>
+    {% endif %}
+
+    <div class="hc-grid">
+      {% for i in (1..6) %}
+        {% assign key = 'product_' | append: i %}
+        {% assign ref = section.settings[key] %}
+        {% assign handle = '' %}
+        {% if ref %}
+          {% if ref.handle %}
+            {% assign handle = ref.handle %}
+          {% else %}
+            {% assign handle = ref %}
+          {% endif %}
+        {% endif %}
+
+        {% assign prod = all_products[handle] %}
+        {% if prod %}
+          {% liquid
+            assign price_money = prod.price_min | default: prod.selected_or_first_available_variant.price
+            assign img = prod.featured_image
+          %}
+          <div class="hc-card" data-prod-index="{{ i }}">
+            <div class="hc-check">
+              <input type="checkbox" class="hc-cb" data-idx="{{ i }}">
+            </div>
+
+            {% if img %}
+              <img
+                class="hc-img"
+                src="{{ img | image_url: width: 900 }}"
+                srcset="{{ img | image_url: width: 450 }} 450w, {{ img | image_url: width: 700 }} 700w, {{ img | image_url: width: 900 }} 900w"
+                sizes="(max-width:768px) 100vw, 33vw"
+                alt="{{ img.alt | default: prod.title | escape }}"
+                loading="lazy">
+            {% else %}
+              <div class="hc-img">{{ 'product-1' | placeholder_svg_tag }}</div>
+            {% endif %}
+
+            <div class="hc-title-sm">{{ prod.title }}</div>
+            {% unless section.settings.hide_price or price_money == blank %}
+              <div class="hc-price">{{ price_money | money }}</div>
+            {% endunless %}
+
+            <div class="hc-traits">
+              {% for n in (1..8) %}
+                {% assign en_id = 'p' | append:i | append:'_t' | append:n | append:'_enable' %}
+                {% assign lb_id = 'p' | append:i | append:'_t' | append:n | append:'_label'  %}
+                {% assign sc_id = 'p' | append:i | append:'_t' | append:n | append:'_score'  %}
+                {% assign ic_id = 'p' | append:i | append:'_t' | append:n | append:'_icon'   %}
+
+                {% assign enabled = section.settings[en_id] %}
+                {% assign label   = section.settings[lb_id] %}
+                {% assign score   = section.settings[sc_id] | default: 0 %}
+                {% assign iconkey = section.settings[ic_id] | default: 'dot' %}
+                {% assign pct = score | times: 100 | divided_by: section.settings.max_scale %}
+
+                {% if enabled and label != blank %}
+                  <div class="hc-trait">
+                    {% case iconkey %}
+                      {% when 'sun' %}<svg class="hc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>
+                      {% when 'shield' %}<svg class="hc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                      {% when 'flame' %}<svg class="hc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>
+                      {% when 'wind'  %}<svg class="hc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg>
+                      {% when 'heart' %}<svg class="hc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                      {% when 'wrench'%}<svg class="hc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                      {% when 'feather'%}<svg class="hc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                      {% when 'star'  %}<svg class="hc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 2 3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+                      {% else %}<svg class="hc-icon" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg>
+                    {% endcase %}
+
+                    <span class="hc-label">{{ label }}</span>
+                    <div class="hc-track" role="meter" aria-valuemin="0" aria-valuemax="{{ section.settings.max_scale }}" aria-valuenow="{{ score }}">
+                      {% if score >= section.settings.threshold %}
+                        <span class="hc-fill" style="width: {{ pct | at_most: 100 }}%;"></span>
+                      {% else %}
+                        <span class="hc-fill hc-fill--orange" style="width: {{ pct | at_most: 100 }}%;"></span>
+                      {% endif %}
+                      <span class="hc-val">{{ score }}</span>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <button class="hc-btn hc-btn-{{ hc_id }}" disabled>Compare</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  const root = document.currentScript.closest('.hc-{{ hc_id }}');
+  if(!root) return;
+
+  const btn = root.querySelector('.hc-btn-{{ hc_id }}');
+  const cbs = root.querySelectorAll('.hc-cb');
+  let selected = new Set();
+  let filterOn = false;
+
+  function updateBtn(){
+    if(!filterOn){
+      btn.textContent = 'Compare';
+      btn.disabled = selected.size < 2;
+    }else{
+      btn.textContent = 'Remove filter';
+      btn.disabled = false;
+    }
+  }
+
+  cbs.forEach(cb=>{
+    cb.addEventListener('change', ()=>{
+      const idx = Number(cb.dataset.idx || -1);
+      if(cb.checked) selected.add(idx); else selected.delete(idx);
+      if(filterOn){ toggleFilter(true); }
+      updateBtn();
+    });
+  });
+
+  function toggleFilter(keepState){
+    const cards = root.querySelectorAll('.hc-card');
+    if(!keepState){ filterOn = !filterOn; }
+    if(filterOn){
+      cards.forEach(card=>{
+        const cb = card.querySelector('.hc-cb');
+        const idx = Number(cb?.dataset.idx || -1);
+        card.classList.toggle('hc-card--hidden', !selected.has(idx));
+      });
+    }else{
+      cards.forEach(card=> card.classList.remove('hc-card--hidden'));
+    }
+  }
+
+  if(btn){
+    btn.addEventListener('click', ()=>{
+      if(!filterOn && selected.size < 2) return;
+      toggleFilter(false);
+      updateBtn();
+    });
+  }
+
+  updateBtn();
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Helmet Compare",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Title", "default": "Find your perfect helmet" },
+    { "type": "text", "id": "sub", "label": "Subtitle", "default": "Select two or more helmets to compare key features." },
+
+    { "type": "header", "content": "Visuals" },
+    { "type": "color", "id": "bg", "label": "Background", "default": "#f6f7fb" },
+    { "type": "color", "id": "card_bg", "label": "Card background", "default": "#ffffff" },
+    { "type": "color", "id": "text", "label": "Text color", "default": "#1f2937" },
+    { "type": "color", "id": "accent", "label": "Accent color (icons)", "default": "#0ea5e9" },
+    { "type": "checkbox", "id": "hide_price", "label": "Hide price", "default": false },
+
+    { "type": "header", "content": "Scoring" },
+    { "type": "range", "id": "max_scale", "label": "Max scale (bar top)", "default": 5, "min": 3, "max": 10, "step": 1 },
+    { "type": "range", "id": "threshold", "label": "Green threshold (>=)", "default": 3, "min": 1, "max": 10, "step": 1 },
+
+    { "type": "header", "content": "Product 1" },
+    { "type": "product", "id": "product_1", "label": "Select product" },
+    { "type": "checkbox", "id": "p1_t1_enable", "label": "Trait 1 enable", "default": true },
+    { "type": "text", "id": "p1_t1_label", "label": "Trait 1 label", "default": "Ventilation" },
+    { "type": "range", "id": "p1_t1_score", "label": "Trait 1 score", "default": 3, "min": 0, "max": 10, "step": 1 },
+    { "type": "select", "id": "p1_t1_icon", "label": "Trait 1 icon", "default": "wind", "options": [
+      { "value": "dot", "label": "Dot" }, { "value": "sun", "label": "Sun" }, { "value": "shield", "label": "Shield" }, { "value": "flame", "label": "Flame" }, { "value": "wind", "label": "Wind" }, { "value": "heart", "label": "Heart" }, { "value": "wrench", "label": "Wrench" }, { "value": "feather", "label": "Feather" }, { "value": "star", "label": "Star" }
+    ]},
+    { "type": "checkbox", "id": "p1_t2_enable", "label": "Trait 2 enable", "default": true },
+    { "type": "text", "id": "p1_t2_label", "label": "Trait 2 label", "default": "Sun protection" },
+    { "type": "range", "id": "p1_t2_score", "label": "Trait 2 score", "default": 3, "min": 0, "max": 10, "step": 1 },
+    { "type": "select", "id": "p1_t2_icon", "label": "Trait 2 icon", "default": "sun", "options": [
+      { "value": "dot", "label": "Dot" }, { "value": "sun", "label": "Sun" }, { "value": "shield", "label": "Shield" }, { "value": "flame", "label": "Flame" }, { "value": "wind", "label": "Wind" }, { "value": "heart", "label": "Heart" }, { "value": "wrench", "label": "Wrench" }, { "value": "feather", "label": "Feather" }, { "value": "star", "label": "Star" }
+    ]},
+    { "type": "checkbox", "id": "p1_t3_enable", "label": "Trait 3 enable", "default": true },
+    { "type": "text", "id": "p1_t3_label", "label": "Trait 3 label", "default": "Impact protection" },
+    { "type": "range", "id": "p1_t3_score", "label": "Trait 3 score", "default": 3, "min": 0, "max": 10, "step": 1 },
+    { "type": "select", "id": "p1_t3_icon", "label": "Trait 3 icon", "default": "shield", "options": [
+      { "value": "dot", "label": "Dot" }, { "value": "sun", "label": "Sun" }, { "value": "shield", "label": "Shield" }, { "value": "flame", "label": "Flame" }, { "value": "wind", "label": "Wind" }, { "value": "heart", "label": "Heart" }, { "value": "wrench", "label": "Wrench" }, { "value": "feather", "label": "Feather" }, { "value": "star", "label": "Star" }
+    ]},
+    { "type": "checkbox", "id": "p1_t4_enable", "label": "Trait 4 enable", "default": false },
+    { "type": "text", "id": "p1_t4_label", "label": "Trait 4 label", "default": "Heat protection" },
+    { "type": "range", "id": "p1_t4_score", "label": "Trait 4 score", "default": 3, "min": 0, "max": 10, "step": 1 },
+    { "type": "select", "id": "p1_t4_icon", "label": "Trait 4 icon", "default": "flame", "options": [
+      { "value": "dot", "label": "Dot" }, { "value": "sun", "label": "Sun" }, { "value": "shield", "label": "Shield" }, { "value": "flame", "label": "Flame" }, { "value": "wind", "label": "Wind" }, { "value": "heart", "label": "Heart" }, { "value": "wrench", "label": "Wrench" }, { "value": "feather", "label": "Feather" }, { "value": "star", "label": "Star" }
+    ]},
+    { "type": "checkbox", "id": "p1_t5_enable", "label": "Trait 5 enable", "default": false },
+    { "type": "text", "id": "p1_t5_label", "label": "Trait 5 label", "default": "Warranty" },
+    { "type": "range", "id": "p1_t5_score", "label": "Trait 5 score", "default": 3, "min": 0, "max": 10, "step": 1 },
+    { "type": "select", "id": "p1_t5_icon", "label": "Trait 5 icon", "default": "star", "options": [
+      { "value": "dot", "label": "Dot" }, { "value": "sun", "label": "Sun" }, { "value": "shield", "label": "Shield" }, { "value": "flame", "label": "Flame" }, { "value": "wind", "label": "Wind" }, { "value": "heart", "label": "Heart" }, { "value": "wrench", "label": "Wrench" }, { "value": "feather", "label": "Feather" }, { "value": "star", "label": "Star" }
+    ]},
+    { "type": "checkbox", "id": "p1_t6_enable", "label": "Trait 6 enable", "default": false },
+    { "type": "text", "id": "p1_t6_label", "label": "Trait 6 label", "default": "Customization" },
+    { "type": "range", "id": "p1_t6_score", "label": "Trait 6 score", "default": 3, "min": 0, "max": 10, "step": 1 },
+    { "type": "select", "id": "p1_t6_icon", "label": "Trait 6 icon", "default": "wrench", "options": [
+      { "value": "dot", "label": "Dot" }, { "value": "sun", "label": "Sun" }, { "value": "shield", "label": "Shield" }, { "value": "flame", "label": "Flame" }, { "value": "wind", "label": "Wind" }, { "value": "heart", "label": "Heart" }, { "value": "wrench", "label": "Wrench" }, { "value": "feather", "label": "Feather" }, { "value": "star", "label": "Star" }
+    ]},
+    { "type": "checkbox", "id": "p1_t7_enable", "label": "Trait 7 enable", "default": false },
+    { "type": "text", "id": "p1_t7_label", "label": "Trait 7 label", "default": "Lightweight" },
+    { "type": "range", "id": "p1_t7_score", "label": "Trait 7 score", "default": 3, "min": 0, "max": 10, "step": 1 },
+    { "type": "select", "id": "p1_t7_icon", "label": "Trait 7 icon", "default": "feather", "options": [
+      { "value": "dot", "label": "Dot" }, { "value": "sun", "label": "Sun" }, { "value": "shield", "label": "Shield" }, { "value": "flame", "label": "Flame" }, { "value": "wind", "label": "Wind" }, { "value": "heart", "label": "Heart" }, { "value": "wrench", "label": "Wrench" }, { "value": "feather", "label": "Feather" }, { "value": "star", "label": "Star" }
+    ]},
+    { "type": "checkbox", "id": "p1_t8_enable", "label": "Trait 8 enable", "default": false },
+    { "type": "text", "id": "p1_t8_label", "label": "Trait 8 label", "default": "Comfort" },
+    { "type": "range", "id": "p1_t8_score", "label": "Trait 8 score", "default": 3, "min": 0, "max": 10, "step": 1 },
+    { "type": "select", "id": "p1_t8_icon", "label": "Trait 8 icon", "default": "heart", "options": [
+      { "value": "dot", "label": "Dot" }, { "value": "sun", "label": "Sun" }, { "value": "shield", "label": "Shield" }, { "value": "flame", "label": "Flame" }, { "value": "wind", "label": "Wind" }, { "value": "heart", "label": "Heart" }, { "value": "wrench", "label": "Wrench" }, { "value": "feather", "label": "Feather" }, { "value": "star", "label": "Star" }
+    ]},
+
+    { "type": "header", "content": "Product 2" },
+    { "type": "product", "id": "product_2", "label": "Select product" },
+
+    { "type": "checkbox", "id": "p2_t1_enable", "label": "Trait 1 enable", "default": true },
+    { "type": "text", "id": "p2_t1_label", "label": "Trait 1 label", "default": "Ventilation" },
+    { "type": "range", "id": "p2_t1_score", "label": "Trait 1 score", "default": 3, "min": 0, "max": 10, "step": 1 },
+    { "type": "select", "id": "p2_t1_icon", "label": "Trait 1 icon", "default": "wind", "options": [
+      { "value": "dot", "label": "Dot" }, { "value": "sun", "label": "Sun" }, { "value": "shield", "label": "Shield" }, { "value": "flame", "label": "Flame" }, { "value": "wind", "label": "Wind" }, { "value": "heart", "label": "Heart" }, { "value": "wrench", "label": "Wrench" }, { "value": "feather", "label": "Feather" }, { "value": "star", "label": "Star" }
+    ]},
+
+    { "type": "checkbox", "id": "p2_t2_enable", "label": "Trait 2 enable", "default": true },
+    { "type": "text", "id": "p2_t2_label", "label": "Trait 2 label", "default": "Sun protection" },
+    { "type": "range", "id": "p2_t2_score", "label": "Trait 2 score", "default": 3, "min": 0, "max": 10, "step": 1 },
+    { "type": "select", "id": "p2_t2_icon", "label": "Trait 2 icon", "default": "sun", "options": [
+      { "value": "dot", "label": "Dot" }, { "value": "sun", "label": "Sun" }, { "value": "shield", "label": "Shield" }, { "value": "flame", "label": "Flame" }, { "value": "wind", "label": "Wind" }, { "value": "heart", "label": "Heart" }, { "value": "wrench", "label": "Wrench" }, { "value": "feather", "label": "Feather" }, { "value": "star", "label": "Star" }
+    ]},
+
+    { "type": "checkbox", "id": "p2_t3_enable", "label": "Trait 3 enable", "default": true },
+    { "type": "text", "id": "p2_t3_label", "label": "Trait 3 label", "default": "Impact protection" },
+    { "type": "range", "id": "p2_t3_score", "label": "Trait 3 score", "default": 3, "min": 0, "max": 10, "step": 1 },
+    { "type": "select", "id": "p2_t3_icon", "label": "Trait 3 icon", "default": "shield", "options": [
+      { "value": "dot", "label": "Dot" }, { "value": "sun", "label": "Sun" }, { "value": "shield", "label": "Shield" }, { "value": "flame", "label": "Flame" }, { "value": "wind", "label": "Wind" }, { "value": "heart", "label": "Heart" }, { "value": "wrench", "label": "Wrench" }, { "value": "feather", "label": "Feather" }, { "value": "star", "label": "Star" }
+    ]},
+
+    { "type": "header", "content": "Product 3" },
+    { "type": "product", "id": "product_3", "label": "Select product" },
+
+    { "type": "checkbox", "id": "p3_t1_enable", "label": "Trait 1 enable", "default": true },
+    { "type": "text", "id": "p3_t1_label", "label": "Trait 1 label", "default": "Ventilation" },
+    { "type": "range", "id": "p3_t1_score", "label": "Trait 1 score", "default": 3, "min": 0, "max": 10, "step": 1 },
+    { "type": "select", "id": "p3_t1_icon", "label": "Trait 1 icon", "default": "wind", "options": [
+      { "value": "dot", "label": "Dot" }, { "value": "sun", "label": "Sun" }, { "value": "shield", "label": "Shield" }, { "value": "flame", "label": "Flame" }, { "value": "wind", "label": "Wind" }, { "value": "heart", "label": "Heart" }, { "value": "wrench", "label": "Wrench" }, { "value": "feather", "label": "Feather" }, { "value": "star", "label": "Star" }
+    ]},
+
+    { "type": "header", "content": "Product 4" },
+    { "type": "product", "id": "product_4", "label": "Select product" },
+
+    { "type": "checkbox", "id": "p4_t1_enable", "label": "Trait 1 enable", "default": true },
+    { "type": "text", "id": "p4_t1_label", "label": "Trait 1 label", "default": "Ventilation" },
+    { "type": "range", "id": "p4_t1_score", "label": "Trait 1 score", "default": 3, "min": 0, "max": 10, "step": 1 },
+    { "type": "select", "id": "p4_t1_icon", "label": "Trait 1 icon", "default": "wind", "options": [
+      { "value": "dot", "label": "Dot" }, { "value": "sun", "label": "Sun" }, { "value": "shield", "label": "Shield" }, { "value": "flame", "label": "Flame" }, { "value": "wind", "label": "Wind" }, { "value": "heart", "label": "Heart" }, { "value": "wrench", "label": "Wrench" }, { "value": "feather", "label": "Feather" }, { "value": "star", "label": "Star" }
+    ]},
+
+    { "type": "header", "content": "Product 5" },
+    { "type": "product", "id": "product_5", "label": "Select product" },
+
+    { "type": "checkbox", "id": "p5_t1_enable", "label": "Trait 1 enable", "default": true },
+    { "type": "text", "id": "p5_t1_label", "label": "Trait 1 label", "default": "Ventilation" },
+    { "type": "range", "id": "p5_t1_score", "label": "Trait 1 score", "default": 3, "min": 0, "max": 10, "step": 1 },
+    { "type": "select", "id": "p5_t1_icon", "label": "Trait 1 icon", "default": "wind", "options": [
+      { "value": "dot", "label": "Dot" }, { "value": "sun", "label": "Sun" }, { "value": "shield", "label": "Shield" }, { "value": "flame", "label": "Flame" }, { "value": "wind", "label": "Wind" }, { "value": "heart", "label": "Heart" }, { "value": "wrench", "label": "Wrench" }, { "value": "feather", "label": "Feather" }, { "value": "star", "label": "Star" }
+    ]},
+
+    { "type": "header", "content": "Product 6" },
+    { "type": "product", "id": "product_6", "label": "Select product" },
+
+    { "type": "checkbox", "id": "p6_t1_enable", "label": "Trait 1 enable", "default": true },
+    { "type": "text", "id": "p6_t1_label", "label": "Trait 1 label", "default": "Ventilation" },
+    { "type": "range", "id": "p6_t1_score", "label": "Trait 1 score", "default": 3, "min": 0, "max": 10, "step": 1 },
+    { "type": "select", "id": "p6_t1_icon", "label": "Trait 1 icon", "default": "wind", "options": [
+      { "value": "dot", "label": "Dot" }, { "value": "sun", "label": "Sun" }, { "value": "shield", "label": "Shield" }, { "value": "flame", "label": "Flame" }, { "value": "wind", "label": "Wind" }, { "value": "heart", "label": "Heart" }, { "value": "wrench", "label": "Wrench" }, { "value": "feather", "label": "Feather" }, { "value": "star", "label": "Star" }
+    ]}
+  ],
+  "presets": [{ "name": "Helmet Compare" }]
+}
+{% endschema %}

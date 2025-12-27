@@ -1,0 +1,482 @@
+{% doc %}
+  @prompt
+    Growth Outlook & Investor Value
+    
+    The North American PPE, hardware, and consumer goods markets represent a multi-billion-dollar Total Addressable Market (TAM) with steady year-over-year growth. Caco America is positioned to capture disproportionate market share by leveraging its exclusivity, logistics backbone, and e-commerce presence.
+    
+    Key growth levers include:
+    
+    Channel Expansion – Scaling beyond Amazon into other digital marketplaces and direct e-commerce platforms.
+    
+    Portfolio Growth – Adding complementary brands to the exclusive distribution portfolio.
+    
+    Geographic Penetration – Deepening Canadian market presence and leveraging Miami’s logistics edge for nearshoring opportunities.
+    
+    Operational Optimization – Increasing automation, enhancing supply chain efficiency, and unlocking margin expansion.
+
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-growth-outlook-{{ ai_gen_id }} {
+    padding: {{ block.settings.section_padding }}px;
+    background-color: {{ block.settings.background_color }};
+    color: {{ block.settings.text_color }};
+  }
+
+  .ai-growth-outlook__container-{{ ai_gen_id }} {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .ai-growth-outlook__header-{{ ai_gen_id }} {
+    text-align: {{ block.settings.text_alignment }};
+    margin-bottom: {{ block.settings.header_spacing }}px;
+  }
+
+  .ai-growth-outlook__title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size }}px;
+    font-weight:700;
+    margin: 0 0 16px;
+    color: {{ block.settings.title_color }};
+  }
+
+  .ai-growth-outlook__subtitle-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subtitle_size }}px;
+    line-height: 1.6;
+    margin: 0 0 24px;
+    opacity: 0.9;
+  }
+
+  .ai-growth-outlook__description-{{ ai_gen_id }} {
+    font-size: {{ block.settings.text_size }}px;
+    line-height: 1.7;
+    margin-bottom: 40px;
+  }
+
+  .ai-growth-outlook__grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: {{ block.settings.card_spacing }}px;
+    margin-top: 40px;
+  }
+
+  .ai-growth-outlook__card-{{ ai_gen_id }} {
+    background-color: {{ block.settings.card_background }};
+    border-radius: {{ block.settings.card_border_radius }}px;
+    padding: {{ block.settings.card_padding }}px;
+    border: 1px solid {{ block.settings.card_border_color }};
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .ai-growth-outlook__card-{{ ai_gen_id }}:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .ai-growth-outlook__card-icon-{{ ai_gen_id }} {
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    background-color: {{ block.settings.icon_background }};
+    border-radius:50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    color: {{ block.settings.icon_color }};
+  }
+
+  .ai-growth-outlook__card-title-{{ ai_gen_id }} {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 12px;
+    color: {{ block.settings.card_title_color }};
+  }
+
+  .ai-growth-outlook__card-description-{{ ai_gen_id }} {
+    font-size: 14px;
+    line-height: 1.6;
+    color: {{ block.settings.card_text_color }};
+    margin: 0;
+  }
+
+  .ai-growth-outlook__metrics-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+    margin: 40px 0;
+    padding: 30px;
+    background-color: {{ block.settings.metrics_background }};
+    border-radius: {{ block.settings.card_border_radius }}px;border: 1px solid {{ block.settings.card_border_color }};
+  }
+
+  .ai-growth-outlook__metric-{{ ai_gen_id }} {
+    text-align: center;
+  }
+
+  .ai-growth-outlook__metric-value-{{ ai_gen_id }} {
+    font-size: 32px;
+    font-weight: 700;
+    color: {{ block.settings.accent_color }};
+    margin: 0 0 8px;
+  }
+
+  .ai-growth-outlook__metric-label-{{ ai_gen_id }} {
+    font-size: 14px;
+    color: {{ block.settings.text_color }};
+    opacity: 0.8;
+    margin: 0;
+  }
+
+  @media screen and (max-width: 768px) {
+    .ai-growth-outlook__grid-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .ai-growth-outlook__metrics-{{ ai_gen_id }} {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .ai-growth-outlook__title-{{ ai_gen_id }} {
+      font-size: 28px;
+    }
+
+    .ai-growth-outlook__metric-value-{{ ai_gen_id }} {
+      font-size: 24px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-growth-outlook-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-growth-outlook__container-{{ ai_gen_id }}">
+    <div class="ai-growth-outlook__header-{{ ai_gen_id }}">
+      {% if block.settings.title != blank %}
+        <h2 class="ai-growth-outlook__title-{{ ai_gen_id }}">{{ block.settings.title }}</h2>
+      {% endif %}
+      
+      {% if block.settings.subtitle != blank %}
+        <div class="ai-growth-outlook__subtitle-{{ ai_gen_id }}">{{ block.settings.subtitle }}</div>
+      {% endif %}
+      {% if block.settings.description != blank %}
+        <div class="ai-growth-outlook__description-{{ ai_gen_id }}">{{ block.settings.description }}</div>
+      {% endif %}
+    </div>
+
+    {% if block.settings.show_metrics %}
+      <div class="ai-growth-outlook__metrics-{{ ai_gen_id }}">
+        <div class="ai-growth-outlook__metric-{{ ai_gen_id }}">
+          <div class="ai-growth-outlook__metric-value-{{ ai_gen_id }}">${{ block.settings.tam_value }}B+</div>
+          <div class="ai-growth-outlook__metric-label-{{ ai_gen_id }}">Total Addressable Market</div>
+        </div>
+        <div class="ai-growth-outlook__metric-{{ ai_gen_id }}">
+          <div class="ai-growth-outlook__metric-value-{{ ai_gen_id }}">{{ block.settings.growth_rate }}%</div>
+          <div class="ai-growth-outlook__metric-label-{{ ai_gen_id }}">Year-over-Year Growth</div>
+        </div>
+        <div class="ai-growth-outlook__metric-{{ ai_gen_id }}">
+          <div class="ai-growth-outlook__metric-value-{{ ai_gen_id }}">{{ block.settings.market_share }}%</div>
+          <div class="ai-growth-outlook__metric-label-{{ ai_gen_id }}">Target Market Share</div>
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="ai-growth-outlook__grid-{{ ai_gen_id }}">
+      <div class="ai-growth-outlook__card-{{ ai_gen_id }}">
+        <div class="ai-growth-outlook__card-icon-{{ ai_gen_id }}">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 3v18h18"/>
+            <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/>
+          </svg>
+        </div>
+        <h3 class="ai-growth-outlook__card-title-{{ ai_gen_id }}">Channel Expansion</h3>
+        <p class="ai-growth-outlook__card-description-{{ ai_gen_id }}">Scaling beyond Amazon into other digital marketplaces and direct e-commerce platforms to maximize reach and revenue opportunities.</p>
+      </div><div class="ai-growth-outlook__card-{{ ai_gen_id }}">
+        <div class="ai-growth-outlook__card-icon-{{ ai_gen_id }}">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+            <line x1="8" y1="21" x2="16" y2="21"/>
+            <line x1="12" y1="17" x2="12" y2="21"/>
+          </svg>
+        </div>
+        <h3 class="ai-growth-outlook__card-title-{{ ai_gen_id }}">Portfolio Growth</h3>
+        <p class="ai-growth-outlook__card-description-{{ ai_gen_id }}">Adding complementary brands to the exclusive distribution portfolio, creating synergies and expanding market coverage.</p>
+      </div>
+
+      <div class="ai-growth-outlook__card-{{ ai_gen_id }}">
+        <div class="ai-growth-outlook__card-icon-{{ ai_gen_id }}">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <polygon points="16.24,7.76 14.12,14.12 7.76,16.24 9.88,9.88"/>
+          </svg>
+        </div>
+        <h3 class="ai-growth-outlook__card-title-{{ ai_gen_id }}">Geographic Penetration</h3>
+        <p class="ai-growth-outlook__card-description-{{ ai_gen_id }}">Deepening Canadian market presence and leveraging Miami's logistics edge for nearshoring opportunities across North America.</p>
+      </div>
+
+      <div class="ai-growth-outlook__card-{{ ai_gen_id }}">
+        <div class="ai-growth-outlook__card-icon-{{ ai_gen_id }}">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>
+        </div>
+        <h3 class="ai-growth-outlook__card-title-{{ ai_gen_id }}">Operational Optimization</h3>
+        <p class="ai-growth-outlook__card-description-{{ ai_gen_id }}">Increasing automation, enhancing supply chain efficiency, and unlocking margin expansion through strategic operational improvements.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Growth outlook",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Growth Outlook & Investor Value"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "The North American PPE, hardware, and consumer goods markets represent a multi-billion-dollar Total Addressable Market (TAM) with steady year-over-year growth."
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Caco America is positioned to capture disproportionate market share by leveraging its exclusivity, logistics backbone, and e-commerce presence.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Metrics"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_metrics",
+      "label": "Show metrics section",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "tam_value",
+      "min": 1,
+      "max": 50,
+      "step": 1,
+      "label": "TAM value (billions)",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "growth_rate",
+      "min": 1,
+      "max": 30,
+      "step": 1,
+      "unit": "%",
+      "label": "Growth rate",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "market_share",
+      "min": 1,
+      "max": 25,
+      "step": 1,
+      "unit": "%",
+      "label": "Target market share",
+      "default": 5
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        {"value": "left", "label": "Left"},
+        {"value": "center", "label": "Center"},
+        {"value": "right", "label": "Right"}
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "min": 20,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Section padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "header_spacing",
+      "min": 20,
+      "max": 80,
+      "step": 10,
+      "unit": "px",
+      "label": "Header spacing",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "card_spacing",
+      "min": 20,
+      "max": 60,
+      "step": 10,
+      "unit": "px",
+      "label": "Card spacing",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "min": 20,
+      "max": 50,
+      "step": 10,
+      "unit": "px",
+      "label": "Card padding",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Card border radius",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 40,
+      "max": 80,
+      "step": 10,
+      "unit": "px",
+      "label": "Icon size",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 24,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "min": 14,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Subtitle size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "min": 12,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Text size",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#0a5ba6"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#f8f9fa"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Card border",
+      "default": "#e9ecef"
+    },
+    {
+      "type": "color",
+      "id": "card_title_color",
+      "label": "Card title",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Card text",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "icon_background",
+      "label": "Icon background",
+      "default": "#0a5ba6"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "metrics_background",
+      "label": "Metrics background",
+      "default": "#f1f3f4"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Growth outlook"
+    }
+  ],
+  "tag": null
+}
+{% endschema %}

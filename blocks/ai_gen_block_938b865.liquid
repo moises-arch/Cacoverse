@@ -1,0 +1,444 @@
+{% doc %}
+  @prompt
+    create a footer socket: place the copyright information aligned to left   and credit cards icons to the right.    text and icons color force to  #acb8c3, I can adjust the icons size. adjust the content to fit into 1500px and responsive.
+    make it easy to edit with padding functions, etc , use fonts for he icons 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
+
+  .ai-footer-socket-{{ ai_gen_id }} {
+    background-color: {{ block.settings.background_color }};
+    padding: {{ block.settings.padding_top }}px 0 {{ block.settings.padding_bottom }}px;
+    border-top: {{ block.settings.border_thickness }}px solid {{ block.settings.border_color }};
+  }
+
+  .ai-footer-socket-container-{{ ai_gen_id }} {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 0 {{ block.settings.padding_horizontal }}px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: {{ block.settings.gap }}px;
+  }
+
+  .ai-footer-socket-copyright-{{ ai_gen_id }} {
+    color: #acb8c3;
+    font-size: {{ block.settings.text_size }}px;
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  .ai-footer-socket-payment-icons-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: {{ block.settings.icon_gap }}px;
+    flex-wrap: wrap;
+  }
+
+  .ai-footer-socket-payment-icon-{{ ai_gen_id }} {
+    color: #acb8c3;
+    font-size: {{ block.settings.icon_size }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: {{ block.settings.icon_size | times: 1.5 }}px;
+    height: {{ block.settings.icon_size }}px;
+    border: 1px solid #acb8c3;
+    border-radius: {{ block.settings.icon_border_radius }}px;
+    background-color: {{ block.settings.icon_background_color }};
+    transition: all 0.3s ease;
+  }
+
+  .ai-footer-socket-payment-icon-{{ ai_gen_id }}:hover {
+    color: {{ block.settings.icon_hover_color }};
+    border-color: {{ block.settings.icon_hover_color }};
+    background-color: {{ block.settings.icon_hover_background }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-footer-socket-container-{{ ai_gen_id }} {
+      flex-direction: {{ block.settings.mobile_layout }};
+      text-align: {{ block.settings.mobile_alignment }};
+      gap: {{ block.settings.mobile_gap }}px;
+    }
+
+    .ai-footer-socket-copyright-{{ ai_gen_id }} {
+      font-size: {{ block.settings.mobile_text_size }}px;
+    }
+
+    .ai-footer-socket-payment-icons-{{ ai_gen_id }} {
+      {% if block.settings.mobile_alignment == 'center' %}
+        justify-content: center;
+      {% elsif block.settings.mobile_alignment == 'right' %}
+        justify-content: flex-end;
+      {% else %}
+        justify-content: flex-start;
+      {% endif %}
+    }
+
+    .ai-footer-socket-payment-icon-{{ ai_gen_id }} {
+      font-size: {{ block.settings.mobile_icon_size }}px;
+      width: {{ block.settings.mobile_icon_size | times: 1.5 }}px;
+      height: {{ block.settings.mobile_icon_size }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-footer-socket-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-footer-socket-container-{{ ai_gen_id }}">
+    <div class="ai-footer-socket-copyright-{{ ai_gen_id }}">
+      {% if block.settings.copyright_text != blank %}
+        {{ block.settings.copyright_text }}
+      {% else %}
+        © {{ 'now' | date: '%Y' }} {{ shop.name }}. All rights reserved.
+      {% endif %}
+    </div>
+
+    <div class="ai-footer-socket-payment-icons-{{ ai_gen_id }}">
+      {% if block.settings.show_visa %}
+        <div class="ai-footer-socket-payment-icon-{{ ai_gen_id }}">
+          <i class="fab fa-cc-visa"></i>
+        </div>
+      {% endif %}
+
+      {% if block.settings.show_mastercard %}
+        <div class="ai-footer-socket-payment-icon-{{ ai_gen_id }}">
+          <i class="fab fa-cc-mastercard"></i>
+        </div>
+      {% endif %}
+
+      {% if block.settings.show_amex %}
+        <div class="ai-footer-socket-payment-icon-{{ ai_gen_id }}">
+          <i class="fab fa-cc-amex"></i>
+        </div>
+      {% endif %}
+
+      {% if block.settings.show_discover %}
+        <div class="ai-footer-socket-payment-icon-{{ ai_gen_id }}">
+          <i class="fab fa-cc-discover"></i>
+        </div>
+      {% endif %}
+
+      {% if block.settings.show_paypal %}
+        <div class="ai-footer-socket-payment-icon-{{ ai_gen_id }}">
+          <i class="fab fa-cc-paypal"></i>
+        </div>
+      {% endif %}
+
+      {% if block.settings.show_apple_pay %}
+        <div class="ai-footer-socket-payment-icon-{{ ai_gen_id }}">
+          <i class="fab fa-cc-apple-pay"></i>
+        </div>
+      {% endif %}
+
+      {% if block.settings.show_google_pay %}
+        <div class="ai-footer-socket-payment-icon-{{ ai_gen_id }}">
+          <i class="fab fa-google-pay"></i>
+        </div>
+      {% endif %}
+
+      {% if block.settings.show_shopify_pay %}
+        <div class="ai-footer-socket-payment-icon-{{ ai_gen_id }}">
+          <i class="fab fa-shopify"></i>
+        </div>
+      {% endif %}
+
+      {% if block.settings.show_stripe %}
+        <div class="ai-footer-socket-payment-icon-{{ ai_gen_id }}">
+          <i class="fab fa-cc-stripe"></i>
+        </div>
+      {% endif %}
+
+      {% if block.settings.show_bitcoin %}
+        <div class="ai-footer-socket-payment-icon-{{ ai_gen_id }}">
+          <i class="fab fa-bitcoin"></i>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Footer socket",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Copyright"
+    },
+    {
+      "type": "textarea",
+      "id": "copyright_text",
+      "label": "Copyright text",
+      "info": "Leave blank to use default format"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "mobile_text_size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile text size",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Payment icons"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_visa",
+      "label": "Show Visa",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_mastercard",
+      "label": "Show Mastercard",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_amex",
+      "label": "Show American Express",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_discover",
+      "label": "Show Discover",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_paypal",
+      "label": "Show PayPal",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_apple_pay",
+      "label": "Show Apple Pay",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_google_pay",
+      "label": "Show Google Pay",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_shopify_pay",
+      "label": "Show Shop Pay",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stripe",
+      "label": "Show Stripe",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bitcoin",
+      "label": "Show Bitcoin",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 12,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Icon size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "mobile_icon_size",
+      "min": 10,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile icon size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "icon_gap",
+      "min": 4,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Icon spacing",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "icon_border_radius",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Icon border radius",
+      "default": 4
+    },
+    {
+      "type": "color",
+      "id": "icon_background_color",
+      "label": "Icon background color",
+      "default": "transparent"
+    },
+    {
+      "type": "color",
+      "id": "icon_hover_color",
+      "label": "Icon hover color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "icon_hover_background",
+      "label": "Icon hover background",
+      "default": "#acb8c3"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Horizontal padding",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "min": 8,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "label": "Gap between elements",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "mobile_layout",
+      "label": "Mobile layout",
+      "options": [
+        {
+          "value": "column",
+          "label": "Stack vertically"
+        },
+        {
+          "value": "row",
+          "label": "Keep horizontal"
+        }
+      ],
+      "default": "column"
+    },
+    {
+      "type": "select",
+      "id": "mobile_alignment",
+      "label": "Mobile alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "mobile_gap",
+      "min": 8,
+      "max": 32,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile gap",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "range",
+      "id": "border_thickness",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "label": "Border thickness",
+      "default": 1
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer socket"
+    }
+  ]
+}
+{% endschema %}

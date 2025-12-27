@@ -1,0 +1,405 @@
+{% doc %}
+  @prompt
+    add video full width with controls , it's not working, dont show controls  always auto play lopp and muted , let me paste the video url , add options to adjust the height  in desktop 
+    
+    in mobile always full height , add texture of dots pixels over the image to appears to be sharper , keep the changes that i already make in it as default 
+    
+    check the texture, ain't working , just in mobile adjust the size to always width 100% and height 100%, add controls for adjust the size in desktop and another for mobile
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+{% assign ai_wrap_id = 'ai-video-' | append: ai_gen_id %}
+
+{% style %}
+  .ai-video-container-{{ ai_gen_id }} {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .ai-video-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    background-color: {{ block.settings.background_color }};
+    {% if block.settings.desktop_height == 'custom' %}
+      height: {{ block.settings.desktop_custom_height }}px;
+    {% elsif block.settings.desktop_height == 'full' %}
+      height: 100vh;
+    {% else %}
+      height: auto;
+    {% endif %}
+    overflow: hidden;
+  }
+
+  .ai-video-element-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    display: block;
+    border-radius: {{ block.settings.border_radius }}px;
+    object-fit: cover;
+  }
+
+  .ai-video-overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    border-radius: {{ block.settings.border_radius }}px;
+  }
+
+  .ai-video-overlay-{{ ai_gen_id }}::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    {% if block.settings.enable_texture %}
+      background-image: 
+        repeating-linear-gradient(
+          0deg,
+          {{ block.settings.texture_color }} 0px,
+          {{ block.settings.texture_color }} {{ block.settings.texture_size }}px,
+          transparent {{ block.settings.texture_size }}px,
+          transparent {{ block.settings.texture_spacing }}px
+        ),
+        repeating-linear-gradient(
+          90deg,
+          {{ block.settings.texture_color }} 0px,
+          {{ block.settings.texture_color }} {{ block.settings.texture_size }}px,
+          transparent {{ block.settings.texture_size }}px,
+          transparent {{ block.settings.texture_spacing }}px
+        );
+      opacity: {{ block.settings.texture_opacity | divided_by: 100.0 }};
+    {% endif %}
+  }
+
+  .ai-video-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    min-height: 400px;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-radius: {{ block.settings.border_radius }}px;
+  }
+
+  .ai-video-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 500px;
+    max-height: 500px;
+  }
+
+  .ai-video-empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-video-wrapper-{{ ai_gen_id }} {
+      {% if block.settings.mobile_height == 'custom' %}
+        height: {{ block.settings.mobile_custom_height }}px;
+      {% elsif block.settings.mobile_height == 'full' %}
+        height: 100vh;
+      {% else %}
+        height: auto;
+      {% endif %}
+    }
+
+    .ai-video-placeholder-{{ ai_gen_id }} {
+      {% if block.settings.mobile_height == 'custom' %}
+        min-height: {{ block.settings.mobile_custom_height }}px;
+      {% elsif block.settings.mobile_height == 'full' %}
+        min-height: 100vh;
+      {% else %}
+        min-height: 400px;
+      {% endif %}
+    }
+  }
+{% endstyle %}
+
+<div id="{{ ai_wrap_id }}"
+  class="ai-video-container-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-video-wrapper-{{ ai_gen_id }}">
+    {% if block.settings.video_url != blank %}
+      <video
+        class="ai-video-element-{{ ai_gen_id }}"
+        autoplay
+        loop
+        muted
+        playsinline
+        preload="none"
+        data-src="{{ block.settings.video_url }}"
+      ></video>
+      <div class="ai-video-overlay-{{ ai_gen_id }}"></div>
+    {% else %}
+      <div class="ai-video-placeholder-{{ ai_gen_id }}">
+        {{ 'image' | placeholder_svg_tag }}
+        <div class="ai-video-empty-state-{{ ai_gen_id }}">
+          Next, add a video URL
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+(function(){
+  var WRAP_ID = "{{ ai_wrap_id }}";
+  var ROOT_MARGIN_PX = 200;
+
+  function init(container){
+    if(!container) return;
+    var video = container.querySelector('.ai-video-element-{{ ai_gen_id }}');
+    if(!video || video.dataset._inited) return;
+    video.dataset._inited = "1";
+
+    function attachSrcOnce(){
+      if(video.dataset._srcAttached) return;
+      var src = video.dataset.src;
+      if(!src) return;
+      // Seteamos la src directamente y forzamos load() para evitar la pantalla negra
+      video.src = src;
+      try { video.load(); } catch(e) {}
+      video.dataset._srcAttached = "1";
+    }
+
+    function safePlay(){
+      try {
+        var p = video.play && video.play();
+        if(p && p.catch) p.catch(function(){});
+      } catch(e){}
+    }
+
+    function isInView(){
+      var r = video.getBoundingClientRect();
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      var vw = window.innerWidth || document.documentElement.clientWidth;
+      return (
+        r.bottom > -ROOT_MARGIN_PX &&
+        r.right  > 0 &&
+        r.top    < vh + ROOT_MARGIN_PX &&
+        r.left   < vw
+      );
+    }
+
+    function primeIfVisible(){
+      if(isInView()){
+        attachSrcOnce();
+        safePlay();
+        return true;
+      }
+      return false;
+    }
+
+    // 1) Primer chequeo inmediato
+    if(!primeIfVisible()){
+      // 2) Observer para lazy real
+      if('IntersectionObserver' in window){
+        var io = new IntersectionObserver(function(entries){
+          entries.forEach(function(e){
+            if(e.target !== video) return;
+            if(e.isIntersecting){
+              attachSrcOnce();
+              safePlay();
+            } else {
+              try { if(!video.paused) video.pause(); } catch(_){}
+            }
+          });
+        }, { rootMargin: ROOT_MARGIN_PX + 'px 0px', threshold: 0.1 });
+        io.observe(video);
+      } else {
+        // 3) Fallback sin IO
+        var onScroll = function(){ primeIfVisible() && cleanup(); };
+        var onResize = function(){ primeIfVisible() && cleanup(); };
+        function cleanup(){
+          window.removeEventListener('scroll', onScroll);
+          window.removeEventListener('resize', onResize);
+        }
+        window.addEventListener('scroll', onScroll, {passive:true});
+        window.addEventListener('resize', onResize);
+        setTimeout(primeIfVisible, 300);
+        setTimeout(primeIfVisible, 1000);
+      }
+    }
+
+    // Reintento tras primer paint
+    requestAnimationFrame(function(){ setTimeout(primeIfVisible, 100); });
+
+    // Pausa si la pestaña no está visible
+    document.addEventListener('visibilitychange', function(){
+      if(document.hidden){
+        try { video.pause(); } catch(_){}
+      } else if(isInView()){
+        safePlay();
+      }
+    });
+  }
+
+  // Arranque robusto (algunos temas mueven scripts al <head>)
+  var containerNow = document.getElementById(WRAP_ID);
+  if(containerNow){ init(containerNow); }
+  else {
+    document.addEventListener('DOMContentLoaded', function(){
+      init(document.getElementById(WRAP_ID));
+    });
+  }
+
+  // Soporte para el editor de Shopify (secciones dinámicas)
+  document.addEventListener('shopify:section:load', function(e){
+    var el = e.target && e.target.querySelector && e.target.querySelector('#' + CSS.escape(WRAP_ID));
+    if(el) init(el);
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Full width video",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Video"
+    },
+    {
+      "type": "url",
+      "id": "video_url",
+      "label": "Video URL"
+    },
+    {
+      "type": "header",
+      "content": "Desktop size"
+    },
+    {
+      "type": "select",
+      "id": "desktop_height",
+      "label": "Height",
+      "options": [
+        { "value": "auto", "label": "Auto" },
+        { "value": "full", "label": "Full screen" },
+        { "value": "custom", "label": "Custom" }
+      ],
+      "default": "full"
+    },
+    {
+      "type": "range",
+      "id": "desktop_custom_height",
+      "min": 200,
+      "max": 1000,
+      "step": 50,
+      "unit": "px",
+      "label": "Custom height",
+      "default": 600
+    },
+    {
+      "type": "header",
+      "content": "Mobile size"
+    },
+    {
+      "type": "select",
+      "id": "mobile_height",
+      "label": "Height",
+      "options": [
+        { "value": "auto", "label": "Auto" },
+        { "value": "full", "label": "Full screen" },
+        { "value": "custom", "label": "Custom" }
+      ],
+      "default": "full"
+    },
+    {
+      "type": "range",
+      "id": "mobile_custom_height",
+      "min": 200,
+      "max": 1000,
+      "step": 50,
+      "unit": "px",
+      "label": "Custom height",
+      "default": 600
+    },
+    {
+      "type": "header",
+      "content": "Texture overlay"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_texture",
+      "label": "Enable dot texture",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "texture_size",
+      "min": 0.5,
+      "max": 3,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Line thickness",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "texture_spacing",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Line spacing",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "texture_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Texture opacity",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "texture_color",
+      "label": "Texture color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 0
+    }
+  ],
+  "presets": [
+    { "name": "Full width video" }
+  ]
+}
+{% endschema %}

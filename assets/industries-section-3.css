@@ -1,0 +1,49 @@
+.industries-section-3 .sh-48{
+  max-width: 37rem;
+  margin: 0 auto;
+}
+
+.template-industries-food-process .industries-section-3 .sh-48 {
+    max-width: 40rem;
+    margin: 0 auto;
+}
+
+.template-industries-manufacturing .industries-section-3 .bbl-3{
+  border-bottom: 1px solid var(--Blue-200, #ABB8C3);
+}
+
+
+.industries-section-3 .sp-16{
+  max-width: 54rem;
+  margin: 0 auto;
+}
+
+.industries-section-3 .info-list {
+    margin: 0 auto;
+}
+
+.industries-section-3 .info-list li {
+    margin: 0 auto;
+    max-width: 28rem;
+}
+
+.industries-section-3 .info-list li .sp-24 {
+   margin: 0;
+}
+
+
+.template-industries-electrical .industries-section-3 .sp-16 {
+    max-width: 58rem;
+    margin: 0 auto;
+}
+
+.template-industries-manufacturing  .industries-section-3  .info-list li .sp-16 {
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 32px;
+    color: var(--font-secondary-color);
+}
+
+.template-industries-electrical .industries-section-3 .sp-24 {
+    margin: 0;
+}

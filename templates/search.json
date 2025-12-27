@@ -1,0 +1,153 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "176177837363f99244": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_7f84df2_iGDTFH": {
+          "type": "ai_gen_block_7f84df2",
+          "settings": {
+            "title_text": "Search Results For",
+            "default_title": "Search Results",
+            "count_text": "Search Results",
+            "search_placeholder": "Search products...",
+            "padding_top": 40,
+            "padding_bottom": 40,
+            "padding_horizontal": 20,
+            "search_bar_width": 400,
+            "title_size": 28,
+            "count_size": 14,
+            "background_color": "rgba(0,0,0,0)",
+            "text_color": "#121212",
+            "count_color": "#666666",
+            "border_color": "#e5e5e5",
+            "border_thickness": 0,
+            "input_background_color": "#ffffff",
+            "input_text_color": "#222222",
+            "input_placeholder_color": "#666666",
+            "input_border_color": "#e9e9e9",
+            "input_border_thickness": 2,
+            "input_pill_shape": true,
+            "input_border_radius": 0,
+            "input_focus_color": "#242833",
+            "search_icon_color": "#666666",
+            "search_icon_hover_color": "#121212"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_7f84df2_iGDTFH"
+      ],
+      "settings": {}
+    },
+    "17617773890c11bab9": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_e546a04_YVdA6E": {
+          "type": "ai_gen_block_e546a04",
+          "settings": {
+            "heading": "Search",
+            "results_for_text": "Search results for",
+            "result_text": "product found",
+            "results_text": "products found",
+            "no_results_heading": "No products found",
+            "no_results_text": "We couldn't find any products matching your search. Try different keywords or browse our collections.",
+            "empty_state_text": "Start searching to discover our products.",
+            "show_breadcrumb": false,
+            "home_text": "Home",
+            "search_text": "Search",
+            "show_vendor": false,
+            "show_price": true,
+            "show_price_prefix": true,
+            "price_prefix": "From",
+            "show_price_suffix": true,
+            "price_suffix": "USD",
+            "show_description": true,
+            "show_discount_percentage": true,
+            "show_button": true,
+            "button_text": "View Product",
+            "show_sale_badge": true,
+            "sale_text": "Sale",
+            "show_sold_out_badge": true,
+            "sold_out_text": "Sold Out",
+            "show_empty_button": true,
+            "empty_button_text": "Browse All Products",
+            "previous_text": "Previous",
+            "next_text": "Next",
+            "container_width": 1400,
+            "columns_desktop": 4,
+            "columns_tablet": 3,
+            "columns_mobile": "2",
+            "grid_gap": 28,
+            "title_description_spacing": 4,
+            "title_size": 42,
+            "product_title_size": 19,
+            "price_size": 20,
+            "background_color": "#ffffff",
+            "title_color": "#000000",
+            "subtitle_color": "#666666",
+            "breadcrumb_color": "#999999",
+            "product_title_color": "#0d6ba6",
+            "vendor_color": "#999999",
+            "description_color": "#666666",
+            "price_color": "#000000",
+            "sale_price_color": "#e74c3c",
+            "link_hover_color": "#242833",
+            "card_background": "#ffffff",
+            "card_border_color": "#e0e0e0",
+            "card_border_width": 1,
+            "card_border_radius": 16,
+            "card_padding": 16,
+            "badge_background": "#000000",
+            "badge_text_color": "#ffffff",
+            "sale_badge_background": "#e74c3c",
+            "badge_border_radius": 4,
+            "discount_background": "#e74c3c",
+            "discount_text_color": "#ffffff",
+            "button_background": "#0d6ba6",
+            "button_text_color": "#ffffff",
+            "button_hover_background": "#222222",
+            "button_border_radius": 40,
+            "pagination_background": "#ffffff",
+            "pagination_text_color": "#000000",
+            "pagination_border_color": "#e0e0e0",
+            "empty_background": "#f2f2f2",
+            "empty_icon_color": "#222222",
+            "section_padding_top": 44,
+            "section_padding_bottom": 52
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_e546a04_YVdA6E"
+      ],
+      "disabled": true,
+      "settings": {}
+    },
+    "main": {
+      "type": "main-search",
+      "settings": {
+        "padding_top_desktop": "0",
+        "padding_bottom_desktop": "80px",
+        "padding_top_mobile": "40px",
+        "padding_bottom_mobile": "40px",
+        "filter_options_blacklist": "Quantity, Series, Title, Frame color, size, nrr, quantity 1, quantity - 1, Pack Quantity,"
+      }
+    }
+  },
+  "order": [
+    "176177837363f99244",
+    "17617773890c11bab9",
+    "main"
+  ]
+}
