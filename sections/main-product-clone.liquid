@@ -2200,12 +2200,6 @@ body.template-product .product__media-modal * {
         </a>
         </div>
 
-        <!-- Other Product Features -->
-        {% if product.metafields.custom.product_details_features != blank or product.metafields.custom.product_details_specifications_name != blank or product.metafields.custom.product_details_download_title != blank or product.metafields.custom.product_details_title and product.metafields.custom.product_detail_description != blank or product.metafields.custom.product_details_sub_title != blank     %}
-        <div class="mt-4 product__info-container">
-         {% render 'main-product-details' , product: product %}
-        </div>
-          {% endif %}
       </section>
       
     </div>
