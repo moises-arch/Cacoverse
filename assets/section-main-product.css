@@ -136,6 +136,10 @@ product-info {
   .product__media-wrapper {
     margin-top: 0 !important;
   }
+
+  .product__column-sticky {
+    top: 0 !important;
+  }
 }
 
 @media screen and (min-width: 990px) {
