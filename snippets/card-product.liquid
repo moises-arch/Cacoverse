@@ -108,37 +108,44 @@
       {% render 'price', product: product, price_class: '', show_compare_at_price: true %}
     {% endif %}
 
-    {% if has_discounted_variants %}
-      <div class="product-card__discount-badges" aria-label="Variantes en descuento">
-        {% assign hidden_tooltip = '' %}
-        {% for variant in discounted_variants %}
-          {% assign discount_amount = variant.compare_at_price | minus: variant.price %}
-          {% assign discount_percent = discount_amount | times: 100 | divided_by: variant.compare_at_price | round %}
-          {% assign tooltip_copy = 'Ahorra ' | append: discount_percent | append: '% en ' | append: variant.title %}
+      {% if has_discounted_variants %}
+        <div class="product-card__discount-badges" aria-label="Variantes en descuento">
+          {% assign hidden_tooltip = '' %}
+          {% for variant in discounted_variants %}
+            {% assign discount_amount = variant.compare_at_price | minus: variant.price %}
+            {% assign discount_percent = discount_amount | times: 100 | divided_by: variant.compare_at_price | round %}
+            {% assign tooltip_copy = 'Ahorra ' | append: discount_percent | append: '% en ' | append: variant.title %}
 
-          {% if forloop.index0 < badge_limit %}
-            <span class="product-card__discount-badge" data-tooltip="{{ tooltip_copy | escape }}">
-              {{- variant.title | replace: '/', ' · ' -}}
+            {% if forloop.index0 < badge_limit %}
+              <span
+                class="product-card__discount-badge"
+                data-tooltip="{{ tooltip_copy | escape }}"
+                title="{{ tooltip_copy | escape }}"
+                aria-label="{{ tooltip_copy | escape }}"
+              >
+                {{- variant.title | replace: '/', ' · ' -}}
+              </span>
+            {% else %}
+              {% assign hidden_tooltip = hidden_tooltip | append: variant.title %}
+              {% unless forloop.last %}
+                {% assign hidden_tooltip = hidden_tooltip | append: ' • ' %}
+              {% endunless %}
+            {% endif %}
+          {% endfor %}
+
+          {% if discounted_variants.size > badge_limit %}
+            {% assign remaining = discounted_variants.size | minus: badge_limit %}
+            <span
+              class="product-card__discount-badge product-card__discount-badge--more"
+              data-tooltip="{{ hidden_tooltip | escape }}"
+              title="{{ hidden_tooltip | escape }}"
+              aria-label="{{ hidden_tooltip | escape }}"
+            >
+              +{{ remaining }}
             </span>
-          {% else %}
-            {% assign hidden_tooltip = hidden_tooltip | append: variant.title %}
-            {% unless forloop.last %}
-              {% assign hidden_tooltip = hidden_tooltip | append: ' • ' %}
-            {% endunless %}
           {% endif %}
-        {% endfor %}
-
-        {% if discounted_variants.size > badge_limit %}
-          {% assign remaining = discounted_variants.size | minus: badge_limit %}
-          <span
-            class="product-card__discount-badge product-card__discount-badge--more"
-            data-tooltip="{{ hidden_tooltip | escape }}"
-          >
-            +{{ remaining }}
-          </span>
-        {% endif %}
-      </div>
-    {% endif %}
+        </div>
+      {% endif %}
   </div>
   {% assign has_color = false %}
   {% assign has_series = false %}

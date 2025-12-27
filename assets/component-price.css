@@ -77,9 +77,11 @@
 }
 
 .price--on-sale .price__sale {
-  display: initial;
+  display: inline-flex;
   flex-direction: row;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  align-items: baseline;
+  gap: 0.28rem;
 }
 
 .price--center {
@@ -89,8 +91,13 @@
 
 .price--on-sale .price-item--regular {
   text-decoration: line-through;
-  color: rgba(var(--color-foreground), 0.75);
-  font-size: 1.3rem;
+  color: rgba(var(--color-foreground), 0.45);
+  font-size: 0.95rem;
+}
+
+.price--on-sale .price-item--sale {
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
 
 .unit-price {
@@ -114,14 +121,18 @@
 .price .badge {
   background-color: #fa521e !important; /* orange background */
   font-weight: 700;
-  padding: 5px 14px !important;         /* more horizontal padding */
-  border-radius: 999px !important;      /* perfect pill corners */
-  letter-spacing: 0.5px;
+  padding: 4px 11px !important;
+  border-radius: 999px !important;
+  letter-spacing: 0.15px;
   text-transform: uppercase;
-  font-size: 13px;
+  font-size: 11px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-width: 58px;
+  line-height: 1.05;
   border: none !important;
+  white-space: nowrap;
 }
 
 .product-card__price-row {
@@ -129,6 +140,7 @@
   flex-wrap: wrap;
   gap: 0.8rem;
   align-items: flex-start;
+  margin-top: 0.35rem;
 }
 
 .product-card__discount-badges {
@@ -143,14 +155,20 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.35rem 0.7rem;
-  background: rgba(var(--color-foreground), 0.05);
-  border: 1px solid rgba(var(--color-foreground), 0.08);
+  padding: 0.45rem 0.9rem;
+  background: linear-gradient(180deg, rgba(var(--color-foreground), 0.06), rgba(var(--color-foreground), 0.04));
+  border: 1px solid rgba(var(--color-foreground), 0.12);
   border-radius: 999px;
-  font-size: 1.2rem;
-  color: rgba(var(--color-foreground), 0.85);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: rgba(var(--color-foreground), 0.9);
   line-height: 1.1;
   white-space: nowrap;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  max-width: 16.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .product-card__discount-badge::after {
@@ -163,11 +181,11 @@
   max-width: 260px;
   padding: 0.7rem 1rem;
   background: rgba(var(--color-background), 0.98);
-  border: 1px solid rgba(var(--color-foreground), 0.08);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(var(--color-foreground), 0.12);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
   color: rgba(var(--color-foreground), 0.9);
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   line-height: 1.4;
   opacity: 0;
   visibility: hidden;
@@ -182,6 +200,13 @@
   opacity: 1;
   visibility: visible;
   transform: translate(-50%, 6px);
+}
+
+.product-card__discount-badge:hover,
+.product-card__discount-badge:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  border-color: rgba(var(--color-foreground), 0.2);
 }
 
 .product-card__discount-badge--more {

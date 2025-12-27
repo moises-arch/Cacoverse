@@ -626,28 +626,19 @@
     .wd40-sale-link {
        color: #d7182b !important;
        font-weight: 800 !important;
-       background: #ffffff;
+       background: linear-gradient(90deg, rgba(243, 62, 92, 0.28) 0%, rgba(243, 62, 92, 0.12) 55%, rgba(243, 62, 92, 0.04) 100%);
        padding: 11px 12px;
        border-radius: 0;
        border: none;
-       box-shadow: none;
+       box-shadow: 0 2px 6px rgba(215, 24, 43, 0.12);
        display: flex;
        align-items: center;
        gap: 8px;
        position: relative;
        overflow: hidden;
-       animation: wd40SalePulse 1.2s ease-in-out infinite alternate;
     }
     .wd40-sale-link svg { color: #d7182b; }
-    .wd40-cat-header-row.sale-active.active { border-left-color: #d7182b; background: linear-gradient(90deg, rgba(243, 62, 92, 0.16) 0%, rgba(243, 62, 92, 0.06) 60%, rgba(243, 62, 92, 0.01) 100%); }
-    .wd40-cat-item:hover .wd40-cat-header-row .wd40-sale-link,
-    .wd40-cat-header-row.sale-active .wd40-sale-link { background: linear-gradient(90deg, rgba(243, 62, 92, 0.16) 0%, rgba(243, 62, 92, 0.06) 60%, rgba(243, 62, 92, 0.01) 100%); }
-    .wd40-cat-item:hover .wd40-cat-header-row.sale-active,
-    .wd40-cat-header-row.sale-active:hover { border-left-color: #d7182b; }
-    @keyframes wd40SalePulse {
-      0% { opacity: 0.65; }
-      100% { opacity: 1; }
-    }
+    .wd40-cat-header-row.sale-active.active { border-left-color: #d7182b; }
     .wd40-cat-badge {
        background: #ffd800;
        color: #111;
