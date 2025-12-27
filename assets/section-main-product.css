@@ -20,6 +20,85 @@ product-info {
   padding-left: 0;
 }
 
+/* PDP layout refinements */
+@media screen and (min-width: 990px) {
+  .product-info--pdp .product {
+    grid-template-columns: minmax(0, 1fr) 600px !important;
+    column-gap: 3rem;
+    align-items: flex-start;
+  }
+
+  .product-info--pdp.product--right {
+    grid-template-columns: 600px minmax(0, 1fr) !important;
+  }
+
+  .product-info--pdp .product__info-wrapper,
+  .product-info--pdp .product__info-container {
+    width: 600px !important;
+    max-width: 600px !important;
+    margin-left: auto;
+  }
+
+  .product-info--pdp.product--right .product__info-wrapper,
+  .product-info--pdp.product--right .product__info-container {
+    margin-left: 0;
+    margin-right: auto;
+  }
+}
+
+/* PDP gallery: keep media static and neutralize default modal affordances */
+.product-info--pdp .product__media-item,
+.product-info--pdp .product__media-item *,
+.product-info--pdp .product__media,
+.product-info--pdp .product__media img,
+.product-info--pdp .product__modal-opener,
+.product-info--pdp .product__modal-opener * {
+  cursor: default !important;
+  transition: none !important;
+}
+
+.product-info--pdp .product__media-item:hover,
+.product-info--pdp .product__media-item:hover *,
+.product-info--pdp .product__modal-opener:hover,
+.product-info--pdp .product__modal-opener:hover * {
+  transform: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+.product-info--pdp .product__media-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-info--pdp .product__media-item img {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  object-fit: contain !important;
+}
+
+.product-info--pdp .product__media-toggle,
+.product-info--pdp .product__media-toggle *,
+.product-info--pdp .product__modal-opener .product__media-toggle,
+.product-info--pdp .product__modal-opener .product__media-toggle *,
+.product-info--pdp .product__modal-opener .product__media-icon,
+.product-info--pdp .product__modal-opener .product__media-button,
+.product-info--pdp .product__modal-opener .product__media-button * {
+  display: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.product-info--pdp .product__media-toggle::before,
+.product-info--pdp .product__media-toggle::after {
+  display: none !important;
+  content: none !important;
+}
+
 
 @media screen and (min-width: 750px) {
   .product__column-sticky {
@@ -4270,5 +4349,3 @@ body.template-product .product__media-modal * {
   visibility: visible;
   transform: translate(-50%, 0);
 }
-
-
