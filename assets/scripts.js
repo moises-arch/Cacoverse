@@ -82,16 +82,26 @@ buttons.forEach(button => {
   });
 });
 
- 
-// FAQS    
-$('.faq-question').on('click', function(){
-  $('.faq-answer').removeClass('active');
-  //$(this).parent().addClass('active');
-  $(this).parent().toggleClass("active");
 
-  $(this).next().slideToggle();
-  $(this).parent().siblings().removeClass('active');
-  $(this).parent().siblings().find('.faq-answer').slideUp('active');
+// FAQS
+$('.faq-question').on('click', function(){
+  const $question = $(this);
+  const $item = $question.parent();
+  const $answer = $question.next('.faq-answer');
+  const willOpen = !$item.hasClass('active');
+
+  $('.faq-item').not($item).removeClass('active').find('.faq-question').attr('aria-expanded', 'false');
+  $('.faq-item').not($item).find('.faq-answer').attr('aria-hidden', 'true').slideUp();
+
+  if (willOpen) {
+    $item.addClass('active');
+    $question.attr('aria-expanded', 'true');
+    $answer.attr('aria-hidden', 'false').slideDown();
+  } else {
+    $item.removeClass('active');
+    $question.attr('aria-expanded', 'false');
+    $answer.attr('aria-hidden', 'true').slideUp();
+  }
 });
 
 
@@ -460,5 +470,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-
 
