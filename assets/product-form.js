@@ -20,7 +20,10 @@ if (!customElements.get('product-form')) {
         this.hideErrors = this.dataset.hideErrors === 'true';
 
         // ===== NUEVO: referencias y hooks de variante =====
-        this.productEl = this.closest('product-info') || document.querySelector('product-info');
+        this.productEl =
+          this.closest('.product') ||
+          this.closest('product-info') ||
+          document.querySelector('product-info');
         this._lastVariantId = this.variantIdInput?.value || null;
 
         this._onVariantEvent = (e) => {
