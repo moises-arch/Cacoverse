@@ -20,6 +20,16 @@
     padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
   }
 
+  .section-{{ section.id }}-width {
+    max-width: 675px;
+    margin: 0 auto;
+  }
+
+  .section-{{ section.id }}-info {
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
   @media screen and (min-width: 750px) {
     .section-{{ section.id }}-padding {
       padding-top: {{ section.settings.padding_top }}px;
@@ -64,7 +74,7 @@
     >
   {%- endif -%}
 
-  <div class="page-width">
+  <div class="page-width section-{{ section.id }}-width">
     <div class="product product--medium product--thumbnail grid grid--1-col{% if product.media.size > 0 %} grid--2-col-tablet{% else %} product--no-media{% endif %} product--left">
       <div class="grid__item product__media-wrapper">
         {%- if product.media.size > 0 -%}
@@ -81,7 +91,7 @@
       <div class="product__info-wrapper grid__item">
         <section
           id="ProductInfo-{{ section.id }}"
-          class="product__info-container product__column-sticky"
+          class="product__info-container product__column-sticky section-{{ section.id }}-info"
           data-section="{{ section.id }}"
           data-url="{{ product.url }}"
         >
