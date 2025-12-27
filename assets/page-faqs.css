@@ -103,8 +103,6 @@
   box-shadow: none;
   overflow: visible;
   padding-bottom: 0;
-  padding-left: 0;
-  padding-right: 0;
 }
 
 .product-details-accordion__header{
@@ -217,7 +215,7 @@
 }
 
 .faq-answer__inner{
-  padding: 8px 4px 12px;
+  padding: 8px 12px 12px;
   background: #f9fbff;
 }
 
