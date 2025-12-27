@@ -32,10 +32,6 @@ product-info {
     grid-template-columns: 600px minmax(0, 1fr) !important;
   }
 
-  .product-info--pdp .product__info-wrapper {
-    align-self: flex-start;
-  }
-
   .product-info--pdp .product__info-wrapper,
   .product-info--pdp .product__info-container {
     width: 600px !important;
@@ -385,17 +381,11 @@ a.product__text {
 @media screen and (min-width: 990px) {
   .product__info-container {
     padding: 22px 24px 24px;
-    border-top-right-radius: 20px;
-    border-bottom-right-radius: 20px;
   }
 }
 
 .product__info-container > * + * {
   margin-top: 0.7rem;
-}
-
-.product-details-accordion {
-  margin-top: 0;
 }
 
 .product__text.caption-with-letter-spacing {
