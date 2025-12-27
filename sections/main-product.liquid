@@ -68,7 +68,10 @@
         <div class="pdp__price-row" aria-live="polite">
           <div class="pdp__price" data-price>
             <span data-price-current>{{ initial_variant.price | money }}</span>
-            <span data-price-compare{% unless initial_variant.compare_at_price > initial_variant.price %} style="display:none"{% endunless %}>{{ initial_variant.compare_at_price | money }}</span>
+            <span class="pdp__price-compare-wrap"{% unless initial_variant.compare_at_price > initial_variant.price %} style="display:none"{% endunless %}>
+              <span class="pdp__price-compare-label">{{ 'products.product.regular_price' | t }}</span>
+              <span data-price-compare>{{ initial_variant.compare_at_price | money }}</span>
+            </span>
             <span class="pdp__badge pdp__badge--sale" data-price-sale></span>
             <span class="pdp__badge pdp__badge--soldout" data-price-soldout{% if initial_variant.available %} style="display:none"{% endif %}>{{ 'products.product.sold_out' | t }}</span>
           </div>
