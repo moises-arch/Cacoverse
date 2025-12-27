@@ -85,7 +85,16 @@
   border: none;
   border-radius: 0;
   padding: 0;
+}
+
+.product-details-accordion-wrapper{
   margin-top: 24px;
+}
+
+@media screen and (min-width: 990px){
+  .product-details-accordion-wrapper{
+    margin-top: 32px;
+  }
 }
 
 .product-details-accordion__shell{
