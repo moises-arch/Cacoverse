@@ -9,6 +9,10 @@
     data-section-id="{{ section.id }}"
     data-product-id="{{ product.id }}"
     data-money-format='{{ shop.money_format | json }}'
+    data-text-add="{{ 'products.product.add_to_cart' | t | escape }}"
+    data-text-soldout="{{ 'products.product.sold_out' | t | escape }}"
+    data-text-instock="{{ 'products.product.inventory_in_stock' | t | escape }}"
+    data-text-lowstock="{{ 'products.product.inventory_low_stock_show_count' | t: quantity: 1 | escape }}"
   >
     <div class="pdp__layout">
       <div class="pdp__media">
@@ -77,6 +81,8 @@
 
         {% form 'product', product, id: product_form_id, class: 'pdp__form', novalidate: 'novalidate' %}
           <input type="hidden" name="id" value="{{ initial_variant.id }}">
+          <input type="hidden" name="form_type" value="product">
+          <input type="hidden" name="utf8" value="✓">
 
           {% unless product.has_only_default_variant %}
             <div class="pdp__options" data-options>
@@ -110,6 +116,9 @@
                 min="{{ initial_variant.quantity_rule.min | default: 1 }}"
                 step="{{ initial_variant.quantity_rule.increment | default: 1 }}"
                 value="{{ initial_variant.quantity_rule.min | default: 1 }}"
+                {% if initial_variant.quantity_rule.max > 0 %}
+                  max="{{ initial_variant.quantity_rule.max }}"
+                {% endif %}
               >
             </label>
             <button type="submit" name="add" class="pdp__btn" data-add-to-cart>

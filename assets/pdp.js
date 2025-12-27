@@ -67,6 +67,13 @@
     const addToCartText = root.querySelector('[data-add-to-cart-text]');
     const quantityInput = root.querySelector('input[name="quantity"]');
 
+    const texts = {
+      add: root.dataset.textAdd || 'Add to cart',
+      sold: root.dataset.textSoldout || 'Sold out',
+      inStock: root.dataset.textInstock || 'In stock',
+      lowStockTemplate: root.dataset.textLowstock || '%d in stock'
+    };
+
     const findVariant = () => {
       const selectedOptions = [];
       root.querySelectorAll('.pdp__option').forEach((wrapper, index) => {
@@ -83,14 +90,14 @@
       const isAvailable = variant?.available;
       stock.classList.toggle('is-soldout', !isAvailable);
       if (!isAvailable) {
-        stock.textContent = window.themeStrings?.soldOut || 'Sold out';
+        stock.textContent = texts.sold;
         return;
       }
       const qty = variant.inventory_quantity;
       if (variant.inventory_management === 'shopify' && qty !== null && qty !== undefined && qty <= 5) {
-        stock.textContent = `${qty} in stock`;
+        stock.textContent = texts.lowStockTemplate.replace('%d', qty);
       } else {
-        stock.textContent = window.themeStrings?.inStock || 'In stock';
+        stock.textContent = texts.inStock;
       }
     };
 
@@ -99,9 +106,7 @@
       const available = Boolean(variant?.available);
       addToCart.disabled = !available;
       addToCart.setAttribute('aria-disabled', String(!available));
-      addToCartText.textContent = available
-        ? (window.themeStrings?.addToCart || 'Add to cart')
-        : (window.themeStrings?.soldOut || 'Sold out');
+      addToCartText.textContent = available ? texts.add : texts.sold;
     };
 
     const updatePrice = (variant) => {
@@ -131,6 +136,11 @@
       if (quantityInput) {
         quantityInput.min = variant.quantity_rule?.min ?? 1;
         quantityInput.step = variant.quantity_rule?.increment ?? 1;
+        if (variant.quantity_rule?.max > 0) {
+          quantityInput.max = variant.quantity_rule.max;
+        } else {
+          quantityInput.removeAttribute('max');
+        }
       }
     };
 
