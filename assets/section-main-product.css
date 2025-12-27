@@ -113,6 +113,29 @@ product-info {
   .product--right .product__media-wrapper {
     order: 2;
   }
+
+  .product__info-wrapper {
+    margin-top: -45px;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .product__info-wrapper,
+  .product__media-wrapper {
+    align-self: flex-start !important;
+  }
+
+  .product__info-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin-top: -45px !important;
+    padding-top: 0 !important;
+  }
+
+  .product__media-wrapper {
+    margin-top: 0 !important;
+  }
 }
 
 @media screen and (min-width: 990px) {
