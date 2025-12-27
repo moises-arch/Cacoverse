@@ -1069,19 +1069,12 @@ button[name="add"]:hover,
       </a>
       </div>
 
+    </div>
   </div>
-</div>
 
-<!-- Other Product Features -->
-{% if product.metafields.custom.product_details_features != blank or product.metafields.custom.product_details_specifications_name != blank or product.metafields.custom.product_details_download_title != blank or product.metafields.custom.product_details_title and product.metafields.custom.product_detail_description != blank or product.metafields.custom.product_details_sub_title != blank %}
-  <div class="page-width product-details-accordion">
-    {% render 'main-product-details', product: product %}
-  </div>
-{% endif %}
-
-{% assign popups = section.blocks | where: 'type', 'popup' %}
-{%- for block in popups -%}
-  <modal-dialog id="PopupModal-{{ block.id }}" class="product-popup-modal" {{ block.shopify_attributes }}>
+  {% assign popups = section.blocks | where: 'type', 'popup' %}
+  {%- for block in popups -%}
+    <modal-dialog id="PopupModal-{{ block.id }}" class="product-popup-modal" {{ block.shopify_attributes }}>
       <div
         role="dialog"
         aria-label="{{ block.settings.text }}"
