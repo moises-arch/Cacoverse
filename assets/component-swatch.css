@@ -1,82 +1,27 @@
-/* =========================================
-   SWATCHES — MINIMAL ROUNDED 
-   ========================================= */
+/* swatch lives in its own file for reusability of the swatch in swatch-input and dropdown */
+.swatch {
+  --swatch--size: var(--swatch-input--size, 4.4rem);
+  --swatch--border-radius: var(--swatch-input--border-radius, 50%);
 
-.product-form__input--swatch{
-  --sw-radius: 8px;                  /* 👈 redondeo exterior */
-  --sw-size: 40px;                    /* tamaño del color */
-  --sw-pad: 4px;                      /* padding del marco */
-  --sw-bw: 1px;                       /* borde minimalista */
-  --sw-border: rgba(17,24,39,.18);
-  --sw-active: #0d6ba6;
-
-  display: flex !important;
-  flex-wrap: wrap !important;
-  gap: 0px !important;
+  display: block;
+  width: var(--swatch--size);
+  max-width: 100%;
+  aspect-ratio: 1 / 1;
+  background: var(--swatch--background);
+  background-position: var(--swatch-focal-point, initial);
+  background-size: cover;
+  background-origin: border-box;
+  border: 0.1rem solid rgba(var(--color-foreground), 0.15);
+  border-radius: var(--swatch--border-radius);
 }
 
-/* 1) Si existe wrapper (muchos themes lo usan), también lo redondeamos */
-.product-form__input--swatch .swatch-input{
-  border-radius: var(--sw-radius) !important;
-  overflow: hidden !important;
+.swatch--square {
+  --swatch--border-radius: var(--swatch-input--border-radius, 0.2rem);
 }
 
-/* 2) El marco REAL: el label */
-.product-form__input--swatch .swatch-input__input + .swatch-input__label{
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-
-  padding: var(--sw-pad) !important;
-  background: #fff !important;
-
-  border: var(--sw-bw) solid var(--sw-border) !important;
-  border-radius: var(--sw-radius) !important;
-  overflow: hidden !important;
-
-  box-shadow: none !important;
-  outline: 0 !important;
+.swatch--unavailable {
+  border-style: dashed;
+  border-color: rgba(var(--color-foreground), 0.5);
 }
 
-/* 3) Muchos themes dibujan el borde con pseudo-elementos cuadrados.
-      Los apagamos para que no “pisen” el borde redondeado. */
-.product-form__input--swatch .swatch-input__input + .swatch-input__label::before,
-.product-form__input--swatch .swatch-input__input + .swatch-input__label::after{
-  content: none !important;
-}
 
-/* 4) El color/imagen adentro */
-.product-form__input--swatch .swatch{
-  width: var(--sw-size) !important;
-  aspect-ratio: 1 / 1 !important;
-  display: block !important;
-
-  border: 0 !important;
-  border-radius: calc(var(--sw-radius) - var(--sw-pad)) !important;
-
-  background: var(--swatch--background) !important;
-  background-position: var(--swatch-focal-point, center) !important;
-  background-size: cover !important;
-}
-
-/* 5) Aunque el theme fuerce “square”, seguimos redondeando */
-.product-form__input--swatch .swatch--square{
-  border-radius: calc(var(--sw-radius) - var(--sw-pad)) !important;
-}
-
-/* 6) Estados minimalistas */
-@media (hover:hover) and (pointer:fine){
-  .product-form__input--swatch .swatch-input__input + .swatch-input__label:hover{
-    border-color: rgba(17,24,39,.32) !important;
-  }
-}
-
-.product-form__input--swatch .swatch-input__input:checked + .swatch-input__label{
-  border-color: var(--sw-active) !important;
-}
-
-.product-form__input--swatch .swatch-input__input:focus-visible + .swatch-input__label{
-  border-color: var(--sw-active) !important;
-  outline: 2px solid color-mix(in srgb, var(--sw-active) 25%, transparent) !important;
-  outline-offset: 2px !important;
-}
