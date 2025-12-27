@@ -2653,23 +2653,26 @@ label.quantity__label.form__label {
     position: relative;
   }
 
-  /* Mostrar solo el slide activo a pantalla completa */
   .caco-media-gallery .product__media-list {
-    display: block !important;
+    display: flex !important;
+    flex-wrap: nowrap;
+    align-items: stretch;
     margin: 0;
     padding: 0;
+    gap: 0;
+    overflow: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
   }
 
-  .caco-media-gallery .product__media-list .product__media-item {
-    display: none !important;
-    width: 100% !important;
+  .caco-media-gallery .product__media-list .product__media-item,
+  .caco-media-gallery .product__media-list .slider__slide {
+    flex: 0 0 100% !important;
     max-width: 100% !important;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
   }
-
-  .caco-media-gallery .product__media-list .product__media-item.is-active {
-    display: block !important;
-  }
-
+  
   .caco-media-gallery .product__media-item .caco-square-box {
     width: 100%;
     min-height: 320px;
