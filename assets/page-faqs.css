@@ -102,6 +102,7 @@
   border-radius: 0;
   box-shadow: none;
   overflow: visible;
+  padding-bottom: 0;
 }
 
 .product-details-accordion__header{
@@ -144,7 +145,7 @@
 }
 
 .product-details-accordion .faq-item:last-child{
-  margin-bottom: 18px;
+  margin-bottom: 8px;
 }
 
 .product-details-accordion .faq-question{
@@ -206,6 +207,7 @@
 .product-details-accordion .faq-answer{
   display: none;
   border-top: 1px dashed #e2e8f0;
+  padding-bottom: 0;
 }
 
 .product-details-accordion .faq-item.active .faq-answer{
@@ -213,7 +215,7 @@
 }
 
 .faq-answer__inner{
-  padding: 6px 22px 22px;
+  padding: 8px 12px 12px;
   background: #f9fbff;
 }
 
@@ -225,8 +227,11 @@
 
 .feature-grid, .spec-grid, .resource-grid{
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  column-gap: 12px;
+  row-gap: 12px;
+  padding: 0;
+  margin: 0;
 }
 
 .feature-pill{
