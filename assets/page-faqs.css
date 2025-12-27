@@ -103,6 +103,8 @@
   box-shadow: none;
   overflow: visible;
   padding-bottom: 0;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .product-details-accordion__header{
@@ -215,7 +217,7 @@
 }
 
 .faq-answer__inner{
-  padding: 8px 12px 12px;
+  padding: 8px 4px 12px;
   background: #f9fbff;
 }
 
@@ -227,9 +229,9 @@
 
 .feature-grid, .spec-grid, .resource-grid{
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  column-gap: 12px;
-  row-gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  column-gap: 10px;
+  row-gap: 10px;
   padding: 0;
   margin: 0;
 }
@@ -237,17 +239,17 @@
 .feature-pill{
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  padding: 14px 16px;
+  gap: 10px;
+  padding: 12px 14px;
   background: #ffffff;
   border: 1px solid #e3eaf5;
-  border-radius: 14px;
-  box-shadow: inset 0 1px 0 #f2f6fb, 0 5px 18px rgba(15, 23, 42, 0.05);
+  border-radius: 12px;
+  box-shadow: inset 0 1px 0 #f2f6fb, 0 3px 12px rgba(15, 23, 42, 0.04);
 }
 
 .feature-pill__icon{
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   display: grid;
   place-items: center;
   background: #f0f6ff;
@@ -258,6 +260,7 @@
 .feature-pill__label{
   font-weight: 600;
   color: #0f172a;
+  line-height: 1.3;
 }
 
 .spec-grid__item{
