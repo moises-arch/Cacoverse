@@ -1,0 +1,298 @@
+{%- liquid
+  assign bg = section.settings.background | default: '#0c2745'
+  assign card_bg = section.settings.card_background | default: '#102c4a'
+  assign text_color = section.settings.text_color | default: '#f7fbff'
+  assign accent = section.settings.accent_color | default: '#60a5fa'
+-%}
+
+{%- style -%}
+#shopify-section-{{ section.id }} .pdp-story {
+  background: radial-gradient(120% 140% at 15% 30%, rgba(96,165,250,0.14) 0%, rgba(96,165,250,0) 55%),
+    radial-gradient(140% 160% at 90% 20%, rgba(250,101,12,0.14) 0%, rgba(250,101,12,0) 55%),
+    {{ bg }};
+  color: {{ text_color }};
+  padding: 52px 0 62px;
+  position: relative;
+  overflow: hidden;
+}
+
+#shopify-section-{{ section.id }} .pdp-story::before,
+#shopify-section-{{ section.id }} .pdp-story::after {
+  content: '';
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: linear-gradient(120deg, rgba(96,165,250,0.12), rgba(250,101,12,0.12));
+  filter: blur(38px);
+  opacity: 0.45;
+}
+
+#shopify-section-{{ section.id }} .pdp-story::before { top: -40px; left: -80px; }
+#shopify-section-{{ section.id }} .pdp-story::after { bottom: -60px; right: -60px; }
+
+#shopify-section-{{ section.id }} .pdp-story__wave {
+  position: absolute;
+  inset: -120px 0 auto 0;
+  width: 100%;
+  height: 200px;
+  background: radial-gradient(120% 120% at 30% 20%, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 60%),
+    radial-gradient(130% 130% at 80% 10%, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 60%);
+  filter: blur(32px);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+#shopify-section-{{ section.id }} .pdp-story__inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 28px;
+}
+
+#shopify-section-{{ section.id }} .pdp-story__layout {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 24px;
+  align-items: stretch;
+}
+
+#shopify-section-{{ section.id }} .pdp-story__intro {
+  grid-column: span 5;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 24px 26px;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.18);
+}
+
+#shopify-section-{{ section.id }} .pdp-story__eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-weight: 800;
+  margin: 0 0 10px;
+  color: {{ accent }};
+  font-size: 12px;
+}
+
+#shopify-section-{{ section.id }} .pdp-story__title {
+  font-size: clamp(26px, 2.8vw, 34px);
+  line-height: 1.1;
+  margin: 0 0 12px;
+}
+
+#shopify-section-{{ section.id }} .pdp-story__lede {
+  margin: 0 0 18px;
+  color: rgba(247, 251, 255, 0.86);
+  line-height: 1.65;
+}
+
+#shopify-section-{{ section.id }} .pdp-story__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  background: {{ accent }};
+  color: #0b1c33;
+  border-radius: 999px;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 14px 30px rgba(96,165,250,0.3);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+#shopify-section-{{ section.id }} .pdp-story__cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 38px rgba(96,165,250,0.38);
+}
+
+#shopify-section-{{ section.id }} .pdp-story__grid {
+  grid-column: span 7;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+#shopify-section-{{ section.id }} .pdp-story__card {
+  background: {{ card_bg }};
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 16px 16px 18px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px 14px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 16px 38px rgba(0,0,0,0.22);
+}
+
+#shopify-section-{{ section.id }} .pdp-story__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  color: {{ text_color }};
+  font-size: 12px;
+  font-weight: 700;
+}
+
+#shopify-section-{{ section.id }} .pdp-story__card-eyebrow {
+  grid-column: 1 / -1;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(247,251,255,0.7);
+  margin: 0;
+}
+
+#shopify-section-{{ section.id }} .pdp-story__card-title {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.4;
+}
+
+#shopify-section-{{ section.id }} .pdp-story__text {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: rgba(247, 251, 255, 0.8);
+  line-height: 1.6;
+}
+
+#shopify-section-{{ section.id }} .pdp-story__icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#shopify-section-{{ section.id }} .pdp-story__icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+@media (max-width: 989px) {
+  #shopify-section-{{ section.id }} .pdp-story {
+    padding: 40px 0 48px;
+  }
+
+  #shopify-section-{{ section.id }} .pdp-story__layout {
+    grid-template-columns: 1fr;
+  }
+
+  #shopify-section-{{ section.id }} .pdp-story__intro,
+  #shopify-section-{{ section.id }} .pdp-story__grid {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 639px) {
+  #shopify-section-{{ section.id }} .pdp-story__grid {
+    grid-template-columns: 1fr;
+  }
+
+  #shopify-section-{{ section.id }} .pdp-story__intro {
+    padding: 20px;
+  }
+
+  #shopify-section-{{ section.id }} .pdp-story__card {
+    grid-template-columns: 1fr;
+  }
+}
+{%- endstyle -%}
+
+<section class="pdp-story">
+  <div class="pdp-story__wave" aria-hidden="true"></div>
+  <div class="page-width">
+    <div class="pdp-story__inner">
+      <div class="pdp-story__layout">
+        <div class="pdp-story__intro">
+          {%- if section.settings.eyebrow != blank -%}
+            <p class="pdp-story__eyebrow">{{ section.settings.eyebrow }}</p>
+          {%- endif -%}
+          {%- if section.settings.heading != blank -%}
+            <h2 class="pdp-story__title">{{ section.settings.heading }}</h2>
+          {%- endif -%}
+          {%- if section.settings.subheading != blank -%}
+            <p class="pdp-story__lede">{{ section.settings.subheading }}</p>
+          {%- endif -%}
+          {%- if section.settings.cta_text != blank -%}
+            <a class="pdp-story__cta" href="{{ section.settings.cta_link | default: '#MainProduct-' | append: section.id }}">{{ section.settings.cta_text }}</a>
+          {%- endif -%}
+        </div>
+
+        <div class="pdp-story__grid">
+          {%- for block in section.blocks -%}
+            <article class="pdp-story__card" {{ block.shopify_attributes }}>
+              {%- if block.settings.icon != blank -%}
+                <span class="pdp-story__icon" aria-hidden="true">
+                  <img src="{{ block.settings.icon | image_url: width: 96 }}" alt="">
+                </span>
+              {%- endif -%}
+              {%- if block.settings.chip_text != blank -%}
+                <span class="pdp-story__chip">{{ block.settings.chip_text }}</span>
+              {%- endif -%}
+              {%- if block.settings.eyebrow != blank -%}
+                <p class="pdp-story__card-eyebrow">{{ block.settings.eyebrow }}</p>
+              {%- endif -%}
+              {%- if block.settings.title != blank -%}
+                <h3 class="pdp-story__card-title">{{ block.settings.title }}</h3>
+              {%- endif -%}
+              {%- if block.settings.text != blank -%}
+                <p class="pdp-story__text">{{ block.settings.text }}</p>
+              {%- endif -%}
+            </article>
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product storytelling grid",
+  "settings": [
+    {"type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Built for crews"},
+    {"type": "text", "id": "heading", "label": "Heading", "default": "Story-first product layout"},
+    {"type": "textarea", "id": "subheading", "label": "Subheading", "default": "Place the why, the specs, and the assurances in one modern view so procurement and crews can align quickly."},
+    {"type": "text", "id": "cta_text", "label": "CTA label", "default": "Talk to an expert"},
+    {"type": "url", "id": "cta_link", "label": "CTA link"},
+    {"type": "color", "id": "background", "label": "Background", "default": "#0c2745"},
+    {"type": "color", "id": "card_background", "label": "Card background", "default": "#0f3159"},
+    {"type": "color", "id": "text_color", "label": "Text color", "default": "#f7fbff"},
+    {"type": "color", "id": "accent_color", "label": "Accent color", "default": "#60a5fa"}
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature tile",
+      "settings": [
+        {"type": "image_picker", "id": "icon", "label": "Icon"},
+        {"type": "text", "id": "chip_text", "label": "Chip text", "default": "Field proven"},
+        {"type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Compliance"},
+        {"type": "text", "id": "title", "label": "Title", "default": "Lead with the details that matter"},
+        {"type": "textarea", "id": "text", "label": "Body copy", "default": "Pair the headline with the proofcertifications, materials, and usage notes in a single glance."}
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product storytelling grid",
+      "category": "Product",
+      "blocks": [
+        {"type": "feature"},
+        {"type": "feature"},
+        {"type": "feature"}
+      ]
+    }
+  ]
+}
+{% endschema %}

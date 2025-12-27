@@ -1,0 +1,122 @@
+variant-selects {
+  display: block;
+}
+
+.product-form__input {
+  position: relative;
+}
+
+.product-form__input input[type='radio'] {
+  clip: rect(0, 0, 0, 0);
+  overflow: hidden;
+  position: absolute;
+  height: 1px;
+  width: 1px;
+}
+
+.product-form__input input[type='radio']:not(.disabled):not(.visually-disabled) + label > .label-unavailable {
+  display: none;
+}
+
+.product-form__input--dropdown {
+  margin-bottom: 1.2rem;
+}
+
+.product-form__input--dropdown .select {
+  border-radius: var(--pdp-radius, 16px);
+  border: 1px solid var(--pdp-border, #d9e0ea);
+  background: #fff;
+}
+
+.product-form__input--dropdown .dropdown-swatch + select {
+  padding-left: 4.2rem;
+}
+
+.product-form__input--dropdown .dropdown-swatch {
+  position: absolute;
+  left: 1.4rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(12, 28, 51, 0.08);
+}
+
+.product-form__input--pill input[type='radio'] + label {
+  border: 1px solid var(--pdp-border, #d9e0ea);
+  background-color: #fff;
+  color: var(--pdp-ink, #0c1c33);
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.4rem 0.6rem 0 0;
+  padding: 0.8rem 1.6rem;
+  font-size: 1.4rem;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.product-form__input--pill input[type='radio'] + label::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  box-shadow: 0 14px 32px rgba(12, 28, 51, 0.05);
+  z-index: -1;
+}
+
+.product-form__input--pill input[type='radio'] + label:hover {
+  border-color: var(--pdp-cta, #0b7ba7);
+  box-shadow: 0 18px 36px rgba(11, 123, 167, 0.14);
+}
+
+.product-form__input--pill input[type='radio']:checked + label {
+  background-color: var(--pdp-cta, #0b7ba7);
+  color: #fff;
+  border-color: var(--pdp-cta, #0b7ba7);
+}
+
+.product-form__input--pill input[type='radio']:disabled + label,
+.product-form__input--pill input[type='radio'].disabled + label {
+  border-color: rgba(12, 28, 51, 0.12);
+  color: rgba(12, 28, 51, 0.55);
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.product-form__input--pill input[type='radio']:focus-visible + label {
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--pdp-cta, #0b7ba7) 30%, transparent);
+}
+
+.product-form__input input[type="radio"].disabled + label::after,
+.product-form__input input[type="radio"][disabled] + label::after,
+.product-form__input button[aria-disabled="true"]::after {
+  content: '\00d7';
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  color: #fff;
+  background: rgba(12, 28, 51, 0.55);
+  border-radius: inherit;
+}
+
+.product-form__input button[aria-disabled="true"],
+.product-form__input input[type="radio"][disabled] + label {
+  pointer-events: none;
+}
+
+.product-form__input input[type="radio"] + label .pack-discount,
+.product-form__input input[type="radio"] + label [class*="discount"],
+.product-form__input input[type="radio"] + label [class*="percent"] {
+  color: #fff;
+  background: var(--pdp-strong, #0b5f7f);
+  border-radius: 6px;
+  padding: 0.2rem 0.6rem;
+  font-weight: 600;
+}
