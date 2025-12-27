@@ -115,6 +115,19 @@ product-info {
   }
 }
 
+@media screen and (min-width: 750px) {
+  .product__info-wrapper,
+  .product__media-wrapper {
+    align-self: flex-start;
+  }
+
+  .product__info-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+}
+
 @media screen and (min-width: 990px) {
   .product--large:not(.product--no-media) .product__media-wrapper {
     max-width: 65%;
