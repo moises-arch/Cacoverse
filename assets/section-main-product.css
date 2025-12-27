@@ -129,8 +129,12 @@ product-info {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    margin-top: -45px !important;
+    margin-top: 0 !important;
     padding-top: 0 !important;
+  }
+
+  .product__media-wrapper {
+    margin-top: 0 !important;
   }
 }
 
