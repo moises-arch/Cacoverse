@@ -1216,6 +1216,31 @@
         "x_bg": "#ffffff",
         "x_color": "#000000"
       }
+    },
+    "1766843797080304f3": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_5e1d97e_fXz3Xy": {
+          "type": "ai_gen_block_5e1d97e",
+          "settings": {
+            "background_color": "#f4f4f4",
+            "border_radius": 8,
+            "spacing": 16,
+            "show_navigation": true,
+            "thumbnail_size": 80,
+            "thumbnail_spacing": 8,
+            "thumbnail_border_radius": 4,
+            "thumbnail_active_border_color": "#000000",
+            "thumbnail_hover_border_color": "#666666",
+            "desktop_width_percent": 100
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_5e1d97e_fXz3Xy"
+      ],
+      "settings": {}
     }
   },
   "order": [
@@ -1230,6 +1255,7 @@
     "blocks_bD6yEJ",
     "1737960900cc9c1de6",
     "1760804945385ca534",
-    "newsletter_popup_QzxyTC"
+    "newsletter_popup_QzxyTC",
+    "1766843797080304f3"
   ]
 }
