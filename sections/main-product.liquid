@@ -1,5 +1,9 @@
 {% assign product_form_id = 'pdp-product-form-' | append: section.id %}
 {% assign initial_variant = product.selected_or_first_available_variant %}
+{% assign initial_sale = 0 %}
+{% if initial_variant.compare_at_price > initial_variant.price %}
+  {% assign initial_sale = 100 | times: initial_variant.compare_at_price | divided_by: initial_variant.compare_at_price | minus: 100 | plus: 0 %}
+{% endif %}
 
 <section id="MainProduct-{{ section.id }}" class="pdp-section" style="padding: {{ section.settings.padding_top | default: 28 }}px 0 {{ section.settings.padding_bottom | default: 28 }}px;">
   {{ 'pdp.css' | asset_url | stylesheet_tag }}
@@ -33,6 +37,7 @@
         {% if product.media.size > 1 %}
           <div class="pdp__thumbs" role="list">
             {% for media in product.media %}
+              {% assign media_variant_ids = product.variants | where: 'featured_media.id', media.id | map: 'id' %}
               <button
                 type="button"
                 class="pdp__thumb{% if featured_media and featured_media.id == media.id %} is-active{% endif %}"
@@ -40,6 +45,7 @@
                 data-media-id="{{ media.id }}"
                 data-media-type="{{ media.media_type }}"
                 data-media-src="{{ media | image_url: width: 1400 }}"
+                data-variant-ids="{{ media_variant_ids | join: ',' }}"
                 aria-label="{{ 'products.product.media.toggle_expand' | t }}"
                 role="listitem"
               >
@@ -61,10 +67,10 @@
 
         <div class="pdp__price-row" aria-live="polite">
           <div class="pdp__price" data-price>
-            <span data-price-regular>{{ initial_variant.price | money }}</span>
-            {% if initial_variant.compare_at_price > initial_variant.price %}
-              <span data-price-compare>{{ initial_variant.compare_at_price | money }}</span>
-            {% endif %}
+            <span data-price-current>{{ initial_variant.price | money }}</span>
+            <span data-price-compare{% unless initial_variant.compare_at_price > initial_variant.price %} style="display:none"{% endunless %}>{{ initial_variant.compare_at_price | money }}</span>
+            <span class="pdp__badge pdp__badge--sale" data-price-sale></span>
+            <span class="pdp__badge pdp__badge--soldout" data-price-soldout{% if initial_variant.available %} style="display:none"{% endif %}>{{ 'products.product.sold_out' | t }}</span>
           </div>
           <div class="pdp__stock" data-stock>
             {% if initial_variant.available %}
@@ -87,8 +93,12 @@
           {% unless product.has_only_default_variant %}
             <div class="pdp__options" data-options>
               {% for option in product.options_with_values %}
+                {% assign is_color = option.name | downcase | contains: 'color' %}
                 <div class="pdp__option" data-option-index="{{ forloop.index0 }}">
-                  <div class="pdp__option-name">{{ option.name }}</div>
+                  <div class="pdp__option-name">
+                    {{ option.name }}
+                    <span class="pdp__option-value" data-option-value="{{ forloop.index0 }}">{{ option.selected_value }}</span>
+                  </div>
                   <div class="pdp__choices" role="radiogroup" aria-label="{{ option.name }}">
                     {% for value in option.values %}
                       {% assign input_id = 'Option-' | append: section.id | append: '-' | append: option.position | append: '-' | append: forloop.index %}
@@ -99,7 +109,18 @@
                         value="{{ value | escape }}"
                         {% if option.selected_value == value %}checked{% endif %}
                       >
-                      <label class="pdp__choice" for="{{ input_id }}">{{ value }}</label>
+                      <label
+                        class="pdp__choice{% if is_color %} pdp__choice--swatch{% endif %}"
+                        for="{{ input_id }}"
+                        {% if is_color %}style="--swatch-color: {{ value | escape }};"{% endif %}
+                      >
+                        {% if is_color %}
+                          <span class="pdp__swatch-circle" aria-hidden="true"></span>
+                          <span class="pdp__choice-text">{{ value }}</span>
+                        {% else %}
+                          {{ value }}
+                        {% endif %}
+                      </label>
                     {% endfor %}
                   </div>
                 </div>
@@ -107,19 +128,30 @@
             </div>
           {% endunless %}
 
+          <div class="pdp__meta">
+            {% if initial_variant.sku != blank %}
+              <span class="pdp__sku-label">{{ 'products.product.sku' | t }}:</span>
+              <span class="pdp__sku-value" data-sku>{{ initial_variant.sku }}</span>
+            {% endif %}
+          </div>
+
           <div class="pdp__cta-row">
             <label class="pdp__qty" aria-label="{{ 'products.product.quantity.label' | t }}">
               <span class="pdp__qty-label">{{ 'products.product.quantity.label' | t }}</span>
-              <input
-                type="number"
-                name="quantity"
-                min="{{ initial_variant.quantity_rule.min | default: 1 }}"
-                step="{{ initial_variant.quantity_rule.increment | default: 1 }}"
-                value="{{ initial_variant.quantity_rule.min | default: 1 }}"
-                {% if initial_variant.quantity_rule.max > 0 %}
-                  max="{{ initial_variant.quantity_rule.max }}"
-                {% endif %}
-              >
+              <div class="pdp__qty-control">
+                <button type="button" class="pdp__qty-btn" data-qty-minus aria-label="{{ 'products.product.quantity.decrease' | t }}"><span aria-hidden="true">−</span></button>
+                <input
+                  type="number"
+                  name="quantity"
+                  min="{{ initial_variant.quantity_rule.min | default: 1 }}"
+                  step="{{ initial_variant.quantity_rule.increment | default: 1 }}"
+                  value="{{ initial_variant.quantity_rule.min | default: 1 }}"
+                  {% if initial_variant.quantity_rule.max > 0 %}
+                    max="{{ initial_variant.quantity_rule.max }}"
+                  {% endif %}
+                >
+                <button type="button" class="pdp__qty-btn" data-qty-plus aria-label="{{ 'products.product.quantity.increase' | t }}"><span aria-hidden="true">+</span></button>
+              </div>
             </label>
             <button type="submit" name="add" class="pdp__btn" data-add-to-cart>
               <span data-add-to-cart-text>
@@ -134,6 +166,15 @@
 
           <div class="pdp__payments">{{ form | payment_terms }}</div>
         {% endform %}
+
+        {% if product.description != blank %}
+          <div class="pdp__description">
+            <h2 class="pdp__description-title">{{ 'products.product.product_description' | t }}</h2>
+            <div class="pdp__description-body rte">
+              {{ product.description }}
+            </div>
+          </div>
+        {% endif %}
       </div>
     </div>
 

@@ -60,12 +60,16 @@
 
     const variantInputs = Array.from(root.querySelectorAll('.pdp__choices input[type="radio"]'));
     const hiddenVariantId = root.querySelector('input[name="id"]');
-    const priceRegular = root.querySelector('[data-price-regular]');
+    const priceCurrent = root.querySelector('[data-price-current]');
     const priceCompare = root.querySelector('[data-price-compare]');
+    const saleBadge = root.querySelector('[data-price-sale]');
+    const soldBadge = root.querySelector('[data-price-soldout]');
     const stock = root.querySelector('[data-stock]');
     const addToCart = root.querySelector('[data-add-to-cart]');
     const addToCartText = root.querySelector('[data-add-to-cart-text]');
     const quantityInput = root.querySelector('input[name="quantity"]');
+    const optionValueEls = root.querySelectorAll('[data-option-value]');
+    const skuEl = root.querySelector('[data-sku]');
 
     const texts = {
       add: root.dataset.textAdd || 'Add to cart',
@@ -110,8 +114,8 @@
     };
 
     const updatePrice = (variant) => {
-      if (!variant || !priceRegular) return;
-      priceRegular.textContent = formatMoney(variant.price, moneyFormat);
+      if (!variant || !priceCurrent) return;
+      priceCurrent.textContent = formatMoney(variant.price, moneyFormat);
       if (priceCompare) {
         if (variant.compare_at_price && variant.compare_at_price > variant.price) {
           priceCompare.textContent = formatMoney(variant.compare_at_price, moneyFormat);
@@ -120,6 +124,31 @@
           priceCompare.style.display = 'none';
         }
       }
+      if (saleBadge) {
+        if (variant.compare_at_price && variant.compare_at_price > variant.price) {
+          const diff = variant.compare_at_price - variant.price;
+          const pct = Math.round((diff / variant.compare_at_price) * 100);
+          saleBadge.textContent = `-${pct}%`;
+          saleBadge.style.display = '';
+        } else {
+          saleBadge.style.display = 'none';
+        }
+      }
+      if (soldBadge) {
+        soldBadge.style.display = variant.available ? 'none' : '';
+      }
+    };
+
+    const filterThumbsForVariant = (variantId) => {
+      const thumbs = root.querySelectorAll('[data-media-thumb]');
+      let firstVisible = null;
+      thumbs.forEach((thumb) => {
+        const variants = (thumb.dataset.variantIds || '').split(',').filter(Boolean);
+        const match = variants.length === 0 || variants.includes(String(variantId));
+        thumb.style.display = match ? '' : 'none';
+        if (match && !firstVisible) firstVisible = thumb;
+      });
+      return firstVisible;
     };
 
     const setVariant = (variant) => {
@@ -128,11 +157,18 @@
       updatePrice(variant);
       setStockState(variant);
       setAddToCartState(variant);
-
-      if (variant.featured_media && variant.featured_media.id) {
-        const thumb = root.querySelector(`[data-media-thumb][data-media-id="${variant.featured_media.id}"]`);
-        if (thumb) thumb.click();
+      if (skuEl) {
+        skuEl.textContent = variant.sku || '';
+        skuEl.style.display = variant.sku ? '' : 'none';
       }
+
+      const firstVisibleThumb = filterThumbsForVariant(variant.id);
+      const targetThumb =
+        (variant.featured_media &&
+          root.querySelector(`[data-media-thumb][data-media-id="${variant.featured_media.id}"]`)) ||
+        firstVisibleThumb;
+      if (targetThumb) targetThumb.click();
+
       if (quantityInput) {
         quantityInput.min = variant.quantity_rule?.min ?? 1;
         quantityInput.step = variant.quantity_rule?.increment ?? 1;
@@ -142,6 +178,12 @@
           quantityInput.removeAttribute('max');
         }
       }
+      optionValueEls.forEach((el) => {
+        const index = Number(el.dataset.optionValue);
+        if (!Number.isNaN(index) && variant.options[index]) {
+          el.textContent = variant.options[index];
+        }
+      });
     };
 
     variantInputs.forEach((input) => {
@@ -153,6 +195,20 @@
 
     const initialVariant = product.variants.find((v) => v.id === Number(hiddenVariantId?.value)) || product.variants[0];
     if (initialVariant) setVariant(initialVariant);
+
+    const stepper = (dir) => {
+      if (!quantityInput) return;
+      const min = Number(quantityInput.min) || 1;
+      const max = quantityInput.max ? Number(quantityInput.max) : Infinity;
+      const step = Number(quantityInput.step) || 1;
+      let next = Number(quantityInput.value) || min;
+      next = dir === 'up' ? next + step : next - step;
+      if (next < min) next = min;
+      if (next > max) next = max;
+      quantityInput.value = next;
+    };
+    root.querySelector('[data-qty-plus]')?.addEventListener('click', () => stepper('up'));
+    root.querySelector('[data-qty-minus]')?.addEventListener('click', () => stepper('down'));
   };
 
   document.addEventListener('DOMContentLoaded', () => {
