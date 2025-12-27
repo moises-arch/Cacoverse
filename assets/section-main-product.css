@@ -20,32 +20,6 @@ product-info {
   padding-left: 0;
 }
 
-/* PDP layout refinements */
-@media screen and (min-width: 990px) {
-  .product-info--pdp .product {
-    grid-template-columns: minmax(0, 1fr) 600px !important;
-    column-gap: 3rem;
-    align-items: flex-start;
-  }
-
-  .product-info--pdp.product--right {
-    grid-template-columns: 600px minmax(0, 1fr) !important;
-  }
-
-  .product-info--pdp .product__info-wrapper,
-  .product-info--pdp .product__info-container {
-    width: 600px !important;
-    max-width: 600px !important;
-    margin-left: auto;
-  }
-
-  .product-info--pdp.product--right .product__info-wrapper,
-  .product-info--pdp.product--right .product__info-container {
-    margin-left: 0;
-    margin-right: auto;
-  }
-}
-
 /* PDP gallery: keep media static and neutralize default modal affordances */
 .product-info--pdp .product__media-item,
 .product-info--pdp .product__media-item *,
