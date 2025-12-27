@@ -1,0 +1,27 @@
+.slider-button {
+  border-radius: 50%;
+  border: 1px solid var(--pdp-border, #d9e0ea);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 10px 26px rgba(12, 28, 51, 0.08);
+  color: var(--pdp-ink, #0c1c33);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.slider-button:not([disabled]):hover {
+  transform: translateY(-1px);
+  border-color: var(--pdp-cta, #0b7ba7);
+  box-shadow: 0 14px 32px rgba(11, 123, 167, 0.14);
+}
+
+.slider-button[disabled] {
+  opacity: 0.35;
+}
+
+.thumbnail-list__item {
+  transition: transform 0.2s ease;
+}
+
+.thumbnail-list__item:focus-within,
+.thumbnail-list__item:hover {
+  transform: translateY(-1px);
+}
