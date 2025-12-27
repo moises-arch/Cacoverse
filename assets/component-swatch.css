@@ -1,125 +1,27 @@
-/* Swatch system – compact, tactile chips */
-.product-form__input--swatch {
-  --swatch-size: 3.2rem;
-  --swatch-gap: 0.55rem;
-  --swatch-radius: 12px;
-  --swatch-border: 1px solid rgba(12, 28, 51, 0.12);
-  --swatch-shadow: 0 10px 26px rgba(12, 28, 51, 0.06);
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--swatch-gap);
-  align-items: center;
-  padding-top: 0.2rem;
-}
+/* swatch lives in its own file for reusability of the swatch in swatch-input and dropdown */
+.swatch {
+  --swatch--size: var(--swatch-input--size, 4.4rem);
+  --swatch--border-radius: var(--swatch-input--border-radius, 50%);
 
-.product-form__input--swatch legend {
-  margin-bottom: 0.35rem;
-}
-
-.product-form__input--swatch .swatch-input {
-  border-radius: var(--swatch-radius);
-  overflow: hidden;
-}
-
-.product-form__input--swatch .swatch-input__input + .swatch-input__label {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.35rem;
-  border-radius: var(--swatch-radius);
-  border: var(--swatch-border);
-  background: #fff;
-  box-shadow: var(--swatch-shadow);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
-}
-
-.product-form__input--swatch .swatch-input__input + .swatch-input__label::before,
-.product-form__input--swatch .swatch-input__input + .swatch-input__label::after {
-  content: none;
-}
-
-.product-form__input--swatch .swatch {
-  width: var(--swatch-size);
+  display: block;
+  width: var(--swatch--size);
+  max-width: 100%;
   aspect-ratio: 1 / 1;
-  border-radius: calc(var(--swatch-radius) - 4px);
   background: var(--swatch--background);
-  background-position: var(--swatch-focal-point, center);
+  background-position: var(--swatch-focal-point, initial);
   background-size: cover;
-  border: 0;
-  box-shadow: inset 0 0 0 1px rgba(12, 28, 51, 0.05);
+  background-origin: border-box;
+  border: 0.1rem solid rgba(var(--color-foreground), 0.15);
+  border-radius: var(--swatch--border-radius);
 }
 
-.product-form__input--swatch .swatch--square {
-  border-radius: calc(var(--swatch-radius) - 4px);
+.swatch--square {
+  --swatch--border-radius: var(--swatch-input--border-radius, 0.2rem);
 }
 
-@media (hover: hover) {
-  .product-form__input--swatch .swatch-input__input + .swatch-input__label:hover {
-    border-color: rgba(11, 123, 167, 0.6);
-    box-shadow: 0 14px 32px rgba(11, 123, 167, 0.14);
-    transform: translateY(-1px);
-  }
+.swatch--unavailable {
+  border-style: dashed;
+  border-color: rgba(var(--color-foreground), 0.5);
 }
 
-.product-form__input--swatch .swatch-input__input:checked + .swatch-input__label {
-  border-color: var(--pdp-cta, #0b7ba7);
-  box-shadow: 0 16px 36px rgba(11, 123, 167, 0.2);
-}
 
-.product-form__input--swatch .swatch-input__input:focus-visible + .swatch-input__label {
-  outline: 2px solid color-mix(in srgb, var(--pdp-cta, #0b7ba7) 40%, transparent);
-  outline-offset: 2px;
-  border-color: var(--pdp-cta, #0b7ba7);
-}
-
-.product-form__input--swatch .swatch-input__input.visually-disabled + .swatch-input__label {
-  opacity: 0.5;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-.product-form__input--swatch .swatch-input__label[data-tooltip] {
-  position: relative;
-}
-
-.product-form__input--swatch .swatch-input__label[data-tooltip]::after,
-.product-form__input--swatch .swatch-input__label[data-tooltip]::before {
-  position: absolute;
-  left: 50%;
-  transform: translate(-50%, 6px);
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition: opacity 0.15s ease, transform 0.18s ease;
-  z-index: 3;
-}
-
-.product-form__input--swatch .swatch-input__label[data-tooltip]::after {
-  content: attr(data-tooltip);
-  bottom: calc(100% + 8px);
-  padding: 4px 8px;
-  background: rgba(12, 28, 51, 0.92);
-  color: #fff;
-  font-size: 11px;
-  font-weight: 700;
-  border-radius: 8px;
-  white-space: nowrap;
-}
-
-.product-form__input--swatch .swatch-input__label[data-tooltip]::before {
-  content: '';
-  bottom: calc(100% + 2px);
-  width: 9px;
-  height: 9px;
-  background: rgba(12, 28, 51, 0.92);
-  clip-path: polygon(50% 100%, 0 0, 100% 0);
-}
-
-.product-form__input--swatch .swatch-input__label[data-tooltip]:hover::after,
-.product-form__input--swatch .swatch-input__label[data-tooltip]:hover::before,
-.product-form__input--swatch .swatch-input__label[data-tooltip]:focus-visible::after,
-.product-form__input--swatch .swatch-input__label[data-tooltip]:focus-visible::before {
-  opacity: 1;
-  visibility: visible;
-  transform: translate(-50%, 0);
-}
