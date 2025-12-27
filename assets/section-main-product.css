@@ -381,16 +381,11 @@ a.product__text {
 @media screen and (min-width: 990px) {
   .product__info-container {
     padding: 22px 24px 24px;
-    border-radius: 0 20px 20px 0;
   }
 }
 
 .product__info-container > * + * {
   margin-top: 0.7rem;
-}
-
-.product-details-accordion {
-  margin-top: 0;
 }
 
 .product__text.caption-with-letter-spacing {
