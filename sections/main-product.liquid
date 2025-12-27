@@ -1067,25 +1067,21 @@ button[name="add"]:hover,
         {{ 'products.product.view_full_details' | t }}
         {{- 'icon-arrow.svg' | inline_asset_content -}}
       </a>
-      {% if product.metafields.custom.product_details_features != blank or product.metafields.custom.product_details_specifications_name != blank or product.metafields.custom.product_details_download_title != blank or product.metafields.custom.product_details_title and product.metafields.custom.product_detail_description != blank or product.metafields.custom.product_details_sub_title != blank %}
-        <div class="product-details-accordion">
-          {% render 'main-product-details', product: product %}
-        </div>
-      {% endif %}
       </div>
 
-    </div>
   </div>
+</div>
 
-  {% if product.metafields.custom.product_details_features != blank or product.metafields.custom.product_details_specifications_name != blank or product.metafields.custom.product_details_download_title != blank or product.metafields.custom.product_details_title and product.metafields.custom.product_detail_description != blank or product.metafields.custom.product_details_sub_title != blank %}
-    <div class="page-width product-details-accordion">
-      {% render 'main-product-details', product: product %}
-    </div>
-  {% endif %}
+<!-- Other Product Features -->
+{% if product.metafields.custom.product_details_features != blank or product.metafields.custom.product_details_specifications_name != blank or product.metafields.custom.product_details_download_title != blank or product.metafields.custom.product_details_title and product.metafields.custom.product_detail_description != blank or product.metafields.custom.product_details_sub_title != blank %}
+  <div class="page-width product-details-accordion">
+    {% render 'main-product-details', product: product %}
+  </div>
+{% endif %}
 
-  {% assign popups = section.blocks | where: 'type', 'popup' %}
-  {%- for block in popups -%}
-    <modal-dialog id="PopupModal-{{ block.id }}" class="product-popup-modal" {{ block.shopify_attributes }}>
+{% assign popups = section.blocks | where: 'type', 'popup' %}
+{%- for block in popups -%}
+  <modal-dialog id="PopupModal-{{ block.id }}" class="product-popup-modal" {{ block.shopify_attributes }}>
       <div
         role="dialog"
         aria-label="{{ block.settings.text }}"
@@ -1138,6 +1134,13 @@ button[name="add"]:hover,
     window.__productVariants[{{ product.id }}] = {{ product.variants | json }};
   </script>
 </product-info>
+
+<!-- Other Product Features -->
+{% if product.metafields.custom.product_details_features != blank or product.metafields.custom.product_details_specifications_name != blank or product.metafields.custom.product_details_download_title != blank or product.metafields.custom.product_details_title and product.metafields.custom.product_detail_description != blank or product.metafields.custom.product_details_sub_title != blank %}
+  <div class="page-width product-details-accordion">
+    {% render 'main-product-details', product: product %}
+  </div>
+{% endif %}
 
 <script><!-- hide the Other Variants Images -->
   function handleizeToken(str) {
