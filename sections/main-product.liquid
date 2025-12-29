@@ -250,8 +250,12 @@ button[name="add"]:hover,
 
       const clampPan = () => {
         if (!frame) return;
-        const maxX = Math.max(0, (preview.clientWidth * zoom - frame.clientWidth) / 2);
-        const maxY = Math.max(0, (preview.clientHeight * zoom - frame.clientHeight) / 2);
+        const viewportW = frame.clientWidth;
+        const viewportH = frame.clientHeight;
+        const imgW = preview.clientWidth * zoom;
+        const imgH = preview.clientHeight * zoom;
+        const maxX = Math.max(0, (imgW - viewportW) / 2);
+        const maxY = Math.max(0, (imgH - viewportH) / 2);
         panX = Math.min(maxX, Math.max(-maxX, panX));
         panY = Math.min(maxY, Math.max(-maxY, panY));
       };
