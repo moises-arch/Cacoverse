@@ -3469,7 +3469,7 @@ label.quantity__label.form__label {
    4. LIGHTBOX (APPLE STYLE)
    ============================ */
 
-#galleryLightbox .apple-lightbox__chrome {
+[id^="galleryLightbox"] .apple-lightbox__chrome {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -3484,7 +3484,7 @@ label.quantity__label.form__label {
   box-shadow: none !important;
 }
 
-#galleryLightbox .apple-lightbox__header {
+[id^="galleryLightbox"] .apple-lightbox__header {
   flex: 0 0 auto;
   margin: 0 0 8px;
   padding: 0;
@@ -3493,7 +3493,7 @@ label.quantity__label.form__label {
   box-shadow: none !important;
 }
 
-#galleryLightbox .apple-lightbox__stage {
+[id^="galleryLightbox"] .apple-lightbox__stage {
   flex: 1 1 auto;
   display: flex;
   align-items: center;
@@ -3506,7 +3506,7 @@ label.quantity__label.form__label {
   position: relative;
 }
 
-#galleryLightbox .apple-lightbox__figure {
+[id^="galleryLightbox"] .apple-lightbox__figure {
   margin: 0;
   padding: 0;
   background: transparent !important;
@@ -3514,7 +3514,7 @@ label.quantity__label.form__label {
   box-shadow: none !important;
 }
 
-#galleryLightbox .apple-lightbox__frame {
+[id^="galleryLightbox"] .apple-lightbox__frame {
   position: relative;
   display: block;
   margin: 0 auto;
@@ -3526,11 +3526,11 @@ label.quantity__label.form__label {
   overflow: hidden !important;
 }
 
-#galleryLightbox .apple-lightbox__scrim {
+[id^="galleryLightbox"] .apple-lightbox__scrim {
   display: none !important;
 }
 
-#galleryLightbox .apple-lightbox__image {
+[id^="galleryLightbox"] .apple-lightbox__image {
   display: block;
   margin: 0 auto;
   width: auto;
@@ -3541,7 +3541,7 @@ label.quantity__label.form__label {
   border-radius: 24px !important;
 }
 
-#galleryLightbox .apple-lightbox__caption {
+[id^="galleryLightbox"] .apple-lightbox__caption {
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
@@ -3549,16 +3549,16 @@ label.quantity__label.form__label {
   padding: 0;
 }
 
-#galleryLightbox .apple-lightbox__caption-text,
-#galleryLightbox .apple-lightbox__progress {
+[id^="galleryLightbox"] .apple-lightbox__caption-text,
+[id^="galleryLightbox"] .apple-lightbox__progress {
   display: none !important;
 }
 
-#galleryLightbox .apple-lightbox__counter {
+[id^="galleryLightbox"] .apple-lightbox__counter {
   color: #ffffff !important;
 }
 
-#galleryLightbox .apple-lightbox__nav {
+[id^="galleryLightbox"] .apple-lightbox__nav {
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
@@ -3576,19 +3576,19 @@ label.quantity__label.form__label {
   color: #ffffff;
 }
 
-#galleryLightbox .apple-lightbox__nav--prev { left: 18px; }
-#galleryLightbox .apple-lightbox__nav--next { right: 18px; }
+[id^="galleryLightbox"] .apple-lightbox__nav--prev { left: 18px; }
+[id^="galleryLightbox"] .apple-lightbox__nav--next { right: 18px; }
 
-#galleryLightbox .apple-lightbox__nav svg {
+[id^="galleryLightbox"] .apple-lightbox__nav svg {
   width: 18px;
   height: 18px;
 }
 
 /* X siempre redonda */
-#galleryLightbox .apple-lightbox__close,
-#galleryLightbox .apple-lightbox__close:focus,
-#galleryLightbox .apple-lightbox__close:hover,
-#galleryLightbox .apple-lightbox__close:active {
+[id^="galleryLightbox"] .apple-lightbox__close,
+[id^="galleryLightbox"] .apple-lightbox__close:focus,
+[id^="galleryLightbox"] .apple-lightbox__close:hover,
+[id^="galleryLightbox"] .apple-lightbox__close:active {
   border-radius: 999px !important;
   outline: none !important;
   box-shadow: none !important;
@@ -3600,28 +3600,28 @@ label.quantity__label.form__label {
 @media (max-width: 749px) {
 
   /* --- LIGHTBOX MOBILE: sin flechas, solo X y swipe --- */
-  #galleryLightbox .apple-lightbox__nav,
-  #galleryLightbox .apple-lightbox__counter {
+  [id^="galleryLightbox"] .apple-lightbox__nav,
+  [id^="galleryLightbox"] .apple-lightbox__counter {
     display: none !important;
   }
 
-  #galleryLightbox .apple-lightbox__chrome {
+  [id^="galleryLightbox"] .apple-lightbox__chrome {
     padding-top: 8px;
   }
 
-  #galleryLightbox .apple-lightbox__image {
+  [id^="galleryLightbox"] .apple-lightbox__image {
     max-width: 98vw;
     max-height: calc(100vh - 120px);
   }
 
-  #galleryLightbox {
+  [id^="galleryLightbox"] {
     cursor: default;
   }
-  #galleryLightbox .apple-lightbox__stage {
+  [id^="galleryLightbox"] .apple-lightbox__stage {
     cursor: pointer;
   }
-  #galleryLightbox .apple-lightbox__frame,
-  #galleryLightbox .apple-lightbox__image {
+  [id^="galleryLightbox"] .apple-lightbox__frame,
+  [id^="galleryLightbox"] .apple-lightbox__image {
     cursor: default;
   }
 
@@ -3887,8 +3887,8 @@ body.template-product .product__media-modal * {
 /* ==========================================
    FIX 1 — IMAGEN DEL LIGHTBOX SIN RECORTE
    ========================================== */
-#galleryLightbox .apple-lightbox__figure,
-#galleryLightbox .apple-lightbox__frame {
+[id^="galleryLightbox"] .apple-lightbox__figure,
+[id^="galleryLightbox"] .apple-lightbox__frame {
   margin: 0 auto !important;
   padding: 0 !important;
   max-width: min(100vw - 64px, 1200px);
@@ -3901,7 +3901,7 @@ body.template-product .product__media-modal * {
   border-radius: 24px !important;
 }
 
-#galleryLightbox .apple-lightbox__image {
+[id^="galleryLightbox"] .apple-lightbox__image {
   width: auto !important;
   height: auto !important;
   max-width: 100% !important;
@@ -3914,7 +3914,7 @@ body.template-product .product__media-modal * {
 /* ==========================================
    FIX 2 — BOTÓN CERRAR ("X") LIMPIO
    ========================================== */
-#galleryLightbox .apple-lightbox__close {
+[id^="galleryLightbox"] .apple-lightbox__close {
   position: fixed;
   top: 24px;
   right: 24px;
@@ -3932,20 +3932,20 @@ body.template-product .product__media-modal * {
 }
 
 /* ocultamos cualquier icono SVG original */
-#galleryLightbox .apple-lightbox__close svg,
-#galleryLightbox .apple-lightbox__close span {
+[id^="galleryLightbox"] .apple-lightbox__close svg,
+[id^="galleryLightbox"] .apple-lightbox__close span {
   display: none !important;
 }
 
 /* nuestra "X" minimal */
-#galleryLightbox .apple-lightbox__close::before {
+[id^="galleryLightbox"] .apple-lightbox__close::before {
   content: '×';
   font-size: 18px;
   line-height: 1;
   color: #ffffff;
 }
 
-#galleryLightbox .apple-lightbox__close:hover {
+[id^="galleryLightbox"] .apple-lightbox__close:hover {
   background: rgba(0, 0, 0, 0.75);
 }
 /* ============================
@@ -3954,24 +3954,24 @@ body.template-product .product__media-modal * {
 @media (min-width: 750px) {
 
   /* Menos padding arriba → más altura útil para la imagen */
-  #galleryLightbox .apple-lightbox__chrome {
+  [id^="galleryLightbox"] .apple-lightbox__chrome {
     padding-top: 16px !important;
     padding-bottom: 24px !important;
   }
 
-  #galleryLightbox .apple-lightbox__header {
+  [id^="galleryLightbox"] .apple-lightbox__header {
     margin-bottom: 10px !important;
   }
 
   /* Imagen centrada, sin recortes */
-  #galleryLightbox .apple-lightbox__stage {
+  [id^="galleryLightbox"] .apple-lightbox__stage {
     padding: 0 32px 24px !important;
     align-items: center !important;
     justify-content: center !important;
   }
 
-  #galleryLightbox .apple-lightbox__figure,
-  #galleryLightbox .apple-lightbox__frame {
+  [id^="galleryLightbox"] .apple-lightbox__figure,
+  [id^="galleryLightbox"] .apple-lightbox__frame {
     margin: 0 auto !important;
     padding: 0 !important;
     max-width: min(100vw - 96px, 1280px);
@@ -3984,7 +3984,7 @@ body.template-product .product__media-modal * {
     border-radius: 24px !important;
   }
 
-  #galleryLightbox .apple-lightbox__image {
+  [id^="galleryLightbox"] .apple-lightbox__image {
     width: auto !important;
     height: auto !important;
     max-width: 100% !important;
@@ -3994,7 +3994,7 @@ body.template-product .product__media-modal * {
   }
 
   /* --- Flechas de navegación ACTIVAS en desktop --- */
-  #galleryLightbox .apple-lightbox__nav {
+  [id^="galleryLightbox"] .apple-lightbox__nav {
     display: flex !important;
     align-items: center;
     justify-content: center;
@@ -4005,7 +4005,7 @@ body.template-product .product__media-modal * {
      ============================ */
 
   /* X más grande, limpia */
-  #galleryLightbox .apple-lightbox__close {
+  [id^="galleryLightbox"] .apple-lightbox__close {
     position: fixed !important;
     top: 24px;
     right: 24px;
@@ -4024,24 +4024,24 @@ body.template-product .product__media-modal * {
   }
 
   /* ocultar cualquier icono interno original */
-  #galleryLightbox .apple-lightbox__close svg,
-  #galleryLightbox .apple-lightbox__close span {
+  [id^="galleryLightbox"] .apple-lightbox__close svg,
+  [id^="galleryLightbox"] .apple-lightbox__close span {
     display: none !important;
   }
 
-  #galleryLightbox .apple-lightbox__close::before {
+  [id^="galleryLightbox"] .apple-lightbox__close::before {
     content: '×';
     font-size: 22px;
     line-height: 1;
     color: #ffffff;
   }
 
-  #galleryLightbox .apple-lightbox__close:hover {
+  [id^="galleryLightbox"] .apple-lightbox__close:hover {
     background: rgba(0, 0, 0, 0.8);
   }
 
   /* Contador 1/46 a la izquierda de la X, mejor ubicado */
-  #galleryLightbox .apple-lightbox__counter {
+  [id^="galleryLightbox"] .apple-lightbox__counter {
     position: fixed !important;
     top: 26px;
     right: 82px; /* separación respecto a la X */
@@ -4063,20 +4063,20 @@ body.template-product .product__media-modal * {
 @media (min-width: 750px) {
 
   /* Más aire arriba/abajo, sin tapar encabezado ni cortar la imagen */
-  #galleryLightbox .apple-lightbox__chrome {
+  [id^="galleryLightbox"] .apple-lightbox__chrome {
     padding-top: 40px !important;
     padding-bottom: 32px !important;
   }
 
-  #galleryLightbox .apple-lightbox__stage {
+  [id^="galleryLightbox"] .apple-lightbox__stage {
     padding: 0 48px 24px !important;
     align-items: center !important;
     justify-content: center !important;
   }
 
   /* Lienzo blanco más contenido para que no corte el casco */
-  #galleryLightbox .apple-lightbox__figure,
-  #galleryLightbox .apple-lightbox__frame {
+  [id^="galleryLightbox"] .apple-lightbox__figure,
+  [id^="galleryLightbox"] .apple-lightbox__frame {
     margin: 0 auto !important;
     padding: 0 !important;
     max-width: min(100vw - 180px, 1200px) !important;
@@ -4089,7 +4089,7 @@ body.template-product .product__media-modal * {
     overflow: hidden !important;
   }
 
-  #galleryLightbox .apple-lightbox__image {
+  [id^="galleryLightbox"] .apple-lightbox__image {
     width: auto !important;
     height: auto !important;
     max-width: 100% !important;
@@ -4101,14 +4101,14 @@ body.template-product .product__media-modal * {
   /* ============================
      FLECHAS DESKTOP – ACTIVAS
      ============================ */
-  #galleryLightbox .apple-lightbox__nav {
+  [id^="galleryLightbox"] .apple-lightbox__nav {
     display: flex !important;
     align-items: center;
     justify-content: center;
     opacity: 0.9;
   }
 
-  #galleryLightbox .apple-lightbox__nav svg {
+  [id^="galleryLightbox"] .apple-lightbox__nav svg {
     width: 22px !important;
     height: 22px !important;
     stroke: #ffffff !important;
@@ -4119,10 +4119,10 @@ body.template-product .product__media-modal * {
      ============================ */
 
   /* Estilizar cualquier botón de cerrar del lightbox */
-  #galleryLightbox button[aria-label*="Close"],
-  #galleryLightbox button[aria-label*="close"],
-  #galleryLightbox button[aria-label*="Cerrar"],
-  #galleryLightbox button[aria-label*="cerrar"] {
+  [id^="galleryLightbox"] button[aria-label*="Close"],
+  [id^="galleryLightbox"] button[aria-label*="close"],
+  [id^="galleryLightbox"] button[aria-label*="Cerrar"],
+  [id^="galleryLightbox"] button[aria-label*="cerrar"] {
     position: fixed !important;
     top: 24px;
     right: 24px;
@@ -4141,32 +4141,32 @@ body.template-product .product__media-modal * {
   }
 
   /* Ocultamos icono original y dibujamos la X limpia */
-  #galleryLightbox button[aria-label*="Close"] svg,
-  #galleryLightbox button[aria-label*="close"] svg,
-  #galleryLightbox button[aria-label*="Cerrar"] svg,
-  #galleryLightbox button[aria-label*="cerrar"] svg {
+  [id^="galleryLightbox"] button[aria-label*="Close"] svg,
+  [id^="galleryLightbox"] button[aria-label*="close"] svg,
+  [id^="galleryLightbox"] button[aria-label*="Cerrar"] svg,
+  [id^="galleryLightbox"] button[aria-label*="cerrar"] svg {
     display: none !important;
   }
 
-  #galleryLightbox button[aria-label*="Close"]::before,
-  #galleryLightbox button[aria-label*="close"]::before,
-  #galleryLightbox button[aria-label*="Cerrar"]::before,
-  #galleryLightbox button[aria-label*="cerrar"]::before {
+  [id^="galleryLightbox"] button[aria-label*="Close"]::before,
+  [id^="galleryLightbox"] button[aria-label*="close"]::before,
+  [id^="galleryLightbox"] button[aria-label*="Cerrar"]::before,
+  [id^="galleryLightbox"] button[aria-label*="cerrar"]::before {
     content: '×';
     font-size: 22px;
     line-height: 1;
     color: #ffffff;
   }
 
-  #galleryLightbox button[aria-label*="Close"]:hover,
-  #galleryLightbox button[aria-label*="close"]:hover,
-  #galleryLightbox button[aria-label*="Cerrar"]:hover,
-  #galleryLightbox button[aria-label*="cerrar"]:hover {
+  [id^="galleryLightbox"] button[aria-label*="Close"]:hover,
+  [id^="galleryLightbox"] button[aria-label*="close"]:hover,
+  [id^="galleryLightbox"] button[aria-label*="Cerrar"]:hover,
+  [id^="galleryLightbox"] button[aria-label*="cerrar"]:hover {
     background: rgba(0, 0, 0, 0.8) !important;
   }
 
   /* Contador 1 / 48 en píldora a la izquierda de la X */
-  #galleryLightbox .apple-lightbox__counter {
+  [id^="galleryLightbox"] .apple-lightbox__counter {
     position: fixed !important;
     top: 26px;
     right: 84px; /* separación respecto al close */
@@ -4188,7 +4188,7 @@ body.template-product .product__media-modal * {
 @media (min-width: 750px) {
 
   /* Todo el contenedor del lightbox: menos padding arriba/abajo */
-  #galleryLightbox .apple-lightbox__chrome {
+  [id^="galleryLightbox"] .apple-lightbox__chrome {
     padding: 8px 32px 14px !important;  /* antes era mucho más alto */
     display: flex !important;
     flex-direction: column !important;
@@ -4198,7 +4198,7 @@ body.template-product .product__media-modal * {
   }
 
   /* Header (marca + título) más pegado arriba */
-  #galleryLightbox .apple-lightbox__header {
+  [id^="galleryLightbox"] .apple-lightbox__header {
     width: 100%;
     max-width: 1200px;
     margin: 0 0 6px !important;
@@ -4206,7 +4206,7 @@ body.template-product .product__media-modal * {
   }
 
   /* Escenario donde vive la imagen: ocupa casi todo el alto */
-  #galleryLightbox .apple-lightbox__stage {
+  [id^="galleryLightbox"] .apple-lightbox__stage {
     flex: 1 1 auto !important;
     width: 100%;
     display: flex !important;
@@ -4217,8 +4217,8 @@ body.template-product .product__media-modal * {
   }
 
   /* Marco blanco que sostiene la imagen */
-  #galleryLightbox .apple-lightbox__figure,
-  #galleryLightbox .apple-lightbox__frame {
+  [id^="galleryLightbox"] .apple-lightbox__figure,
+  [id^="galleryLightbox"] .apple-lightbox__frame {
     margin: 0 auto !important;
     padding: 0 !important;
     display: flex !important;
@@ -4235,7 +4235,7 @@ body.template-product .product__media-modal * {
   }
 
   /* La imagen: nunca se deforma y siempre cabe completa */
-  #galleryLightbox .apple-lightbox__image {
+  [id^="galleryLightbox"] .apple-lightbox__image {
     display: block !important;
     margin: 0 auto !important;
 
@@ -4255,12 +4255,12 @@ body.template-product .product__media-modal * {
 @media (min-width: 750px) {
 
   /* Menos padding arriba: header más pegado al borde */
-  #galleryLightbox .apple-lightbox__chrome {
+  [id^="galleryLightbox"] .apple-lightbox__chrome {
     padding-top: 4px !important;
   }
 
   /* Header bien arriba y compacto */
-  #galleryLightbox .apple-lightbox__header {
+  [id^="galleryLightbox"] .apple-lightbox__header {
     margin-top: 0 !important;
     margin-bottom: 4px !important;
     padding-top: 0 !important;
@@ -4269,8 +4269,8 @@ body.template-product .product__media-modal * {
   }
 
   /* Línea de "CACO AMERICA LLC" más pequeña y elegante */
-  #galleryLightbox .apple-lightbox__header .apple-lightbox__eyebrow,
-  #galleryLightbox .apple-lightbox__header > :first-child {
+  [id^="galleryLightbox"] .apple-lightbox__header .apple-lightbox__eyebrow,
+  [id^="galleryLightbox"] .apple-lightbox__header > :first-child {
     font-size: 11px !important;
     letter-spacing: 0.18em !important;
     text-transform: uppercase !important;
@@ -4278,8 +4278,8 @@ body.template-product .product__media-modal * {
   }
 
   /* "Safety Helmet" pegado a la marca, sin tanto aire */
-  #galleryLightbox .apple-lightbox__header .apple-lightbox__title,
-  #galleryLightbox .apple-lightbox__header > :last-child {
+  [id^="galleryLightbox"] .apple-lightbox__header .apple-lightbox__title,
+  [id^="galleryLightbox"] .apple-lightbox__header > :last-child {
     margin-top: 2px !important;
   }
 }
@@ -4290,7 +4290,7 @@ body.template-product .product__media-modal * {
 @media (min-width: 750px) {
 
   /* El figure se convierte en un flex centrado */
-  #galleryLightbox .apple-lightbox__figure {
+  [id^="galleryLightbox"] .apple-lightbox__figure {
     margin: 0 !important;
     padding: 0 !important;
     display: flex !important;
@@ -4299,7 +4299,7 @@ body.template-product .product__media-modal * {
   }
 
   /* Adiós “tarjeta” blanca: sin fondo, sin sombra, sin tamaño fijo */
-  #galleryLightbox .apple-lightbox__frame {
+  [id^="galleryLightbox"] .apple-lightbox__frame {
     margin: 0 !important;
     padding: 0 !important;
     background: transparent !important;
@@ -4312,7 +4312,7 @@ body.template-product .product__media-modal * {
   }
 
   /* La imagen respeta SIEMPRE su proporción */
-  #galleryLightbox .apple-lightbox__image {
+  [id^="galleryLightbox"] .apple-lightbox__image {
     display: block !important;
     width: auto !important;
     height: auto !important;
@@ -4327,25 +4327,25 @@ body.template-product .product__media-modal * {
    bajo la imagen en el lightbox
    ============================ */
 @media (min-width: 750px) {
-  #galleryLightbox .apple-lightbox__chrome,
-  #galleryLightbox .apple-lightbox__stage,
-  #galleryLightbox .apple-lightbox__figure,
-  #galleryLightbox .apple-lightbox__frame,
-  #galleryLightbox .apple-lightbox__image {
+  [id^="galleryLightbox"] .apple-lightbox__chrome,
+  [id^="galleryLightbox"] .apple-lightbox__stage,
+  [id^="galleryLightbox"] .apple-lightbox__figure,
+  [id^="galleryLightbox"] .apple-lightbox__frame,
+  [id^="galleryLightbox"] .apple-lightbox__image {
     background: transparent !important;
   }
 
   /* Por si Dawn mete decoraciones con ::before/::after */
-  #galleryLightbox .apple-lightbox__chrome::before,
-  #galleryLightbox .apple-lightbox__chrome::after,
-  #galleryLightbox .apple-lightbox__frame::before,
-  #galleryLightbox .apple-lightbox__frame::after {
+  [id^="galleryLightbox"] .apple-lightbox__chrome::before,
+  [id^="galleryLightbox"] .apple-lightbox__chrome::after,
+  [id^="galleryLightbox"] .apple-lightbox__frame::before,
+  [id^="galleryLightbox"] .apple-lightbox__frame::after {
     background: transparent !important;
   }
 
   /* Cero padding/margen extra alrededor de la imagen */
-  #galleryLightbox .apple-lightbox__figure,
-  #galleryLightbox .apple-lightbox__frame {
+  [id^="galleryLightbox"] .apple-lightbox__figure,
+  [id^="galleryLightbox"] .apple-lightbox__frame {
     padding: 0 !important;
     margin: 0 !important;
   }
@@ -4362,7 +4362,7 @@ body.template-product .product__media-modal * {
 
 
 /* === OVERRIDE HEADER LIGHTBOX: LEFT ALIGN + SAME LOOK MOBILE/DESKTOP === */
-#galleryLightbox .apple-lightbox__header {
+[id^="galleryLightbox"] .apple-lightbox__header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -4374,13 +4374,13 @@ body.template-product .product__media-modal * {
   line-height: 1.1 !important;
 }
 
-#galleryLightbox .apple-lightbox__title {
+[id^="galleryLightbox"] .apple-lightbox__title {
   text-align: left !important;
 }
 
 /* "CACO AMERICA LLC" estilo desktop → también en mobile */
-#galleryLightbox .apple-lightbox__header .apple-lightbox__eyebrow,
-#galleryLightbox .apple-lightbox__header > :first-child {
+[id^="galleryLightbox"] .apple-lightbox__header .apple-lightbox__eyebrow,
+[id^="galleryLightbox"] .apple-lightbox__header > :first-child {
   font-size: 11px !important;
   letter-spacing: 0.18em !important;
   text-transform: uppercase !important;
@@ -4388,15 +4388,15 @@ body.template-product .product__media-modal * {
 }
 
 /* "SAFETY HELMET" pegado a la marca */
-#galleryLightbox .apple-lightbox__header .apple-lightbox__title,
-#galleryLightbox .apple-lightbox__header > :last-child {
+[id^="galleryLightbox"] .apple-lightbox__header .apple-lightbox__title,
+[id^="galleryLightbox"] .apple-lightbox__header > :last-child {
   margin-top: 2px !important;
 }
 
 
 /* === MOBILE CLOSE BUTTON → SAME AS DESKTOP === */
 @media (max-width: 749px) {
-  #galleryLightbox .apple-lightbox__close {
+  [id^="galleryLightbox"] .apple-lightbox__close {
     position: fixed !important;
     top: 24px;
     right: 24px;
@@ -4414,12 +4414,12 @@ body.template-product .product__media-modal * {
     z-index: 9999;
   }
 
-  #galleryLightbox .apple-lightbox__close svg,
-  #galleryLightbox .apple-lightbox__close span {
+  [id^="galleryLightbox"] .apple-lightbox__close svg,
+  [id^="galleryLightbox"] .apple-lightbox__close span {
     display: none !important;
   }
 
-  #galleryLightbox .apple-lightbox__close::before {
+  [id^="galleryLightbox"] .apple-lightbox__close::before {
     content: '×';
     font-size: 22px;
     line-height: 1;

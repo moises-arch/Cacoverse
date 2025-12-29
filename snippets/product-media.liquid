@@ -5,6 +5,9 @@
   - media: {Object} Product Media object
   - loop: {Boolean} Enable video looping (optional)
   - variant_image: {Boolean} Whether or not media is associated with a variant
+  - loading_behavior: {String} Optional loading strategy (lazy|eager)
+  - fetch_priority: {String} Optional fetchpriority value
+  - sizes_attr: {String} Optional sizes attribute for responsive images
 
   Usage:
   {% render 'product-media',
@@ -14,28 +17,35 @@
   %}
 {% endcomment %}
 
+{%- liquid
+  assign loading_behavior = loading_behavior | default: 'lazy'
+  assign fetch_priority = fetch_priority | default: ''
+  assign sizes_attr = sizes_attr | default: '(min-width: 750px) calc(100vw - 22rem), 1100px'
+  assign src_widths = '320,480,640,800,960,1200,1500,1800,2048,2560' | split: ','
+  assign src_template = media.preview_image | image_url: width: 800 | replace: '_800x.', '_{width}x.'
+  assign low_src = media.preview_image | image_url: width: 720
+  assign intrinsic_width = media.preview_image.width | default: 1100
+  assign intrinsic_ratio = media.preview_image.aspect_ratio | default: 1
+  assign intrinsic_height = intrinsic_width | divided_by: intrinsic_ratio | ceil
+-%}
+
 {%- if media.media_type == 'image' -%}
   <img
     class="global-media-settings global-media-settings--no-shadow{% if variant_image %} product__media-item--variant{% endif %}"
     data-lightbox-source="true"
     data-full="{{ media | img_url: 'master' }}"
-    srcset="
-      {%- if media.preview_image.width >= 550 -%}{{ media.preview_image | image_url: width: 550 }} 550w,{%- endif -%}
-      {%- if media.preview_image.width >= 1100 -%}{{ media.preview_image | image_url: width: 1100 }} 1100w,{%- endif -%}
-      {%- if media.preview_image.width >= 1445 -%}{{ media.preview_image | image_url: width: 1445 }} 1445w,{%- endif -%}
-      {%- if media.preview_image.width >= 1680 -%}{{ media.preview_image | image_url: width: 1680 }} 1680w,{%- endif -%}
-      {%- if media.preview_image.width >= 2048 -%}{{ media.preview_image | image_url: width: 2048 }} 2048w,{%- endif -%}
-      {%- if media.preview_image.width >= 2200 -%}{{ media.preview_image | image_url: width: 2200 }} 2200w,{%- endif -%}
-      {%- if media.preview_image.width >= 2890 -%}{{ media.preview_image | image_url: width: 2890 }} 2890w,{%- endif -%}
-      {%- if media.preview_image.width >= 4096 -%}{{ media.preview_image | image_url: width: 4096 }} 4096w,{%- endif -%}
-      {{ media.preview_image | image_url }} {{ media.preview_image.width }}w
-    "
-    sizes="(min-width: 750px) calc(100vw - 22rem), 1100px"
-    src="{{ media.preview_image | image_url: width: 1445 }}"
+    data-src-template="{{ src_template }}"
+    data-src-widths="{{ src_widths | join: ',' }}"
+    data-sizes="{{ sizes_attr | strip }}"
+    data-low-src="{{ low_src }}"
+    data-loading-behavior="{{ loading_behavior }}"
+    {% if fetch_priority != blank %}fetchpriority="{{ fetch_priority }}"{% endif %}
+    src="{{ low_src }}"
     alt="{{ media.alt | escape }}"
-    loading="lazy"
-    width="1100"
-    height="{{ 1100 | divided_by: media.preview_image.aspect_ratio | ceil }}"
+    loading="{{ loading_behavior }}"
+    decoding="async"
+    width="{{ intrinsic_width }}"
+    height="{{ intrinsic_height }}"
     data-media-id="{{ media.id }}"
   >
 {%- else -%}
@@ -62,21 +72,20 @@
       {%- endif -%}
     </span>
     <img
-      srcset="
-        {% if media.preview_image.width >= 288 %}{{ media.preview_image | image_url: width: 288 }} 288w,{% endif %}
-        {% if media.preview_image.width >= 576 %}{{ media.preview_image | image_url: width: 576 }} 576w,{% endif %}
-        {% if media.preview_image.width >= 550 %}{{ media.preview_image | image_url: width: 550 }} 550w,{% endif %}
-        {% if media.preview_image.width >= 1100 %}{{ media.preview_image | image_url: width: 1100 }} 1100w,{% endif %}
-        {{ media.preview_image | image_url }} {{ media.preview_image.width }}w
-      "
-      src="{{ media | image_url: width: 550, height: 550 }}"
-      sizes="(min-width: 1200px) calc((1200px - 10rem) / 2), (min-width: 750px) calc((100vw - 11.5rem) / 2), calc(100vw - 4rem)"
-      loading="lazy"
+      data-src-template="{{ src_template }}"
+      data-src-widths="{{ src_widths | join: ',' }}"
+      data-sizes="(min-width: 1200px) calc((1200px - 10rem) / 2), (min-width: 750px) calc((100vw - 11.5rem) / 2), calc(100vw - 4rem)"
+      data-low-src="{{ low_src }}"
+      data-loading-behavior="{{ loading_behavior }}"
+      src="{{ low_src }}"
+      loading="{{ loading_behavior }}"
+      decoding="async"
       width="576"
       height="{{ 576 | divided_by: media.preview_image.aspect_ratio }}"
       alt="{{ media.preview_image.alt | escape }}"
       data-full="{{ media | img_url: 'master' }}"
       data-lightbox-source="true"
+      data-media-id="{{ media.id }}"
     >
   </button>
   <template>
