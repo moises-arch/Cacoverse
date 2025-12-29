@@ -467,8 +467,12 @@ button[name="add"]:hover,
       };
 
       const scrollByStep = (direction = 1) => {
-        const amount = sliderList ? sliderList.clientWidth * 0.9 : 0;
-        sliderList?.scrollBy({ left: direction * amount, behavior: 'smooth' });
+        if (!sliderList) return;
+        const width = sliderList.clientWidth;
+        const currentIndex = Math.round(sliderList.scrollLeft / width);
+        const targetIndex = Math.max(0, Math.min(gallerySlides.length - 1, currentIndex + direction));
+        const nextLeft = targetIndex * width;
+        sliderList.scrollTo({ left: nextLeft, behavior: 'smooth' });
       };
 
       const syncCounter = () => {
