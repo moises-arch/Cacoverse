@@ -477,6 +477,7 @@ button[name="add"]:hover,
         const targetIndex = Math.max(0, Math.min(gallerySlides.length - 1, currentIndex + direction));
         const nextLeft = targetIndex * width;
         sliderList.scrollTo({ left: nextLeft, behavior: 'smooth' });
+        setTimeout(updateArrowState, 220);
       };
 
       const syncCounter = () => {
