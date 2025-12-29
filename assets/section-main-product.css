@@ -3048,6 +3048,37 @@ label.quantity__label.form__label {
     width: 100%;
   }
 
+  .pdp-media-slider {
+    gap: 1.2rem;
+    padding: 0.4rem 0;
+    scroll-behavior: smooth;
+  }
+
+  .pdp-media-slider .caco-square-box {
+    aspect-ratio: 4 / 5;
+    background: #f5f7fb;
+  }
+
+  .pdp-media-slider img,
+  .pdp-media-slider video,
+  .pdp-media-slider model-viewer,
+  .pdp-media-slider iframe {
+    object-fit: contain;
+  }
+
+  .pdp-media-slider .product__media-item {
+    transition: transform 160ms ease, box-shadow 160ms ease;
+  }
+
+  .pdp-media-slider .product__media-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.12);
+  }
+
+  .pdp-media-slider .product__media-item button {
+    outline-offset: 2px;
+  }
+
   .apple-lightbox__controls {
     display: inline-flex;
     align-items: center;

@@ -200,6 +200,11 @@ button[name="add"]:hover,
       const counterTotal = document.querySelector(
         '#GalleryViewer-{{ section.id }} .slider-counter--total'
       );
+      const sliderNav = document
+        .getElementById('GalleryViewer-{{ section.id }}')
+        ?.querySelector('.slider-buttons');
+      const sliderPrev = sliderNav?.querySelector('.slider-button--prev');
+      const sliderNext = sliderNav?.querySelector('.slider-button--next');
 
       if (!lightbox || !sliderList) return () => {};
 
@@ -448,6 +453,24 @@ button[name="add"]:hover,
         });
       };
 
+      const updateArrowState = () => {
+        if (!sliderList || !sliderNav) return;
+        const maxScroll = sliderList.scrollWidth - sliderList.clientWidth;
+        const atStart = sliderList.scrollLeft <= 1;
+        const atEnd = sliderList.scrollLeft >= maxScroll - 1;
+        sliderPrev?.toggleAttribute('hidden', atStart);
+        sliderNext?.toggleAttribute('hidden', atEnd);
+      };
+
+      const handleScroll = () => {
+        updateArrowState();
+      };
+
+      const scrollByStep = (direction = 1) => {
+        const amount = sliderList ? sliderList.clientWidth * 0.9 : 0;
+        sliderList?.scrollBy({ left: direction * amount, behavior: 'smooth' });
+      };
+
       const syncCounter = () => {
         const total = gallerySlides.length;
         if (counterTotal) counterTotal.textContent = total || 0;
@@ -465,6 +488,7 @@ button[name="add"]:hover,
         const slideObserver = new MutationObserver(() => {
           rebuildGallery();
           syncCounter();
+          updateArrowState();
         });
 
         slideObserver.observe(sliderList, {
@@ -477,9 +501,23 @@ button[name="add"]:hover,
         cleanups.push(() => slideObserver.disconnect());
       }
 
+      addListener(sliderList, 'scroll', handleScroll, { passive: true });
+      addListener(window, 'resize', updateArrowState, { passive: true });
+
+      addListener(sliderPrev, 'click', (event) => {
+        event.preventDefault();
+        scrollByStep(-1);
+      });
+
+      addListener(sliderNext, 'click', (event) => {
+        event.preventDefault();
+        scrollByStep(1);
+      });
+
       const refreshFromVariant = () => {
         rebuildGallery();
         syncCounter();
+        updateArrowState();
       };
 
       addListener(document, 'variant:change', refreshFromVariant);
@@ -553,6 +591,7 @@ button[name="add"]:hover,
       rebuildGallery();
       bindSlides();
       syncCounter();
+      updateArrowState();
 
       applyZoomState();
 
