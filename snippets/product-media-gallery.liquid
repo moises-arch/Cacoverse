@@ -49,7 +49,7 @@
 <media-gallery
   id="MediaGallery-{{ section.id }}"
   role="region"
-  class="{% if section.settings.enable_sticky_info %}product__column-sticky {% endif %}caco-media-gallery"
+  class="{% if section.settings.enable_sticky_info %}product__column-sticky {% endif %}caco-media-gallery pdp-media"
   aria-label="{{ 'products.product.media.gallery_viewer' | t }}"
   data-desktop-layout="{{ section.settings.gallery_layout }}"
 >
@@ -61,7 +61,7 @@
 
     <ul
       id="Slider-Gallery-{{ section.id }}"
-      class="product__media-list contains-media grid grid--peek list-unstyled slider slider--mobile slider--tablet-up pdp-media-slider"
+      class="product__media-list contains-media grid grid--peek list-unstyled slider slider--mobile slider--tablet-up pdp-media-slider pdp-media__track"
       role="list"
     >
 
@@ -115,7 +115,7 @@
 
   <li
     id="Slide-{{ section.id }}-{{ fm.id }}"
-    class="product__media-item grid__item slider__slide is-active{% if single_media_visible %} product__media-item--single{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+    class="product__media-item pdp-media__item grid__item slider__slide is-active{% if single_media_visible %} product__media-item--single{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
     data-media-id="{{ section.id }}-{{ fm.id }}"
     selected-color="{{ fm_color }}"
     selected-color-list="{{ fm_color_list }}"
@@ -178,7 +178,7 @@
 
   <li
     id="Slide-{{ section.id }}-{{ media.id }}"
-    class="product__media-item grid__item slider__slide{% if single_media_visible %} product__media-item--single{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+    class="product__media-item pdp-media__item grid__item slider__slide{% if single_media_visible %} product__media-item--single{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
     data-media-id="{{ section.id }}-{{ media.id }}"
     selected-color="{{ m_color }}"
     selected-color-list="{{ m_color_list }}"
@@ -203,7 +203,7 @@
 
     </ul>
 
-    <div class="slider-buttons caco-media-nav quick-add-hidden{% if hide_mobile_slider %} small-hide{% endif %}">
+    <div class="slider-buttons caco-media-nav pdp-media__nav quick-add-hidden{% if hide_mobile_slider %} small-hide{% endif %}">
       <button type="button" class="slider-button slider-button--prev" name="previous" aria-label="{{ 'general.slider.previous_slide' | t }}">
         <span class="svg-wrapper">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
       </button>
