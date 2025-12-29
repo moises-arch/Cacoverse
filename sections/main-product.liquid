@@ -218,6 +218,7 @@ button[name="add"]:hover,
       const preview = lightbox.querySelector('#appleLightboxImage');
       const caption = lightbox.querySelector('.apple-lightbox__caption-text');
       const progress = lightbox.querySelector('.apple-lightbox__progress-bar');
+      const zoomMeter = lightbox.querySelector('.apple-lightbox__zoom-meter');
       const closeBtn = lightbox.querySelector('.apple-lightbox__close');
       const nextBtn = lightbox.querySelector('.apple-lightbox__nav--next');
       const prevBtn = lightbox.querySelector('.apple-lightbox__nav--prev');
@@ -236,6 +237,9 @@ button[name="add"]:hover,
       let currentIndex = 0;
       let lastFocus = null;
       let zoom = 1;
+      let maxZoom = 4;
+      let naturalW = 0;
+      let naturalH = 0;
       let panX = 0;
       let panY = 0;
       let isDragging = false;
@@ -273,10 +277,13 @@ button[name="add"]:hover,
         if (zoomResetBtn) {
           zoomResetBtn.toggleAttribute('hidden', zoom <= 1.01);
         }
+        if (zoomMeter) {
+          zoomMeter.textContent = `${Math.round(zoom * 100)}%`;
+        }
       };
 
       const setZoom = (nextZoom, originX, originY) => {
-        const clamped = Math.max(1, Math.min(4, nextZoom));
+        const clamped = Math.max(1, Math.min(maxZoom, nextZoom));
         if (clamped === zoom) return;
         if (originX !== undefined && originY !== undefined && frame) {
           const frameRect = frame.getBoundingClientRect();
@@ -343,6 +350,18 @@ button[name="add"]:hover,
 
         if (source) preview.src = source;
         preview.alt = target.alt || target.getAttribute('data-alt') || '{{ product.title | escape }}';
+        preview.onload = () => {
+          naturalW = preview.naturalWidth || preview.width || 0;
+          naturalH = preview.naturalHeight || preview.height || 0;
+          const viewportW = frame?.clientWidth || naturalW || 1;
+          const viewportH = frame?.clientHeight || naturalH || 1;
+          const naturalScale = Math.min(
+            naturalW / Math.max(1, preview.clientWidth || viewportW),
+            naturalH / Math.max(1, preview.clientHeight || viewportH)
+          );
+          maxZoom = Math.max(1, Math.min(4, naturalScale));
+          resetZoom();
+        };
 
         if (caption) {
           caption.textContent = target.alt || '{{ product.title | escape }}';
@@ -573,6 +592,7 @@ button[name="add"]:hover,
 
       const handlePointerDown = (event) => {
         if (zoom <= 1) return;
+        event.preventDefault();
         isDragging = true;
         dragState = { x: event.clientX, y: event.clientY, panX, panY };
         preview.setPointerCapture(event.pointerId);
@@ -580,6 +600,7 @@ button[name="add"]:hover,
 
       const handlePointerMove = (event) => {
         if (!isDragging) return;
+        event.preventDefault();
         panX = dragState.panX + (event.clientX - dragState.x);
         panY = dragState.panY + (event.clientY - dragState.y);
         applyZoomState();

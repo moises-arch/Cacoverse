@@ -2855,7 +2855,7 @@ label.quantity__label.form__label {
   align-items: center;
   justify-content: space-between;
   gap: 0.6rem;
-  padding: 0 0 0.15rem 0;
+  padding: 0 0 0 0;
   color: rgba(255, 255, 255, 0.9);
   letter-spacing: 0.01em;
   font-weight: 600;
@@ -2951,6 +2951,7 @@ label.quantity__label.form__label {
   border-radius: 0;
   background: transparent;
   will-change: transform;
+  touch-action: none;
 }
 
 .apple-lightbox__caption,
@@ -3025,7 +3026,7 @@ label.quantity__label.form__label {
   /* Encapsulated PDP media block */
   .pdp-media {
     --pdp-media-gap: 1.2rem;
-    --pdp-media-size: min(1200px, 90vw);
+    --pdp-media-size: min(1200px, 80vw, 80vh);
     position: relative;
     width: 100%;
   }
@@ -3034,6 +3035,7 @@ label.quantity__label.form__label {
     padding: 0 !important;
     margin: 0 !important;
     width: 100%;
+    height: var(--pdp-media-size);
   }
 
   .pdp-media .pdp-media__track {
