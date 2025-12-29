@@ -2712,31 +2712,8 @@ label.quantity__label.form__label {
   transition: transform 180ms ease, filter 180ms ease;
 }
 
-.caco-zoomable {
-  cursor: crosshair;
-  transition: transform 200ms ease, filter 200ms ease;
-  will-change: transform;
-}
-
 .product__media-item {
   position: relative;
-}
-
-.product__media-item.is-zooming .caco-zoomable {
-  transform: scale(1.6);
-  transform-origin: var(--zoom-x, 50%) var(--zoom-y, 50%);
-  filter: saturate(1.05);
-}
-
-@media (hover: none) {
-  .caco-zoomable {
-    cursor: default;
-  }
-
-  .product__media-item.is-zooming .caco-zoomable {
-    transform: none;
-    filter: none;
-  }
 }
 
 .image-magnify-full-size {
@@ -2747,6 +2724,91 @@ label.quantity__label.form__label {
 .caco-media-gallery .product__media-item:focus-within .product__media-img {
   transform: scale(1.012);
   filter: saturate(1.04);
+}
+
+@media screen and (max-width: 749px) {
+  .caco-media-overlay {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .pdp-media-slider + .slider-buttons {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.25rem;
+  }
+
+  .pdp-media-slider + .slider-buttons .slider-button {
+    width: 3.6rem;
+    height: 3.6rem;
+    border-radius: 999px;
+    background: #ffffff;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(13, 107, 166, 0.12);
+  }
+
+  .pdp-media-slider + .slider-buttons .slider-counter {
+    font-weight: 700;
+    color: #0a4f8a;
+  }
+
+  .caco-square-box {
+    background: #f5f7fb;
+  }
+
+  .caco-square-box > * {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .caco-square-box img,
+  .caco-square-box video,
+  .caco-square-box model-viewer,
+  .caco-square-box iframe {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+  }
+
+  .caco-square-box .deferred-media,
+  .caco-square-box product-model,
+  .caco-square-box .product__media-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .caco-media-overlay {
+    position: absolute;
+    inset: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    z-index: 2;
+  }
+
+  .caco-media-overlay:focus-visible {
+    outline: 2px solid #0d6ba6;
+    outline-offset: 2px;
+  }
+
+  .caco-media-gallery .product__media-item,
+  .caco-media-gallery .product__media-item * {
+    cursor: default !important;
+  }
+
+  .caco-media-gallery .product__media-item:hover .product__media-img,
+  .caco-media-gallery .product__media-item:focus-within .product__media-img,
+  .caco-media-gallery .product__media-item:hover img,
+  .caco-media-gallery .product__media-item:focus-within img {
+    transform: none;
+    filter: none;
+  }
 }
 
 .apple-lightbox {
@@ -2774,16 +2836,16 @@ label.quantity__label.form__label {
 
 .apple-lightbox__chrome {
   position: relative;
-  width: min(1080px, 94vw);
-  max-height: 92vh;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 1.1rem;
-  padding: clamp(1.4rem, 2.2vw, 1.8rem);
-  border-radius: 18px;
+  gap: 0.5rem;
+  padding: 1.2rem;
+  border-radius: 0;
   background: linear-gradient(165deg, #0d111a 0%, #0a0d14 60%, #080a11 100%);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  border: none;
+  box-shadow: none;
   overflow: hidden;
   color: #f6f7fb;
 }
@@ -2792,8 +2854,8 @@ label.quantity__label.form__label {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.85rem;
-  padding: 0;
+  gap: 0.6rem;
+  padding: 0 0 0 0;
   color: rgba(255, 255, 255, 0.9);
   letter-spacing: 0.01em;
   font-weight: 600;
@@ -2843,32 +2905,36 @@ label.quantity__label.form__label {
 
 .apple-lightbox__stage {
   position: relative;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
+  display: flex;
   align-items: center;
-  gap: clamp(0.75rem, 2vw, 1.25rem);
-  padding: clamp(0.9rem, 1.8vw, 1.5rem);
-  background: rgba(12, 16, 24, 0.9);
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border-radius: 0;
+  border: none;
+  height: calc(100vh - 120px);
 }
 
 .apple-lightbox__figure {
+  flex: 1 1 auto;
   display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
   align-items: center;
   justify-content: center;
+  margin: 0;
+  padding: 0;
 }
 
 .apple-lightbox__frame {
   position: relative;
   width: 100%;
-  border-radius: 14px;
-  overflow: hidden;
-  background: #0b0e14;
-  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  height: 100%;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .apple-lightbox__scrim {
@@ -2878,68 +2944,31 @@ label.quantity__label.form__label {
 .apple-lightbox__image {
   position: relative;
   z-index: 1;
-  width: 100%;
-  max-height: 74vh;
+  width: auto;
+  max-width: 100vw;
+  max-height: calc(100vh - 120px);
   object-fit: contain;
-  border-radius: 12px;
-  background: #0b0e14;
+  border-radius: 0;
+  background: transparent;
+  will-change: transform;
+  touch-action: none;
 }
 
-.apple-lightbox__caption {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  color: rgba(255, 255, 255, 0.86);
-  font-size: 1.25rem;
-  letter-spacing: 0.01em;
-  width: 100%;
-  justify-content: space-between;
-}
-
-.apple-lightbox__counter {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.3rem 0.75rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  font-weight: 700;
-  color: #fff;
-}
-
-.apple-lightbox__caption-text {
-  color: rgba(255, 255, 255, 0.86);
-  font-weight: 600;
-}
-
+.apple-lightbox__caption,
 .apple-lightbox__progress {
-  position: relative;
-  height: 0.38rem;
-  width: 100%;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  overflow: hidden;
-}
-
-.apple-lightbox__progress-bar {
-  position: absolute;
-  inset: 0;
-  width: 0;
-  background: linear-gradient(90deg, #7bc6ff, #4f8cff);
-  transition: width 180ms ease;
+  display: none;
 }
 
 .apple-lightbox__nav {
   border: none;
-  width: 4.2rem;
-  height: 4.2rem;
+  width: 3.6rem;
+  height: 3.6rem;
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
-  font-size: 2rem;
+  background: rgba(255, 255, 255, 0.22);
+  color: #0b0e14;
+  font-size: 1.8rem;
   cursor: pointer;
   transition: background 140ms ease, transform 140ms ease, box-shadow 140ms ease;
   box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35);
@@ -2947,40 +2976,226 @@ label.quantity__label.form__label {
 
 .apple-lightbox__nav:hover,
 .apple-lightbox__nav:focus-visible {
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.32);
   transform: translateY(-1px);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.38);
   outline: 2px solid rgba(255, 255, 255, 0.22);
   outline-offset: 3px;
 }
 
-.apple-lightbox__nav--prev {
-  justify-self: flex-start;
-}
-
+.apple-lightbox__nav--prev,
 .apple-lightbox__nav--next {
-  justify-self: flex-end;
+  position: relative;
+  top: auto;
+  left: auto;
+  right: auto;
 }
 
 .apple-lock-scroll {
   overflow: hidden;
 }
 
-.product__media-item.is-zooming::after {
-  content: "";
-  position: absolute;
-  width: 18%;
-  aspect-ratio: 1 / 1;
-  border-radius: 14px;
-  border: 2px solid rgba(255, 255, 255, 0.9);
-  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.14), transparent 70%);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(0, 0, 0, 0.1);
-  left: var(--zoom-x, 50%);
-  top: var(--zoom-y, 50%);
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  transition: opacity 120ms ease;
+@media screen and (min-width: 750px) {
+  .pdp-media-slider {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    gap: 0;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-snap-stop: always;
+    overscroll-behavior-x: contain;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .pdp-media-slider .product__media-item {
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    scroll-snap-align: center;
+    margin: 0 !important;
+    overflow: hidden;
+  }
+
+  .pdp-media-slider .product__media-item > * {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Encapsulated PDP media block */
+  .pdp-media {
+    --pdp-media-gap: 1.2rem;
+    --pdp-media-size: min(1200px, 80vw, 80vh);
+    position: relative;
+    width: 100%;
+  }
+
+  .pdp-media .product__media-list {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100%;
+    height: var(--pdp-media-size);
+  }
+
+  .pdp-media .pdp-media__track {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    gap: 0;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-snap-stop: always;
+    scroll-behavior: smooth;
+  }
+
+  .pdp-media .pdp-media__item {
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    scroll-snap-align: center;
+    margin: 0 !important;
+    transition: transform 160ms ease, box-shadow 160ms ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100%;
+    height: var(--pdp-media-size);
+  }
+
+  .pdp-media .pdp-media__item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.12);
+  }
+
+  .pdp-media .caco-square-box {
+    aspect-ratio: 1 / 1;
+    background: #f5f7fb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    width: var(--pdp-media-size);
+    height: var(--pdp-media-size);
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .pdp-media .product__media-item img,
+  .pdp-media .product__media-item video,
+  .pdp-media .product__media-item model-viewer,
+  .pdp-media .product__media-item iframe {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: block;
+    max-height: 100%;
+  }
+
+  .pdp-media .caco-media-overlay {
+    position: absolute;
+    inset: 0;
+    border: none;
+    background: transparent;
+    cursor: zoom-in;
+  }
+
+  .pdp-media .caco-media-pill {
+    position: absolute;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .pdp-media__nav {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    pointer-events: none;
+    padding: 0 0.6rem;
+  }
+
+  .pdp-media__nav .slider-button {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 3.6rem;
+    height: 3.6rem;
+    border-radius: 999px;
+    background: #ffffff;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(13, 107, 166, 0.12);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 160ms ease, transform 160ms ease;
+  }
+
+  .pdp-media:hover .pdp-media__nav .slider-button,
+  .pdp-media__nav .slider-button:focus-visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .pdp-media__nav .slider-button[disabled] {
+    opacity: 0.35;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .pdp-media__nav .slider-counter {
+    font-weight: 700;
+    color: #0a4f8a;
+  }
+
+  .apple-lightbox__controls {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .apple-lightbox__zoom-btn {
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    border-radius: 10px;
+    padding: 0.6rem 0.9rem;
+    font-weight: 700;
+    min-width: 3.6rem;
+    cursor: pointer;
+    transition: background 140ms ease, transform 140ms ease, box-shadow 140ms ease;
+  }
+
+  .apple-lightbox__zoom-btn:hover,
+  .apple-lightbox__zoom-btn:focus-visible {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+    outline: 2px solid rgba(255, 255, 255, 0.24);
+    outline-offset: 2px;
+  }
+
+  .apple-lightbox__zoom-reset[hidden] {
+    display: none;
+  }
+
+  .apple-lightbox__image {
+    transition: transform 160ms ease;
+    touch-action: none;
+  }
+
+  .apple-lightbox--zoomed .apple-lightbox__image {
+    cursor: grab;
+  }
 }
+
 .caco-media-nav {
   position: absolute;
   inset: 0;
@@ -4132,30 +4347,6 @@ body.template-product .product__media-modal * {
   }
 }
 
-
-/* ============================
-   INLINE ZOOM LENS CUSTOM
-   ============================ */
-#shopify-section-{{ section.id }} .inline-zoom-lens {
-  position: absolute;
-  pointer-events: none;
-  width: 260px;    /* <-- tamaño del cuadro de zoom */
-  height: 260px;   /* <-- cámbialo si lo quieres más grande/pequeño */
-  border-radius: 18px;
-  border: 1px solid rgba(255,255,255,0.9);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-  overflow: hidden;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 220% 220%; /* nivel de zoom */
-  opacity: 0;
-  transition: opacity .18s ease-out;
-  z-index: 5;
-}
-
-#shopify-section-{{ section.id }} .inline-zoom-lens.is-active {
-  opacity: 1;
-}
 
 /* por si algún zoom viejo estorba */
 #shopify-section-{{ section.id }} .image-magnify,
