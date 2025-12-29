@@ -52,6 +52,9 @@
   class="{% if section.settings.enable_sticky_info %}product__column-sticky {% endif %}caco-media-gallery pdp-media"
   aria-label="{{ 'products.product.media.gallery_viewer' | t }}"
   data-desktop-layout="{{ section.settings.gallery_layout }}"
+  data-section-id="{{ section.id }}"
+  data-product-title="{{ product.title | escape }}"
+  data-media-gallery
 >
   <div id="GalleryStatus-{{ section.id }}" class="visually-hidden" role="status"></div>
 <slider-component id="GalleryViewer-{{ section.id }}" class="slider-mobile-gutter">
@@ -117,12 +120,20 @@
     id="Slide-{{ section.id }}-{{ fm.id }}"
     class="product__media-item pdp-media__item grid__item slider__slide is-active{% if single_media_visible %} product__media-item--single{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
     data-media-id="{{ section.id }}-{{ fm.id }}"
+    data-media-index="{{ slide_index }}"
     selected-color="{{ fm_color }}"
     selected-color-list="{{ fm_color_list }}"
     selected-key="{{ fm_key }}"
   >
     <div class="caco-square-box">
-      {% render 'product-media', media: fm, loop: section.settings.enable_video_looping, variant_image: variant_images contains fm.src %}
+      {% render 'product-media',
+        media: fm,
+        loop: section.settings.enable_video_looping,
+        variant_image: variant_images contains fm.src,
+        loading_behavior: 'eager',
+        fetch_priority: 'high',
+        sizes_attr: sizes_main
+      %}
       <button
         type="button"
         class="caco-media-overlay"
@@ -180,12 +191,19 @@
     id="Slide-{{ section.id }}-{{ media.id }}"
     class="product__media-item pdp-media__item grid__item slider__slide{% if single_media_visible %} product__media-item--single{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
     data-media-id="{{ section.id }}-{{ media.id }}"
+    data-media-index="{{ slide_index }}"
     selected-color="{{ m_color }}"
     selected-color-list="{{ m_color_list }}"
     selected-key="{{ m_key }}"
   >
     <div class="caco-square-box">
-      {% render 'product-media', media: media, loop: section.settings.enable_video_looping, variant_image: variant_images contains media.src %}
+      {% render 'product-media',
+        media: media,
+        loop: section.settings.enable_video_looping,
+        variant_image: variant_images contains media.src,
+        loading_behavior: 'lazy',
+        sizes_attr: sizes_main
+      %}
       <button
         type="button"
         class="caco-media-overlay"
