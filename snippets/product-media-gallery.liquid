@@ -1,11 +1,8 @@
 {% comment %}
-  Renders a product media gallery with 1:1 aspect ratio images.
-  Features:
-  - Square 1:1 images
-  - Prev/Next navigation arrows
-  - Lightbox integration with zoom
-  - Thumbnail navigation with arrows
-  - Mobile/tablet responsive
+  Renders a product media gallery. Used by media-gallery.js and product-media-modal.
+  Adds data attributes for filtering:
+    selected-color / thumbnail-color => color (from media.alt before first "|")
+    selected-key   / thumbnail-key   => color--series  (color and series from media.alt split by "|")
 {% endcomment %}
 
 {%- liquid
@@ -39,7 +36,15 @@
   endif
 -%}
 
+{%- comment -%} 🔒 Single source of truth for current media {%- endcomment -%}
 {%- assign featured_media = product.selected_or_first_available_variant.featured_media | default: product.featured_media -%}
+
+{%- comment -%} Utility to normalize media.alt into primary token and list {%- endcomment -%}
+{%- liquid
+  assign color_token_source = ''
+  assign color_token_list = ''
+  assign color_token_primary = 'all-show'
+-%}
 
 <media-gallery
   id="MediaGallery-{{ section.id }}"
@@ -52,9 +57,7 @@
   data-media-gallery
 >
   <div id="GalleryStatus-{{ section.id }}" class="visually-hidden" role="status"></div>
-  
-  {%- comment -%} Main Gallery Slider {%- endcomment -%}
-  <slider-component id="GalleryViewer-{{ section.id }}" class="slider-mobile-gutter">
+<slider-component id="GalleryViewer-{{ section.id }}" class="slider-mobile-gutter">
     <a class="skip-to-content-link button visually-hidden quick-add-hidden" href="#ProductInfo-{{ section.id }}">
       {{ 'accessibility.skip_to_product_info' | t }}
     </a>
@@ -64,184 +67,171 @@
       class="product__media-list contains-media grid grid--peek list-unstyled slider slider--mobile slider--tablet-up pdp-media-slider pdp-media__track"
       role="list"
     >
-      {%- assign widths_list = "320,480,640,800,960,1200,1500,1800,2048,2560,3000,3840" | split: "," -%}
-      {%- capture sizes_main -%}
-        (min-width: {{ settings.page_width }}px) {{ settings.page_width | times: media_width | round | minus: 64 }}px,
-        (min-width: 990px) calc({{ media_width | times: 100 }}vw - 4rem),
-        100vw
-      {%- endcapture -%}
 
-      {%- assign slide_index = 0 -%}
+{%- assign widths_list = "320,480,640,800,960,1200,1500,1800,2048,2560,3000,3840" | split: "," -%}
+{%- capture sizes_main -%}
+  (min-width: {{ settings.page_width }}px) {{ settings.page_width | times: media_width | round | minus: 64 }}px,
+  (min-width: 990px) calc({{ media_width | times: 100 }}vw - 4rem),
+  100vw
+{%- endcapture -%}
 
-      {%- comment -%} Featured Media First {%- endcomment -%}
-      {%- if featured_media and featured_media.media_type == 'image' -%}
-        {%- assign fm = featured_media -%}
-        
-        {%- comment -%} Parse color/series from alt text {%- endcomment -%}
-        {%- assign fm_parts = fm.alt | default: '' | split: '|' -%}
-        {%- assign fm_color_source = fm_parts[0] | default: '' | downcase -%}
-        {%- assign fm_color_tokens = fm_color_source | replace: '|', ',' | replace: '/', ',' | split: ',' -%}
-        {%- assign fm_color = 'all-show' -%}
-        {%- assign fm_color_list = '' -%}
-        {%- for token in fm_color_tokens -%}
-          {%- assign cleaned = token | strip | handleize -%}
-          {%- if cleaned != '' -%}
-            {%- if fm_color == 'all-show' -%}{%- assign fm_color = cleaned -%}{%- endif -%}
-            {%- if fm_color_list != '' -%}{%- assign fm_color_list = fm_color_list | append: ',' -%}{%- endif -%}
-            {%- assign fm_color_list = fm_color_list | append: cleaned -%}
-          {%- endif -%}
-        {%- endfor -%}
-        {%- assign fm_alt_tokens = fm.alt | default: '' | downcase | replace: '|', ',' | replace: '/', ',' | split: ',' -%}
-        {%- for token in fm_alt_tokens -%}
-          {%- assign cleaned = token | strip | handleize -%}
-          {%- if cleaned == 'all' or cleaned == 'all-show' -%}
-            {%- unless fm_color_list contains cleaned -%}
-              {%- if fm_color_list != '' -%}{%- assign fm_color_list = fm_color_list | append: ',' -%}{%- endif -%}
-              {%- assign fm_color_list = fm_color_list | append: cleaned -%}
-            {%- endunless -%}
-            {%- if fm_color == 'all-show' -%}{%- assign fm_color = cleaned -%}{%- endif -%}
-          {%- endif -%}
-        {%- endfor -%}
-        {%- assign fm_series = fm_parts[1] | default: '' | strip | handleize -%}
-        {%- assign fm_key = fm_color | append: '--' | append: fm_series -%}
+{%- assign first_rendered = false -%}
 
-        {%- capture srcset_featured -%}
-          {%- for w in widths_list -%}
-            {%- assign ww = w | plus: 0 -%}
-            {{ fm | image_url: width: ww }} {{ ww }}w{%- unless forloop.last -%}, {%- endunless -%}
-          {%- endfor -%}
-        {%- endcapture -%}
+{%- assign slide_index = 0 -%}
 
-        <li
-          id="Slide-{{ section.id }}-{{ fm.id }}"
-          class="product__media-item pdp-media__item grid__item slider__slide is-active{% if single_media_visible %} product__media-item--single{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
-          data-media-id="{{ section.id }}-{{ fm.id }}"
-          data-media-index="{{ slide_index }}"
-          selected-color="{{ fm_color }}"
-          selected-color-list="{{ fm_color_list }}"
-          selected-key="{{ fm_key }}"
-        >
-          <div class="caco-square-box">
-            {% render 'product-media',
-              media: fm,
-              loop: section.settings.enable_video_looping,
-              variant_image: variant_images contains fm.src,
-              loading_behavior: 'eager',
-              fetch_priority: 'high',
-              sizes_attr: sizes_main
-            %}
-            <button
-              type="button"
-              class="caco-media-overlay"
-              tabindex="-1"
-              data-lightbox-index="{{ slide_index }}"
-              aria-label="Open gallery view for {{ fm.alt | default: product.title | escape }}"
-            >
-              <span class="caco-media-pill">Open gallery</span>
-            </button>
-          </div>
-        </li>
-        {%- assign slide_index = slide_index | plus: 1 -%}
-      {%- endif -%}
-
-      {%- comment -%} Remaining Media {%- endcomment -%}
-      {%- for media in product.media -%}
-        {%- if media.media_type != 'image' -%}{% continue %}{%- endif -%}
-        {%- if featured_media and media.id == featured_media.id -%}{% continue %}{%- endif -%}
-
-        {%- assign m_parts = media.alt | default: '' | split: '|' -%}
-        {%- assign m_color_source = m_parts[0] | default: '' | downcase -%}
-        {%- assign m_color_tokens = m_color_source | replace: '|', ',' | replace: '/', ',' | split: ',' -%}
-        {%- assign m_color = 'all-show' -%}
-        {%- assign m_color_list = '' -%}
-        {%- for token in m_color_tokens -%}
-          {%- assign cleaned = token | strip | handleize -%}
-          {%- if cleaned != '' -%}
-            {%- if m_color == 'all-show' -%}{%- assign m_color = cleaned -%}{%- endif -%}
-            {%- if m_color_list != '' -%}{%- assign m_color_list = m_color_list | append: ',' -%}{%- endif -%}
-            {%- assign m_color_list = m_color_list | append: cleaned -%}
-          {%- endif -%}
-        {%- endfor -%}
-        {%- assign m_alt_tokens = media.alt | default: '' | downcase | replace: '|', ',' | replace: '/', ',' | split: ',' -%}
-        {%- for token in m_alt_tokens -%}
-          {%- assign cleaned = token | strip | handleize -%}
-          {%- if cleaned == 'all' or cleaned == 'all-show' -%}
-            {%- unless m_color_list contains cleaned -%}
-              {%- if m_color_list != '' -%}{%- assign m_color_list = m_color_list | append: ',' -%}{%- endif -%}
-              {%- assign m_color_list = m_color_list | append: cleaned -%}
-            {%- endunless -%}
-            {%- if m_color == 'all-show' -%}{%- assign m_color = cleaned -%}{%- endif -%}
-          {%- endif -%}
-        {%- endfor -%}
-        {%- assign m_series = m_parts[1] | default: '' | strip | handleize -%}
-        {%- assign m_key = m_color | append: '--' | append: m_series -%}
-
-        {%- capture srcset_attr -%}
-          {%- for w in widths_list -%}
-            {%- assign ww = w | plus: 0 -%}
-            {{ media | image_url: width: ww }} {{ ww }}w{%- unless forloop.last -%}, {%- endunless -%}
-          {%- endfor -%}
-        {%- endcapture -%}
-
-        <li
-          id="Slide-{{ section.id }}-{{ media.id }}"
-          class="product__media-item pdp-media__item grid__item slider__slide{% if single_media_visible %} product__media-item--single{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
-          data-media-id="{{ section.id }}-{{ media.id }}"
-          data-media-index="{{ slide_index }}"
-          selected-color="{{ m_color }}"
-          selected-color-list="{{ m_color_list }}"
-          selected-key="{{ m_key }}"
-        >
-          <div class="caco-square-box">
-            {% render 'product-media',
-              media: media,
-              loop: section.settings.enable_video_looping,
-              variant_image: variant_images contains media.src,
-              loading_behavior: 'lazy',
-              sizes_attr: sizes_main
-            %}
-            <button
-              type="button"
-              class="caco-media-overlay"
-              tabindex="-1"
-              data-lightbox-index="{{ slide_index }}"
-              aria-label="Open gallery view for {{ media.alt | default: product.title | escape }}"
-            >
-              <span class="caco-media-pill">Open gallery</span>
-            </button>
-          </div>
-        </li>
-        {%- assign slide_index = slide_index | plus: 1 -%}
-      {%- endfor -%}
-    </ul>
-
-    {%- comment -%} Navigation Arrows for Main Gallery {%- endcomment -%}
-    {%- if media_count > 1 -%}
-      <div class="slider-buttons caco-media-nav pdp-media__nav quick-add-hidden{% if hide_mobile_slider %} small-hide{% endif %}">
-        <button 
-          type="button" 
-          class="slider-button slider-button--prev" 
-          name="previous" 
-          aria-label="{{ 'general.slider.previous_slide' | t }}"
-        >
-          <span class="svg-wrapper">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
-        </button>
-        <div class="slider-counter caption">
-          <span class="slider-counter--current">1</span>
-          <span aria-hidden="true"> / </span>
-          <span class="visually-hidden">{{ 'general.slider.of' | t }}</span>
-          <span class="slider-counter--total">{{ media_count }}</span>
-        </div>
-        <button 
-          type="button" 
-          class="slider-button slider-button--next" 
-          name="next" 
-          aria-label="{{ 'general.slider.next_slide' | t }}"
-        >
-          <span class="svg-wrapper">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
-        </button>
-      </div>
+{%- if featured_media and featured_media.media_type == 'image' -%}
+  {%- assign fm = featured_media -%}
+  
+  {%- assign fm_parts = fm.alt | default: '' | split: '|' -%}
+  {%- assign fm_color_source = fm_parts[0] | default: '' | downcase -%}
+  {%- assign fm_color_tokens = fm_color_source | replace: '|', ',' | replace: '/', ',' | split: ',' -%}
+  {%- assign fm_color = 'all-show' -%}
+  {%- assign fm_color_list = '' -%}
+  {%- for token in fm_color_tokens -%}
+    {%- assign cleaned = token | strip | handleize -%}
+    {%- if cleaned != '' -%}
+      {%- if fm_color == 'all-show' -%}{%- assign fm_color = cleaned -%}{%- endif -%}
+      {%- if fm_color_list != '' -%}{%- assign fm_color_list = fm_color_list | append: ',' -%}{%- endif -%}
+      {%- assign fm_color_list = fm_color_list | append: cleaned -%}
     {%- endif -%}
+  {%- endfor -%}
+  {%- assign fm_alt_tokens = fm.alt | default: '' | downcase | replace: '|', ',' | replace: '/', ',' | split: ',' -%}
+  {%- for token in fm_alt_tokens -%}
+    {%- assign cleaned = token | strip | handleize -%}
+    {%- if cleaned == 'all' or cleaned == 'all-show' -%}
+      {%- unless fm_color_list contains cleaned -%}
+        {%- if fm_color_list != '' -%}{%- assign fm_color_list = fm_color_list | append: ',' -%}{%- endif -%}
+        {%- assign fm_color_list = fm_color_list | append: cleaned -%}
+      {%- endunless -%}
+      {%- if fm_color == 'all-show' -%}{%- assign fm_color = cleaned -%}{%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- assign fm_series = fm_parts[1] | default: '' | strip | handleize -%}
+  {%- assign fm_key    = fm_color | append: '--' | append: fm_series -%}
+
+  {%- capture srcset_featured -%}
+    {%- for w in widths_list -%}
+      {%- assign ww = w | plus: 0 -%}
+      {{ fm | image_url: width: ww }} {{ ww }}w{%- unless forloop.last -%}, {%- endunless -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+
+  <li
+    id="Slide-{{ section.id }}-{{ fm.id }}"
+    class="product__media-item pdp-media__item grid__item slider__slide is-active{% if single_media_visible %} product__media-item--single{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+    data-media-id="{{ section.id }}-{{ fm.id }}"
+    data-media-index="{{ slide_index }}"
+    selected-color="{{ fm_color }}"
+    selected-color-list="{{ fm_color_list }}"
+    selected-key="{{ fm_key }}"
+  >
+    <div class="caco-square-box">
+      {% render 'product-media',
+        media: fm,
+        loop: section.settings.enable_video_looping,
+        variant_image: variant_images contains fm.src,
+        loading_behavior: 'eager',
+        fetch_priority: 'high',
+        sizes_attr: sizes_main
+      %}
+      <button
+        type="button"
+        class="caco-media-overlay"
+        tabindex="-1"
+        data-lightbox-index="{{ slide_index }}"
+        aria-label="Open gallery view for {{ fm.alt | default: product.title | escape }}"
+      >
+        <span class="caco-media-pill">Open gallery</span>
+      </button>
+    </div>
+  </li>
+  {%- assign first_rendered = true -%}
+  {%- assign slide_index = slide_index | plus: 1 -%}
+{%- endif -%}
+
+{%- for media in product.media -%}
+  {%- if media.media_type != 'image' -%}{% continue %}{%- endif -%}
+  {%- if featured_media and media.id == featured_media.id -%}{% continue %}{%- endif -%}
+
+  {%- assign m_parts = media.alt | default: '' | split: '|' -%}
+  {%- assign m_color_source = m_parts[0] | default: '' | downcase -%}
+  {%- assign m_color_tokens = m_color_source | replace: '|', ',' | replace: '/', ',' | split: ',' -%}
+  {%- assign m_color  = 'all-show' -%}
+  {%- assign m_color_list = '' -%}
+  {%- for token in m_color_tokens -%}
+    {%- assign cleaned = token | strip | handleize -%}
+    {%- if cleaned != '' -%}
+      {%- if m_color == 'all-show' -%}{%- assign m_color = cleaned -%}{%- endif -%}
+      {%- if m_color_list != '' -%}{%- assign m_color_list = m_color_list | append: ',' -%}{%- endif -%}
+      {%- assign m_color_list = m_color_list | append: cleaned -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- assign m_alt_tokens = media.alt | default: '' | downcase | replace: '|', ',' | replace: '/', ',' | split: ',' -%}
+  {%- for token in m_alt_tokens -%}
+    {%- assign cleaned = token | strip | handleize -%}
+    {%- if cleaned == 'all' or cleaned == 'all-show' -%}
+      {%- unless m_color_list contains cleaned -%}
+        {%- if m_color_list != '' -%}{%- assign m_color_list = m_color_list | append: ',' -%}{%- endif -%}
+        {%- assign m_color_list = m_color_list | append: cleaned -%}
+      {%- endunless -%}
+      {%- if m_color == 'all-show' -%}{%- assign m_color = cleaned -%}{%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- assign m_series = m_parts[1] | default: '' | strip | handleize -%}
+  {%- assign m_key    = m_color | append: '--' | append: m_series -%}
+
+  {%- capture srcset_attr -%}
+    {%- for w in widths_list -%}
+      {%- assign ww = w | plus: 0 -%}
+      {{ media | image_url: width: ww }} {{ ww }}w{%- unless forloop.last -%}, {%- endunless -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+
+  <li
+    id="Slide-{{ section.id }}-{{ media.id }}"
+    class="product__media-item pdp-media__item grid__item slider__slide{% if single_media_visible %} product__media-item--single{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+    data-media-id="{{ section.id }}-{{ media.id }}"
+    data-media-index="{{ slide_index }}"
+    selected-color="{{ m_color }}"
+    selected-color-list="{{ m_color_list }}"
+    selected-key="{{ m_key }}"
+  >
+    <div class="caco-square-box">
+      {% render 'product-media',
+        media: media,
+        loop: section.settings.enable_video_looping,
+        variant_image: variant_images contains media.src,
+        loading_behavior: 'lazy',
+        sizes_attr: sizes_main
+      %}
+      <button
+        type="button"
+        class="caco-media-overlay"
+        tabindex="-1"
+        data-lightbox-index="{{ slide_index }}"
+        aria-label="Open gallery view for {{ media.alt | default: product.title | escape }}"
+      >
+        <span class="caco-media-pill">Open gallery</span>
+      </button>
+    </div>
+  </li>
+  {%- assign first_rendered = true -%}
+  {%- assign slide_index = slide_index | plus: 1 -%}
+{%- endfor -%}
+
+      </ul>
+
+    <div class="slider-buttons caco-media-nav pdp-media__nav quick-add-hidden{% if hide_mobile_slider %} small-hide{% endif %}">
+      <button type="button" class="slider-button slider-button--prev" name="previous" aria-label="{{ 'general.slider.previous_slide' | t }}">
+        <span class="svg-wrapper">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
+      </button>
+      <div class="slider-counter caption">
+        <span class="slider-counter--current">1</span>
+        <span aria-hidden="true"> / </span>
+        <span class="visually-hidden">{{ 'general.slider.of' | t }}</span>
+        <span class="slider-counter--total">{{ media_count }}</span>
+      </div>
+    </div>
   </slider-component>
 
   {%- if first_3d_model -%}
@@ -259,7 +249,6 @@
     </button>
   {%- endif -%}
 
-  {%- comment -%} Thumbnail Slider {%- endcomment -%}
   {%- liquid
     assign is_not_limited_to_single_item = false
     if limit == null or limit > 1
@@ -314,7 +303,7 @@
           {%- assign fm_parts = featured_media.alt | default: '' | split: '|' -%}
           {%- assign fm_color_source = fm_parts[0] | default: '' | downcase -%}
           {%- assign fm_color_tokens = fm_color_source | replace: '|', ',' | replace: '/', ',' | split: ',' -%}
-          {%- assign fm_color = 'all-show' -%}
+          {%- assign fm_color  = 'all-show' -%}
           {%- assign fm_color_list = '' -%}
           {%- for token in fm_color_tokens -%}
             {%- assign cleaned = token | strip | handleize -%}
@@ -386,7 +375,7 @@
             {%- assign m_parts = media.alt | default: '' | split: '|' -%}
             {%- assign m_color_source = m_parts[0] | default: '' | downcase -%}
             {%- assign m_color_tokens = m_color_source | replace: '|', ',' | replace: '/', ',' | split: ',' -%}
-            {%- assign m_color = 'all-show' -%}
+            {%- assign m_color  = 'all-show' -%}
             {%- assign m_color_list = '' -%}
             {%- for token in m_color_tokens -%}
               {%- assign cleaned = token | strip | handleize -%}
@@ -460,4 +449,28 @@
       </button>
     </slider-component>
   {%- endif -%}
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </media-gallery>
