@@ -1,6 +1,13 @@
+<caco-product-media
+  class="caco-product-media"
+  data-section-id="{{ section.id }}"
+  data-product-title="{{ product.title | escape }}"
+  data-media-count="{{ product.media.size }}"
+  style="display: block"
+>
 <product-info
   id="MainProduct-{{ section.id }}"
-  class="section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}"
+  class="section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }} product-info--pdp"
   data-section="{{ section.id }}"
   data-product-id="{{ product.id }}"
   data-update-url="true"
@@ -30,9 +37,7 @@
 
 {%- style -%}
 
-/* ============================
-   1. BOTONES (ATC / BUY NOW)
-   ============================ */
+/* CTA theming */
 button[name="add"],
 .shopify-payment-button__button,
 .product-form__submit {
@@ -50,9 +55,7 @@ button[name="add"]:hover,
   background-color: #fa650c !important;
 }
 
-/* ============================
-   2. PADDING SECCIÓN + FONDO PDP
-   ============================ */
+/* Section spacing */
 .section-{{ section.id }}-padding {
   padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
   padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
@@ -65,6 +68,7 @@ button[name="add"]:hover,
   }
 }
 
+/* PDP background */
 .template-product #MainContent,
 .template-product #MainContent product-info {
   background-repeat: repeat;
@@ -72,1251 +76,80 @@ button[name="add"]:hover,
   background-color: #f2f2f2;
 }
 
-/* ============================
-   3. GALERÍA — BASE
-   ============================ */
-
-/* Sin “hand” ni hover loco en media items */
-#shopify-section-{{ section.id }} .product__media-item,
-#shopify-section-{{ section.id }} .product__media-item *,
-#shopify-section-{{ section.id }} .product__media,
-#shopify-section-{{ section.id }} .product__media img,
-#shopify-section-{{ section.id }} .product__modal-opener,
-#shopify-section-{{ section.id }} .product__modal-opener * {
-  cursor: default !important;
-  transition: none !important;
-}
-
-#shopify-section-{{ section.id }} .product__media-item:hover,
-#shopify-section-{{ section.id }} .product__media-item:hover *,
-#shopify-section-{{ section.id }} .product__modal-opener:hover,
-#shopify-section-{{ section.id }} .product__modal-opener:hover * {
-  transform: none !important;
-  box-shadow: none !important;
-  filter: none !important;
-  opacity: 1 !important;
-}
-
-/* Centrar la imagen principal en su frame */
-#shopify-section-{{ section.id }} .product__media-item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-#shopify-section-{{ section.id }} .product__media-item img {
-  display: block !important;
-  width: 100% !important;
-  height: auto !important;
-  object-fit: contain !important;
-}
-
-/* ============================
-   3.B – LIMPIAR “OPEN GALLERY”
-   ============================ */
-
-#shopify-section-{{ section.id }} .product__media-toggle,
-#shopify-section-{{ section.id }} .product__media-toggle *,
-#shopify-section-{{ section.id }} .product__modal-opener .product__media-toggle,
-#shopify-section-{{ section.id }} .product__modal-opener .product__media-toggle *,
-#shopify-section-{{ section.id }} .product__modal-opener .product__media-icon,
-#shopify-section-{{ section.id }} .product__modal-opener .product__media-button,
-#shopify-section-{{ section.id }} .product__modal-opener .product__media-button * {
-  display: none !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  border: none !important;
-}
-
-#shopify-section-{{ section.id }} .product__media-toggle::before,
-#shopify-section-{{ section.id }} .product__media-toggle::after {
-  display: none !important;
-  content: none !important;
-}
-
-/* ============================
-   4. LIGHTBOX (APPLE STYLE)
-   ============================ */
-
-#galleryLightbox .apple-lightbox__chrome {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: stretch;
-  max-width: 100vw !important;
-  height: 100vh !important;
-  margin: 0;
-  padding: 10px 16px 24px;
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-#galleryLightbox .apple-lightbox__header {
-  flex: 0 0 auto;
-  margin: 0 0 8px;
-  padding: 0;
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-#galleryLightbox .apple-lightbox__stage {
-  flex: 1 1 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0;
-  padding: 0;
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  position: relative;
-}
-
-#galleryLightbox .apple-lightbox__figure {
-  margin: 0;
-  padding: 0;
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-#galleryLightbox .apple-lightbox__frame {
-  position: relative;
-  display: block;
-  margin: 0 auto;
-  padding: 0;
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  border-radius: 24px !important;
-  overflow: hidden !important;
-}
-
-#galleryLightbox .apple-lightbox__scrim {
-  display: none !important;
-}
-
-#galleryLightbox .apple-lightbox__image {
-  display: block;
-  margin: 0 auto;
-  width: auto;
-  height: auto;
-  max-width: 96vw;
-  max-height: calc(100vh - 150px);
-  object-fit: contain;
-  border-radius: 24px !important;
-}
-
-#galleryLightbox .apple-lightbox__caption {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  margin-top: 6px;
-  padding: 0;
-}
-
-#galleryLightbox .apple-lightbox__caption-text,
-#galleryLightbox .apple-lightbox__progress {
-  display: none !important;
-}
-
-#galleryLightbox .apple-lightbox__counter {
-  color: #ffffff !important;
-}
-
-#galleryLightbox .apple-lightbox__nav {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.45);
-  color: #ffffff;
-}
-
-#galleryLightbox .apple-lightbox__nav--prev { left: 18px; }
-#galleryLightbox .apple-lightbox__nav--next { right: 18px; }
-
-#galleryLightbox .apple-lightbox__nav svg {
-  width: 18px;
-  height: 18px;
-}
-
-/* X siempre redonda */
-#galleryLightbox .apple-lightbox__close,
-#galleryLightbox .apple-lightbox__close:focus,
-#galleryLightbox .apple-lightbox__close:hover,
-#galleryLightbox .apple-lightbox__close:active {
-  border-radius: 999px !important;
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-/* ============================
-   5. MOBILE RULES
-   ============================ */
-@media (max-width: 749px) {
-
-  /* --- LIGHTBOX MOBILE: sin flechas, solo X y swipe --- */
-  #galleryLightbox .apple-lightbox__nav,
-  #galleryLightbox .apple-lightbox__counter {
-    display: none !important;
-  }
-
-  #galleryLightbox .apple-lightbox__chrome {
-    padding-top: 8px;
-  }
-
-  #galleryLightbox .apple-lightbox__image {
-    max-width: 98vw;
-    max-height: calc(100vh - 120px);
-  }
-
-  #galleryLightbox {
-    cursor: default;
-  }
-  #galleryLightbox .apple-lightbox__stage {
-    cursor: pointer;
-  }
-  #galleryLightbox .apple-lightbox__frame,
-  #galleryLightbox .apple-lightbox__image {
-    cursor: default;
-  }
-
-  /* ======================
-     MEDIA BOX FULL WIDTH
-     ====================== */
-  #shopify-section-{{ section.id }} .product__media-wrapper {
-    width: 100%;
-    max-width: 100%;
-    margin: 12px 0 20px;
-    padding: 16px 0 20px;          /* sin padding lateral */
-    background: #f3f3f3;
-    border-radius: 24px;
-    box-sizing: border-box;
-  }
-
-  #shopify-section-{{ section.id }} .product__media-list {
-    margin: 0;
-  }
-
-  /* Frame blanco interno */
-  #shopify-section-{{ section.id }} .product__media-item {
-    padding: 10px;
-    background: #ffffff;
-    border-radius: 18px;
-  }
-
-  /* ======================
-     STRIP DE THUMBS + FLECHAS
-     ====================== */
-
-  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail-slider,
-  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail-slider--mobile {
-    position: relative;
-    margin-top: 14px;
-  }
-
-  /* Thumbs en una sola fila */
-  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail-list {
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    align-items: center;
-    gap: 8px;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-  }
-
-  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail-list__item {
-    flex: 0 0 24%;
-    max-width: 24%;
-  }
-
-  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail {
-    background: #ffffff;
-    border-radius: 12px;
-    padding: 4px;
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
-  }
-
-  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail__media {
-    border-radius: 10px;
-    overflow: hidden;
-  }
-
-  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail__media img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  /* Thumb activo con marco azul */
-  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail.is-active {
-    box-shadow: 0 0 0 2px #0d6ba6;
-  }
-
-  /* Flechas fuera, centradas, sin fondo/borde/sombra */
-  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail-slider .slider-button,
-  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail-slider--mobile .slider-button {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: auto;
-    height: auto;
-    padding: 0;
-    margin: 0;
-    border: none !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    color: #9b9b9b;
-  }
-
-  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail-slider .slider-button--prev,
-  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail-slider--mobile .slider-button--prev {
-    left: -18px;
-  }
-
-  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail-slider .slider-button--next,
-  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail-slider--mobile .slider-button--next {
-    right: -18px;
-  }
-
-  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail-slider .slider-button svg,
-  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail-slider--mobile .slider-button svg {
-    width: 16px;
-    height: 16px;
-  }
-
-  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail-slider .slider-button[disabled],
-  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail-slider--mobile .slider-button[disabled] {
-    opacity: 0.15;
-  }
-}
-
-
-
-/* ==== KILL SWITCH UI "OPEN GALLERY" ==== */
-
-/* Botón/overlay que Dawn mete sobre la imagen */
-#shopify-section-{{ section.id }} .product__modal-opener,
-#shopify-section-{{ section.id }} .product__modal-opener *,
-#shopify-section-{{ section.id }} .product__media-toggle,
-#shopify-section-{{ section.id }} .product__media-toggle *,
-#shopify-section-{{ section.id }} [data-media-modal-opener],
-#shopify-section-{{ section.id }} [data-media-modal-opener] *,
-#shopify-section-{{ section.id }} button[aria-label*="Open gallery"],
-#shopify-section-{{ section.id }} [aria-label*="Open gallery"],
-#shopify-section-{{ section.id }} button[aria-label*="open gallery"],
-#shopify-section-{{ section.id }} [aria-label*="open gallery"] {
-  display: none !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  border: none !important;
-}
-
-/* Modal nativo de Dawn (por si llega a abrirse) */
-body.template-product .product-media-modal,
-body.template-product .product-media-modal *,
-body.template-product .product__media-modal,
-body.template-product .product__media-modal * {
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-}
-/* ==== FIX: MAIN IMAGE FULL-WIDTH + CENTRADA EN MOBILE ==== */
-@media (max-width: 749px) {
-
-  /* El wrapper gris de la galería: full width, sin empuje lateral */
-  #shopify-section-{{ section.id }} .product__media-wrapper {
-    margin: 0 !important;
-    padding: 16px 0 18px !important; /* solo vertical */
-    background: #f3f3f3;
-    border-radius: 20px;
-    box-sizing: border-box;
-  }
-
-  /* Quitamos el “offset” típico de Dawn (slider-mobile-gutter) */
-  #shopify-section-{{ section.id }} .slider-mobile-gutter,
-  #shopify-section-{{ section.id }} .product__media-list {
-    margin: 0 auto !important;
-    padding: 0 !important;
-    width: 100% !important;
-  }
-
-  /* Slides sin padding raro ni desplazamientos */
-  #shopify-section-{{ section.id }} .product__media-list .slider,
-  #shopify-section-{{ section.id }} .product__media-list .slider__slide {
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 100% !important;
-  }
-
-  /* Contenedor blanco que estaba corriendo la imagen → fuera */
-  #shopify-section-{{ section.id }} .product__media-item {
-    padding: 0 !important;
-    background: transparent !important;
-    border-radius: 24px !important;
-  }
-
-  /* Imagen grande totalmente centrada dentro del wrapper gris */
-  #shopify-section-{{ section.id }} .product__media-item img {
-    display: block;
-    margin: 0 auto;
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-  }
-}
-/* ==== MOBILE: GAP MAIN IMAGE ↔ THUMBS = 20px ==== */
-@media (max-width: 749px) {
-  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail-slider,
-  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail-slider--mobile {
-    margin-top: -13px !important;   /* espacio exacto entre imagen grande y thumbs */
-  }
-}
-
-
-
-
-
-
-
-
-
-/* ==== MOBILE: "crop to zoom" icon — círculo sutil siempre visible ==== */ @media (max-width: 749px) { /* El contenedor de la imagen principal sirve de referencia */ #shopify-section-{{ section.id }} .product__media-item { position: relative; } #shopify-section-{{ section.id }} .product__media-item::after { content: ''; position: absolute; right: 14px; bottom: 14px; width: 34px; height: 34px; /* Círculo con fondo oscuro suave y borde blanco — se ve en fondo claro y oscuro */ border-radius: 999px; background-color: rgba(0, 0, 0, 0.55); border: 1.4px solid rgba(255, 255, 255, 0.9); box-shadow: none; /* Icono crop dentro del círculo */ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 4h5M6 4v5M18 20v-5M18 20h-5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: center; background-size: 18px 18px; pointer-events: none; /* no bloquea el tap en la imagen */ opacity: 0; transform-origin: center; animation: crop-hint-pulse 3.2s ease-in-out infinite; } @keyframes crop-hint-pulse { 0%, 60% { opacity: 0; transform: scale(0.9); } 70% { opacity: 0.8; transform: scale(1); } 82% { opacity: 0.8; transform: scale(1.06); } 100% { opacity: 0; transform: scale(0.95); } } }
-
-
-
-
-
-
-
-/* ==== DESKTOP/TABLET: crop/zoom icon SOLO ON HOVER
-       (imagen principal + thumbnails) ==== */
-@media (min-width: 750px) {
-
-  /* Referencia para el pseudo-elemento */
-  #shopify-section-{{ section.id }} .product__media-item,
-  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail {
-    position: relative;
-  }
-
-  /* Estado base: icono preparado pero invisible */
-  #shopify-section-{{ section.id }} .product__media-item::after,
-  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail::after {
-    content: '';
-    position: absolute;
-    right: 14px;
-    bottom: 14px;
-    width: 34px;
-    height: 34px;
-
-    border-radius: 999px;
-    background-color: rgba(0, 0, 0, 0.45);
-    border: 1.4px solid rgba(255, 255, 255, 0.9);
-    box-shadow: none;
-
-    /* mismo ícono que mobile */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 4h5M6 4v5M18 20v-5M18 20h-5'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 18px 18px;
-
-    pointer-events: none;
-
-    opacity: 0 !important;          /* oculto por default */
-    transform: scale(0.9);
-    animation: none !important;      /* mata la animación anterior */
-    transition: opacity 0.22s ease, transform 0.22s ease;
-  }
-
-  /* Visible solo on hover (muy sutil) */
-  #shopify-section-{{ section.id }} .product__media-item:hover::after,
-  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail:hover::after {
-    opacity: 0.75 !important;
-    transform: scale(1);
-  }
-}
-
-
-
-
-/* ==========================================
-   FIX 1 — IMAGEN DEL LIGHTBOX SIN RECORTE
-   ========================================== */
-#galleryLightbox .apple-lightbox__figure,
-#galleryLightbox .apple-lightbox__frame {
-  margin: 0 auto !important;
-  padding: 0 !important;
-  max-width: min(100vw - 64px, 1200px);
-  max-height: calc(100vh - 96px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent !important;
-  overflow: visible !important;   /* nada se corta */
-  border-radius: 24px !important;
-}
-
-#galleryLightbox .apple-lightbox__image {
-  width: auto !important;
-  height: auto !important;
-  max-width: 100% !important;
-  max-height: 100% !important;
-  object-fit: contain !important; /* se ajusta, no se recorta */
-  border-radius: 24px !important;
-}
-
-
-/* ==========================================
-   FIX 2 — BOTÓN CERRAR ("X") LIMPIO
-   ========================================== */
-#galleryLightbox .apple-lightbox__close {
-  position: fixed;
-  top: 24px;
-  right: 24px;
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.55);
-  border: 1px solid rgba(255,255,255,0.85);
-  box-shadow: 0 0 0 1px rgba(0,0,0,0.15);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-/* ocultamos cualquier icono SVG original */
-#galleryLightbox .apple-lightbox__close svg,
-#galleryLightbox .apple-lightbox__close span {
-  display: none !important;
-}
-
-/* nuestra "X" minimal */
-#galleryLightbox .apple-lightbox__close::before {
-  content: '×';
-  font-size: 18px;
-  line-height: 1;
-  color: #ffffff;
-}
-
-#galleryLightbox .apple-lightbox__close:hover {
-  background: rgba(0, 0, 0, 0.75);
-}
-/* ============================
-   DESKTOP LIGHTBOX TUNING
-   ============================ */
-@media (min-width: 750px) {
-
-  /* Menos padding arriba → más altura útil para la imagen */
-  #galleryLightbox .apple-lightbox__chrome {
-    padding-top: 16px !important;
-    padding-bottom: 24px !important;
-  }
-
-  #galleryLightbox .apple-lightbox__header {
-    margin-bottom: 10px !important;
-  }
-
-  /* Imagen centrada, sin recortes */
-  #galleryLightbox .apple-lightbox__stage {
-    padding: 0 32px 24px !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-
-  #galleryLightbox .apple-lightbox__figure,
-  #galleryLightbox .apple-lightbox__frame {
-    margin: 0 auto !important;
-    padding: 0 !important;
-    max-width: min(100vw - 96px, 1280px);
-    max-height: calc(100vh - 170px); /* más espacio vertical para que no se corte */
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    background: transparent !important;
-    overflow: visible !important;
-    border-radius: 24px !important;
-  }
-
-  #galleryLightbox .apple-lightbox__image {
-    width: auto !important;
-    height: auto !important;
-    max-width: 100% !important;
-    max-height: 100% !important;
-    object-fit: contain !important;
-    border-radius: 24px !important;
-  }
-
-  /* --- Flechas de navegación ACTIVAS en desktop --- */
-  #galleryLightbox .apple-lightbox__nav {
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-  }
-
-  /* ============================
-     BOTÓN CERRAR + CONTADOR
-     ============================ */
-
-  /* X más grande, limpia */
-  #galleryLightbox .apple-lightbox__close {
-    position: fixed !important;
-    top: 24px;
-    right: 24px;
-    width: 40px;
-    height: 40px;
-    padding: 0;
-    border-radius: 999px;
-    background: rgba(0, 0, 0, 0.55);
-    border: 1px solid rgba(255,255,255,0.85);
-    box-shadow: 0 0 0 1px rgba(0,0,0,0.18);
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 9999;
-  }
-
-  /* ocultar cualquier icono interno original */
-  #galleryLightbox .apple-lightbox__close svg,
-  #galleryLightbox .apple-lightbox__close span {
-    display: none !important;
-  }
-
-  #galleryLightbox .apple-lightbox__close::before {
-    content: '×';
-    font-size: 22px;
-    line-height: 1;
-    color: #ffffff;
-  }
-
-  #galleryLightbox .apple-lightbox__close:hover {
-    background: rgba(0, 0, 0, 0.8);
-  }
-
-  /* Contador 1/46 a la izquierda de la X, mejor ubicado */
-  #galleryLightbox .apple-lightbox__counter {
-    position: fixed !important;
-    top: 26px;
-    right: 82px; /* separación respecto a la X */
-    padding: 4px 10px;
-    border-radius: 999px;
-    background: rgba(0,0,0,0.55);
-    color: #ffffff;
-    font-size: 12px;
-    line-height: 1;
-    display: inline-flex !important;
-    align-items: center;
-    justify-content: center;
-    z-index: 9998;
-  }
-}
-/* ============================
-   DESKTOP LIGHTBOX – FIX LAYOUT
-   ============================ */
-@media (min-width: 750px) {
-
-  /* Más aire arriba/abajo, sin tapar encabezado ni cortar la imagen */
-  #galleryLightbox .apple-lightbox__chrome {
-    padding-top: 40px !important;
-    padding-bottom: 32px !important;
-  }
-
-  #galleryLightbox .apple-lightbox__stage {
-    padding: 0 48px 24px !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-
-  /* Lienzo blanco más contenido para que no corte el casco */
-  #galleryLightbox .apple-lightbox__figure,
-  #galleryLightbox .apple-lightbox__frame {
-    margin: 0 auto !important;
-    padding: 0 !important;
-    max-width: min(100vw - 180px, 1200px) !important;
-    max-height: calc(100vh - 220px) !important; /* clave para que no se corte */
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    background: #ffffff !important;
-    border-radius: 24px !important;
-    overflow: hidden !important;
-  }
-
-  #galleryLightbox .apple-lightbox__image {
-    width: auto !important;
-    height: auto !important;
-    max-width: 100% !important;
-    max-height: 100% !important;
-    object-fit: contain !important;
-    border-radius: 0 !important;
-  }
-
-  /* ============================
-     FLECHAS DESKTOP – ACTIVAS
-     ============================ */
-  #galleryLightbox .apple-lightbox__nav {
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    opacity: 0.9;
-  }
-
-  #galleryLightbox .apple-lightbox__nav svg {
-    width: 22px !important;
-    height: 22px !important;
-    stroke: #ffffff !important;
-  }
-
-  /* ============================
-     BOTÓN CERRAR + CONTADOR
-     ============================ */
-
-  /* Estilizar cualquier botón de cerrar del lightbox */
-  #galleryLightbox button[aria-label*="Close"],
-  #galleryLightbox button[aria-label*="close"],
-  #galleryLightbox button[aria-label*="Cerrar"],
-  #galleryLightbox button[aria-label*="cerrar"] {
-    position: fixed !important;
-    top: 24px;
-    right: 24px;
-    width: 40px;
-    height: 40px;
-    padding: 0;
-    border-radius: 999px;
-    background: rgba(0, 0, 0, 0.55) !important;
-    border: 1px solid rgba(255, 255, 255, 0.85) !important;
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.18);
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 9999;
-  }
-
-  /* Ocultamos icono original y dibujamos la X limpia */
-  #galleryLightbox button[aria-label*="Close"] svg,
-  #galleryLightbox button[aria-label*="close"] svg,
-  #galleryLightbox button[aria-label*="Cerrar"] svg,
-  #galleryLightbox button[aria-label*="cerrar"] svg {
-    display: none !important;
-  }
-
-  #galleryLightbox button[aria-label*="Close"]::before,
-  #galleryLightbox button[aria-label*="close"]::before,
-  #galleryLightbox button[aria-label*="Cerrar"]::before,
-  #galleryLightbox button[aria-label*="cerrar"]::before {
-    content: '×';
-    font-size: 22px;
-    line-height: 1;
-    color: #ffffff;
-  }
-
-  #galleryLightbox button[aria-label*="Close"]:hover,
-  #galleryLightbox button[aria-label*="close"]:hover,
-  #galleryLightbox button[aria-label*="Cerrar"]:hover,
-  #galleryLightbox button[aria-label*="cerrar"]:hover {
-    background: rgba(0, 0, 0, 0.8) !important;
-  }
-
-  /* Contador 1 / 48 en píldora a la izquierda de la X */
-  #galleryLightbox .apple-lightbox__counter {
-    position: fixed !important;
-    top: 26px;
-    right: 84px; /* separación respecto al close */
-    padding: 4px 10px;
-    border-radius: 999px;
-    background: rgba(0, 0, 0, 0.55);
-    color: #ffffff;
-    font-size: 12px;
-    line-height: 1;
-    display: inline-flex !important;
-    align-items: center;
-    justify-content: center;
-    z-index: 9998;
-  }
-}
-/* ============================
-   DESKTOP: MÁS ESPACIO PARA LA IMAGEN
-   ============================ */
-@media (min-width: 750px) {
-
-  /* Todo el contenedor del lightbox: menos padding arriba/abajo */
-  #galleryLightbox .apple-lightbox__chrome {
-    padding: 8px 32px 14px !important;  /* antes era mucho más alto */
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: flex-start !important;
-    align-items: center !important;
-    box-sizing: border-box !important;
-  }
-
-  /* Header (marca + título) más pegado arriba */
-  #galleryLightbox .apple-lightbox__header {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 0 6px !important;
-    padding: 0 !important;
-  }
-
-  /* Escenario donde vive la imagen: ocupa casi todo el alto */
-  #galleryLightbox .apple-lightbox__stage {
-    flex: 1 1 auto !important;
-    width: 100%;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
-  /* Marco blanco que sostiene la imagen */
-  #galleryLightbox .apple-lightbox__figure,
-  #galleryLightbox .apple-lightbox__frame {
-    margin: 0 auto !important;
-    padding: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-
-    max-width: min(100vw - 120px, 1300px) !important;
-    max-height: calc(100vh - 70px) !important;  /* más alto que antes */
-
-    background: #ffffff !important;
-    border-radius: 24px !important;
-    box-sizing: border-box !important;
-    overflow: hidden !important;
-  }
-
-  /* La imagen: nunca se deforma y siempre cabe completa */
-  #galleryLightbox .apple-lightbox__image {
-    display: block !important;
-    margin: 0 auto !important;
-
-    width: auto !important;
-    height: auto !important;
-
-    max-width: calc(100% - 40px) !important;
-    max-height: calc(100vh - 110px) !important;
-
-    object-fit: contain !important;
-  }
-}
-
-/* ============================
-   TUNING HEADER LIGHTBOX DESKTOP
-   ============================ */
-@media (min-width: 750px) {
-
-  /* Menos padding arriba: header más pegado al borde */
-  #galleryLightbox .apple-lightbox__chrome {
-    padding-top: 4px !important;
-  }
-
-  /* Header bien arriba y compacto */
-  #galleryLightbox .apple-lightbox__header {
-    margin-top: 0 !important;
-    margin-bottom: 4px !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-    line-height: 1.1 !important;
-  }
-
-  /* Línea de "CACO AMERICA LLC" más pequeña y elegante */
-  #galleryLightbox .apple-lightbox__header .apple-lightbox__eyebrow,
-  #galleryLightbox .apple-lightbox__header > :first-child {
-    font-size: 11px !important;
-    letter-spacing: 0.18em !important;
-    text-transform: uppercase !important;
-    opacity: 0.8 !important;
-  }
-
-  /* "Safety Helmet" pegado a la marca, sin tanto aire */
-  #galleryLightbox .apple-lightbox__header .apple-lightbox__title,
-  #galleryLightbox .apple-lightbox__header > :last-child {
-    margin-top: 2px !important;
-  }
-}
-/* ============================
-   LIGHTBOX DESKTOP SIN WRAPPER BLANCO
-   Imagen siempre completa y centrada
-   ============================ */
-@media (min-width: 750px) {
-
-  /* El figure se convierte en un flex centrado */
-  #galleryLightbox .apple-lightbox__figure {
-    margin: 0 !important;
-    padding: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-
-  /* Adiós “tarjeta” blanca: sin fondo, sin sombra, sin tamaño fijo */
-  #galleryLightbox .apple-lightbox__frame {
-    margin: 0 !important;
-    padding: 0 !important;
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    width: auto !important;
-    height: auto !important;
-    overflow: visible !important;   /* no recorta la imagen */
-    border-radius: 24px !important;  /* solo redondea la propia imagen */
-  }
-
-  /* La imagen respeta SIEMPRE su proporción */
-  #galleryLightbox .apple-lightbox__image {
-    display: block !important;
-    width: auto !important;
-    height: auto !important;
-    max-width: 88vw !important;
-    max-height: calc(100vh - 170px) !important; /* espacio para header + X */
-    object-fit: contain !important;
-    border-radius: 24px !important;
-  }
-}
-/* ============================
-   FIX: eliminar cualquier fondo blanco
-   bajo la imagen en el lightbox
-   ============================ */
-@media (min-width: 750px) {
-  #galleryLightbox .apple-lightbox__chrome,
-  #galleryLightbox .apple-lightbox__stage,
-  #galleryLightbox .apple-lightbox__figure,
-  #galleryLightbox .apple-lightbox__frame,
-  #galleryLightbox .apple-lightbox__image {
-    background: transparent !important;
-  }
-
-  /* Por si Dawn mete decoraciones con ::before/::after */
-  #galleryLightbox .apple-lightbox__chrome::before,
-  #galleryLightbox .apple-lightbox__chrome::after,
-  #galleryLightbox .apple-lightbox__frame::before,
-  #galleryLightbox .apple-lightbox__frame::after {
-    background: transparent !important;
-  }
-
-  /* Cero padding/margen extra alrededor de la imagen */
-  #galleryLightbox .apple-lightbox__figure,
-  #galleryLightbox .apple-lightbox__frame {
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-}
-
-
-/* ============================
-   INLINE ZOOM LENS CUSTOM
-   ============================ */
-#shopify-section-{{ section.id }} .inline-zoom-lens {
-  position: absolute;
-  pointer-events: none;
-  width: 260px;    /* <-- tamaño del cuadro de zoom */
-  height: 260px;   /* <-- cámbialo si lo quieres más grande/pequeño */
-  border-radius: 18px;
-  border: 1px solid rgba(255,255,255,0.9);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-  overflow: hidden;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 220% 220%; /* nivel de zoom */
-  opacity: 0;
-  transition: opacity .18s ease-out;
-  z-index: 5;
-}
-
-#shopify-section-{{ section.id }} .inline-zoom-lens.is-active {
-  opacity: 1;
-}
-
-/* por si algún zoom viejo estorba */
-#shopify-section-{{ section.id }} .image-magnify,
-#shopify-section-{{ section.id }} .image-magnify-full-size,
-#shopify-section-{{ section.id }} .zoomContainer {
-  display: none !important;
-}
-
-
-
-/* === OVERRIDE HEADER LIGHTBOX: LEFT ALIGN + SAME LOOK MOBILE/DESKTOP === */
-#galleryLightbox .apple-lightbox__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  text-align: left !important;
-  margin-top: 0 !important;
-  margin-bottom: 4px !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-  line-height: 1.1 !important;
-}
-
-#galleryLightbox .apple-lightbox__title {
-  text-align: left !important;
-}
-
-/* "CACO AMERICA LLC" estilo desktop → también en mobile */
-#galleryLightbox .apple-lightbox__header .apple-lightbox__eyebrow,
-#galleryLightbox .apple-lightbox__header > :first-child {
-  font-size: 11px !important;
-  letter-spacing: 0.18em !important;
-  text-transform: uppercase !important;
-  opacity: 0.8 !important;
-}
-
-/* "SAFETY HELMET" pegado a la marca */
-#galleryLightbox .apple-lightbox__header .apple-lightbox__title,
-#galleryLightbox .apple-lightbox__header > :last-child {
-  margin-top: 2px !important;
-}
-
-
-/* === MOBILE CLOSE BUTTON → SAME AS DESKTOP === */
-@media (max-width: 749px) {
-  #galleryLightbox .apple-lightbox__close {
-    position: fixed !important;
-    top: 24px;
-    right: 24px;
-    width: 40px;
-    height: 40px;
-    padding: 0;
-    border-radius: 999px;
-    background: rgba(0, 0, 0, 0.55) !important;
-    border: 1px solid rgba(255, 255, 255, 0.85) !important;
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.18);
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 9999;
-  }
-
-  #galleryLightbox .apple-lightbox__close svg,
-  #galleryLightbox .apple-lightbox__close span {
-    display: none !important;
-  }
-
-  #galleryLightbox .apple-lightbox__close::before {
-    content: '×';
-    font-size: 22px;
-    line-height: 1;
-    color: #ffffff;
-  }
-}
-
-/* ============================
-   SWATCHES — POLISHED LOOK
-   ============================ */
-#shopify-section-{{ section.id }} .product-form__input--swatch {
-  --swatch-input--size: 3.2rem;
-  --swatch-input--border-radius: 20px;
-  --swatch-border-width: 1.6px;
-  --swatch-outline-width: 0px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  align-items: center;
-  margin-top: 6px;
-}
-
-#shopify-section-{{ section.id }} .product-form__input--swatch legend {
-  margin-bottom: 2px;
-}
-
-#shopify-section-{{ section.id }} .swatch-input__input + .swatch-input__label {
-  --swatch-input--border-radius: 20px !important;
-  --swatch-outline-width: 0px !important;
-  color: var(--swatch-text-color, #111827);
-  padding: 0.28rem;
-  background: #ffffff;
-  border: var(--swatch-border-width) solid rgba(17, 24, 39, 0.18);
-  border-radius: var(--swatch-input--border-radius);
-  box-shadow: none;
-  transition: border-color 0.16s ease, background-color 0.16s ease;
-  outline: none !important;
-}
-
-#shopify-section-{{ section.id }} .swatch-input__input + .swatch-input__label .swatch {
-  border: 0 !important;
-  border-radius: calc(var(--swatch-input--border-radius) * 0.9);
-  box-shadow: none !important;
-}
-
-#shopify-section-{{ section.id }} .swatch-input__input + .swatch-input__label:hover,
-#shopify-section-{{ section.id }} .swatch-input__input:hover + .swatch-input__label {
-  --swatch-border-width: 2.2px;
-  border-color: #0d6ba6;
-  background: #f8fafc;
-  box-shadow: none;
-  outline: none !important;
-}
-
-#shopify-section-{{ section.id }} .swatch-input__input:checked + .swatch-input__label {
-  --swatch-border-width: 2.2px;
-  border-color: #0d6ba6;
-  background: #f0f7fb;
-  outline: none;
-  box-shadow: none;
-}
-
-#shopify-section-{{ section.id }} .swatch-input__input:focus-visible + .swatch-input__label {
-  outline: 2px solid #0d6ba6;
-  outline-offset: 2px;
-  border-color: #0d6ba6;
-  box-shadow: none;
-}
-
-#shopify-section-{{ section.id }} .swatch-input__input.visually-disabled + .swatch-input__label {
-  cursor: not-allowed;
-  opacity: 0.55;
-  background: #f3f4f6;
-}
-
-#shopify-section-{{ section.id }} .swatch-input__label[data-tooltip] {
-  position: relative;
-}
-
-#shopify-section-{{ section.id }} .swatch-input__label[data-tooltip]::after,
-#shopify-section-{{ section.id }} .swatch-input__label[data-tooltip]::before {
-  position: absolute;
-  left: 50%;
-  transform: translate(-50%, 6px);
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.15s ease, transform 0.18s ease;
-  pointer-events: none;
-  z-index: 5;
-}
-
-#shopify-section-{{ section.id }} .swatch-input__label[data-tooltip]::after {
-  content: attr(data-tooltip);
-  bottom: calc(100% + 8px);
-  padding: 4px 8px;
-  background: var(--swatch-tooltip-bg, #4b5563);
-  color: var(--swatch-tooltip-text, #ffffff);
-  font-size: 11px;
-  font-weight: 700;
-  border-radius: 8px;
-  box-shadow: none;
-  white-space: nowrap;
-  line-height: 1.1;
-  text-decoration: none;
-  color: var(--swatch-tooltip-text, #ffffff) !important;
-  text-shadow: none;
-}
-
-#shopify-section-{{ section.id }} .swatch-input__label[data-tooltip]::before {
-  content: '';
-  bottom: calc(100% + 2px);
-  width: 9px;
-  height: 9px;
-  background: var(--swatch-tooltip-bg, #4b5563);
-  clip-path: polygon(50% 100%, 0 0, 100% 0);
-}
-
-#shopify-section-{{ section.id }} .swatch-input__label[data-tooltip]:hover::after,
-#shopify-section-{{ section.id }} .swatch-input__label[data-tooltip]:hover::before,
-#shopify-section-{{ section.id }} .swatch-input__label[data-tooltip]:focus-visible::after,
-#shopify-section-{{ section.id }} .swatch-input__label[data-tooltip]:focus-visible::before {
-  opacity: 1;
-  visibility: visible;
-  transform: translate(-50%, 0);
-}
-
-
 {%- endstyle -%}
 
 
 
 
-<div
-  id="galleryLightbox"
+<caco-media-lightbox
+  id="galleryLightbox-{{ section.id }}"
   class="apple-lightbox"
+  data-media-lightbox
+  data-section-id="{{ section.id }}"
   role="dialog"
   aria-modal="true"
-  aria-label="{{ product.title | escape }} image gallery"
+  aria-labelledby="galleryLightboxHeading-{{ section.id }}"
   hidden
 >
-  <div class="apple-lightbox__backdrop" aria-hidden="true"></div>
+  <div class="apple-lightbox__backdrop" data-lightbox-backdrop aria-hidden="true"></div>
   <div class="apple-lightbox__chrome" role="document">
     <header class="apple-lightbox__header">
       <div class="apple-lightbox__title">
         <span class="apple-lightbox__eyebrow">{{ shop.name | escape }}</span>
-        <span class="apple-lightbox__heading">{{ product.title | escape }}</span>
+        <span class="apple-lightbox__heading" id="galleryLightboxHeading-{{ section.id }}">{{ product.title | escape }}</span>
       </div>
       <div class="apple-lightbox__meta">
         <div class="apple-lightbox__counter">
-          <span class="apple-lightbox__counter-current">1</span>
+          <span class="apple-lightbox__counter-current" data-lightbox-current>1</span>
           <span class="apple-lightbox__counter-divider">/</span>
-          <span class="apple-lightbox__counter-total">1</span>
+          <span class="apple-lightbox__counter-total" data-lightbox-total>{{ product.media.size | default: 1 }}</span>
         </div>
-        <button type="button" class="apple-lightbox__close" aria-label="{{ 'accessibility.close' | t }}">
+        <button type="button" class="apple-lightbox__close" data-lightbox-close aria-label="{{ 'accessibility.close' | t }}">
           {{ 'icon-close.svg' | inline_asset_content }}
         </button>
       </div>
     </header>
 
     <div class="apple-lightbox__stage">
-      <button type="button" class="apple-lightbox__nav apple-lightbox__nav--prev" aria-label="{{ 'general.slider.previous_slide' | t }}">
+      <button type="button" class="apple-lightbox__nav apple-lightbox__nav--prev" data-lightbox-prev aria-label="{{ 'general.slider.previous_slide' | t }}">
         ‹
       </button>
       <figure class="apple-lightbox__figure">
-        <div class="apple-lightbox__frame">
+        <div class="apple-lightbox__frame" data-lightbox-frame>
           <div class="apple-lightbox__scrim"></div>
-          <img id="appleLightboxImage" class="apple-lightbox__image" src="" alt="{{ product.title | escape }}">
+          <img id="appleLightboxImage-{{ section.id }}" class="apple-lightbox__image" data-lightbox-image src="" alt="{{ product.title | escape }}">
         </div>
         <figcaption class="apple-lightbox__caption">
-          <div class="apple-lightbox__caption-text"></div>
+          <div class="apple-lightbox__caption-text" data-lightbox-caption></div>
+          <div class="apple-lightbox__controls" aria-label="Zoom controls">
+            <button type="button" class="apple-lightbox__zoom-btn" data-zoom-out aria-label="Zoom out">
+              <span class="svg-wrapper">{{ 'icon-minus.svg' | inline_asset_content }}</span>
+            </button>
+            <button type="button" class="apple-lightbox__zoom-btn" data-zoom-in aria-label="Zoom in">
+              <span class="svg-wrapper">{{ 'icon-plus.svg' | inline_asset_content }}</span>
+            </button>
+            <button type="button" class="apple-lightbox__zoom-btn apple-lightbox__zoom-reset" data-zoom-reset hidden aria-label="Reset zoom">
+              <span class="svg-wrapper">{{ 'icon-refresh.svg' | inline_asset_content | default: 'Reset' }}</span>
+            </button>
+          </div>
           <div class="apple-lightbox__progress" aria-hidden="true">
-            <span class="apple-lightbox__progress-bar"></span>
+            <span class="apple-lightbox__progress-bar" data-lightbox-progress></span>
           </div>
         </figcaption>
       </figure>
-      <button type="button" class="apple-lightbox__nav apple-lightbox__nav--next" aria-label="{{ 'general.slider.next_slide' | t }}">
+      <button type="button" class="apple-lightbox__nav apple-lightbox__nav--next" data-lightbox-next aria-label="{{ 'general.slider.next_slide' | t }}">
         ›
       </button>
     </div>
   </div>
-</div>
-<script>
-  (function() {
-    document.addEventListener('DOMContentLoaded', function() {
-      const root = document.querySelector('#shopify-section-{{ section.id }}');
-      if (!root) return;
-
-      // Bloquea el modal nativo (product-modal.js / media-gallery.js)
-      root.addEventListener('click', function(evt) {
-        const killer = evt.target.closest(
-          '.product__modal-opener, .product__media-toggle, [data-media-modal-opener]'
-        );
-        if (killer) {
-          evt.preventDefault();
-          evt.stopImmediatePropagation(); // cancelamos handlers de Dawn
-        }
-      }, true); // capture=true para ganarle al theme
-    });
-  })();
-</script>
+</caco-media-lightbox>
 
 
   <script src="{{ 'product-info.js' | asset_url }}" defer="defer"></script>
   <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'product-media-orchestrator.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'product-media-enhanced.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'sticky-add-to-cart.js' | asset_url }}" defer="defer"></script>
   {%- if product.quantity_price_breaks_configured? -%}
     <script src="{{ 'show-more.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'price-per-item.js' | asset_url }}" defer="defer"></script>
@@ -1349,321 +182,16 @@ body.template-product .product__media-modal * {
 
 
 
-
-<script defer>
-  document.addEventListener('DOMContentLoaded', () => {
-    const SECTION_ID = '{{ section.id }}';
-
-    const gallerySelector = '#Slider-Gallery-{{ section.id }} .product__media-item';
-    const sliderList = document.getElementById('Slider-Gallery-{{ section.id }}');
-    const lightbox = document.getElementById('galleryLightbox');
-
-    if (!lightbox) return;
-
-    const body = document.body;
-    const preview = lightbox.querySelector('#appleLightboxImage');
-    const caption = lightbox.querySelector('.apple-lightbox__caption-text');
-    const progress = lightbox.querySelector('.apple-lightbox__progress-bar');
-    const closeBtn = lightbox.querySelector('.apple-lightbox__close');
-    const nextBtn = lightbox.querySelector('.apple-lightbox__nav--next');
-    const prevBtn = lightbox.querySelector('.apple-lightbox__nav--prev');
-    const backdrop = lightbox.querySelector('.apple-lightbox__backdrop');
-    const countCurrent = lightbox.querySelector('.apple-lightbox__counter-current');
-    const countTotal = lightbox.querySelector('.apple-lightbox__counter-total');
-
-    const counterCurrent = document.querySelector(
-      '#GalleryViewer-{{ section.id }} .slider-counter--current'
-    );
-    const counterTotal = document.querySelector(
-      '#GalleryViewer-{{ section.id }} .slider-counter--total'
-    );
-
-    let gallerySlides = [];
-    let galleryImages = [];
-    let currentIndex = 0;
-    let lastFocus = null;
-
-    // ========= helpers =========
-
-    const isVisible = (el) => {
-      if (!el) return false;
-      const cs = window.getComputedStyle(el);
-      return cs.display !== 'none' && cs.visibility !== 'hidden' && cs.opacity !== '0';
-    };
-
-    const rebuildGallery = () => {
-      const root = document.getElementById(`shopify-section-${SECTION_ID}`) || document;
-      const allSlides = Array.from(root.querySelectorAll(gallerySelector));
-
-      // solo las que no has escondido con tus filtros (alt / selected-color / etc.)
-      gallerySlides = allSlides.filter(isVisible);
-      galleryImages = gallerySlides
-        .map((slide) => slide.querySelector('.product__media-img'))
-        .filter(Boolean);
-
-      // contador del pill 1 / 46 y del slider nativo
-      const total = galleryImages.length;
-      if (countTotal) countTotal.textContent = total;
-      if (counterTotal) counterTotal.textContent = total;
-
-      if (currentIndex >= total) {
-        currentIndex = total > 0 ? total - 1 : 0;
-      }
-    };
-
-    const updatePreview = (index) => {
-      if (!galleryImages.length) return;
-      const target = galleryImages[index];
-      if (!target) return;
-
-      preview.src = target.dataset.full || target.currentSrc || target.src;
-      preview.alt = target.alt || '{{ product.title | escape }}';
-
-      if (caption) {
-        caption.textContent = target.alt || '{{ product.title | escape }}';
-      }
-
-      if (countCurrent) countCurrent.textContent = index + 1;
-      if (counterCurrent) counterCurrent.textContent = index + 1;
-
-      if (progress) {
-        progress.style.width = `${((index + 1) / (galleryImages.length || 1)) * 100}%`;
-      }
-    };
-
-    const showLightbox = (index = 0) => {
-      rebuildGallery();
-      if (!galleryImages.length) return;
-
-      currentIndex = index;
-      lastFocus = document.activeElement;
-
-      updatePreview(currentIndex);
-      lightbox.removeAttribute('hidden');
-      lightbox.classList.add('is-visible');
-      body.classList.add('apple-lock-scroll');
-
-      if (closeBtn) closeBtn.focus({ preventScroll: true });
-    };
-
-    const hideLightbox = () => {
-      lightbox.setAttribute('hidden', 'hidden');
-      lightbox.classList.remove('is-visible');
-      body.classList.remove('apple-lock-scroll');
-
-      if (lastFocus && typeof lastFocus.focus === 'function') {
-        lastFocus.focus({ preventScroll: true });
-      }
-    };
-
-    const goNext = () => {
-      if (!galleryImages.length) return;
-      currentIndex = (currentIndex + 1) % galleryImages.length;
-      updatePreview(currentIndex);
-    };
-
-    const goPrev = () => {
-      if (!galleryImages.length) return;
-      currentIndex =
-        (currentIndex - 1 + galleryImages.length) % galleryImages.length;
-      updatePreview(currentIndex);
-    };
-
-    const handleKeydown = (event) => {
-      if (lightbox.hasAttribute('hidden')) return;
-
-      if (event.key === 'Escape') {
-        hideLightbox();
-      } else if (event.key === 'ArrowRight') {
-        goNext();
-      } else if (event.key === 'ArrowLeft') {
-        goPrev();
-      }
-    };
-
-    const allowBackdropClose = () => window.innerWidth >= 750;
-
-    // ========= binding de slides / thumbs SOLO usando las visibles =========
-    const bindSlides = () => {
-      const root = document.getElementById(`shopify-section-${SECTION_ID}`) || document;
-      const allSlides = Array.from(root.querySelectorAll(gallerySelector));
-
-      allSlides.forEach((slide) => {
-        slide.setAttribute('tabindex', '0');
-        const image = slide.querySelector('.product__media-img');
-
-        const openFromSlide = () => {
-          // recalculamos visible set según tus filtros actuales
-          rebuildGallery();
-          const idx = gallerySlides.indexOf(slide);
-          const safeIndex = idx >= 0 ? idx : 0;
-          showLightbox(safeIndex);
-        };
-
-        if (image) {
-          image.setAttribute('role', 'button');
-          image.setAttribute('tabindex', '0');
-
-          image.addEventListener('click', openFromSlide);
-          image.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter' || event.key === ' ') {
-              event.preventDefault();
-              openFromSlide();
-            }
-          });
-        }
-
-        slide.addEventListener('keydown', (event) => {
-          if (event.target !== slide) return;
-          if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            openFromSlide();
-          }
-        });
-      });
-    };
-
-    const syncCounter = () => {
-      // usamos solo los slides visibles
-      const total = gallerySlides.length;
-      if (counterTotal) counterTotal.textContent = total || 0;
-
-      if (counterCurrent) {
-        const activeIndex = gallerySlides.findIndex((slide) =>
-          slide.classList.contains('is-active') ||
-          slide.classList.contains('__mobile-visible')
-        );
-
-        counterCurrent.textContent =
-          activeIndex >= 0
-            ? activeIndex + 1
-            : total
-              ? 1
-              : 0;
-      }
-    };
-
-    // ========= observers / eventos que disparan el re-filtro =========
-
-    // cambios en la galería (estilos, clases) → re-scan
-    if (sliderList) {
-      const slideObserver = new MutationObserver(() => {
-        rebuildGallery();
-        syncCounter();
-      });
-
-      slideObserver.observe(sliderList, {
-        attributes: true,
-        attributeFilter: ['class', 'style'],
-        subtree: true,
-        childList: true,
-      });
-    }
-
-    // eventos de variante del theme (tu script de filtros por alt se ejecuta aquí)
-    const refreshFromVariant = () => {
-      rebuildGallery();
-      syncCounter();
-    };
-
-    document.addEventListener('variant:change', refreshFromVariant);
-    document.addEventListener('variant:changed', refreshFromVariant);
-    document.addEventListener('product:variant-change', refreshFromVariant);
-    document.addEventListener('shopify:section:load', refreshFromVariant);
-
-    // ========= eventos del propio lightbox =========
-
-    lightbox.addEventListener('click', (event) => {
-      if (!allowBackdropClose()) return;
-      if (event.target === lightbox) {
-        hideLightbox();
-      }
-    });
-
-    if (backdrop) {
-      backdrop.addEventListener('click', (event) => {
-        if (!allowBackdropClose()) return;
-        hideLightbox();
-      });
-    }
-
-    if (closeBtn) closeBtn.addEventListener('click', hideLightbox);
-    if (nextBtn) nextBtn.addEventListener('click', goNext);
-    if (prevBtn) prevBtn.addEventListener('click', goPrev);
-    document.addEventListener('keydown', handleKeydown);
-
-    // limpiar “magnifiers” legacy que puedan estorbar
-   
-   
-   
-    const removeLegacyMagnifiers = () => {
-      document
-        .querySelectorAll('.image-magnify-full-size')
-        .forEach((node) => node.remove());
-    };
-
-    removeLegacyMagnifiers();
-
-    // primer setup
-    rebuildGallery();
-    bindSlides();
-    syncCounter();
-
-    /* Swatch text contrast helper */
-    const applySwatchContrast = () => {
-      const root = document.getElementById(`shopify-section-${SECTION_ID}`);
-      if (!root) return;
-
-      const labels = root.querySelectorAll('.product-form__input--swatch .swatch-input__label');
-      const rgbToLuminance = (rgbString) => {
-        const parts = (rgbString.match(/[\d.]+/g) || [])
-          .slice(0, 3)
-          .map((v) => parseFloat(v))
-          .filter((v) => !Number.isNaN(v));
-        if (parts.length < 3) return 1; // fallback to dark text
-        const [r, g, b] = parts;
-        const channel = (v) => {
-          const c = v / 255;
-          return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
-        };
-        return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
-      };
-
-      labels.forEach((label) => {
-        const swatch = label.querySelector('.swatch');
-        if (!swatch) return;
-        const bg = window.getComputedStyle(swatch).getPropertyValue('background-color');
-        const lum = rgbToLuminance(bg);
-        const textColor = lum > 0.55 ? '#0f172a' : '#f8fafc';
-        label.style.setProperty('--swatch-text-color', textColor);
-      });
-    };
-
-    applySwatchContrast();
-    document.addEventListener('shopify:section:load', applySwatchContrast);
-    document.addEventListener('variant:change', applySwatchContrast);
-    document.addEventListener('variant:changed', applySwatchContrast);
-  });
-</script>
-
-
-
-
-
-
   {% assign variant_images = product.images | where: 'attached_to_variant?', true | map: 'src' %}
   <div class="product product--{{ section.settings.media_size }} product--{{ section.settings.media_position }} product--{{ section.settings.gallery_layout }} product--mobile-{{ section.settings.mobile_thumbnails }} grid grid--1-col {% if product.media.size > 0 %}grid--2-col-tablet{% else %}product--no-media{% endif %}">
     <div class="grid__item product__media-wrapper">
       {% render 'product-media-gallery', variant_images: variant_images %}
     </div>
     <div class="product__info-wrapper grid__item{% if settings.page_width > 1400 and section.settings.media_size == "small" %} product__info-wrapper--extra-padding{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
-      <section
+      <div
         id="ProductInfo-{{ section.id }}"
-        class="{% if section.settings.enable_sticky_info %} product__column-sticky{% endif %}"
+        class="product__info-container{% if section.settings.enable_sticky_info %} product__column-sticky{% endif %}"
       >
-        <div class="product__info-container">
-     
-
         {%- assign product_form_id = 'product-form-' | append: section.id -%}
 
         {%- for block in section.blocks -%}
@@ -2233,24 +761,22 @@ body.template-product .product__media-modal * {
                   <script src="{{ 'quick-add.js' | asset_url }}" defer="defer"></script>
                 {%- endif -%}
               </product-recommendations>
-            {%- when 'icon-with-text' -%}
-              {% render 'icon-with-text', block: block %}
-          {%- endcase -%}
-        {%- endfor -%}
-        <a href="{{ product.url }}" class="link product__view-details animate-arrow">
-          {{ 'products.product.view_full_details' | t }}
-          {{- 'icon-arrow.svg' | inline_asset_content -}}
-        </a>
-        </div>
+          {%- when 'icon-with-text' -%}
+            {% render 'icon-with-text', block: block %}
+        {%- endcase -%}
+      {%- endfor -%}
+      <a href="{{ product.url }}" class="link product__view-details animate-arrow">
+        {{ 'products.product.view_full_details' | t }}
+        {{- 'icon-arrow.svg' | inline_asset_content -}}
+      </a>
+      </div>
 
-        <!-- Other Product Features -->
-        {% if product.metafields.custom.product_details_features != blank or product.metafields.custom.product_details_specifications_name != blank or product.metafields.custom.product_details_download_title != blank or product.metafields.custom.product_details_title and product.metafields.custom.product_detail_description != blank or product.metafields.custom.product_details_sub_title != blank     %}
-        <div class="mt-4 product__info-container">
-         {% render 'main-product-details' , product: product %}
+      <!-- Other Product Features -->
+      {% if product.metafields.custom.product_details_features != blank or product.metafields.custom.product_details_specifications_name != blank or product.metafields.custom.product_details_download_title != blank or product.metafields.custom.product_details_title and product.metafields.custom.product_detail_description != blank or product.metafields.custom.product_details_sub_title != blank     %}
+        <div class="product-details-accordion-wrapper">
+          {% render 'main-product-details' , product: product %}
         </div>
-          {% endif %}
-      </section>
-      
+      {% endif %}
     </div>
   </div>
 
@@ -2279,11 +805,6 @@ body.template-product .product__media-modal * {
       </div>
     </modal-dialog>
   {%- endfor -%}
-
-  {%- if product.media.size > 0 -%}
-    <script src="{{ 'product-modal.js' | asset_url }}" defer="defer"></script>
-    <script src="{{ 'media-gallery.js' | asset_url }}" defer="defer"></script>
-  {%- endif -%}
 
   {%- if first_3d_model -%}
     <script type="application/json" id="ProductJSON-{{ product.id }}">
@@ -2765,6 +1286,7 @@ body.template-product .product__media-modal * {
 
 
 
+</caco-product-media>
 
 {% schema %}
 

@@ -20,6 +20,59 @@ product-info {
   padding-left: 0;
 }
 
+/* PDP gallery: keep media static and neutralize default modal affordances */
+.product-info--pdp .product__media-item,
+.product-info--pdp .product__media-item *,
+.product-info--pdp .product__media,
+.product-info--pdp .product__media img,
+.product-info--pdp .product__modal-opener,
+.product-info--pdp .product__modal-opener * {
+  cursor: default !important;
+  transition: none !important;
+}
+
+.product-info--pdp .product__media-item:hover,
+.product-info--pdp .product__media-item:hover *,
+.product-info--pdp .product__modal-opener:hover,
+.product-info--pdp .product__modal-opener:hover * {
+  transform: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+.product-info--pdp .product__media-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-info--pdp .product__media-item img {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  object-fit: contain !important;
+}
+
+.product-info--pdp .product__media-toggle,
+.product-info--pdp .product__media-toggle *,
+.product-info--pdp .product__modal-opener .product__media-toggle,
+.product-info--pdp .product__modal-opener .product__media-toggle *,
+.product-info--pdp .product__modal-opener .product__media-icon,
+.product-info--pdp .product__modal-opener .product__media-button,
+.product-info--pdp .product__modal-opener .product__media-button * {
+  display: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.product-info--pdp .product__media-toggle::before,
+.product-info--pdp .product__media-toggle::after {
+  display: none !important;
+  content: none !important;
+}
+
 
 @media screen and (min-width: 750px) {
   .product__column-sticky {
@@ -59,6 +112,33 @@ product-info {
 
   .product--right .product__media-wrapper {
     order: 2;
+  }
+
+  .product__info-wrapper {
+    margin-top: -45px;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .product__info-wrapper,
+  .product__media-wrapper {
+    align-self: flex-start !important;
+  }
+
+  .product__info-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin-top: -45px !important;
+    padding-top: 0 !important;
+  }
+
+  .product__media-wrapper {
+    margin-top: 0 !important;
+  }
+
+  .product__column-sticky {
+    top: 0 !important;
   }
 }
 
@@ -2632,31 +2712,8 @@ label.quantity__label.form__label {
   transition: transform 180ms ease, filter 180ms ease;
 }
 
-.caco-zoomable {
-  cursor: crosshair;
-  transition: transform 200ms ease, filter 200ms ease;
-  will-change: transform;
-}
-
 .product__media-item {
   position: relative;
-}
-
-.product__media-item.is-zooming .caco-zoomable {
-  transform: scale(1.6);
-  transform-origin: var(--zoom-x, 50%) var(--zoom-y, 50%);
-  filter: saturate(1.05);
-}
-
-@media (hover: none) {
-  .caco-zoomable {
-    cursor: default;
-  }
-
-  .product__media-item.is-zooming .caco-zoomable {
-    transform: none;
-    filter: none;
-  }
 }
 
 .image-magnify-full-size {
@@ -2667,6 +2724,91 @@ label.quantity__label.form__label {
 .caco-media-gallery .product__media-item:focus-within .product__media-img {
   transform: scale(1.012);
   filter: saturate(1.04);
+}
+
+@media screen and (max-width: 749px) {
+  .caco-media-overlay {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .pdp-media-slider + .slider-buttons {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.25rem;
+  }
+
+  .pdp-media-slider + .slider-buttons .slider-button {
+    width: 3.6rem;
+    height: 3.6rem;
+    border-radius: 999px;
+    background: #ffffff;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(13, 107, 166, 0.12);
+  }
+
+  .pdp-media-slider + .slider-buttons .slider-counter {
+    font-weight: 700;
+    color: #0a4f8a;
+  }
+
+  .caco-square-box {
+    background: #f5f7fb;
+  }
+
+  .caco-square-box > * {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .caco-square-box img,
+  .caco-square-box video,
+  .caco-square-box model-viewer,
+  .caco-square-box iframe {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+  }
+
+  .caco-square-box .deferred-media,
+  .caco-square-box product-model,
+  .caco-square-box .product__media-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .caco-media-overlay {
+    position: absolute;
+    inset: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    z-index: 2;
+  }
+
+  .caco-media-overlay:focus-visible {
+    outline: 2px solid #0d6ba6;
+    outline-offset: 2px;
+  }
+
+  .caco-media-gallery .product__media-item,
+  .caco-media-gallery .product__media-item * {
+    cursor: default !important;
+  }
+
+  .caco-media-gallery .product__media-item:hover .product__media-img,
+  .caco-media-gallery .product__media-item:focus-within .product__media-img,
+  .caco-media-gallery .product__media-item:hover img,
+  .caco-media-gallery .product__media-item:focus-within img {
+    transform: none;
+    filter: none;
+  }
 }
 
 .apple-lightbox {
@@ -2694,16 +2836,16 @@ label.quantity__label.form__label {
 
 .apple-lightbox__chrome {
   position: relative;
-  width: min(1080px, 94vw);
-  max-height: 92vh;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 1.1rem;
-  padding: clamp(1.4rem, 2.2vw, 1.8rem);
-  border-radius: 18px;
+  gap: 0.5rem;
+  padding: 1.2rem;
+  border-radius: 0;
   background: linear-gradient(165deg, #0d111a 0%, #0a0d14 60%, #080a11 100%);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  border: none;
+  box-shadow: none;
   overflow: hidden;
   color: #f6f7fb;
 }
@@ -2712,8 +2854,8 @@ label.quantity__label.form__label {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.85rem;
-  padding: 0;
+  gap: 0.6rem;
+  padding: 0 0 0 0;
   color: rgba(255, 255, 255, 0.9);
   letter-spacing: 0.01em;
   font-weight: 600;
@@ -2763,32 +2905,36 @@ label.quantity__label.form__label {
 
 .apple-lightbox__stage {
   position: relative;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
+  display: flex;
   align-items: center;
-  gap: clamp(0.75rem, 2vw, 1.25rem);
-  padding: clamp(0.9rem, 1.8vw, 1.5rem);
-  background: rgba(12, 16, 24, 0.9);
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border-radius: 0;
+  border: none;
+  height: calc(100vh - 120px);
 }
 
 .apple-lightbox__figure {
+  flex: 1 1 auto;
   display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
   align-items: center;
   justify-content: center;
+  margin: 0;
+  padding: 0;
 }
 
 .apple-lightbox__frame {
   position: relative;
   width: 100%;
-  border-radius: 14px;
-  overflow: hidden;
-  background: #0b0e14;
-  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  height: 100%;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .apple-lightbox__scrim {
@@ -2798,68 +2944,31 @@ label.quantity__label.form__label {
 .apple-lightbox__image {
   position: relative;
   z-index: 1;
-  width: 100%;
-  max-height: 74vh;
+  width: auto;
+  max-width: 100vw;
+  max-height: calc(100vh - 120px);
   object-fit: contain;
-  border-radius: 12px;
-  background: #0b0e14;
+  border-radius: 0;
+  background: transparent;
+  will-change: transform;
+  touch-action: none;
 }
 
-.apple-lightbox__caption {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  color: rgba(255, 255, 255, 0.86);
-  font-size: 1.25rem;
-  letter-spacing: 0.01em;
-  width: 100%;
-  justify-content: space-between;
-}
-
-.apple-lightbox__counter {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.3rem 0.75rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  font-weight: 700;
-  color: #fff;
-}
-
-.apple-lightbox__caption-text {
-  color: rgba(255, 255, 255, 0.86);
-  font-weight: 600;
-}
-
+.apple-lightbox__caption,
 .apple-lightbox__progress {
-  position: relative;
-  height: 0.38rem;
-  width: 100%;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  overflow: hidden;
-}
-
-.apple-lightbox__progress-bar {
-  position: absolute;
-  inset: 0;
-  width: 0;
-  background: linear-gradient(90deg, #7bc6ff, #4f8cff);
-  transition: width 180ms ease;
+  display: none;
 }
 
 .apple-lightbox__nav {
   border: none;
-  width: 4.2rem;
-  height: 4.2rem;
+  width: 3.6rem;
+  height: 3.6rem;
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
-  font-size: 2rem;
+  background: rgba(255, 255, 255, 0.22);
+  color: #0b0e14;
+  font-size: 1.8rem;
   cursor: pointer;
   transition: background 140ms ease, transform 140ms ease, box-shadow 140ms ease;
   box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35);
@@ -2867,40 +2976,230 @@ label.quantity__label.form__label {
 
 .apple-lightbox__nav:hover,
 .apple-lightbox__nav:focus-visible {
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.32);
   transform: translateY(-1px);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.38);
   outline: 2px solid rgba(255, 255, 255, 0.22);
   outline-offset: 3px;
 }
 
-.apple-lightbox__nav--prev {
-  justify-self: flex-start;
-}
-
+.apple-lightbox__nav--prev,
 .apple-lightbox__nav--next {
-  justify-self: flex-end;
+  position: relative;
+  top: auto;
+  left: auto;
+  right: auto;
 }
 
 .apple-lock-scroll {
   overflow: hidden;
 }
 
-.product__media-item.is-zooming::after {
-  content: "";
-  position: absolute;
-  width: 18%;
-  aspect-ratio: 1 / 1;
-  border-radius: 14px;
-  border: 2px solid rgba(255, 255, 255, 0.9);
-  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.14), transparent 70%);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(0, 0, 0, 0.1);
-  left: var(--zoom-x, 50%);
-  top: var(--zoom-y, 50%);
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  transition: opacity 120ms ease;
+@media screen and (min-width: 750px) {
+  .pdp-media-slider {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    gap: 0;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-snap-stop: always;
+    overscroll-behavior-x: contain;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .pdp-media-slider .product__media-item {
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    scroll-snap-align: center;
+    margin: 0 !important;
+    overflow: hidden;
+  }
+
+  .pdp-media-slider .product__media-item > * {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Encapsulated PDP media block */
+  .pdp-media {
+    --pdp-media-gap: 1.2rem;
+    --pdp-media-size: min(1200px, 80vw, 80vh);
+    position: relative;
+    width: 100%;
+  }
+
+  .pdp-media .product__media-list {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100%;
+    height: var(--pdp-media-size);
+    background: transparent !important;
+  }
+
+  .pdp-media .pdp-media__track {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    gap: 0;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-snap-stop: always;
+    scroll-behavior: smooth;
+  }
+
+  .pdp-media .pdp-media__item {
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    scroll-snap-align: center;
+    margin: 0 !important;
+    transition: transform 160ms ease, box-shadow 160ms ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100%;
+    height: var(--pdp-media-size);
+    background: transparent;
+  }
+
+  .pdp-media .pdp-media__item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.12);
+  }
+
+  .pdp-media .caco-square-box {
+    aspect-ratio: 1 / 1;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    width: var(--pdp-media-size);
+    height: var(--pdp-media-size);
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .pdp-media .product__media-item img,
+  .pdp-media .product__media-item video,
+  .pdp-media .product__media-item model-viewer,
+  .pdp-media .product__media-item iframe {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: block;
+    max-height: 100%;
+  }
+
+  .pdp-media .caco-media-overlay {
+    position: absolute;
+    inset: 0;
+    border: none;
+    background: transparent;
+    cursor: zoom-in;
+  }
+
+  .pdp-media .caco-media-pill {
+    position: absolute;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .pdp-media__nav {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    pointer-events: none;
+    padding: 0 0.6rem;
+  }
+
+  .pdp-media__nav .slider-button {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 3.6rem;
+    height: 3.6rem;
+    border-radius: 999px;
+    background: #ffffff;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(13, 107, 166, 0.12);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 160ms ease, transform 160ms ease;
+  }
+
+  .pdp-media:hover .pdp-media__nav .slider-button,
+  .pdp-media__nav .slider-button:focus-visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .pdp-media__nav .slider-button[disabled] {
+    opacity: 0.35;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .pdp-media__nav .slider-counter {
+    font-weight: 700;
+    color: #0a4f8a;
+  }
+
+  .apple-lightbox__controls {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .apple-lightbox__zoom-btn {
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    border-radius: 10px;
+    padding: 0.6rem 0.9rem;
+    font-weight: 700;
+    min-width: 3.6rem;
+    cursor: pointer;
+    transition: background 140ms ease, transform 140ms ease, box-shadow 140ms ease;
+  }
+
+  .apple-lightbox__zoom-btn:hover,
+  .apple-lightbox__zoom-btn:focus-visible {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+    outline: 2px solid rgba(255, 255, 255, 0.24);
+    outline-offset: 2px;
+  }
+
+  .apple-lightbox__zoom-reset[hidden] {
+    display: none;
+  }
+
+  .apple-lightbox__image {
+    transition: transform 160ms ease;
+    touch-action: none;
+  }
+
+  .apple-lightbox--zoomed .apple-lightbox__image {
+    cursor: grab;
+  }
 }
+
 .caco-media-nav {
   position: absolute;
   inset: 0;
@@ -3091,3 +3390,1672 @@ label.quantity__label.form__label {
 .product-breadcrumbs .breadcrumbs{ margin:0 !important; padding:0 !important; }
 
 /* FIN — CACO HOTFIX PACK */
+
+/* Section-specific layout overrides */
+.section-{{ section.id }}-padding {
+  padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+  padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+}
+
+@media screen and (min-width: 750px) {
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+}
+/* ============================
+   3. GALERÍA — BASE
+   ============================ */
+
+/* Sin “hand” ni hover loco en media items */
+#shopify-section-{{ section.id }} .product__media-item,
+#shopify-section-{{ section.id }} .product__media-item *,
+#shopify-section-{{ section.id }} .product__media,
+#shopify-section-{{ section.id }} .product__media img,
+#shopify-section-{{ section.id }} .product__modal-opener,
+#shopify-section-{{ section.id }} .product__modal-opener * {
+  cursor: default !important;
+  transition: none !important;
+}
+
+#shopify-section-{{ section.id }} .product__media-item:hover,
+#shopify-section-{{ section.id }} .product__media-item:hover *,
+#shopify-section-{{ section.id }} .product__modal-opener:hover,
+#shopify-section-{{ section.id }} .product__modal-opener:hover * {
+  transform: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+/* Centrar la imagen principal en su frame */
+#shopify-section-{{ section.id }} .product__media-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#shopify-section-{{ section.id }} .product__media-item img {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  object-fit: contain !important;
+}
+
+/* ============================
+   3.B – LIMPIAR “OPEN GALLERY”
+   ============================ */
+
+#shopify-section-{{ section.id }} .product__media-toggle,
+#shopify-section-{{ section.id }} .product__media-toggle *,
+#shopify-section-{{ section.id }} .product__modal-opener .product__media-toggle,
+#shopify-section-{{ section.id }} .product__modal-opener .product__media-toggle *,
+#shopify-section-{{ section.id }} .product__modal-opener .product__media-icon,
+#shopify-section-{{ section.id }} .product__modal-opener .product__media-button,
+#shopify-section-{{ section.id }} .product__modal-opener .product__media-button * {
+  display: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+#shopify-section-{{ section.id }} .product__media-toggle::before,
+#shopify-section-{{ section.id }} .product__media-toggle::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* ============================
+   4. LIGHTBOX (APPLE STYLE)
+   ============================ */
+
+[id^="galleryLightbox"] .apple-lightbox__chrome {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  max-width: 100vw !important;
+  height: 100vh !important;
+  margin: 0;
+  padding: 10px 16px 24px;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+[id^="galleryLightbox"] .apple-lightbox__header {
+  flex: 0 0 auto;
+  margin: 0 0 8px;
+  padding: 0;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+[id^="galleryLightbox"] .apple-lightbox__stage {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  position: relative;
+}
+
+[id^="galleryLightbox"] .apple-lightbox__figure {
+  margin: 0;
+  padding: 0;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+[id^="galleryLightbox"] .apple-lightbox__frame {
+  position: relative;
+  display: block;
+  margin: 0 auto;
+  padding: 0;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 24px !important;
+  overflow: hidden !important;
+}
+
+[id^="galleryLightbox"] .apple-lightbox__scrim {
+  display: none !important;
+}
+
+[id^="galleryLightbox"] .apple-lightbox__image {
+  display: block;
+  margin: 0 auto;
+  width: auto;
+  height: auto;
+  max-width: 96vw;
+  max-height: calc(100vh - 150px);
+  object-fit: contain;
+  border-radius: 24px !important;
+}
+
+[id^="galleryLightbox"] .apple-lightbox__caption {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  margin-top: 6px;
+  padding: 0;
+}
+
+[id^="galleryLightbox"] .apple-lightbox__caption-text,
+[id^="galleryLightbox"] .apple-lightbox__progress {
+  display: none !important;
+}
+
+[id^="galleryLightbox"] .apple-lightbox__counter {
+  color: #ffffff !important;
+}
+
+[id^="galleryLightbox"] .apple-lightbox__nav {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.45);
+  color: #ffffff;
+}
+
+[id^="galleryLightbox"] .apple-lightbox__nav--prev { left: 18px; }
+[id^="galleryLightbox"] .apple-lightbox__nav--next { right: 18px; }
+
+[id^="galleryLightbox"] .apple-lightbox__nav svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* X siempre redonda */
+[id^="galleryLightbox"] .apple-lightbox__close,
+[id^="galleryLightbox"] .apple-lightbox__close:focus,
+[id^="galleryLightbox"] .apple-lightbox__close:hover,
+[id^="galleryLightbox"] .apple-lightbox__close:active {
+  border-radius: 999px !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* ============================
+   5. MOBILE RULES
+   ============================ */
+@media (max-width: 749px) {
+
+  /* --- LIGHTBOX MOBILE: sin flechas, solo X y swipe --- */
+  [id^="galleryLightbox"] .apple-lightbox__nav,
+  [id^="galleryLightbox"] .apple-lightbox__counter {
+    display: none !important;
+  }
+
+  [id^="galleryLightbox"] .apple-lightbox__chrome {
+    padding-top: 8px;
+  }
+
+  [id^="galleryLightbox"] .apple-lightbox__image {
+    max-width: 98vw;
+    max-height: calc(100vh - 120px);
+  }
+
+  [id^="galleryLightbox"] {
+    cursor: default;
+  }
+  [id^="galleryLightbox"] .apple-lightbox__stage {
+    cursor: pointer;
+  }
+  [id^="galleryLightbox"] .apple-lightbox__frame,
+  [id^="galleryLightbox"] .apple-lightbox__image {
+    cursor: default;
+  }
+
+  /* ======================
+     MEDIA BOX FULL WIDTH
+     ====================== */
+  #shopify-section-{{ section.id }} .product__media-wrapper {
+    width: 100%;
+    max-width: 100%;
+    margin: 12px 0 20px;
+    padding: 16px 0 20px;          /* sin padding lateral */
+    background: #f3f3f3;
+    border-radius: 24px;
+    box-sizing: border-box;
+  }
+
+  #shopify-section-{{ section.id }} .product__media-list {
+    margin: 0;
+  }
+
+  /* Frame blanco interno */
+  #shopify-section-{{ section.id }} .product__media-item {
+    padding: 10px;
+    background: #ffffff;
+    border-radius: 18px;
+  }
+
+  /* ======================
+     STRIP DE THUMBS + FLECHAS
+     ====================== */
+
+  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail-slider,
+  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail-slider--mobile {
+    position: relative;
+    margin-top: 14px;
+  }
+
+  /* Thumbs en una sola fila */
+  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail-list {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail-list__item {
+    flex: 0 0 24%;
+    max-width: 24%;
+  }
+
+  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 4px;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
+  }
+
+  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail__media {
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Thumb activo con marco azul */
+  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail.is-active {
+    box-shadow: 0 0 0 2px #0d6ba6;
+  }
+
+  /* Flechas fuera, centradas, sin fondo/borde/sombra */
+  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail-slider .slider-button,
+  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail-slider--mobile .slider-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: auto;
+    height: auto;
+    padding: 0;
+    margin: 0;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: #9b9b9b;
+  }
+
+  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail-slider .slider-button--prev,
+  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail-slider--mobile .slider-button--prev {
+    left: -18px;
+  }
+
+  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail-slider .slider-button--next,
+  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail-slider--mobile .slider-button--next {
+    right: -18px;
+  }
+
+  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail-slider .slider-button svg,
+  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail-slider--mobile .slider-button svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail-slider .slider-button[disabled],
+  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail-slider--mobile .slider-button[disabled] {
+    opacity: 0.15;
+  }
+}
+
+
+
+/* ==== KILL SWITCH UI "OPEN GALLERY" ==== */
+
+/* Botón/overlay que Dawn mete sobre la imagen */
+#shopify-section-{{ section.id }} .product__modal-opener,
+#shopify-section-{{ section.id }} .product__modal-opener *,
+#shopify-section-{{ section.id }} .product__media-toggle,
+#shopify-section-{{ section.id }} .product__media-toggle *,
+#shopify-section-{{ section.id }} [data-media-modal-opener],
+#shopify-section-{{ section.id }} [data-media-modal-opener] *,
+#shopify-section-{{ section.id }} button[aria-label*="Open gallery"],
+#shopify-section-{{ section.id }} [aria-label*="Open gallery"],
+#shopify-section-{{ section.id }} button[aria-label*="open gallery"],
+#shopify-section-{{ section.id }} [aria-label*="open gallery"] {
+  display: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Modal nativo de Dawn (por si llega a abrirse) */
+body.template-product .product-media-modal,
+body.template-product .product-media-modal *,
+body.template-product .product__media-modal,
+body.template-product .product__media-modal * {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+/* ==== FIX: MAIN IMAGE FULL-WIDTH + CENTRADA EN MOBILE ==== */
+@media (max-width: 749px) {
+
+  /* El wrapper gris de la galería: full width, sin empuje lateral */
+  #shopify-section-{{ section.id }} .product__media-wrapper {
+    margin: 0 !important;
+    padding: 16px 0 18px !important; /* solo vertical */
+    background: #f3f3f3;
+    border-radius: 20px;
+    box-sizing: border-box;
+  }
+
+  /* Quitamos el “offset” típico de Dawn (slider-mobile-gutter) */
+  #shopify-section-{{ section.id }} .slider-mobile-gutter,
+  #shopify-section-{{ section.id }} .product__media-list {
+    margin: 0 auto !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+
+  /* Slides sin padding raro ni desplazamientos */
+  #shopify-section-{{ section.id }} .product__media-list .slider,
+  #shopify-section-{{ section.id }} .product__media-list .slider__slide {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+
+  /* Contenedor blanco que estaba corriendo la imagen → fuera */
+  #shopify-section-{{ section.id }} .product__media-item {
+    padding: 0 !important;
+    background: transparent !important;
+    border-radius: 24px !important;
+  }
+
+  /* Imagen grande totalmente centrada dentro del wrapper gris */
+  #shopify-section-{{ section.id }} .product__media-item img {
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+}
+/* ==== MOBILE: GAP MAIN IMAGE ↔ THUMBS = 20px ==== */
+@media (max-width: 749px) {
+  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail-slider,
+  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail-slider--mobile {
+    margin-top: -13px !important;   /* espacio exacto entre imagen grande y thumbs */
+  }
+}
+
+
+
+
+
+
+
+
+
+/* ==== MOBILE: "crop to zoom" icon — círculo sutil siempre visible ==== */ @media (max-width: 749px) { /* El contenedor de la imagen principal sirve de referencia */ #shopify-section-{{ section.id }} .product__media-item { position: relative; } #shopify-section-{{ section.id }} .product__media-item::after { content: ''; position: absolute; right: 14px; bottom: 14px; width: 34px; height: 34px; /* Círculo con fondo oscuro suave y borde blanco — se ve en fondo claro y oscuro */ border-radius: 999px; background-color: rgba(0, 0, 0, 0.55); border: 1.4px solid rgba(255, 255, 255, 0.9); box-shadow: none; /* Icono crop dentro del círculo */ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 4h5M6 4v5M18 20v-5M18 20h-5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: center; background-size: 18px 18px; pointer-events: none; /* no bloquea el tap en la imagen */ opacity: 0; transform-origin: center; animation: crop-hint-pulse 3.2s ease-in-out infinite; } @keyframes crop-hint-pulse { 0%, 60% { opacity: 0; transform: scale(0.9); } 70% { opacity: 0.8; transform: scale(1); } 82% { opacity: 0.8; transform: scale(1.06); } 100% { opacity: 0; transform: scale(0.95); } } }
+
+
+
+
+
+
+
+/* ==== DESKTOP/TABLET: crop/zoom icon SOLO ON HOVER
+       (imagen principal + thumbnails) ==== */
+@media (min-width: 750px) {
+
+  /* Referencia para el pseudo-elemento */
+  #shopify-section-{{ section.id }} .product__media-item,
+  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail {
+    position: relative;
+  }
+
+  /* Estado base: icono preparado pero invisible */
+  #shopify-section-{{ section.id }} .product__media-item::after,
+  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail::after {
+    content: '';
+    position: absolute;
+    right: 14px;
+    bottom: 14px;
+    width: 34px;
+    height: 34px;
+
+    border-radius: 999px;
+    background-color: rgba(0, 0, 0, 0.45);
+    border: 1.4px solid rgba(255, 255, 255, 0.9);
+    box-shadow: none;
+
+    /* mismo ícono que mobile */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 4h5M6 4v5M18 20v-5M18 20h-5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 18px 18px;
+
+    pointer-events: none;
+
+    opacity: 0 !important;          /* oculto por default */
+    transform: scale(0.9);
+    animation: none !important;      /* mata la animación anterior */
+    transition: opacity 0.22s ease, transform 0.22s ease;
+  }
+
+  /* Visible solo on hover (muy sutil) */
+  #shopify-section-{{ section.id }} .product__media-item:hover::after,
+  #shopify-section-{{ section.id }} .product__media-wrapper .thumbnail:hover::after {
+    opacity: 0.75 !important;
+    transform: scale(1);
+  }
+}
+
+
+
+
+/* ==========================================
+   FIX 1 — IMAGEN DEL LIGHTBOX SIN RECORTE
+   ========================================== */
+[id^="galleryLightbox"] .apple-lightbox__figure,
+[id^="galleryLightbox"] .apple-lightbox__frame {
+  margin: 0 auto !important;
+  padding: 0 !important;
+  max-width: min(100vw - 64px, 1200px);
+  max-height: calc(100vh - 96px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent !important;
+  overflow: visible !important;   /* nada se corta */
+  border-radius: 24px !important;
+}
+
+[id^="galleryLightbox"] .apple-lightbox__image {
+  width: auto !important;
+  height: auto !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain !important; /* se ajusta, no se recorta */
+  border-radius: 24px !important;
+}
+
+
+/* ==========================================
+   FIX 2 — BOTÓN CERRAR ("X") LIMPIO
+   ========================================== */
+[id^="galleryLightbox"] .apple-lightbox__close {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255,255,255,0.85);
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* ocultamos cualquier icono SVG original */
+[id^="galleryLightbox"] .apple-lightbox__close svg,
+[id^="galleryLightbox"] .apple-lightbox__close span {
+  display: none !important;
+}
+
+/* nuestra "X" minimal */
+[id^="galleryLightbox"] .apple-lightbox__close::before {
+  content: '×';
+  font-size: 18px;
+  line-height: 1;
+  color: #ffffff;
+}
+
+[id^="galleryLightbox"] .apple-lightbox__close:hover {
+  background: rgba(0, 0, 0, 0.75);
+}
+/* ============================
+   DESKTOP LIGHTBOX TUNING
+   ============================ */
+@media (min-width: 750px) {
+
+  /* Menos padding arriba → más altura útil para la imagen */
+  [id^="galleryLightbox"] .apple-lightbox__chrome {
+    padding-top: 16px !important;
+    padding-bottom: 24px !important;
+  }
+
+  [id^="galleryLightbox"] .apple-lightbox__header {
+    margin-bottom: 10px !important;
+  }
+
+  /* Imagen centrada, sin recortes */
+  [id^="galleryLightbox"] .apple-lightbox__stage {
+    padding: 0 32px 24px !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  [id^="galleryLightbox"] .apple-lightbox__figure,
+  [id^="galleryLightbox"] .apple-lightbox__frame {
+    margin: 0 auto !important;
+    padding: 0 !important;
+    max-width: min(100vw - 96px, 1280px);
+    max-height: calc(100vh - 170px); /* más espacio vertical para que no se corte */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: transparent !important;
+    overflow: visible !important;
+    border-radius: 24px !important;
+  }
+
+  [id^="galleryLightbox"] .apple-lightbox__image {
+    width: auto !important;
+    height: auto !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    object-fit: contain !important;
+    border-radius: 24px !important;
+  }
+
+  /* --- Flechas de navegación ACTIVAS en desktop --- */
+  [id^="galleryLightbox"] .apple-lightbox__nav {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ============================
+     BOTÓN CERRAR + CONTADOR
+     ============================ */
+
+  /* X más grande, limpia */
+  [id^="galleryLightbox"] .apple-lightbox__close {
+    position: fixed !important;
+    top: 24px;
+    right: 24px;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(255,255,255,0.85);
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.18);
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 9999;
+  }
+
+  /* ocultar cualquier icono interno original */
+  [id^="galleryLightbox"] .apple-lightbox__close svg,
+  [id^="galleryLightbox"] .apple-lightbox__close span {
+    display: none !important;
+  }
+
+  [id^="galleryLightbox"] .apple-lightbox__close::before {
+    content: '×';
+    font-size: 22px;
+    line-height: 1;
+    color: #ffffff;
+  }
+
+  [id^="galleryLightbox"] .apple-lightbox__close:hover {
+    background: rgba(0, 0, 0, 0.8);
+  }
+
+  /* Contador 1/46 a la izquierda de la X, mejor ubicado */
+  [id^="galleryLightbox"] .apple-lightbox__counter {
+    position: fixed !important;
+    top: 26px;
+    right: 82px; /* separación respecto a la X */
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(0,0,0,0.55);
+    color: #ffffff;
+    font-size: 12px;
+    line-height: 1;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    z-index: 9998;
+  }
+}
+/* ============================
+   DESKTOP LIGHTBOX – FIX LAYOUT
+   ============================ */
+@media (min-width: 750px) {
+
+  /* Más aire arriba/abajo, sin tapar encabezado ni cortar la imagen */
+  [id^="galleryLightbox"] .apple-lightbox__chrome {
+    padding-top: 40px !important;
+    padding-bottom: 32px !important;
+  }
+
+  [id^="galleryLightbox"] .apple-lightbox__stage {
+    padding: 0 48px 24px !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  /* Lienzo blanco más contenido para que no corte el casco */
+  [id^="galleryLightbox"] .apple-lightbox__figure,
+  [id^="galleryLightbox"] .apple-lightbox__frame {
+    margin: 0 auto !important;
+    padding: 0 !important;
+    max-width: min(100vw - 180px, 1200px) !important;
+    max-height: calc(100vh - 220px) !important; /* clave para que no se corte */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: #ffffff !important;
+    border-radius: 24px !important;
+    overflow: hidden !important;
+  }
+
+  [id^="galleryLightbox"] .apple-lightbox__image {
+    width: auto !important;
+    height: auto !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    object-fit: contain !important;
+    border-radius: 0 !important;
+  }
+
+  /* ============================
+     FLECHAS DESKTOP – ACTIVAS
+     ============================ */
+  [id^="galleryLightbox"] .apple-lightbox__nav {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.9;
+  }
+
+  [id^="galleryLightbox"] .apple-lightbox__nav svg {
+    width: 22px !important;
+    height: 22px !important;
+    stroke: #ffffff !important;
+  }
+
+  /* ============================
+     BOTÓN CERRAR + CONTADOR
+     ============================ */
+
+  /* Estilizar cualquier botón de cerrar del lightbox */
+  [id^="galleryLightbox"] button[aria-label*="Close"],
+  [id^="galleryLightbox"] button[aria-label*="close"],
+  [id^="galleryLightbox"] button[aria-label*="Cerrar"],
+  [id^="galleryLightbox"] button[aria-label*="cerrar"] {
+    position: fixed !important;
+    top: 24px;
+    right: 24px;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.55) !important;
+    border: 1px solid rgba(255, 255, 255, 0.85) !important;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.18);
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 9999;
+  }
+
+  /* Ocultamos icono original y dibujamos la X limpia */
+  [id^="galleryLightbox"] button[aria-label*="Close"] svg,
+  [id^="galleryLightbox"] button[aria-label*="close"] svg,
+  [id^="galleryLightbox"] button[aria-label*="Cerrar"] svg,
+  [id^="galleryLightbox"] button[aria-label*="cerrar"] svg {
+    display: none !important;
+  }
+
+  [id^="galleryLightbox"] button[aria-label*="Close"]::before,
+  [id^="galleryLightbox"] button[aria-label*="close"]::before,
+  [id^="galleryLightbox"] button[aria-label*="Cerrar"]::before,
+  [id^="galleryLightbox"] button[aria-label*="cerrar"]::before {
+    content: '×';
+    font-size: 22px;
+    line-height: 1;
+    color: #ffffff;
+  }
+
+  [id^="galleryLightbox"] button[aria-label*="Close"]:hover,
+  [id^="galleryLightbox"] button[aria-label*="close"]:hover,
+  [id^="galleryLightbox"] button[aria-label*="Cerrar"]:hover,
+  [id^="galleryLightbox"] button[aria-label*="cerrar"]:hover {
+    background: rgba(0, 0, 0, 0.8) !important;
+  }
+
+  /* Contador 1 / 48 en píldora a la izquierda de la X */
+  [id^="galleryLightbox"] .apple-lightbox__counter {
+    position: fixed !important;
+    top: 26px;
+    right: 84px; /* separación respecto al close */
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.55);
+    color: #ffffff;
+    font-size: 12px;
+    line-height: 1;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    z-index: 9998;
+  }
+}
+/* ============================
+   DESKTOP: MÁS ESPACIO PARA LA IMAGEN
+   ============================ */
+@media (min-width: 750px) {
+
+  /* Todo el contenedor del lightbox: menos padding arriba/abajo */
+  [id^="galleryLightbox"] .apple-lightbox__chrome {
+    padding: 8px 32px 14px !important;  /* antes era mucho más alto */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Header (marca + título) más pegado arriba */
+  [id^="galleryLightbox"] .apple-lightbox__header {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 0 6px !important;
+    padding: 0 !important;
+  }
+
+  /* Escenario donde vive la imagen: ocupa casi todo el alto */
+  [id^="galleryLightbox"] .apple-lightbox__stage {
+    flex: 1 1 auto !important;
+    width: 100%;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Marco blanco que sostiene la imagen */
+  [id^="galleryLightbox"] .apple-lightbox__figure,
+  [id^="galleryLightbox"] .apple-lightbox__frame {
+    margin: 0 auto !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    max-width: min(100vw - 120px, 1300px) !important;
+    max-height: calc(100vh - 70px) !important;  /* más alto que antes */
+
+    background: #ffffff !important;
+    border-radius: 24px !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+
+  /* La imagen: nunca se deforma y siempre cabe completa */
+  [id^="galleryLightbox"] .apple-lightbox__image {
+    display: block !important;
+    margin: 0 auto !important;
+
+    width: auto !important;
+    height: auto !important;
+
+    max-width: calc(100% - 40px) !important;
+    max-height: calc(100vh - 110px) !important;
+
+    object-fit: contain !important;
+  }
+}
+
+/* ============================
+   TUNING HEADER LIGHTBOX DESKTOP
+   ============================ */
+@media (min-width: 750px) {
+
+  /* Menos padding arriba: header más pegado al borde */
+  [id^="galleryLightbox"] .apple-lightbox__chrome {
+    padding-top: 4px !important;
+  }
+
+  /* Header bien arriba y compacto */
+  [id^="galleryLightbox"] .apple-lightbox__header {
+    margin-top: 0 !important;
+    margin-bottom: 4px !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    line-height: 1.1 !important;
+  }
+
+  /* Línea de "CACO AMERICA LLC" más pequeña y elegante */
+  [id^="galleryLightbox"] .apple-lightbox__header .apple-lightbox__eyebrow,
+  [id^="galleryLightbox"] .apple-lightbox__header > :first-child {
+    font-size: 11px !important;
+    letter-spacing: 0.18em !important;
+    text-transform: uppercase !important;
+    opacity: 0.8 !important;
+  }
+
+  /* "Safety Helmet" pegado a la marca, sin tanto aire */
+  [id^="galleryLightbox"] .apple-lightbox__header .apple-lightbox__title,
+  [id^="galleryLightbox"] .apple-lightbox__header > :last-child {
+    margin-top: 2px !important;
+  }
+}
+/* ============================
+   LIGHTBOX DESKTOP SIN WRAPPER BLANCO
+   Imagen siempre completa y centrada
+   ============================ */
+@media (min-width: 750px) {
+
+  /* El figure se convierte en un flex centrado */
+  [id^="galleryLightbox"] .apple-lightbox__figure {
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  /* Adiós “tarjeta” blanca: sin fondo, sin sombra, sin tamaño fijo */
+  [id^="galleryLightbox"] .apple-lightbox__frame {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    width: auto !important;
+    height: auto !important;
+    overflow: visible !important;   /* no recorta la imagen */
+    border-radius: 24px !important;  /* solo redondea la propia imagen */
+  }
+
+  /* La imagen respeta SIEMPRE su proporción */
+  [id^="galleryLightbox"] .apple-lightbox__image {
+    display: block !important;
+    width: auto !important;
+    height: auto !important;
+    max-width: 88vw !important;
+    max-height: calc(100vh - 170px) !important; /* espacio para header + X */
+    object-fit: contain !important;
+    border-radius: 24px !important;
+  }
+}
+/* ============================
+   FIX: eliminar cualquier fondo blanco
+   bajo la imagen en el lightbox
+   ============================ */
+@media (min-width: 750px) {
+  [id^="galleryLightbox"] .apple-lightbox__chrome,
+  [id^="galleryLightbox"] .apple-lightbox__stage,
+  [id^="galleryLightbox"] .apple-lightbox__figure,
+  [id^="galleryLightbox"] .apple-lightbox__frame,
+  [id^="galleryLightbox"] .apple-lightbox__image {
+    background: transparent !important;
+  }
+
+  /* Por si Dawn mete decoraciones con ::before/::after */
+  [id^="galleryLightbox"] .apple-lightbox__chrome::before,
+  [id^="galleryLightbox"] .apple-lightbox__chrome::after,
+  [id^="galleryLightbox"] .apple-lightbox__frame::before,
+  [id^="galleryLightbox"] .apple-lightbox__frame::after {
+    background: transparent !important;
+  }
+
+  /* Cero padding/margen extra alrededor de la imagen */
+  [id^="galleryLightbox"] .apple-lightbox__figure,
+  [id^="galleryLightbox"] .apple-lightbox__frame {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}
+
+
+/* por si algún zoom viejo estorba */
+#shopify-section-{{ section.id }} .image-magnify,
+#shopify-section-{{ section.id }} .image-magnify-full-size,
+#shopify-section-{{ section.id }} .zoomContainer {
+  display: none !important;
+}
+
+
+
+/* === OVERRIDE HEADER LIGHTBOX: LEFT ALIGN + SAME LOOK MOBILE/DESKTOP === */
+[id^="galleryLightbox"] .apple-lightbox__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  text-align: left !important;
+  margin-top: 0 !important;
+  margin-bottom: 4px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  line-height: 1.1 !important;
+}
+
+[id^="galleryLightbox"] .apple-lightbox__title {
+  text-align: left !important;
+}
+
+/* "CACO AMERICA LLC" estilo desktop → también en mobile */
+[id^="galleryLightbox"] .apple-lightbox__header .apple-lightbox__eyebrow,
+[id^="galleryLightbox"] .apple-lightbox__header > :first-child {
+  font-size: 11px !important;
+  letter-spacing: 0.18em !important;
+  text-transform: uppercase !important;
+  opacity: 0.8 !important;
+}
+
+/* "SAFETY HELMET" pegado a la marca */
+[id^="galleryLightbox"] .apple-lightbox__header .apple-lightbox__title,
+[id^="galleryLightbox"] .apple-lightbox__header > :last-child {
+  margin-top: 2px !important;
+}
+
+
+/* === MOBILE CLOSE BUTTON → SAME AS DESKTOP === */
+@media (max-width: 749px) {
+  [id^="galleryLightbox"] .apple-lightbox__close {
+    position: fixed !important;
+    top: 24px;
+    right: 24px;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.55) !important;
+    border: 1px solid rgba(255, 255, 255, 0.85) !important;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.18);
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 9999;
+  }
+
+  [id^="galleryLightbox"] .apple-lightbox__close svg,
+  [id^="galleryLightbox"] .apple-lightbox__close span {
+    display: none !important;
+  }
+
+  [id^="galleryLightbox"] .apple-lightbox__close::before {
+    content: '×';
+    font-size: 22px;
+    line-height: 1;
+    color: #ffffff;
+  }
+}
+
+/* ============================
+   SWATCHES — POLISHED LOOK
+   ============================ */
+#shopify-section-{{ section.id }} .product-form__input--swatch {
+  --swatch-input--size: 3.2rem;
+  --swatch-input--border-radius: 20px;
+  --swatch-border-width: 1.6px;
+  --swatch-outline-width: 0px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin-top: 6px;
+}
+
+#shopify-section-{{ section.id }} .product-form__input--swatch legend {
+  margin-bottom: 2px;
+}
+
+#shopify-section-{{ section.id }} .swatch-input__input + .swatch-input__label {
+  --swatch-input--border-radius: 20px !important;
+  --swatch-outline-width: 0px !important;
+  color: var(--swatch-text-color, #111827);
+  padding: 0.28rem;
+  background: #ffffff;
+  border: var(--swatch-border-width) solid rgba(17, 24, 39, 0.18);
+  border-radius: var(--swatch-input--border-radius);
+  box-shadow: none;
+  transition: border-color 0.16s ease, background-color 0.16s ease;
+  outline: none !important;
+}
+
+#shopify-section-{{ section.id }} .swatch-input__input + .swatch-input__label .swatch {
+  border: 0 !important;
+  border-radius: calc(var(--swatch-input--border-radius) * 0.9);
+  box-shadow: none !important;
+}
+
+#shopify-section-{{ section.id }} .swatch-input__input + .swatch-input__label:hover,
+#shopify-section-{{ section.id }} .swatch-input__input:hover + .swatch-input__label {
+  --swatch-border-width: 2.2px;
+  border-color: #0d6ba6;
+  background: #f8fafc;
+  box-shadow: none;
+  outline: none !important;
+}
+
+#shopify-section-{{ section.id }} .swatch-input__input:checked + .swatch-input__label {
+  --swatch-border-width: 2.2px;
+  border-color: #0d6ba6;
+  background: #f0f7fb;
+  outline: none;
+  box-shadow: none;
+}
+
+#shopify-section-{{ section.id }} .swatch-input__input:focus-visible + .swatch-input__label {
+  outline: 2px solid #0d6ba6;
+  outline-offset: 2px;
+  border-color: #0d6ba6;
+  box-shadow: none;
+}
+
+#shopify-section-{{ section.id }} .swatch-input__input.visually-disabled + .swatch-input__label {
+  cursor: not-allowed;
+  opacity: 0.55;
+  background: #f3f4f6;
+}
+
+#shopify-section-{{ section.id }} .swatch-input__label[data-tooltip] {
+  position: relative;
+}
+
+#shopify-section-{{ section.id }} .swatch-input__label[data-tooltip]::after,
+#shopify-section-{{ section.id }} .swatch-input__label[data-tooltip]::before {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 6px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s ease, transform 0.18s ease;
+  pointer-events: none;
+  z-index: 5;
+}
+
+#shopify-section-{{ section.id }} .swatch-input__label[data-tooltip]::after {
+  content: attr(data-tooltip);
+  bottom: calc(100% + 8px);
+  padding: 4px 8px;
+  background: var(--swatch-tooltip-bg, #4b5563);
+  color: var(--swatch-tooltip-text, #ffffff);
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 8px;
+  box-shadow: none;
+  white-space: nowrap;
+  line-height: 1.1;
+  text-decoration: none;
+  color: var(--swatch-tooltip-text, #ffffff) !important;
+  text-shadow: none;
+}
+
+#shopify-section-{{ section.id }} .swatch-input__label[data-tooltip]::before {
+  content: '';
+  bottom: calc(100% + 2px);
+  width: 9px;
+  height: 9px;
+  background: var(--swatch-tooltip-bg, #4b5563);
+  clip-path: polygon(50% 100%, 0 0, 100% 0);
+}
+
+#shopify-section-{{ section.id }} .swatch-input__label[data-tooltip]:hover::after,
+#shopify-section-{{ section.id }} .swatch-input__label[data-tooltip]:hover::before,
+#shopify-section-{{ section.id }} .swatch-input__label[data-tooltip]:focus-visible::after,
+#shopify-section-{{ section.id }} .swatch-input__label[data-tooltip]:focus-visible::before {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
+
+/* ========================================
+   ENHANCED PRODUCT MEDIA GALLERY STYLES
+   ======================================== */
+
+/* Main Gallery Improvements */
+.pdp-media__track {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.pdp-media__item {
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+}
+
+/* Navigation Buttons Enhancement */
+.pdp-media__nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding: 0 1rem;
+}
+
+.pdp-media__nav .slider-button {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #e6ebf2;
+  box-shadow: 0 4px 12px rgba(13, 107, 166, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  color: #0a4f8a;
+}
+
+.pdp-media__nav .slider-button:hover {
+  background: #0d6ba6;
+  border-color: #0d6ba6;
+  color: #ffffff;
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(13, 107, 166, 0.2);
+}
+
+.pdp-media__nav .slider-button:active {
+  transform: scale(0.95);
+}
+
+.pdp-media__nav .slider-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.pdp-media__nav .slider-button svg {
+  width: 20px;
+  height: 20px;
+}
+
+.pdp-media__nav .slider-counter {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0a4f8a;
+  min-width: 50px;
+  text-align: center;
+}
+
+/* Thumbnail Enhancements */
+.thumbnail-slider {
+  margin-top: 1.5rem;
+  position: relative;
+}
+
+.thumbnail-list {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.thumbnail-list__item {
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.thumbnail-list__item button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.thumbnail-list__item button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 3px solid transparent;
+  border-radius: 10px;
+  transition: border-color 0.25s ease;
+  pointer-events: none;
+}
+
+.thumbnail-list__item button:hover::after {
+  border-color: rgba(13, 107, 166, 0.3);
+}
+
+.thumbnail-list__item button[aria-current="true"]::after {
+  border-color: #0d6ba6;
+}
+
+.thumbnail-list__item button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.thumbnail-slider .slider-button {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #e6ebf2;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #0a4f8a;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+}
+
+.thumbnail-slider .slider-button--prev {
+  left: -12px;
+}
+
+.thumbnail-slider .slider-button--next {
+  right: -12px;
+}
+
+.thumbnail-slider .slider-button:hover {
+  background: #0d6ba6;
+  border-color: #0d6ba6;
+  color: #ffffff;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.thumbnail-slider .slider-button svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Media Overlay (for lightbox trigger) */
+.caco-media-pill {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(13, 107, 166, 0.95);
+  color: #ffffff;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+  backdrop-filter: blur(8px);
+}
+
+.caco-media-overlay:hover .caco-media-pill,
+.caco-media-overlay:focus .caco-media-pill {
+  opacity: 1;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 749px) {
+  .pdp-media__nav {
+    margin-top: 1rem;
+    gap: 0.75rem;
+  }
+  
+  .pdp-media__nav .slider-button {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .thumbnail-slider {
+    margin-top: 1rem;
+  }
+  
+  .caco-media-gallery .thumbnail-list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.5rem !important;
+    padding: 0.75rem 0 0 !important;
+    margin: 0.75rem 0 0 !important;
+  }
+  
+  .thumbnail-slider .slider-button {
+    display: none !important;
+  }
+}
+
+@media screen and (min-width: 750px) and (max-width: 989px) {
+  .caco-media-gallery .thumbnail-list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.625rem !important;
+  }
+  
+  .thumbnail-slider .slider-button {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .thumbnail-slider .slider-button--prev {
+    left: -10px;
+  }
+  
+  .thumbnail-slider .slider-button--next {
+    right: -10px;
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .caco-media-gallery .thumbnail-list {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.875rem !important;
+  }
+  
+  .pdp-media__nav {
+    margin-top: 2rem;
+  }
+  
+  .thumbnail-slider {
+    margin-top: 2rem;
+  }
+}
+
+/* Accessibility Improvements */
+.slider-button:focus-visible {
+  outline: 3px solid #0d6ba6;
+  outline-offset: 3px;
+}
+
+.thumbnail button:focus-visible {
+  outline: 3px solid #0d6ba6;
+  outline-offset: 2px;
+}
+
+/* Loading States */
+.caco-square-box img[loading="lazy"] {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s ease-in-out infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .pdp-media__nav .slider-button,
+  .thumbnail-slider .slider-button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  
+  .thumbnail-list__item button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+/* High DPI Displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .caco-square-box {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .pdp-media__track,
+  .thumbnail-list {
+    scroll-behavior: auto;
+  }
+  
+  .slider-button,
+  .thumbnail-list__item button,
+  .caco-media-pill {
+    transition: none;
+  }
+  
+  @keyframes loading {
+    0%, 100% {
+      background-position: 0 0;
+    }
+  }
+}
+
+
+/* ========================================
+   ADVANCED FEATURES
+   ======================================== */
+
+/* Progress Indicators (Dots) */
+.pdp-media__progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 1rem;
+  padding: 0 1rem;
+}
+
+.pdp-media__progress-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #d0d7e2;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  border: none;
+  padding: 0;
+}
+
+.pdp-media__progress-dot:hover {
+  background: #0d6ba6;
+  transform: scale(1.25);
+}
+
+.pdp-media__progress-dot.is-active {
+  background: #0d6ba6;
+  width: 24px;
+  border-radius: 4px;
+}
+
+/* Smooth Slide Transitions */
+.pdp-media__track {
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pdp-media__item {
+  opacity: 0.6;
+  transform: scale(0.95);
+  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pdp-media__item.is-active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Video Support Enhancements */
+.caco-square-box video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.product__media-item--video .caco-media-pill {
+  background: rgba(250, 101, 12, 0.95);
+}
+
+.product__media-item--video::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 64px;
+  height: 64px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.product__media-item--video::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-40%, -50%);
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 12px 0 12px 20px;
+  border-color: transparent transparent transparent #0d6ba6;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.product__media-item--video:hover::before,
+.product__media-item--video:hover::after {
+  opacity: 1;
+}
+
+/* Image Preloading Indicator */
+.pdp-media__item[data-preloaded="true"] {
+  animation: fadeInPreload 0.3s ease;
+}
+
+@keyframes fadeInPreload {
+  from {
+    opacity: 0.4;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Swipe Gesture Indicator (Mobile) */
+@media screen and (max-width: 749px) {
+  .pdp-media-slider::after {
+    content: 'Swipe to browse';
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(10, 79, 138, 0.9);
+    color: #ffffff;
+    padding: 6px 14px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 600;
+    opacity: 0;
+    animation: swipeHint 3s ease 1s;
+    pointer-events: none;
+    z-index: 3;
+  }
+  
+  @keyframes swipeHint {
+    0%, 100% {
+      opacity: 0;
+    }
+    10%, 90% {
+      opacity: 1;
+    }
+  }
+  
+  .pdp-media__progress {
+    margin-top: 0.75rem;
+  }
+  
+  .pdp-media__progress-dot {
+    width: 6px;
+    height: 6px;
+  }
+  
+  .pdp-media__progress-dot.is-active {
+    width: 18px;
+  }
+}
+
+/* Tablet Optimizations */
+@media screen and (min-width: 750px) and (max-width: 989px) {
+  .pdp-media__progress {
+    margin-top: 1.25rem;
+  }
+}
+
+/* Desktop Enhancements */
+@media screen and (min-width: 990px) {
+  .pdp-media__progress {
+    margin-top: 1.5rem;
+  }
+  
+  .pdp-media__item {
+    opacity: 0.85;
+  }
+}
+
+/* Accessibility for Progress Dots */
+.pdp-media__progress-dot:focus-visible {
+  outline: 2px solid #0d6ba6;
+  outline-offset: 4px;
+  transform: scale(1.5);
+}
+
+/* Loading State for Videos */
+.product__media-item--video.is-loading::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(240, 240, 240, 0.8) 25%, rgba(224, 224, 224, 0.8) 50%, rgba(240, 240, 240, 0.8) 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s ease-in-out infinite;
+  z-index: 1;
+}
+
