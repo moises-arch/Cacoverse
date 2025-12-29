@@ -458,8 +458,8 @@ button[name="add"]:hover,
         const maxScroll = sliderList.scrollWidth - sliderList.clientWidth;
         const atStart = sliderList.scrollLeft <= 1;
         const atEnd = sliderList.scrollLeft >= maxScroll - 1;
-        sliderPrev?.toggleAttribute('hidden', atStart);
-        sliderNext?.toggleAttribute('hidden', atEnd);
+        if (sliderPrev) sliderPrev.disabled = atStart;
+        if (sliderNext) sliderNext.disabled = atEnd;
       };
 
       const handleScroll = () => {

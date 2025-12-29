@@ -3078,7 +3078,7 @@ label.quantity__label.form__label {
   }
 
   .pdp-media .caco-square-box {
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 1 / 1;
     background: #f5f7fb;
   }
 
@@ -3091,6 +3091,23 @@ label.quantity__label.form__label {
     height: 100%;
   }
 
+  .pdp-media .caco-media-overlay {
+    position: absolute;
+    inset: 0;
+    border: none;
+    background: transparent;
+  }
+
+  .pdp-media .caco-media-pill {
+    position: absolute;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
   .pdp-media__nav {
     display: flex;
     gap: 1rem;
@@ -3100,12 +3117,21 @@ label.quantity__label.form__label {
   }
 
   .pdp-media__nav .slider-button {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
     width: 3.6rem;
     height: 3.6rem;
     border-radius: 999px;
     background: #ffffff;
     box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
     border: 1px solid rgba(13, 107, 166, 0.12);
+    opacity: 1;
+  }
+
+  .pdp-media__nav .slider-button[disabled] {
+    opacity: 0.45;
+    cursor: not-allowed;
   }
 
   .pdp-media__nav .slider-counter {
