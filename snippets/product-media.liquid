@@ -17,6 +17,8 @@
 {%- if media.media_type == 'image' -%}
   <img
     class="global-media-settings global-media-settings--no-shadow{% if variant_image %} product__media-item--variant{% endif %}"
+    data-lightbox-source="true"
+    data-full="{{ media | img_url: 'master' }}"
     srcset="
       {%- if media.preview_image.width >= 550 -%}{{ media.preview_image | image_url: width: 550 }} 550w,{%- endif -%}
       {%- if media.preview_image.width >= 1100 -%}{{ media.preview_image | image_url: width: 1100 }} 1100w,{%- endif -%}
@@ -73,6 +75,8 @@
       width="576"
       height="{{ 576 | divided_by: media.preview_image.aspect_ratio }}"
       alt="{{ media.preview_image.alt | escape }}"
+      data-full="{{ media | img_url: 'master' }}"
+      data-lightbox-source="true"
     >
   </button>
   <template>
