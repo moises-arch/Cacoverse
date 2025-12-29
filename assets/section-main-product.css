@@ -3039,10 +3039,13 @@ label.quantity__label.form__label {
   }
 
   .pdp-media .product__media-list {
+    display: flex !important;
+    flex-wrap: nowrap !important;
     padding: 0 !important;
     margin: 0 !important;
     width: 100%;
     height: var(--pdp-media-size);
+    background: transparent !important;
   }
 
   .pdp-media .pdp-media__track {
@@ -3069,6 +3072,7 @@ label.quantity__label.form__label {
     justify-content: center;
     min-height: 100%;
     height: var(--pdp-media-size);
+    background: transparent;
   }
 
   .pdp-media .pdp-media__item:hover {
@@ -3078,7 +3082,7 @@ label.quantity__label.form__label {
 
   .pdp-media .caco-square-box {
     aspect-ratio: 1 / 1;
-    background: #f5f7fb;
+    background: transparent;
     display: flex;
     align-items: center;
     justify-content: center;
