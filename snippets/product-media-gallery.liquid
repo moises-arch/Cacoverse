@@ -49,21 +49,22 @@
 <media-gallery
   id="MediaGallery-{{ section.id }}"
   role="region"
-  class="{% if section.settings.enable_sticky_info %}product__column-sticky {% endif %}caco-media-gallery"
+  class="{% if section.settings.enable_sticky_info %}product__column-sticky {% endif %}caco-media-gallery pdp-media"
   aria-label="{{ 'products.product.media.gallery_viewer' | t }}"
   data-desktop-layout="{{ section.settings.gallery_layout }}"
 >
   <div id="GalleryStatus-{{ section.id }}" class="visually-hidden" role="status"></div>
-  <slider-component id="GalleryViewer-{{ section.id }}" class="slider-mobile-gutter">
+<slider-component id="GalleryViewer-{{ section.id }}" class="slider-mobile-gutter">
     <a class="skip-to-content-link button visually-hidden quick-add-hidden" href="#ProductInfo-{{ section.id }}">
       {{ 'accessibility.skip_to_product_info' | t }}
     </a>
 
-    <ul
-      id="Slider-Gallery-{{ section.id }}"
-      class="product__media-list contains-media grid grid--peek list-unstyled slider slider--mobile"
-      role="list"
-    >
+    <div class="pdp-media__viewport">
+      <ul
+        id="Slider-Gallery-{{ section.id }}"
+        class="product__media-list contains-media grid grid--peek list-unstyled slider slider--mobile slider--tablet-up pdp-media-slider pdp-media__track"
+        role="list"
+      >
 
 {%- assign widths_list = "320,480,640,800,960,1200,1500,1800,2048,2560,3000,3840" | split: "," -%}
 {%- capture sizes_main -%}
@@ -115,24 +116,14 @@
 
   <li
     id="Slide-{{ section.id }}-{{ fm.id }}"
-    class="product__media-item grid__item slider__slide is-active{% if single_media_visible %} product__media-item--single{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+    class="product__media-item pdp-media__item grid__item slider__slide is-active{% if single_media_visible %} product__media-item--single{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
     data-media-id="{{ section.id }}-{{ fm.id }}"
     selected-color="{{ fm_color }}"
     selected-color-list="{{ fm_color_list }}"
     selected-key="{{ fm_key }}"
   >
     <div class="caco-square-box">
-      <img
-        class="product__media-img caco-zoomable"
-        src="{{ fm | image_url: width: 3000 }}"
-        srcset="{{ srcset_featured | strip }}"
-        sizes="{{ sizes_main | strip }}"
-        alt="{{ fm.alt | escape }}"
-        loading="eager"
-        fetchpriority="high"
-        decoding="async"
-        data-full="{{ fm | img_url: 'master' }}"
-      >
+      {% render 'product-media', media: fm, loop: section.settings.enable_video_looping, variant_image: variant_images contains fm.src %}
       <button
         type="button"
         class="caco-media-overlay"
@@ -188,24 +179,14 @@
 
   <li
     id="Slide-{{ section.id }}-{{ media.id }}"
-    class="product__media-item grid__item slider__slide{% if single_media_visible %} product__media-item--single{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+    class="product__media-item pdp-media__item grid__item slider__slide{% if single_media_visible %} product__media-item--single{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
     data-media-id="{{ section.id }}-{{ media.id }}"
     selected-color="{{ m_color }}"
     selected-color-list="{{ m_color_list }}"
     selected-key="{{ m_key }}"
   >
     <div class="caco-square-box">
-      <img
-        class="product__media-img caco-zoomable"
-        src="{{ media | image_url: width: 3000 }}"
-        srcset="{{ srcset_attr | strip }}"
-        sizes="{{ sizes_main | strip }}"
-        alt="{{ media.alt | escape }}"
-        loading="{% if first_rendered %}lazy{% else %}eager{% endif %}"
-        fetchpriority="{% if first_rendered %}auto{% else %}high{% endif %}"
-        decoding="async"
-        data-full="{{ media | img_url: 'master' }}"
-      >
+      {% render 'product-media', media: media, loop: section.settings.enable_video_looping, variant_image: variant_images contains media.src %}
       <button
         type="button"
         class="caco-media-overlay"
@@ -221,21 +202,22 @@
   {%- assign slide_index = slide_index | plus: 1 -%}
 {%- endfor -%}
 
-    </ul>
+      </ul>
 
-    <div class="slider-buttons caco-media-nav quick-add-hidden{% if hide_mobile_slider %} small-hide{% endif %}">
-      <button type="button" class="slider-button slider-button--prev" name="previous" aria-label="{{ 'general.slider.previous_slide' | t }}">
-        <span class="svg-wrapper">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
-      </button>
-      <div class="slider-counter caption">
-        <span class="slider-counter--current">1</span>
-        <span aria-hidden="true"> / </span>
-        <span class="visually-hidden">{{ 'general.slider.of' | t }}</span>
-        <span class="slider-counter--total">{{ media_count }}</span>
+      <div class="slider-buttons caco-media-nav pdp-media__nav quick-add-hidden{% if hide_mobile_slider %} small-hide{% endif %}">
+        <button type="button" class="slider-button slider-button--prev" name="previous" aria-label="{{ 'general.slider.previous_slide' | t }}">
+          <span class="svg-wrapper">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
+        </button>
+        <div class="slider-counter caption">
+          <span class="slider-counter--current">1</span>
+          <span aria-hidden="true"> / </span>
+          <span class="visually-hidden">{{ 'general.slider.of' | t }}</span>
+          <span class="slider-counter--total">{{ media_count }}</span>
+        </div>
+        <button type="button" class="slider-button slider-button--next" name="next" aria-label="{{ 'general.slider.next_slide' | t }}">
+          <span class="svg-wrapper">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
+        </button>
       </div>
-      <button type="button" class="slider-button slider-button--next" name="next" aria-label="{{ 'general.slider.next_slide' | t }}">
-        <span class="svg-wrapper">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
-      </button>
     </div>
   </slider-component>
 
@@ -472,239 +454,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<style>
-@media (min-width: 990px){
-  /* El slide activo debe ser relative y cortar la lente */
-  .product__media-item{ position:relative; overflow:hidden; }
-
-  /* Lente circular con el zoom dentro de la misma imagen */
-.caco-zoom-lens{
-  --lens-size: 250px; /* tamaño base más grande */
-  position:absolute; display:none; pointer-events:none;
-  z-index:60;
-  width:var(--lens-size); height:var(--lens-size);
-  border-radius: 12px; /* ahora sí es una lupa circular */
-  border:1px solid rgba(176, 176, 176, 0.28);
-  background: rgba(255, 255, 255, 0.96) no-repeat center / cover;
-  box-shadow:0 18px 32px rgba(0,0,0,.26), inset 0 0 0 1px rgba(255,255,255,.18);
-  transition:opacity .08s ease, box-shadow 180ms ease;
-}
-
-
-  /* Asegura que el overlay de Dawn no tape la lente */
-  .product__media-toggle::after{ z-index:40; pointer-events:none; }
-}
-@media (max-width: 989px){
-  .caco-zoom-lens{ display:none !important; }
-}
-</style>
-
-<script>
-(() => {
-  const sec = "{{ section.id }}";
-  const galleryList = document.getElementById("Slider-Gallery-"+sec);
-  const galleryRoot = document.getElementById("MediaGallery-"+sec) || galleryList;
-  if(!galleryList) return;
-
-  const $ = (s,root=document)=>root.querySelector(s);
-  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-  const mq = matchMedia('(min-width: 990px)');
-  const allowZoom = () => mq.matches;
-  const activeItem = ()=>$('.product__media-item.is-active', galleryList);
-  const activeImg  = ()=>$('.product__media-item.is-active .product__media-img', galleryList);
-
-  let S = {
-    img:null,item:null,lens:null,
-    fullW:0, fullH:0, ratioX:1, ratioY:1,
-    lensW:0, lensH:0,
-    ready:false, ticking:false
-  };
-
-  async function primeImage(img, fullUrl){
-    // Espera a que la imagen full esté decodificada antes de calcular
-    const pre = new Image();
-    pre.src = fullUrl;
-    try{ await (pre.decode ? pre.decode() : new Promise(r => pre.complete ? r() : pre.onload = r)); }
-    catch(_e){ /* fallback igual */ }
-    return pre;
-  }
-
-
-
-
-function computeLens(pre){
-  const img = S.img; if(!img) return;
-  const r = img.getBoundingClientRect();
-
-  S.fullW = pre.naturalWidth || pre.width || r.width;
-  S.fullH = pre.naturalHeight|| pre.height|| r.height;
-
-  S.ratioX = (S.fullW / r.width)  || 1;
-  S.ratioY = (S.fullH / r.height) || 1;
-
-  // Lente más grande y responsiva
-  const baseSize = Math.min(r.width, r.height) * 0.5; // 50% del lado menor
-  const size = clamp(baseSize, 160, 260);             // límites para desktop
-  S.lensW = size;
-  S.lensH = size;
-
-  S.lens.style.width  = S.lensW+'px';
-  S.lens.style.height = S.lensH+'px';
-  S.lens.style.setProperty('--lens-size', size+'px');
-
-  const fullUrl = img.getAttribute('data-full') || img.currentSrc || img.src;
-  S.lens.style.backgroundImage = `url("${fullUrl}")`;
-
-  // Aumenta el factor de zoom (1.4x sobre la resolución real)
-  const zoomFactor = 1.0;
-  S.lens.style.backgroundSize  = `${S.fullW * zoomFactor}px ${S.fullH * zoomFactor}px`;
-
-  S.ready = true;
-}
-
-
-  async function bindToActive(force=false){
-    if(!allowZoom()) return false;
-
-    const item = activeItem(), img = activeImg();
-    if(!item || !img) return false;
-
-    // Crear/mover lente al item activo
-    if(!S.lens){
-      S.lens = document.createElement('div');
-      S.lens.className = 'caco-zoom-lens';
-    }
-    if(S.lens.parentNode !== item) item.appendChild(S.lens);
-
-    const changed = (S.img !== img) || force;
-    S.img = img; S.item = item;
-
-    if(changed){
-      S.ready = false;
-      const full = img.getAttribute('data-full') || img.currentSrc || img.src;
-      const pre  = await primeImage(img, full);
-      computeLens(pre);
-      // Primer paint del lente (por si alguien inspecciona)
-      S.lens.style.display = 'block';
-      S.lens.style.display = 'none';
-    }
-    return true;
-  }
-
-  const within=(el,x,y)=>{ const r=el.getBoundingClientRect(); return x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom; };
-  const show = ()=>{ if(S.lens) S.lens.style.display='block'; };
-  const hide = ()=>{ if(S.lens) S.lens.style.display='none'; };
-
-  function rafMove(e){
-    if(S.ticking) return;
-    S.ticking = true;
-    requestAnimationFrame(() => {
-      S.ticking = false;
-      move(e);
-    });
-  }
-
-  function move(e){
-    // Bind perezoso en el primer movimiento (si algo no estaba listo)
-    if(!allowZoom()) { hide(); return; }
-    if(!S.img || !S.ready){ bindToActive(true).then(()=>{ if(!S.ready) return; position(e); }); return; }
-    position(e);
-  }
-
-function position(e){
-  if (!S.img) return;
-  if (!allowZoom()) { hide(); return; }
-
-  // Punto real del cursor / touch
-  const cx = e.touches ? e.touches[0].clientX : e.clientX;
-  const cy = e.touches ? e.touches[0].clientY : e.clientY;
-
-  if (!within(S.img, cx, cy)) { hide(); return; }
-
-  const r = S.img.getBoundingClientRect();
-  const x = cx - r.left;  // posición dentro de la imagen
-  const y = cy - r.top;
-
-  // La LUPA no se sale visualmente del contenedor
-  const left = clamp(x - S.lensW / 2, 0, r.width  - S.lensW);
-  const top  = clamp(y - S.lensH / 2, 0, r.height - S.lensH);
-
-  S.lens.style.left = left + 'px';
-  S.lens.style.top  = top  + 'px';
-
-  // Punto de zoom en la imagen grande
-  let fullX = x * S.ratioX;
-  let fullY = y * S.ratioY;
-
-  // 🔑 Clamp para que la imagen SIEMPRE llene la lupa
-  const minX = S.lensW / 2;
-  const maxX = S.fullW - S.lensW / 2;
-  const minY = S.lensH / 2;
-  const maxY = S.fullH - S.lensH / 2;
-
-  fullX = clamp(fullX, minX, maxX);
-  fullY = clamp(fullY, minY, maxY);
-
-  const bgX = -(fullX - S.lensW / 2);
-  const bgY = -(fullY - S.lensH / 2);
-
-  S.lens.style.backgroundPosition = `${bgX}px ${bgY}px`;
-
-  show();
-}
-
-
-
-  // ===== Robustness hooks =====
-  const mo = new MutationObserver(() => { S.img=null; S.ready=false; hide(); bindToActive(true); });
-  mo.observe(galleryList, {subtree:true, attributes:true, attributeFilter:['class']});
-
-  document.addEventListener('variant:change', () => { S.img=null; S.ready=false; hide(); bindToActive(true); });
-  galleryRoot && galleryRoot.addEventListener('change', () => { S.img=null; S.ready=false; hide(); bindToActive(true); });
-  document.addEventListener('shopify:section:load', () => { S.img=null; S.ready=false; hide(); bindToActive(true); });
-
-  const thumbList = document.getElementById('Slider-Thumbnails-'+sec);
-  if (thumbList) {
-    thumbList.addEventListener('pointerenter', hide, {capture:true});
-    thumbList.addEventListener('pointermove', hide, {capture:true});
-    thumbList.addEventListener('pointerleave', hide, {capture:true});
-  }
-
-  // Pointer/touch (solo en el viewer principal, no thumbnails)
-  galleryList.addEventListener('pointerenter', e => {
-    if(!allowZoom()) return;
-    bindToActive(true).then(() => rafMove(e));
-  }, true);
-  galleryList.addEventListener('pointermove',  e => { if(allowZoom()) rafMove(e); else hide(); }, {passive:true, capture:true});
-  galleryList.addEventListener('pointerleave', () => { hide(); }, true);
-  galleryList.addEventListener('touchstart',  e => { if(allowZoom()) bindToActive(true); else hide(); }, {passive:true, capture:true});
-  galleryList.addEventListener('touchmove',   e => { if(allowZoom()) rafMove(e); else hide(); }, {passive:true, capture:true});
-  galleryList.addEventListener('touchend',    hide, true);
-
-  window.addEventListener('resize', ()=>{ S.img=null; S.ready=false; hide(); }, {passive:true});
-
-  // Primer bind
-  bindToActive(true);
-})();
-</script>
 
 
 
