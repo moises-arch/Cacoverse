@@ -54,16 +54,17 @@
   data-desktop-layout="{{ section.settings.gallery_layout }}"
 >
   <div id="GalleryStatus-{{ section.id }}" class="visually-hidden" role="status"></div>
-  <slider-component id="GalleryViewer-{{ section.id }}" class="slider-mobile-gutter">
+<slider-component id="GalleryViewer-{{ section.id }}" class="slider-mobile-gutter">
     <a class="skip-to-content-link button visually-hidden quick-add-hidden" href="#ProductInfo-{{ section.id }}">
       {{ 'accessibility.skip_to_product_info' | t }}
     </a>
 
-    <ul
-      id="Slider-Gallery-{{ section.id }}"
-      class="product__media-list contains-media grid grid--peek list-unstyled slider slider--mobile slider--tablet-up pdp-media-slider pdp-media__track"
-      role="list"
-    >
+    <div class="pdp-media__viewport">
+      <ul
+        id="Slider-Gallery-{{ section.id }}"
+        class="product__media-list contains-media grid grid--peek list-unstyled slider slider--mobile slider--tablet-up pdp-media-slider pdp-media__track"
+        role="list"
+      >
 
 {%- assign widths_list = "320,480,640,800,960,1200,1500,1800,2048,2560,3000,3840" | split: "," -%}
 {%- capture sizes_main -%}
@@ -201,21 +202,22 @@
   {%- assign slide_index = slide_index | plus: 1 -%}
 {%- endfor -%}
 
-    </ul>
+      </ul>
 
-    <div class="slider-buttons caco-media-nav pdp-media__nav quick-add-hidden{% if hide_mobile_slider %} small-hide{% endif %}">
-      <button type="button" class="slider-button slider-button--prev" name="previous" aria-label="{{ 'general.slider.previous_slide' | t }}">
-        <span class="svg-wrapper">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
-      </button>
-      <div class="slider-counter caption">
-        <span class="slider-counter--current">1</span>
-        <span aria-hidden="true"> / </span>
-        <span class="visually-hidden">{{ 'general.slider.of' | t }}</span>
-        <span class="slider-counter--total">{{ media_count }}</span>
+      <div class="slider-buttons caco-media-nav pdp-media__nav quick-add-hidden{% if hide_mobile_slider %} small-hide{% endif %}">
+        <button type="button" class="slider-button slider-button--prev" name="previous" aria-label="{{ 'general.slider.previous_slide' | t }}">
+          <span class="svg-wrapper">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
+        </button>
+        <div class="slider-counter caption">
+          <span class="slider-counter--current">1</span>
+          <span aria-hidden="true"> / </span>
+          <span class="visually-hidden">{{ 'general.slider.of' | t }}</span>
+          <span class="slider-counter--total">{{ media_count }}</span>
+        </div>
+        <button type="button" class="slider-button slider-button--next" name="next" aria-label="{{ 'general.slider.next_slide' | t }}">
+          <span class="svg-wrapper">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
+        </button>
       </div>
-      <button type="button" class="slider-button slider-button--next" name="next" aria-label="{{ 'general.slider.next_slide' | t }}">
-        <span class="svg-wrapper">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
-      </button>
     </div>
   </slider-component>
 

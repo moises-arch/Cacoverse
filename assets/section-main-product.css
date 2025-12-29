@@ -3010,6 +3010,13 @@ label.quantity__label.form__label {
     width: 100%;
   }
 
+  .pdp-media__viewport {
+    position: relative;
+    width: 100%;
+    height: var(--pdp-media-size);
+    overflow: hidden;
+  }
+
   .pdp-media-slider .product__media-item {
     flex: 0 0 100% !important;
     width: 100% !important;
