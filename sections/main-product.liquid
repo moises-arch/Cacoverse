@@ -113,9 +113,15 @@ button[name="add"]:hover,
       <figcaption class="apple-lightbox__caption">
         <div class="apple-lightbox__caption-text"></div>
         <div class="apple-lightbox__controls" aria-label="Zoom controls">
-          <button type="button" class="apple-lightbox__zoom-btn" data-zoom-out aria-label="Zoom out">−</button>
-          <button type="button" class="apple-lightbox__zoom-btn" data-zoom-in aria-label="Zoom in">+</button>
-          <button type="button" class="apple-lightbox__zoom-btn apple-lightbox__zoom-reset" data-zoom-reset hidden aria-label="Reset zoom">Reset</button>
+          <button type="button" class="apple-lightbox__zoom-btn" data-zoom-out aria-label="Zoom out">
+            <span class="svg-wrapper">{{ 'icon-minus.svg' | inline_asset_content }}</span>
+          </button>
+          <button type="button" class="apple-lightbox__zoom-btn" data-zoom-in aria-label="Zoom in">
+            <span class="svg-wrapper">{{ 'icon-plus.svg' | inline_asset_content }}</span>
+          </button>
+          <button type="button" class="apple-lightbox__zoom-btn apple-lightbox__zoom-reset" data-zoom-reset hidden aria-label="Reset zoom">
+            <span class="svg-wrapper">{{ 'icon-refresh.svg' | inline_asset_content | default: 'Reset' }}</span>
+          </button>
         </div>
         <div class="apple-lightbox__progress" aria-hidden="true">
           <span class="apple-lightbox__progress-bar"></span>
@@ -560,7 +566,6 @@ button[name="add"]:hover,
       removeLegacyMagnifiers();
 
       const handleWheel = (event) => {
-        if (zoom <= 1) return;
         event.preventDefault();
         const delta = event.deltaY > 0 ? -0.2 : 0.2;
         setZoom(zoom + delta, event.clientX, event.clientY);

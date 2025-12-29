@@ -2854,8 +2854,8 @@ label.quantity__label.form__label {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  padding: 0 0 0.25rem 0;
+  gap: 0.6rem;
+  padding: 0 0 0.15rem 0;
   color: rgba(255, 255, 255, 0.9);
   letter-spacing: 0.01em;
   font-weight: 600;
@@ -3025,6 +3025,7 @@ label.quantity__label.form__label {
   /* Encapsulated PDP media block */
   .pdp-media {
     --pdp-media-gap: 1.2rem;
+    --pdp-media-size: min(1200px, 90vw);
     position: relative;
     width: 100%;
   }
@@ -3058,6 +3059,7 @@ label.quantity__label.form__label {
     align-items: center;
     justify-content: center;
     min-height: 100%;
+    height: var(--pdp-media-size);
   }
 
   .pdp-media .pdp-media__item:hover {
@@ -3072,10 +3074,10 @@ label.quantity__label.form__label {
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    width: 100%;
-    max-width: 1200px;
+    width: var(--pdp-media-size);
+    height: var(--pdp-media-size);
+    max-width: 100%;
     margin: 0 auto;
-    height: auto;
   }
 
   .pdp-media .product__media-item img,
