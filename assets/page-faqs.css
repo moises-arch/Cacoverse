@@ -225,10 +225,10 @@
   font-size: calc(var(--icon-size) * 0.45);
   line-height: 1;
 }
-.faq-question__icon svg{
-  fill: #2563eb;
-  stroke: #2563eb;
+.faq-question__icon{
+  color: #2563eb; /* your new icon color */
 }
+
 
 
 
