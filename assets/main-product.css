@@ -150,9 +150,7 @@
     padding: 0;
   }
 
-.product-features li:last-child {
-    padding-bottom: 0;
-}
+
 
 .spec-item{
     background: #EBF0F5;
