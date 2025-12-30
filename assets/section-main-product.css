@@ -294,10 +294,6 @@ product-info {
 
 /* Product info */
 
-.product__info-container > * + * {
-  margin: 0;
-  letter-spacing: 0rem !important;
-}
 
 
 .product__info-container .product-form,
@@ -382,9 +378,7 @@ a.product__text {
   }
 }
 
-.product__info-container > * + * {
-  margin-top: 0.3rem;
-}
+
 
 .product__text.caption-with-letter-spacing {
   letter-spacing: 0.24em;
