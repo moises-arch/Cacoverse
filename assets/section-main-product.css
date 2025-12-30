@@ -568,7 +568,6 @@ a.product__text {
   padding: 17px 28px !important;
   letter-spacing: 0.01em;
   text-transform: none;
-  box-shadow: 0 8px 18px rgba(13, 107, 166, 0.16) !important;
   position: relative;
   overflow: hidden;
   display: inline-flex;
