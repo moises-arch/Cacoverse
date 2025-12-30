@@ -58,7 +58,8 @@
           {% capture type %}{% cycle 'question', 'answer' %}{% endcapture %}
 
           {% if type == 'question' %}
-           
+            <div class="faq-item" itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
+              <div class="faq-question" itemprop="name">
                 <div>
                   {{ faq }}
                 </div>
