@@ -194,13 +194,12 @@
   display: grid;
   place-items: center;
   transition: all 0.2s ease-in-out;
-  color: #0f172a;
+  color: #a6b1bf;
 }
 
 .product-details-accordion .faq-item.active .faq-question__icon{
   background: #f7fafc;
   border-color: #d7e1ec;
-  color: #cccccc;
 }
 
 .product-details-accordion .faq-answer{
