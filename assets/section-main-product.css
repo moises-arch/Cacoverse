@@ -355,13 +355,12 @@ a.product__text {
 }
 
 .product .price__container {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.7rem;
   display: flex;
   align-items: baseline;
   gap: 0.25rem;
   flex-wrap: wrap;
   justify-content: flex-start;
-  padding-bottom: 0.6rem;
   border-bottom: 1px solid #e7ecf3;
 }
 
@@ -1877,6 +1876,7 @@ a.product__text {
   font-size: 14px;
   line-height: 1.5rempx;
   color: #ABB8C3;
+      margin: -3px 0px 0px 0px;
 }
 .product__sku:before {
     content: 'SKU:';
