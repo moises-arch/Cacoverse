@@ -106,7 +106,7 @@
 }
 
 .product-details-accordion__header{
-  padding: 0 0 10px;
+  padding: 25px 0 10px;
   display: flex;
   flex-direction: column;
   gap: 6px;
