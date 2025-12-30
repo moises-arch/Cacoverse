@@ -156,7 +156,7 @@
   gap: 14px;
   border: none;
   background: transparent;
-  padding: 18px 22px;
+  padding: 10px 15px;
   text-align: left;
 }
 
@@ -189,16 +189,12 @@
 }
 
 .faq-question__icon{
+  /* Hard lock the size so it never deforms */
   width: 46px;
   height: 46px;
-  border-radius: 50%;
-  border: 1px solid #d7e1ec;
-  background: #f7fafc;
-  display: grid;
-  place-items: center;
-  transition: all 0.2s ease-in-out;
-  color: #a6b1bf;
-}
+  flex: 0 0 46px;          /* key: prevents shrinking */
+  aspect-ratio: 1 / 1;     /* extra insurance */
+  box-sizing: border-box;  /* keeps border inside the 46px */
 
 .product-details-accordion .faq-item.active .faq-question__icon{
   background: #f7fafc;
