@@ -156,7 +156,7 @@
   gap: 14px;
   border: none;
   background: transparent;
-  padding: 10px 15px;
+  padding: 18px 22px;
   text-align: left;
 }
 
@@ -188,7 +188,17 @@
   color: #0f172a;
 }
 
-
+.faq-question__icon{
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid #d7e1ec;
+  background: #f7fafc;
+  display: grid;
+  place-items: center;
+  transition: all 0.2s ease-in-out;
+  color: #a6b1bf;
+}
 
 .product-details-accordion .faq-item.active .faq-question__icon{
   background: #f7fafc;
