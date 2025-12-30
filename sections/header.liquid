@@ -3271,6 +3271,30 @@ document.addEventListener('DOMContentLoaded', function() {
     document.body.classList.add('has-caco-sticky');
   }
 
+
+  function safeRecalcHeaderHeight() {
+  // 1) immediate (next frame)
+  requestAnimationFrame(computeHeaderHeight);
+  // 2) after transitions (announcement/nav animates max-height)
+  setTimeout(computeHeaderHeight, 300);
+}
+
+// Keep height synced when the header changes size
+if ('ResizeObserver' in window) {
+  var ro = new ResizeObserver(safeRecalcHeaderHeight);
+  ro.observe(headerWrapper);
+}
+
+// Recalc on the common “weird states”
+window.addEventListener('resize', safeRecalcHeaderHeight);
+window.addEventListener('orientationchange', safeRecalcHeaderHeight);
+window.addEventListener('pageshow', safeRecalcHeaderHeight);
+document.addEventListener('visibilitychange', function () {
+  if (!document.hidden) safeRecalcHeaderHeight();
+});
+
+
+
   window.cacoUpdateHeaderHeight = computeHeaderHeight;
 
   function handleScroll() {
