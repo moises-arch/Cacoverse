@@ -486,7 +486,7 @@ a.product__text {
   box-shadow: none !important;
   border-radius: 999px !important;
   background: #f5f7fa !important;
-  color: #4d5b68 !important;
+  color:rgb(255, 0, 0) !important;
   font-weight: 600;
 }
 
