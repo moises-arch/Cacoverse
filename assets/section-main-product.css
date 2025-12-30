@@ -562,7 +562,7 @@ a.product__text {
 
 .product__info-wrapper .product-form__submit {
   background: #0d6ba6 !important;
-  border: 1px solid #0d6ba6 !important;
+  border: 0px solid #0d6ba6 !important;
   color: #ffffff !important;
   border-radius: 999px !important;
   padding: 17px 28px !important;
