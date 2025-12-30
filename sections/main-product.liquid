@@ -107,21 +107,16 @@ button[name="add"]:hover,
       </button>
       <figure class="apple-lightbox__figure">
         <div class="apple-lightbox__frame">
-        <div class="apple-lightbox__scrim"></div>
-        <img id="appleLightboxImage" class="apple-lightbox__image" src="" alt="{{ product.title | escape }}">
-      </div>
-      <figcaption class="apple-lightbox__caption">
-        <div class="apple-lightbox__caption-text"></div>
-        <div class="apple-lightbox__controls" aria-label="Zoom controls">
-          <button type="button" class="apple-lightbox__zoom-btn" data-zoom-out aria-label="Zoom out">−</button>
-          <button type="button" class="apple-lightbox__zoom-btn" data-zoom-in aria-label="Zoom in">+</button>
-          <button type="button" class="apple-lightbox__zoom-btn apple-lightbox__zoom-reset" data-zoom-reset hidden aria-label="Reset zoom">Reset</button>
+          <div class="apple-lightbox__scrim"></div>
+          <img id="appleLightboxImage" class="apple-lightbox__image" src="" alt="{{ product.title | escape }}">
         </div>
-        <div class="apple-lightbox__progress" aria-hidden="true">
-          <span class="apple-lightbox__progress-bar"></span>
-        </div>
-      </figcaption>
-    </figure>
+        <figcaption class="apple-lightbox__caption">
+          <div class="apple-lightbox__caption-text"></div>
+          <div class="apple-lightbox__progress" aria-hidden="true">
+            <span class="apple-lightbox__progress-bar"></span>
+          </div>
+        </figcaption>
+      </figure>
       <button type="button" class="apple-lightbox__nav apple-lightbox__nav--next" aria-label="{{ 'general.slider.next_slide' | t }}">
         ›
       </button>
@@ -187,395 +182,261 @@ button[name="add"]:hover,
 <script defer>
   document.addEventListener('DOMContentLoaded', () => {
     const SECTION_ID = '{{ section.id }}';
-    const mql = window.matchMedia('(min-width: 750px)');
-    let teardownDesktop = null;
 
-    const initDesktopTablet = () => {
-      const gallerySelector = '#Slider-Gallery-{{ section.id }} .product__media-item';
-      const sliderList = document.getElementById('Slider-Gallery-{{ section.id }}');
-      const lightbox = document.getElementById('galleryLightbox');
-      const counterCurrent = document.querySelector(
-        '#GalleryViewer-{{ section.id }} .slider-counter--current'
-      );
-      const counterTotal = document.querySelector(
-        '#GalleryViewer-{{ section.id }} .slider-counter--total'
-      );
+    const gallerySelector = '#Slider-Gallery-{{ section.id }} .product__media-item';
+    const sliderList = document.getElementById('Slider-Gallery-{{ section.id }}');
+    const lightbox = document.getElementById('galleryLightbox');
 
-      if (!lightbox || !sliderList) return () => {};
+    if (!lightbox) return;
 
-      const body = document.body;
-      const preview = lightbox.querySelector('#appleLightboxImage');
-      const caption = lightbox.querySelector('.apple-lightbox__caption-text');
-      const progress = lightbox.querySelector('.apple-lightbox__progress-bar');
-      const closeBtn = lightbox.querySelector('.apple-lightbox__close');
-      const nextBtn = lightbox.querySelector('.apple-lightbox__nav--next');
-      const prevBtn = lightbox.querySelector('.apple-lightbox__nav--prev');
-      const backdrop = lightbox.querySelector('.apple-lightbox__backdrop');
-      const countCurrent = lightbox.querySelector('.apple-lightbox__counter-current');
-      const countTotal = lightbox.querySelector('.apple-lightbox__counter-total');
-      const zoomInBtn = lightbox.querySelector('[data-zoom-in]');
-      const zoomOutBtn = lightbox.querySelector('[data-zoom-out]');
-      const zoomResetBtn = lightbox.querySelector('[data-zoom-reset]');
-      const frame = lightbox.querySelector('.apple-lightbox__frame');
+    const body = document.body;
+    const preview = lightbox.querySelector('#appleLightboxImage');
+    const caption = lightbox.querySelector('.apple-lightbox__caption-text');
+    const progress = lightbox.querySelector('.apple-lightbox__progress-bar');
+    const closeBtn = lightbox.querySelector('.apple-lightbox__close');
+    const nextBtn = lightbox.querySelector('.apple-lightbox__nav--next');
+    const prevBtn = lightbox.querySelector('.apple-lightbox__nav--prev');
+    const backdrop = lightbox.querySelector('.apple-lightbox__backdrop');
+    const countCurrent = lightbox.querySelector('.apple-lightbox__counter-current');
+    const countTotal = lightbox.querySelector('.apple-lightbox__counter-total');
 
-      if (!preview) return () => {};
+    const counterCurrent = document.querySelector(
+      '#GalleryViewer-{{ section.id }} .slider-counter--current'
+    );
+    const counterTotal = document.querySelector(
+      '#GalleryViewer-{{ section.id }} .slider-counter--total'
+    );
 
-      let gallerySlides = [];
-      let galleryImages = [];
-      let currentIndex = 0;
-      let lastFocus = null;
-      let zoom = 1;
-      let panX = 0;
-      let panY = 0;
-      let isDragging = false;
-      let dragState = { x: 0, y: 0, panX: 0, panY: 0 };
+    let gallerySlides = [];
+    let galleryImages = [];
+    let currentIndex = 0;
+    let lastFocus = null;
 
-      const cleanups = [];
-      const addListener = (el, evt, fn, opts) => {
-        if (!el) return;
-        el.addEventListener(evt, fn, opts);
-        cleanups.push(() => el.removeEventListener(evt, fn, opts));
-      };
+    // ========= helpers =========
 
-      const isVisible = (el) => {
-        if (!el) return false;
-        const cs = window.getComputedStyle(el);
-        return cs.display !== 'none' && cs.visibility !== 'hidden' && cs.opacity !== '0';
-      };
+    const isVisible = (el) => {
+      if (!el) return false;
+      const cs = window.getComputedStyle(el);
+      return cs.display !== 'none' && cs.visibility !== 'hidden' && cs.opacity !== '0';
+    };
 
-      const clampPan = () => {
-        if (!frame) return;
-        const maxX = Math.max(0, (preview.clientWidth * zoom - frame.clientWidth) / 2);
-        const maxY = Math.max(0, (preview.clientHeight * zoom - frame.clientHeight) / 2);
-        panX = Math.min(maxX, Math.max(-maxX, panX));
-        panY = Math.min(maxY, Math.max(-maxY, panY));
-      };
+    const rebuildGallery = () => {
+      const root = document.getElementById(`shopify-section-${SECTION_ID}`) || document;
+      const allSlides = Array.from(root.querySelectorAll(gallerySelector));
 
-      const applyZoomState = () => {
-        clampPan();
-        preview.style.transform = `translate(${panX}px, ${panY}px) scale(${zoom})`;
-        lightbox.classList.toggle('apple-lightbox--zoomed', zoom > 1.01);
-        if (zoomResetBtn) {
-          zoomResetBtn.toggleAttribute('hidden', zoom <= 1.01);
-        }
-      };
+      // solo las que no has escondido con tus filtros (alt / selected-color / etc.)
+      gallerySlides = allSlides.filter(isVisible);
+      galleryImages = gallerySlides
+        .map((slide) => slide.querySelector('.product__media-img'))
+        .filter(Boolean);
 
-      const setZoom = (nextZoom, originX, originY) => {
-        const clamped = Math.max(1, Math.min(4, nextZoom));
-        if (clamped === zoom) return;
-        if (originX !== undefined && originY !== undefined && frame) {
-          const frameRect = frame.getBoundingClientRect();
-          const offsetX = originX - (frameRect.left + frameRect.width / 2);
-          const offsetY = originY - (frameRect.top + frameRect.height / 2);
-          panX = (panX - offsetX) * (clamped / zoom) + offsetX;
-          panY = (panY - offsetY) * (clamped / zoom) + offsetY;
-        }
-        zoom = clamped;
-        applyZoomState();
-      };
+      // contador del pill 1 / 46 y del slider nativo
+      const total = galleryImages.length;
+      if (countTotal) countTotal.textContent = total;
+      if (counterTotal) counterTotal.textContent = total;
 
-      const resetZoom = () => {
-        zoom = 1;
-        panX = 0;
-        panY = 0;
-        applyZoomState();
-      };
+      if (currentIndex >= total) {
+        currentIndex = total > 0 ? total - 1 : 0;
+      }
+    };
 
-      const rebuildGallery = () => {
-        const root = document.getElementById(`shopify-section-${SECTION_ID}`) || document;
-        const allSlides = Array.from(root.querySelectorAll(gallerySelector));
+    const updatePreview = (index) => {
+      if (!galleryImages.length) return;
+      const target = galleryImages[index];
+      if (!target) return;
 
-        gallerySlides = allSlides.filter(isVisible);
-        galleryImages = gallerySlides
-          .map((slide) => slide.querySelector('[data-lightbox-source], img, video'))
-          .filter(Boolean);
+      preview.src = target.dataset.full || target.currentSrc || target.src;
+      preview.alt = target.alt || '{{ product.title | escape }}';
 
-        gallerySlides.forEach((slide, idx) => {
-          slide.dataset.lightboxIndex = idx;
-          slide
-            .querySelectorAll('[data-lightbox-index]')
-            .forEach((btn) => btn.setAttribute('data-lightbox-index', idx));
-        });
+      if (caption) {
+        caption.textContent = target.alt || '{{ product.title | escape }}';
+      }
 
-        const total = galleryImages.length;
-        if (countTotal) countTotal.textContent = total;
-        if (counterTotal) counterTotal.textContent = total;
+      if (countCurrent) countCurrent.textContent = index + 1;
+      if (counterCurrent) counterCurrent.textContent = index + 1;
 
-        if (currentIndex >= total) {
-          currentIndex = total > 0 ? total - 1 : 0;
-        }
-      };
+      if (progress) {
+        progress.style.width = `${((index + 1) / (galleryImages.length || 1)) * 100}%`;
+      }
+    };
 
-      const syncProgress = (index) => {
-        if (countCurrent) countCurrent.textContent = index + 1;
-        if (counterCurrent) counterCurrent.textContent = index + 1;
-        if (progress) {
-          progress.style.width = `${((index + 1) / (galleryImages.length || 1)) * 100}%`;
-        }
-      };
+    const showLightbox = (index = 0) => {
+      rebuildGallery();
+      if (!galleryImages.length) return;
 
-      const updatePreview = (index) => {
-        if (!galleryImages.length) return;
-        const target = galleryImages[index];
-        if (!target) return;
+      currentIndex = index;
+      lastFocus = document.activeElement;
 
-        const source =
-          target.dataset.full ||
-          target.currentSrc ||
-          target.src ||
-          target.poster ||
-          target.getAttribute('data-src');
+      updatePreview(currentIndex);
+      lightbox.removeAttribute('hidden');
+      lightbox.classList.add('is-visible');
+      body.classList.add('apple-lock-scroll');
 
-        if (source) preview.src = source;
-        preview.alt = target.alt || target.getAttribute('data-alt') || '{{ product.title | escape }}';
+      if (closeBtn) closeBtn.focus({ preventScroll: true });
+    };
 
-        if (caption) {
-          caption.textContent = target.alt || '{{ product.title | escape }}';
-        }
+    const hideLightbox = () => {
+      lightbox.setAttribute('hidden', 'hidden');
+      lightbox.classList.remove('is-visible');
+      body.classList.remove('apple-lock-scroll');
 
-        syncProgress(index);
-      };
+      if (lastFocus && typeof lastFocus.focus === 'function') {
+        lastFocus.focus({ preventScroll: true });
+      }
+    };
 
-      const showLightbox = (index = 0) => {
-        rebuildGallery();
-        if (!galleryImages.length) return;
+    const goNext = () => {
+      if (!galleryImages.length) return;
+      currentIndex = (currentIndex + 1) % galleryImages.length;
+      updatePreview(currentIndex);
+    };
 
-        currentIndex = index;
-        lastFocus = document.activeElement;
-        resetZoom();
+    const goPrev = () => {
+      if (!galleryImages.length) return;
+      currentIndex =
+        (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+      updatePreview(currentIndex);
+    };
 
-        updatePreview(currentIndex);
-        lightbox.removeAttribute('hidden');
-        lightbox.classList.add('is-visible');
-        body.classList.add('apple-lock-scroll');
+    const handleKeydown = (event) => {
+      if (lightbox.hasAttribute('hidden')) return;
 
-        if (closeBtn) closeBtn.focus({ preventScroll: true });
-      };
+      if (event.key === 'Escape') {
+        hideLightbox();
+      } else if (event.key === 'ArrowRight') {
+        goNext();
+      } else if (event.key === 'ArrowLeft') {
+        goPrev();
+      }
+    };
 
-      const hideLightbox = () => {
-        lightbox.setAttribute('hidden', 'hidden');
-        lightbox.classList.remove('is-visible');
-        body.classList.remove('apple-lock-scroll');
-        resetZoom();
+    const allowBackdropClose = () => window.innerWidth >= 750;
 
-        if (lastFocus && typeof lastFocus.focus === 'function') {
-          lastFocus.focus({ preventScroll: true });
-        }
-      };
+    // ========= binding de slides / thumbs SOLO usando las visibles =========
+    const bindSlides = () => {
+      const root = document.getElementById(`shopify-section-${SECTION_ID}`) || document;
+      const allSlides = Array.from(root.querySelectorAll(gallerySelector));
 
-      const goNext = () => {
-        if (!galleryImages.length) return;
-        currentIndex = (currentIndex + 1) % galleryImages.length;
-        updatePreview(currentIndex);
-        const slide = gallerySlides[currentIndex];
-        slide?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-      };
+      allSlides.forEach((slide) => {
+        slide.setAttribute('tabindex', '0');
+        const image = slide.querySelector('.product__media-img');
 
-      const goPrev = () => {
-        if (!galleryImages.length) return;
-        currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
-        updatePreview(currentIndex);
-        const slide = gallerySlides[currentIndex];
-        slide?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-      };
+        const openFromSlide = () => {
+          // recalculamos visible set según tus filtros actuales
+          rebuildGallery();
+          const idx = gallerySlides.indexOf(slide);
+          const safeIndex = idx >= 0 ? idx : 0;
+          showLightbox(safeIndex);
+        };
 
-      const handleKeydown = (event) => {
-        if (lightbox.hasAttribute('hidden')) return;
-        const focusable = Array.from(
-          lightbox.querySelectorAll(
-            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-          )
-        ).filter((el) => !el.hasAttribute('hidden'));
+        if (image) {
+          image.setAttribute('role', 'button');
+          image.setAttribute('tabindex', '0');
 
-        if (event.key === 'Escape') {
-          hideLightbox();
-        } else if (event.key === 'ArrowRight') {
-          goNext();
-        } else if (event.key === 'ArrowLeft') {
-          goPrev();
-        } else if (event.key === 'Tab' && focusable.length) {
-          const first = focusable[0];
-          const last = focusable[focusable.length - 1];
-          if (event.shiftKey && document.activeElement === first) {
-            event.preventDefault();
-            last.focus();
-          } else if (!event.shiftKey && document.activeElement === last) {
-            event.preventDefault();
-            first.focus();
-          }
-        }
-      };
-
-      const allowBackdropClose = () => window.innerWidth >= 750;
-
-      const bindSlides = () => {
-        const root = document.getElementById(`shopify-section-${SECTION_ID}`) || document;
-        const allSlides = Array.from(root.querySelectorAll(gallerySelector));
-
-        allSlides.forEach((slide) => {
-          slide.setAttribute('tabindex', '0');
-          const trigger =
-            slide.querySelector('.caco-media-overlay') ||
-            slide.querySelector('[data-lightbox-index]') ||
-            slide.querySelector('img');
-
-          const openFromSlide = () => {
-            rebuildGallery();
-            const idx = gallerySlides.indexOf(slide);
-            const safeIndex = idx >= 0 ? idx : 0;
-            showLightbox(safeIndex);
-          };
-
-          if (trigger) {
-            trigger.setAttribute('role', 'button');
-            trigger.setAttribute('tabindex', '0');
-            addListener(trigger, 'click', openFromSlide);
-            addListener(trigger, 'keydown', (event) => {
-              if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                openFromSlide();
-              }
-            });
-          }
-
-          addListener(slide, 'keydown', (event) => {
-            if (event.target !== slide) return;
+          image.addEventListener('click', openFromSlide);
+          image.addEventListener('keydown', (event) => {
             if (event.key === 'Enter' || event.key === ' ') {
               event.preventDefault();
               openFromSlide();
             }
           });
-        });
-      };
-
-      const syncCounter = () => {
-        const total = gallerySlides.length;
-        if (counterTotal) counterTotal.textContent = total || 0;
-
-        if (counterCurrent) {
-          const activeIndex = gallerySlides.findIndex((slide) =>
-            slide.classList.contains('is-active') || slide.classList.contains('__mobile-visible')
-          );
-
-          counterCurrent.textContent = activeIndex >= 0 ? activeIndex + 1 : total ? 1 : 0;
         }
-      };
 
-      if (sliderList) {
-        const slideObserver = new MutationObserver(() => {
-          rebuildGallery();
-          syncCounter();
+        slide.addEventListener('keydown', (event) => {
+          if (event.target !== slide) return;
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            openFromSlide();
+          }
         });
+      });
+    };
 
-        slideObserver.observe(sliderList, {
-          attributes: true,
-          attributeFilter: ['class', 'style'],
-          subtree: true,
-          childList: true,
-        });
+    const syncCounter = () => {
+      // usamos solo los slides visibles
+      const total = gallerySlides.length;
+      if (counterTotal) counterTotal.textContent = total || 0;
 
-        cleanups.push(() => slideObserver.disconnect());
+      if (counterCurrent) {
+        const activeIndex = gallerySlides.findIndex((slide) =>
+          slide.classList.contains('is-active') ||
+          slide.classList.contains('__mobile-visible')
+        );
+
+        counterCurrent.textContent =
+          activeIndex >= 0
+            ? activeIndex + 1
+            : total
+              ? 1
+              : 0;
       }
+    };
 
-      const refreshFromVariant = () => {
+    // ========= observers / eventos que disparan el re-filtro =========
+
+    // cambios en la galería (estilos, clases) → re-scan
+    if (sliderList) {
+      const slideObserver = new MutationObserver(() => {
         rebuildGallery();
         syncCounter();
-      };
-
-      addListener(document, 'variant:change', refreshFromVariant);
-      addListener(document, 'variant:changed', refreshFromVariant);
-      addListener(document, 'product:variant-change', refreshFromVariant);
-      addListener(document, 'shopify:section:load', refreshFromVariant);
-
-      addListener(lightbox, 'click', (event) => {
-        if (!allowBackdropClose()) return;
-        if (event.target === lightbox) {
-          hideLightbox();
-        }
       });
 
-      addListener(backdrop, 'click', () => {
-        if (!allowBackdropClose()) return;
-        hideLightbox();
+      slideObserver.observe(sliderList, {
+        attributes: true,
+        attributeFilter: ['class', 'style'],
+        subtree: true,
+        childList: true,
       });
+    }
 
-      addListener(closeBtn, 'click', hideLightbox);
-      addListener(nextBtn, 'click', goNext);
-      addListener(prevBtn, 'click', goPrev);
-      addListener(document, 'keydown', handleKeydown);
-
-      const removeLegacyMagnifiers = () => {
-        document
-          .querySelectorAll('.image-magnify-full-size')
-          .forEach((node) => node.remove());
-      };
-
-      removeLegacyMagnifiers();
-
-      const handleWheel = (event) => {
-        if (zoom <= 1) return;
-        event.preventDefault();
-        const delta = event.deltaY > 0 ? -0.2 : 0.2;
-        setZoom(zoom + delta, event.clientX, event.clientY);
-      };
-
-      const handlePointerDown = (event) => {
-        if (zoom <= 1) return;
-        isDragging = true;
-        dragState = { x: event.clientX, y: event.clientY, panX, panY };
-        preview.setPointerCapture(event.pointerId);
-      };
-
-      const handlePointerMove = (event) => {
-        if (!isDragging) return;
-        panX = dragState.panX + (event.clientX - dragState.x);
-        panY = dragState.panY + (event.clientY - dragState.y);
-        applyZoomState();
-      };
-
-      const handlePointerUp = (event) => {
-        if (!isDragging) return;
-        isDragging = false;
-        preview.releasePointerCapture(event.pointerId);
-      };
-
-      addListener(preview, 'wheel', handleWheel, { passive: false });
-      addListener(preview, 'pointerdown', handlePointerDown);
-      addListener(preview, 'pointermove', handlePointerMove);
-      addListener(preview, 'pointerup', handlePointerUp);
-      addListener(preview, 'pointercancel', handlePointerUp);
-      addListener(preview, 'lostpointercapture', handlePointerUp);
-
-      addListener(zoomInBtn, 'click', () => setZoom(zoom + 0.25));
-      addListener(zoomOutBtn, 'click', () => setZoom(zoom - 0.25));
-      addListener(zoomResetBtn, 'click', resetZoom);
-
+    // eventos de variante del theme (tu script de filtros por alt se ejecuta aquí)
+    const refreshFromVariant = () => {
       rebuildGallery();
-      bindSlides();
       syncCounter();
+    };
 
-      applyZoomState();
+    document.addEventListener('variant:change', refreshFromVariant);
+    document.addEventListener('variant:changed', refreshFromVariant);
+    document.addEventListener('product:variant-change', refreshFromVariant);
+    document.addEventListener('shopify:section:load', refreshFromVariant);
 
-      return () => {
+    // ========= eventos del propio lightbox =========
+
+    lightbox.addEventListener('click', (event) => {
+      if (!allowBackdropClose()) return;
+      if (event.target === lightbox) {
         hideLightbox();
-        cleanups.forEach((fn) => fn());
-      };
-    };
-
-    const handleBreakpoint = (event) => {
-      const matches = event.matches ?? mql.matches;
-      if (matches) {
-        if (!teardownDesktop) {
-          teardownDesktop = initDesktopTablet();
-        }
-      } else if (teardownDesktop) {
-        teardownDesktop();
-        teardownDesktop = null;
       }
+    });
+
+    if (backdrop) {
+      backdrop.addEventListener('click', (event) => {
+        if (!allowBackdropClose()) return;
+        hideLightbox();
+      });
+    }
+
+    if (closeBtn) closeBtn.addEventListener('click', hideLightbox);
+    if (nextBtn) nextBtn.addEventListener('click', goNext);
+    if (prevBtn) prevBtn.addEventListener('click', goPrev);
+    document.addEventListener('keydown', handleKeydown);
+
+    // limpiar “magnifiers” legacy que puedan estorbar
+   
+   
+   
+    const removeLegacyMagnifiers = () => {
+      document
+        .querySelectorAll('.image-magnify-full-size')
+        .forEach((node) => node.remove());
     };
 
-    handleBreakpoint({ matches: mql.matches });
-    mql.addEventListener('change', handleBreakpoint);
+    removeLegacyMagnifiers();
+
+    // primer setup
+    rebuildGallery();
+    bindSlides();
+    syncCounter();
 
     /* Swatch text contrast helper */
     const applySwatchContrast = () => {
