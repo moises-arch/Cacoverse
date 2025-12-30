@@ -141,11 +141,8 @@
 .product-features li{
 
   font-weight: 600;
-  font-size: 24px;
-  line-height: 32px;
   /* identical to box height, or 133% */
   color: var(--font-secondary-color);
-  padding-bottom: 40px;
 }
 
 .product-features .two-column-list {
