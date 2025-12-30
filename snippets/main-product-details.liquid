@@ -96,6 +96,8 @@
       {% endif %}
 
       {% if product.metafields.custom.product_details_specifications_name %}
+        {% assign specification_values = product.metafields.custom.product_details_specification_values.value %}
+        {% assign specification_labels = product.metafields.custom.product_details_specifications_name.value %}
         <div class="faq-item" itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
           <button class="faq-question" type="button" itemprop="name" aria-expanded="false">
             <div class="faq-question__copy">
@@ -134,8 +136,7 @@
               <div class="meta-fields-details">
                 <div class="product-features">
                   <ul class="list-unstyled two-column-list spec-grid">
-                    {% assign specification_values = product.metafields.custom.product_details_specification_values.value %}
-                    {% for specification in product.metafields.custom.product_details_specifications_name.value %}
+                    {% for specification in specification_labels %}
                       <li class="spec-grid__item">
                         <p class="spec-grid__label">{{ specification }}</p>
                         <p class="spec-grid__value">{{ specification_values[forloop.index0] -}}</p>
@@ -151,6 +152,8 @@
 
       <!-- Documentations -->
       {% if product.metafields.custom.product_details_download_title %}
+        {% assign document_links = product.metafields.custom.product_details_download_file_link.value %}
+        {% assign document_titles = product.metafields.custom.product_details_download_title.value %}
         <div class="faq-item" itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
           <button class="faq-question" type="button" itemprop="name" aria-expanded="false">
             <div class="faq-question__copy">
@@ -189,8 +192,7 @@
               <div class="meta-fields-details">
                 <div class="download-resources">
                   <ul class="list-unstyled two-column-list resource-grid">
-                    {% assign document_links = product.metafields.custom.product_details_download_file_link.value %}
-                    {% for document in product.metafields.custom.product_details_download_title.value %}
+                    {% for document in document_titles %}
                       <li class="resource-chip">
                         <div class="resource-chip__body">
                           <span class="resource-chip__title">
@@ -284,7 +286,10 @@
           <button class="faq-question" type="button" itemprop="name" aria-expanded="false">
             <div class="faq-question__copy">
               <span class="faq-question__eyebrow">Additional details</span>
-              <span class="faq-question__title">{{ product.metafields.custom.product_details_sub_title }}</span>
+              <div class="faq-question__title-row">
+                <span class="faq-question__title">{{ product.metafields.custom.product_details_sub_title }}</span>
+                <span class="faq-badge">Deep dive</span>
+              </div>
             </div>
             <span class="faq-question__icon" aria-hidden="true">
               <svg
