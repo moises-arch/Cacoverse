@@ -761,7 +761,7 @@ button::after,
 .swatch,
 .variant-option,
 .color-swatch {
-  border-radius: var(--radius-pill) !important;
+  border-radius: var(--radius-md) !important;
   overflow: hidden !important;
   background-clip: padding-box !important;
 }
