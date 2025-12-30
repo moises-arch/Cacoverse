@@ -1963,8 +1963,8 @@ variant-selects .form__label strong{
 
 .product-form__input--pill.options-color input[type=radio]+label {
   box-sizing: border-box;
-  width: 88px;
-  height: 88px;
+  width: 70px;
+  height: 70px;
   border: 1px solid #EBF0F5 !important;
   background: #fff !important;
   position: relative;
