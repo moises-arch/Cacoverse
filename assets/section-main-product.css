@@ -4302,6 +4302,14 @@ body.template-product .product__media-modal * {
   text-shadow: none;
 }
 
+.swatch-input__label[data-tooltip]::after,
+.swatch-input__label[data-tooltip]::before{
+  content: none !important;
+  display: none !important;
+}
+
+
+
 #shopify-section-{{ section.id }} .swatch-input__label[data-tooltip]::before {
   content: '';
   bottom: calc(100% + 2px);
