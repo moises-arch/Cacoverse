@@ -20,7 +20,7 @@
 
 .price .price-item {
   display: inline-block;
-  margin: 0 1rem 0 0;
+  margin: .3rem .3rem 0rem 0rem;
   letter-spacing: 0;
 }
 
@@ -121,7 +121,7 @@
 .price .badge {
   background-color: #fa521e !important; /* orange background */
   font-weight: 700;
-  padding: 4px 11px !important;
+  padding: 5px 12px!important;
   border-radius: 999px !important;
   letter-spacing: 0.15px;
   text-transform: uppercase;
