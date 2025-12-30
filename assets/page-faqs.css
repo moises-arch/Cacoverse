@@ -200,7 +200,7 @@
 .product-details-accordion .faq-item.active .faq-question__icon{
   background: #f7fafc;
   border-color: #d7e1ec;
-  color: #ffffff;
+  color: #cccccc;
 }
 
 .product-details-accordion .faq-answer{
