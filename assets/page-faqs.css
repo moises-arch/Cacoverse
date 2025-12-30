@@ -268,21 +268,21 @@
   background: #ffffff;
   border: 1px solid #e3eaf5;
   border-radius: 12px;
-  padding: 14px 16px;
+  padding: 5px 16px;
   box-shadow: inset 0 1px 0 #f2f6fb;
 }
 
 .spec-grid__label{
   color: #475569;
   font-size: 14px;
-  margin: 0 0 4px;
+  margin: 0 0px 0px;
 }
 
 .spec-grid__value{
   font-weight: 700;
   color: #0f172a;
   font-size: 18px;
-  margin: 0;
+  margin: 0px 0px 10px 0px;
 }
 
 .resource-chip{
