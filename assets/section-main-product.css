@@ -114,9 +114,6 @@ product-info {
     order: 2;
   }
 
-  .product__info-wrapper {
-    margin-top: -45px;
-  }
 }
 
 @media screen and (min-width: 750px) {
