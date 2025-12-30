@@ -52,7 +52,7 @@
 .product-form__input--swatch .swatch-input__input:checked + .swatch-input__label {
   --swatch-border-width: 2.2px;
   border-color: #0d6ba6;
-  background: #f0f7fb;
+
 }
 
 .product-form__input--swatch .swatch-input__input:focus-visible + .swatch-input__label {
