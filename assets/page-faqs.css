@@ -344,14 +344,12 @@
   height: 38px;
 }
 
-
-
 @media (max-width: 767px){
-  .resources-grid{
-    display: grid !important;
+  .resource-grid{
     grid-template-columns: 1fr !important;
   }
 }
+
 
 
 @media (max-width: 767px) {
