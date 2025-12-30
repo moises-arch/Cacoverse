@@ -188,13 +188,7 @@
   color: #0f172a;
 }
 
-.faq-question__icon{
-  /* Hard lock the size so it never deforms */
-  width: 46px;
-  height: 46px;
-  flex: 0 0 46px;          /* key: prevents shrinking */
-  aspect-ratio: 1 / 1;     /* extra insurance */
-  box-sizing: border-box;  /* keeps border inside the 46px */
+
 
 .product-details-accordion .faq-item.active .faq-question__icon{
   background: #f7fafc;
