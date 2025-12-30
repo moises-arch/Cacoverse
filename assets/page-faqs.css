@@ -188,28 +188,47 @@
   color: #0f172a;
 }
 
-.faq-question__icon{
-  /* Hard lock the size so it never deforms */
-  width: 46px;
-  height: 46px;
-  flex: 0 0 46px;          /* key: prevents shrinking */
-  aspect-ratio: 1 / 1;     /* extra insurance */
-  box-sizing: border-box;  /* keeps border inside the 46px */
 
-  /* Your existing styling */
+
+
+/* Set the icon size once */
+.faq-question__icon{
+  --icon-size: 40px;
+
+  width: var(--icon-size);
+  height: var(--icon-size);
+  flex: 0 0 var(--icon-size);
+  aspect-ratio: 1 / 1;
+  box-sizing: border-box;
+
   border-radius: 50%;
   border: 1px solid #d7e1ec;
   background: #f7fafc;
+
   display: grid;
   place-items: center;
 
-  /* Keep the transition tight (no “transition everything” chaos) */
   transition: transform .2s ease, background-color .2s ease, border-color .2s ease, color .2s ease;
   color: #a6b1bf;
+}
 
-  /* Optional: prevents accidental text/icon stretching */
+/* Make the SVG (or icon element) scale with the container */
+.faq-question__icon svg{
+  width: calc(var(--icon-size) * 0.45);   /* tweak 0.40–0.55 to taste */
+  height: calc(var(--icon-size) * 0.45);
+  display: block;
+}
+
+/* If the icon is not an SVG but an <i> or <span> */
+.faq-question__icon i,
+.faq-question__icon span{
+  font-size: calc(var(--icon-size) * 0.45);
   line-height: 1;
 }
+
+
+
+
 
 .product-details-accordion .faq-item.active .faq-question__icon{
   background: #f7fafc;
