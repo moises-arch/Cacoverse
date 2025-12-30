@@ -189,15 +189,26 @@
 }
 
 .faq-question__icon{
+  /* Hard lock the size so it never deforms */
   width: 46px;
   height: 46px;
+  flex: 0 0 46px;          /* key: prevents shrinking */
+  aspect-ratio: 1 / 1;     /* extra insurance */
+  box-sizing: border-box;  /* keeps border inside the 46px */
+
+  /* Your existing styling */
   border-radius: 50%;
   border: 1px solid #d7e1ec;
   background: #f7fafc;
   display: grid;
   place-items: center;
-  transition: all 0.2s ease-in-out;
+
+  /* Keep the transition tight (no “transition everything” chaos) */
+  transition: transform .2s ease, background-color .2s ease, border-color .2s ease, color .2s ease;
   color: #a6b1bf;
+
+  /* Optional: prevents accidental text/icon stretching */
+  line-height: 1;
 }
 
 .product-details-accordion .faq-item.active .faq-question__icon{
