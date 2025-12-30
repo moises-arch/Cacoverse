@@ -344,6 +344,16 @@
   height: 38px;
 }
 
+
+
+@media (max-width: 767px){
+  .resources-grid{
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+  }
+}
+
+
 @media (max-width: 767px) {
   .product-details-accordion{
     padding: 0;
