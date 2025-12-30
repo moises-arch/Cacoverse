@@ -198,10 +198,9 @@
 }
 
 .product-details-accordion .faq-item.active .faq-question__icon{
-  background: #0a5ba6;
-  border-color: #0a5ba6;
+  background: #f7fafc;
+  border-color: #d7e1ec;
   color: #ffffff;
-  box-shadow: 0 12px 26px rgba(10, 91, 166, 0.28);
 }
 
 .product-details-accordion .faq-answer{
