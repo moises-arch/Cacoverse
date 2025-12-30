@@ -183,7 +183,7 @@
 }
 
 .faq-question__title{
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 700;
   color: #0f172a;
 }
@@ -225,9 +225,7 @@
   font-size: calc(var(--icon-size) * 0.45);
   line-height: 1;
 }
-.faq-question__icon{
-  color: #2563eb; /* your new icon color */
-}
+
 
 
 
