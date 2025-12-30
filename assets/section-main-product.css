@@ -2836,16 +2836,16 @@ label.quantity__label.form__label {
 
 .apple-lightbox__chrome {
   position: relative;
-  width: 100%;
-  height: 100%;
+  width: min(1080px, 94vw);
+  max-height: 92vh;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  padding: 1.2rem;
-  border-radius: 0;
+  gap: 1.1rem;
+  padding: clamp(1.4rem, 2.2vw, 1.8rem);
+  border-radius: 18px;
   background: linear-gradient(165deg, #0d111a 0%, #0a0d14 60%, #080a11 100%);
-  border: none;
-  box-shadow: none;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.04);
   overflow: hidden;
   color: #f6f7fb;
 }
@@ -2854,8 +2854,8 @@ label.quantity__label.form__label {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.6rem;
-  padding: 0 0 0 0;
+  gap: 0.85rem;
+  padding: 0;
   color: rgba(255, 255, 255, 0.9);
   letter-spacing: 0.01em;
   font-weight: 600;
@@ -2905,36 +2905,32 @@ label.quantity__label.form__label {
 
 .apple-lightbox__stage {
   position: relative;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  justify-content: center;
-  padding: 0;
-  margin: 0;
-  background: transparent;
-  border-radius: 0;
-  border: none;
-  height: calc(100vh - 120px);
+  gap: clamp(0.75rem, 2vw, 1.25rem);
+  padding: clamp(0.9rem, 1.8vw, 1.5rem);
+  background: rgba(12, 16, 24, 0.9);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .apple-lightbox__figure {
-  flex: 1 1 auto;
   display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
   align-items: center;
   justify-content: center;
-  margin: 0;
-  padding: 0;
 }
 
 .apple-lightbox__frame {
   position: relative;
   width: 100%;
-  height: 100%;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #0b0e14;
+  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .apple-lightbox__scrim {
@@ -2944,31 +2940,68 @@ label.quantity__label.form__label {
 .apple-lightbox__image {
   position: relative;
   z-index: 1;
-  width: auto;
-  max-width: 100vw;
-  max-height: calc(100vh - 120px);
+  width: 100%;
+  max-height: 74vh;
   object-fit: contain;
-  border-radius: 0;
-  background: transparent;
-  will-change: transform;
-  touch-action: none;
+  border-radius: 12px;
+  background: #0b0e14;
 }
 
-.apple-lightbox__caption,
+.apple-lightbox__caption {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 1.25rem;
+  letter-spacing: 0.01em;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.apple-lightbox__counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-weight: 700;
+  color: #fff;
+}
+
+.apple-lightbox__caption-text {
+  color: rgba(255, 255, 255, 0.86);
+  font-weight: 600;
+}
+
 .apple-lightbox__progress {
-  display: none;
+  position: relative;
+  height: 0.38rem;
+  width: 100%;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.apple-lightbox__progress-bar {
+  position: absolute;
+  inset: 0;
+  width: 0;
+  background: linear-gradient(90deg, #7bc6ff, #4f8cff);
+  transition: width 180ms ease;
 }
 
 .apple-lightbox__nav {
   border: none;
-  width: 3.6rem;
-  height: 3.6rem;
+  width: 4.2rem;
+  height: 4.2rem;
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.22);
-  color: #0b0e14;
-  font-size: 1.8rem;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 2rem;
   cursor: pointer;
   transition: background 140ms ease, transform 140ms ease, box-shadow 140ms ease;
   box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35);
@@ -2976,19 +3009,19 @@ label.quantity__label.form__label {
 
 .apple-lightbox__nav:hover,
 .apple-lightbox__nav:focus-visible {
-  background: rgba(255, 255, 255, 0.32);
+  background: rgba(255, 255, 255, 0.18);
   transform: translateY(-1px);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.38);
   outline: 2px solid rgba(255, 255, 255, 0.22);
   outline-offset: 3px;
 }
 
-.apple-lightbox__nav--prev,
+.apple-lightbox__nav--prev {
+  justify-self: flex-start;
+}
+
 .apple-lightbox__nav--next {
-  position: relative;
-  top: auto;
-  left: auto;
-  right: auto;
+  justify-self: flex-end;
 }
 
 .apple-lock-scroll {
@@ -2996,170 +3029,6 @@ label.quantity__label.form__label {
 }
 
 @media screen and (min-width: 750px) {
-  .pdp-media-slider {
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    gap: 0;
-    padding: 0;
-    margin: 0;
-    overflow: hidden;
-    scroll-snap-type: x mandatory;
-    scroll-snap-stop: always;
-    overscroll-behavior-x: contain;
-    align-items: stretch;
-    width: 100%;
-  }
-
-  .pdp-media-slider .product__media-item {
-    flex: 0 0 100% !important;
-    width: 100% !important;
-    scroll-snap-align: center;
-    margin: 0 !important;
-    overflow: hidden;
-  }
-
-  .pdp-media-slider .product__media-item > * {
-    width: 100%;
-    height: 100%;
-  }
-
-  /* Encapsulated PDP media block */
-  .pdp-media {
-    --pdp-media-gap: 1.2rem;
-    --pdp-media-size: min(1200px, 80vw, 80vh);
-    position: relative;
-    width: 100%;
-  }
-
-  .pdp-media .product__media-list {
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    width: 100%;
-    height: var(--pdp-media-size);
-    background: transparent !important;
-  }
-
-  .pdp-media .pdp-media__track {
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    gap: 0;
-    padding: 0;
-    margin: 0;
-    overflow: hidden;
-    scroll-snap-type: x mandatory;
-    scroll-snap-stop: always;
-    scroll-behavior: smooth;
-  }
-
-  .pdp-media .pdp-media__item {
-    flex: 0 0 100% !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    scroll-snap-align: center;
-    margin: 0 !important;
-    transition: transform 160ms ease, box-shadow 160ms ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100%;
-    height: var(--pdp-media-size);
-    background: transparent;
-  }
-
-  .pdp-media .pdp-media__item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.12);
-  }
-
-  .pdp-media .caco-square-box {
-    aspect-ratio: 1 / 1;
-    background: transparent;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    width: var(--pdp-media-size);
-    height: var(--pdp-media-size);
-    max-width: 100%;
-    margin: 0 auto;
-  }
-
-  .pdp-media .product__media-item img,
-  .pdp-media .product__media-item video,
-  .pdp-media .product__media-item model-viewer,
-  .pdp-media .product__media-item iframe {
-    object-fit: cover;
-    width: 100%;
-    height: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    display: block;
-    max-height: 100%;
-  }
-
-  .pdp-media .caco-media-overlay {
-    position: absolute;
-    inset: 0;
-    border: none;
-    background: transparent;
-    cursor: zoom-in;
-  }
-
-  .pdp-media .caco-media-pill {
-    position: absolute;
-    clip: rect(0 0 0 0);
-    clip-path: inset(50%);
-    height: 1px;
-    width: 1px;
-    overflow: hidden;
-    white-space: nowrap;
-  }
-
-  .pdp-media__nav {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    pointer-events: none;
-    padding: 0 0.6rem;
-  }
-
-  .pdp-media__nav .slider-button {
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    width: 3.6rem;
-    height: 3.6rem;
-    border-radius: 999px;
-    background: #ffffff;
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
-    border: 1px solid rgba(13, 107, 166, 0.12);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 160ms ease, transform 160ms ease;
-  }
-
-  .pdp-media:hover .pdp-media__nav .slider-button,
-  .pdp-media__nav .slider-button:focus-visible {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateY(0);
-  }
-
-  .pdp-media__nav .slider-button[disabled] {
-    opacity: 0.35;
-    cursor: not-allowed;
-    pointer-events: none;
-  }
-
-  .pdp-media__nav .slider-counter {
-    font-weight: 700;
-    color: #0a4f8a;
-  }
-
   .apple-lightbox__controls {
     display: inline-flex;
     align-items: center;
@@ -3469,7 +3338,7 @@ label.quantity__label.form__label {
    4. LIGHTBOX (APPLE STYLE)
    ============================ */
 
-[id^="galleryLightbox"] .apple-lightbox__chrome {
+#galleryLightbox .apple-lightbox__chrome {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -3484,7 +3353,7 @@ label.quantity__label.form__label {
   box-shadow: none !important;
 }
 
-[id^="galleryLightbox"] .apple-lightbox__header {
+#galleryLightbox .apple-lightbox__header {
   flex: 0 0 auto;
   margin: 0 0 8px;
   padding: 0;
@@ -3493,7 +3362,7 @@ label.quantity__label.form__label {
   box-shadow: none !important;
 }
 
-[id^="galleryLightbox"] .apple-lightbox__stage {
+#galleryLightbox .apple-lightbox__stage {
   flex: 1 1 auto;
   display: flex;
   align-items: center;
@@ -3506,7 +3375,7 @@ label.quantity__label.form__label {
   position: relative;
 }
 
-[id^="galleryLightbox"] .apple-lightbox__figure {
+#galleryLightbox .apple-lightbox__figure {
   margin: 0;
   padding: 0;
   background: transparent !important;
@@ -3514,7 +3383,7 @@ label.quantity__label.form__label {
   box-shadow: none !important;
 }
 
-[id^="galleryLightbox"] .apple-lightbox__frame {
+#galleryLightbox .apple-lightbox__frame {
   position: relative;
   display: block;
   margin: 0 auto;
@@ -3526,11 +3395,11 @@ label.quantity__label.form__label {
   overflow: hidden !important;
 }
 
-[id^="galleryLightbox"] .apple-lightbox__scrim {
+#galleryLightbox .apple-lightbox__scrim {
   display: none !important;
 }
 
-[id^="galleryLightbox"] .apple-lightbox__image {
+#galleryLightbox .apple-lightbox__image {
   display: block;
   margin: 0 auto;
   width: auto;
@@ -3541,7 +3410,7 @@ label.quantity__label.form__label {
   border-radius: 24px !important;
 }
 
-[id^="galleryLightbox"] .apple-lightbox__caption {
+#galleryLightbox .apple-lightbox__caption {
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
@@ -3549,16 +3418,16 @@ label.quantity__label.form__label {
   padding: 0;
 }
 
-[id^="galleryLightbox"] .apple-lightbox__caption-text,
-[id^="galleryLightbox"] .apple-lightbox__progress {
+#galleryLightbox .apple-lightbox__caption-text,
+#galleryLightbox .apple-lightbox__progress {
   display: none !important;
 }
 
-[id^="galleryLightbox"] .apple-lightbox__counter {
+#galleryLightbox .apple-lightbox__counter {
   color: #ffffff !important;
 }
 
-[id^="galleryLightbox"] .apple-lightbox__nav {
+#galleryLightbox .apple-lightbox__nav {
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
@@ -3576,19 +3445,19 @@ label.quantity__label.form__label {
   color: #ffffff;
 }
 
-[id^="galleryLightbox"] .apple-lightbox__nav--prev { left: 18px; }
-[id^="galleryLightbox"] .apple-lightbox__nav--next { right: 18px; }
+#galleryLightbox .apple-lightbox__nav--prev { left: 18px; }
+#galleryLightbox .apple-lightbox__nav--next { right: 18px; }
 
-[id^="galleryLightbox"] .apple-lightbox__nav svg {
+#galleryLightbox .apple-lightbox__nav svg {
   width: 18px;
   height: 18px;
 }
 
 /* X siempre redonda */
-[id^="galleryLightbox"] .apple-lightbox__close,
-[id^="galleryLightbox"] .apple-lightbox__close:focus,
-[id^="galleryLightbox"] .apple-lightbox__close:hover,
-[id^="galleryLightbox"] .apple-lightbox__close:active {
+#galleryLightbox .apple-lightbox__close,
+#galleryLightbox .apple-lightbox__close:focus,
+#galleryLightbox .apple-lightbox__close:hover,
+#galleryLightbox .apple-lightbox__close:active {
   border-radius: 999px !important;
   outline: none !important;
   box-shadow: none !important;
@@ -3600,28 +3469,28 @@ label.quantity__label.form__label {
 @media (max-width: 749px) {
 
   /* --- LIGHTBOX MOBILE: sin flechas, solo X y swipe --- */
-  [id^="galleryLightbox"] .apple-lightbox__nav,
-  [id^="galleryLightbox"] .apple-lightbox__counter {
+  #galleryLightbox .apple-lightbox__nav,
+  #galleryLightbox .apple-lightbox__counter {
     display: none !important;
   }
 
-  [id^="galleryLightbox"] .apple-lightbox__chrome {
+  #galleryLightbox .apple-lightbox__chrome {
     padding-top: 8px;
   }
 
-  [id^="galleryLightbox"] .apple-lightbox__image {
+  #galleryLightbox .apple-lightbox__image {
     max-width: 98vw;
     max-height: calc(100vh - 120px);
   }
 
-  [id^="galleryLightbox"] {
+  #galleryLightbox {
     cursor: default;
   }
-  [id^="galleryLightbox"] .apple-lightbox__stage {
+  #galleryLightbox .apple-lightbox__stage {
     cursor: pointer;
   }
-  [id^="galleryLightbox"] .apple-lightbox__frame,
-  [id^="galleryLightbox"] .apple-lightbox__image {
+  #galleryLightbox .apple-lightbox__frame,
+  #galleryLightbox .apple-lightbox__image {
     cursor: default;
   }
 
@@ -3887,8 +3756,8 @@ body.template-product .product__media-modal * {
 /* ==========================================
    FIX 1 — IMAGEN DEL LIGHTBOX SIN RECORTE
    ========================================== */
-[id^="galleryLightbox"] .apple-lightbox__figure,
-[id^="galleryLightbox"] .apple-lightbox__frame {
+#galleryLightbox .apple-lightbox__figure,
+#galleryLightbox .apple-lightbox__frame {
   margin: 0 auto !important;
   padding: 0 !important;
   max-width: min(100vw - 64px, 1200px);
@@ -3901,7 +3770,7 @@ body.template-product .product__media-modal * {
   border-radius: 24px !important;
 }
 
-[id^="galleryLightbox"] .apple-lightbox__image {
+#galleryLightbox .apple-lightbox__image {
   width: auto !important;
   height: auto !important;
   max-width: 100% !important;
@@ -3914,7 +3783,7 @@ body.template-product .product__media-modal * {
 /* ==========================================
    FIX 2 — BOTÓN CERRAR ("X") LIMPIO
    ========================================== */
-[id^="galleryLightbox"] .apple-lightbox__close {
+#galleryLightbox .apple-lightbox__close {
   position: fixed;
   top: 24px;
   right: 24px;
@@ -3932,20 +3801,20 @@ body.template-product .product__media-modal * {
 }
 
 /* ocultamos cualquier icono SVG original */
-[id^="galleryLightbox"] .apple-lightbox__close svg,
-[id^="galleryLightbox"] .apple-lightbox__close span {
+#galleryLightbox .apple-lightbox__close svg,
+#galleryLightbox .apple-lightbox__close span {
   display: none !important;
 }
 
 /* nuestra "X" minimal */
-[id^="galleryLightbox"] .apple-lightbox__close::before {
+#galleryLightbox .apple-lightbox__close::before {
   content: '×';
   font-size: 18px;
   line-height: 1;
   color: #ffffff;
 }
 
-[id^="galleryLightbox"] .apple-lightbox__close:hover {
+#galleryLightbox .apple-lightbox__close:hover {
   background: rgba(0, 0, 0, 0.75);
 }
 /* ============================
@@ -3954,24 +3823,24 @@ body.template-product .product__media-modal * {
 @media (min-width: 750px) {
 
   /* Menos padding arriba → más altura útil para la imagen */
-  [id^="galleryLightbox"] .apple-lightbox__chrome {
+  #galleryLightbox .apple-lightbox__chrome {
     padding-top: 16px !important;
     padding-bottom: 24px !important;
   }
 
-  [id^="galleryLightbox"] .apple-lightbox__header {
+  #galleryLightbox .apple-lightbox__header {
     margin-bottom: 10px !important;
   }
 
   /* Imagen centrada, sin recortes */
-  [id^="galleryLightbox"] .apple-lightbox__stage {
+  #galleryLightbox .apple-lightbox__stage {
     padding: 0 32px 24px !important;
     align-items: center !important;
     justify-content: center !important;
   }
 
-  [id^="galleryLightbox"] .apple-lightbox__figure,
-  [id^="galleryLightbox"] .apple-lightbox__frame {
+  #galleryLightbox .apple-lightbox__figure,
+  #galleryLightbox .apple-lightbox__frame {
     margin: 0 auto !important;
     padding: 0 !important;
     max-width: min(100vw - 96px, 1280px);
@@ -3984,7 +3853,7 @@ body.template-product .product__media-modal * {
     border-radius: 24px !important;
   }
 
-  [id^="galleryLightbox"] .apple-lightbox__image {
+  #galleryLightbox .apple-lightbox__image {
     width: auto !important;
     height: auto !important;
     max-width: 100% !important;
@@ -3994,7 +3863,7 @@ body.template-product .product__media-modal * {
   }
 
   /* --- Flechas de navegación ACTIVAS en desktop --- */
-  [id^="galleryLightbox"] .apple-lightbox__nav {
+  #galleryLightbox .apple-lightbox__nav {
     display: flex !important;
     align-items: center;
     justify-content: center;
@@ -4005,7 +3874,7 @@ body.template-product .product__media-modal * {
      ============================ */
 
   /* X más grande, limpia */
-  [id^="galleryLightbox"] .apple-lightbox__close {
+  #galleryLightbox .apple-lightbox__close {
     position: fixed !important;
     top: 24px;
     right: 24px;
@@ -4024,24 +3893,24 @@ body.template-product .product__media-modal * {
   }
 
   /* ocultar cualquier icono interno original */
-  [id^="galleryLightbox"] .apple-lightbox__close svg,
-  [id^="galleryLightbox"] .apple-lightbox__close span {
+  #galleryLightbox .apple-lightbox__close svg,
+  #galleryLightbox .apple-lightbox__close span {
     display: none !important;
   }
 
-  [id^="galleryLightbox"] .apple-lightbox__close::before {
+  #galleryLightbox .apple-lightbox__close::before {
     content: '×';
     font-size: 22px;
     line-height: 1;
     color: #ffffff;
   }
 
-  [id^="galleryLightbox"] .apple-lightbox__close:hover {
+  #galleryLightbox .apple-lightbox__close:hover {
     background: rgba(0, 0, 0, 0.8);
   }
 
   /* Contador 1/46 a la izquierda de la X, mejor ubicado */
-  [id^="galleryLightbox"] .apple-lightbox__counter {
+  #galleryLightbox .apple-lightbox__counter {
     position: fixed !important;
     top: 26px;
     right: 82px; /* separación respecto a la X */
@@ -4063,20 +3932,20 @@ body.template-product .product__media-modal * {
 @media (min-width: 750px) {
 
   /* Más aire arriba/abajo, sin tapar encabezado ni cortar la imagen */
-  [id^="galleryLightbox"] .apple-lightbox__chrome {
+  #galleryLightbox .apple-lightbox__chrome {
     padding-top: 40px !important;
     padding-bottom: 32px !important;
   }
 
-  [id^="galleryLightbox"] .apple-lightbox__stage {
+  #galleryLightbox .apple-lightbox__stage {
     padding: 0 48px 24px !important;
     align-items: center !important;
     justify-content: center !important;
   }
 
   /* Lienzo blanco más contenido para que no corte el casco */
-  [id^="galleryLightbox"] .apple-lightbox__figure,
-  [id^="galleryLightbox"] .apple-lightbox__frame {
+  #galleryLightbox .apple-lightbox__figure,
+  #galleryLightbox .apple-lightbox__frame {
     margin: 0 auto !important;
     padding: 0 !important;
     max-width: min(100vw - 180px, 1200px) !important;
@@ -4089,7 +3958,7 @@ body.template-product .product__media-modal * {
     overflow: hidden !important;
   }
 
-  [id^="galleryLightbox"] .apple-lightbox__image {
+  #galleryLightbox .apple-lightbox__image {
     width: auto !important;
     height: auto !important;
     max-width: 100% !important;
@@ -4101,14 +3970,14 @@ body.template-product .product__media-modal * {
   /* ============================
      FLECHAS DESKTOP – ACTIVAS
      ============================ */
-  [id^="galleryLightbox"] .apple-lightbox__nav {
+  #galleryLightbox .apple-lightbox__nav {
     display: flex !important;
     align-items: center;
     justify-content: center;
     opacity: 0.9;
   }
 
-  [id^="galleryLightbox"] .apple-lightbox__nav svg {
+  #galleryLightbox .apple-lightbox__nav svg {
     width: 22px !important;
     height: 22px !important;
     stroke: #ffffff !important;
@@ -4119,10 +3988,10 @@ body.template-product .product__media-modal * {
      ============================ */
 
   /* Estilizar cualquier botón de cerrar del lightbox */
-  [id^="galleryLightbox"] button[aria-label*="Close"],
-  [id^="galleryLightbox"] button[aria-label*="close"],
-  [id^="galleryLightbox"] button[aria-label*="Cerrar"],
-  [id^="galleryLightbox"] button[aria-label*="cerrar"] {
+  #galleryLightbox button[aria-label*="Close"],
+  #galleryLightbox button[aria-label*="close"],
+  #galleryLightbox button[aria-label*="Cerrar"],
+  #galleryLightbox button[aria-label*="cerrar"] {
     position: fixed !important;
     top: 24px;
     right: 24px;
@@ -4141,32 +4010,32 @@ body.template-product .product__media-modal * {
   }
 
   /* Ocultamos icono original y dibujamos la X limpia */
-  [id^="galleryLightbox"] button[aria-label*="Close"] svg,
-  [id^="galleryLightbox"] button[aria-label*="close"] svg,
-  [id^="galleryLightbox"] button[aria-label*="Cerrar"] svg,
-  [id^="galleryLightbox"] button[aria-label*="cerrar"] svg {
+  #galleryLightbox button[aria-label*="Close"] svg,
+  #galleryLightbox button[aria-label*="close"] svg,
+  #galleryLightbox button[aria-label*="Cerrar"] svg,
+  #galleryLightbox button[aria-label*="cerrar"] svg {
     display: none !important;
   }
 
-  [id^="galleryLightbox"] button[aria-label*="Close"]::before,
-  [id^="galleryLightbox"] button[aria-label*="close"]::before,
-  [id^="galleryLightbox"] button[aria-label*="Cerrar"]::before,
-  [id^="galleryLightbox"] button[aria-label*="cerrar"]::before {
+  #galleryLightbox button[aria-label*="Close"]::before,
+  #galleryLightbox button[aria-label*="close"]::before,
+  #galleryLightbox button[aria-label*="Cerrar"]::before,
+  #galleryLightbox button[aria-label*="cerrar"]::before {
     content: '×';
     font-size: 22px;
     line-height: 1;
     color: #ffffff;
   }
 
-  [id^="galleryLightbox"] button[aria-label*="Close"]:hover,
-  [id^="galleryLightbox"] button[aria-label*="close"]:hover,
-  [id^="galleryLightbox"] button[aria-label*="Cerrar"]:hover,
-  [id^="galleryLightbox"] button[aria-label*="cerrar"]:hover {
+  #galleryLightbox button[aria-label*="Close"]:hover,
+  #galleryLightbox button[aria-label*="close"]:hover,
+  #galleryLightbox button[aria-label*="Cerrar"]:hover,
+  #galleryLightbox button[aria-label*="cerrar"]:hover {
     background: rgba(0, 0, 0, 0.8) !important;
   }
 
   /* Contador 1 / 48 en píldora a la izquierda de la X */
-  [id^="galleryLightbox"] .apple-lightbox__counter {
+  #galleryLightbox .apple-lightbox__counter {
     position: fixed !important;
     top: 26px;
     right: 84px; /* separación respecto al close */
@@ -4188,7 +4057,7 @@ body.template-product .product__media-modal * {
 @media (min-width: 750px) {
 
   /* Todo el contenedor del lightbox: menos padding arriba/abajo */
-  [id^="galleryLightbox"] .apple-lightbox__chrome {
+  #galleryLightbox .apple-lightbox__chrome {
     padding: 8px 32px 14px !important;  /* antes era mucho más alto */
     display: flex !important;
     flex-direction: column !important;
@@ -4198,7 +4067,7 @@ body.template-product .product__media-modal * {
   }
 
   /* Header (marca + título) más pegado arriba */
-  [id^="galleryLightbox"] .apple-lightbox__header {
+  #galleryLightbox .apple-lightbox__header {
     width: 100%;
     max-width: 1200px;
     margin: 0 0 6px !important;
@@ -4206,7 +4075,7 @@ body.template-product .product__media-modal * {
   }
 
   /* Escenario donde vive la imagen: ocupa casi todo el alto */
-  [id^="galleryLightbox"] .apple-lightbox__stage {
+  #galleryLightbox .apple-lightbox__stage {
     flex: 1 1 auto !important;
     width: 100%;
     display: flex !important;
@@ -4217,8 +4086,8 @@ body.template-product .product__media-modal * {
   }
 
   /* Marco blanco que sostiene la imagen */
-  [id^="galleryLightbox"] .apple-lightbox__figure,
-  [id^="galleryLightbox"] .apple-lightbox__frame {
+  #galleryLightbox .apple-lightbox__figure,
+  #galleryLightbox .apple-lightbox__frame {
     margin: 0 auto !important;
     padding: 0 !important;
     display: flex !important;
@@ -4235,7 +4104,7 @@ body.template-product .product__media-modal * {
   }
 
   /* La imagen: nunca se deforma y siempre cabe completa */
-  [id^="galleryLightbox"] .apple-lightbox__image {
+  #galleryLightbox .apple-lightbox__image {
     display: block !important;
     margin: 0 auto !important;
 
@@ -4255,12 +4124,12 @@ body.template-product .product__media-modal * {
 @media (min-width: 750px) {
 
   /* Menos padding arriba: header más pegado al borde */
-  [id^="galleryLightbox"] .apple-lightbox__chrome {
+  #galleryLightbox .apple-lightbox__chrome {
     padding-top: 4px !important;
   }
 
   /* Header bien arriba y compacto */
-  [id^="galleryLightbox"] .apple-lightbox__header {
+  #galleryLightbox .apple-lightbox__header {
     margin-top: 0 !important;
     margin-bottom: 4px !important;
     padding-top: 0 !important;
@@ -4269,8 +4138,8 @@ body.template-product .product__media-modal * {
   }
 
   /* Línea de "CACO AMERICA LLC" más pequeña y elegante */
-  [id^="galleryLightbox"] .apple-lightbox__header .apple-lightbox__eyebrow,
-  [id^="galleryLightbox"] .apple-lightbox__header > :first-child {
+  #galleryLightbox .apple-lightbox__header .apple-lightbox__eyebrow,
+  #galleryLightbox .apple-lightbox__header > :first-child {
     font-size: 11px !important;
     letter-spacing: 0.18em !important;
     text-transform: uppercase !important;
@@ -4278,8 +4147,8 @@ body.template-product .product__media-modal * {
   }
 
   /* "Safety Helmet" pegado a la marca, sin tanto aire */
-  [id^="galleryLightbox"] .apple-lightbox__header .apple-lightbox__title,
-  [id^="galleryLightbox"] .apple-lightbox__header > :last-child {
+  #galleryLightbox .apple-lightbox__header .apple-lightbox__title,
+  #galleryLightbox .apple-lightbox__header > :last-child {
     margin-top: 2px !important;
   }
 }
@@ -4290,7 +4159,7 @@ body.template-product .product__media-modal * {
 @media (min-width: 750px) {
 
   /* El figure se convierte en un flex centrado */
-  [id^="galleryLightbox"] .apple-lightbox__figure {
+  #galleryLightbox .apple-lightbox__figure {
     margin: 0 !important;
     padding: 0 !important;
     display: flex !important;
@@ -4299,7 +4168,7 @@ body.template-product .product__media-modal * {
   }
 
   /* Adiós “tarjeta” blanca: sin fondo, sin sombra, sin tamaño fijo */
-  [id^="galleryLightbox"] .apple-lightbox__frame {
+  #galleryLightbox .apple-lightbox__frame {
     margin: 0 !important;
     padding: 0 !important;
     background: transparent !important;
@@ -4312,7 +4181,7 @@ body.template-product .product__media-modal * {
   }
 
   /* La imagen respeta SIEMPRE su proporción */
-  [id^="galleryLightbox"] .apple-lightbox__image {
+  #galleryLightbox .apple-lightbox__image {
     display: block !important;
     width: auto !important;
     height: auto !important;
@@ -4327,25 +4196,25 @@ body.template-product .product__media-modal * {
    bajo la imagen en el lightbox
    ============================ */
 @media (min-width: 750px) {
-  [id^="galleryLightbox"] .apple-lightbox__chrome,
-  [id^="galleryLightbox"] .apple-lightbox__stage,
-  [id^="galleryLightbox"] .apple-lightbox__figure,
-  [id^="galleryLightbox"] .apple-lightbox__frame,
-  [id^="galleryLightbox"] .apple-lightbox__image {
+  #galleryLightbox .apple-lightbox__chrome,
+  #galleryLightbox .apple-lightbox__stage,
+  #galleryLightbox .apple-lightbox__figure,
+  #galleryLightbox .apple-lightbox__frame,
+  #galleryLightbox .apple-lightbox__image {
     background: transparent !important;
   }
 
   /* Por si Dawn mete decoraciones con ::before/::after */
-  [id^="galleryLightbox"] .apple-lightbox__chrome::before,
-  [id^="galleryLightbox"] .apple-lightbox__chrome::after,
-  [id^="galleryLightbox"] .apple-lightbox__frame::before,
-  [id^="galleryLightbox"] .apple-lightbox__frame::after {
+  #galleryLightbox .apple-lightbox__chrome::before,
+  #galleryLightbox .apple-lightbox__chrome::after,
+  #galleryLightbox .apple-lightbox__frame::before,
+  #galleryLightbox .apple-lightbox__frame::after {
     background: transparent !important;
   }
 
   /* Cero padding/margen extra alrededor de la imagen */
-  [id^="galleryLightbox"] .apple-lightbox__figure,
-  [id^="galleryLightbox"] .apple-lightbox__frame {
+  #galleryLightbox .apple-lightbox__figure,
+  #galleryLightbox .apple-lightbox__frame {
     padding: 0 !important;
     margin: 0 !important;
   }
@@ -4362,7 +4231,7 @@ body.template-product .product__media-modal * {
 
 
 /* === OVERRIDE HEADER LIGHTBOX: LEFT ALIGN + SAME LOOK MOBILE/DESKTOP === */
-[id^="galleryLightbox"] .apple-lightbox__header {
+#galleryLightbox .apple-lightbox__header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -4374,13 +4243,13 @@ body.template-product .product__media-modal * {
   line-height: 1.1 !important;
 }
 
-[id^="galleryLightbox"] .apple-lightbox__title {
+#galleryLightbox .apple-lightbox__title {
   text-align: left !important;
 }
 
 /* "CACO AMERICA LLC" estilo desktop → también en mobile */
-[id^="galleryLightbox"] .apple-lightbox__header .apple-lightbox__eyebrow,
-[id^="galleryLightbox"] .apple-lightbox__header > :first-child {
+#galleryLightbox .apple-lightbox__header .apple-lightbox__eyebrow,
+#galleryLightbox .apple-lightbox__header > :first-child {
   font-size: 11px !important;
   letter-spacing: 0.18em !important;
   text-transform: uppercase !important;
@@ -4388,15 +4257,15 @@ body.template-product .product__media-modal * {
 }
 
 /* "SAFETY HELMET" pegado a la marca */
-[id^="galleryLightbox"] .apple-lightbox__header .apple-lightbox__title,
-[id^="galleryLightbox"] .apple-lightbox__header > :last-child {
+#galleryLightbox .apple-lightbox__header .apple-lightbox__title,
+#galleryLightbox .apple-lightbox__header > :last-child {
   margin-top: 2px !important;
 }
 
 
 /* === MOBILE CLOSE BUTTON → SAME AS DESKTOP === */
 @media (max-width: 749px) {
-  [id^="galleryLightbox"] .apple-lightbox__close {
+  #galleryLightbox .apple-lightbox__close {
     position: fixed !important;
     top: 24px;
     right: 24px;
@@ -4414,12 +4283,12 @@ body.template-product .product__media-modal * {
     z-index: 9999;
   }
 
-  [id^="galleryLightbox"] .apple-lightbox__close svg,
-  [id^="galleryLightbox"] .apple-lightbox__close span {
+  #galleryLightbox .apple-lightbox__close svg,
+  #galleryLightbox .apple-lightbox__close span {
     display: none !important;
   }
 
-  [id^="galleryLightbox"] .apple-lightbox__close::before {
+  #galleryLightbox .apple-lightbox__close::before {
     content: '×';
     font-size: 22px;
     line-height: 1;
