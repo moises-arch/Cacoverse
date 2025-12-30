@@ -34,20 +34,11 @@
     <div class="faq-list" itemscope="" itemtype="https://schema.org/FAQPage">
       <!-- Features -->
       {% if product.metafields.custom.product_details_features %}
-        {% assign feature_list = product.metafields.custom.product_details_features.value %}
-        {% assign feature_count = feature_list.size %}
         <div class="faq-item active" itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
           <button class="faq-question" type="button" itemprop="name" aria-expanded="true">
             <div class="faq-question__copy">
               <span class="faq-question__eyebrow">Essentials</span>
-              <div class="faq-question__title-row">
-                <span class="faq-question__title">Features</span>
-                <span class="faq-badge">{{ feature_count }} highlight{% if feature_count > 1 %}s{% endif %}</span>
-              </div>
-              <div class="faq-question__meta-row">
-                <span class="faq-status">Curated for this model</span>
-                <span class="faq-badge">Updated</span>
-              </div>
+              <span class="faq-question__title">Features</span>
             </div>
             <span class="faq-question__icon" aria-hidden="true">
               <svg
@@ -78,14 +69,10 @@
           <div class="faq-answer" itemscope="" itemprop="acceptedAnswer" itemtype="https://schema.org/Answer" aria-hidden="false" style="display: block;">
             <div class="faq-answer__inner">
               <p class="faq-answer__lede">Top benefits and standout attributes for this product.</p>
-              <div class="faq-answer__meta-grid">
-                <div class="faq-answer__meta-pill"><strong>{{ feature_count }}</strong> items selected</div>
-                <div class="faq-answer__meta-pill">Organized for quick scan</div>
-              </div>
               <div class="meta-fields-details">
                 <div class="product-features">
                   <ul class="list-unstyled two-column-list feature-grid">
-                    {% for feature in feature_list %}
+                    {% for feature in product.metafields.custom.product_details_features.value %}
                       <li class="feature-pill">
                         <span class="feature-pill__icon">
                           <img
@@ -109,19 +96,11 @@
       {% endif %}
 
       {% if product.metafields.custom.product_details_specifications_name %}
-        {% assign specification_values = product.metafields.custom.product_details_specification_values.value %}
-        {% assign specification_labels = product.metafields.custom.product_details_specifications_name.value %}
         <div class="faq-item" itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
           <button class="faq-question" type="button" itemprop="name" aria-expanded="false">
             <div class="faq-question__copy">
               <span class="faq-question__eyebrow">Tech sheet</span>
-              <div class="faq-question__title-row">
-                <span class="faq-question__title">Specifications</span>
-                <span class="faq-badge">{{ specification_count }} data point{% if specification_count > 1 %}s{% endif %}</span>
-              </div>
-              <div class="faq-question__meta-row">
-                <span class="faq-status">Performance + compatibility</span>
-              </div>
+              <span class="faq-question__title">Specifications</span>
             </div>
             <span class="faq-question__icon" aria-hidden="true">
               <svg
@@ -152,14 +131,11 @@
           <div class="faq-answer" itemscope="" itemprop="acceptedAnswer" itemtype="https://schema.org/Answer" aria-hidden="true">
             <div class="faq-answer__inner">
               <p class="faq-answer__lede">Check the key technical data to validate compatibility and performance.</p>
-              <div class="faq-answer__meta-grid">
-                <div class="faq-answer__meta-pill"><strong>{{ specification_count }}</strong> measurements</div>
-                <div class="faq-answer__meta-pill">Quick grid layout</div>
-              </div>
               <div class="meta-fields-details">
                 <div class="product-features">
                   <ul class="list-unstyled two-column-list spec-grid">
-                    {% for specification in specification_labels %}
+                    {% assign specification_values = product.metafields.custom.product_details_specification_values.value %}
+                    {% for specification in product.metafields.custom.product_details_specifications_name.value %}
                       <li class="spec-grid__item">
                         <p class="spec-grid__label">{{ specification }}</p>
                         <p class="spec-grid__value">{{ specification_values[forloop.index0] -}}</p>
@@ -175,19 +151,11 @@
 
       <!-- Documentations -->
       {% if product.metafields.custom.product_details_download_title %}
-        {% assign document_links = product.metafields.custom.product_details_download_file_link.value %}
-        {% assign document_titles = product.metafields.custom.product_details_download_title.value %}
         <div class="faq-item" itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
           <button class="faq-question" type="button" itemprop="name" aria-expanded="false">
             <div class="faq-question__copy">
               <span class="faq-question__eyebrow">Resources</span>
-              <div class="faq-question__title-row">
-                <span class="faq-question__title">Documentation & downloads</span>
-                <span class="faq-badge">{{ document_count }} file{% if document_count > 1 %}s{% endif %}</span>
-              </div>
-              <div class="faq-question__meta-row">
-                <span class="faq-status">PDF ready</span>
-              </div>
+              <span class="faq-question__title">Documentation & downloads</span>
             </div>
             <span class="faq-question__icon" aria-hidden="true">
               <svg
@@ -221,7 +189,8 @@
               <div class="meta-fields-details">
                 <div class="download-resources">
                   <ul class="list-unstyled two-column-list resource-grid">
-                    {% for document in document_titles %}
+                    {% assign document_links = product.metafields.custom.product_details_download_file_link.value %}
+                    {% for document in product.metafields.custom.product_details_download_title.value %}
                       <li class="resource-chip">
                         <div class="resource-chip__body">
                           <span class="resource-chip__title">
@@ -264,13 +233,7 @@
           <button class="faq-question" type="button" itemprop="name" aria-expanded="false">
             <div class="faq-question__copy">
               <span class="faq-question__eyebrow">Overview</span>
-              <div class="faq-question__title-row">
-                <span class="faq-question__title">About the product</span>
-                <span class="faq-badge">Story</span>
-              </div>
-              <div class="faq-question__meta-row">
-                <span class="faq-status">Description</span>
-              </div>
+              <span class="faq-question__title">About the product</span>
             </div>
             <span class="faq-question__icon" aria-hidden="true">
               <svg
@@ -321,10 +284,7 @@
           <button class="faq-question" type="button" itemprop="name" aria-expanded="false">
             <div class="faq-question__copy">
               <span class="faq-question__eyebrow">Additional details</span>
-              <div class="faq-question__title-row">
-                <span class="faq-question__title">{{ product.metafields.custom.product_details_sub_title }}</span>
-                <span class="faq-badge">Deep dive</span>
-              </div>
+              <span class="faq-question__title">{{ product.metafields.custom.product_details_sub_title }}</span>
             </div>
             <span class="faq-question__icon" aria-hidden="true">
               <svg
