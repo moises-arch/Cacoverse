@@ -525,10 +525,10 @@ a.product__text {
 .product__info-wrapper .quantity {
   border-radius: 26px !important;
   border: 1px solid #d0d7e2;
-  padding: 6px;
+  padding: 0px;
   background: #ffffff;
   gap: 0px;
-  min-height: 46px;
+  min-height: 55px;
   box-shadow: none;
   width: auto;
 }
