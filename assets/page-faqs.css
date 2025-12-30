@@ -123,9 +123,9 @@
 
 .product-details-accordion__title{
   font-weight: 700;
-  font-size: 26px;
+  font-size: 21px;
   color: #0f172a;
-  margin: 0px 0px -11px 5px;
+  margin: 6px 0px -14px 5px;
 }
 
 .product-details-accordion__subtitle{
@@ -183,7 +183,7 @@
 }
 
 .faq-question__title{
-  font-size: 18px;
+  font-size: 24px;
   font-weight: 700;
   color: #0f172a;
 }
