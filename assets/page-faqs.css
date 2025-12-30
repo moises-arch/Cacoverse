@@ -178,6 +178,9 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
+#shopify-section-{{ section.id }} [class*="__eyebrow"]{
+  display:none !important;
+}
 
 .faq-question__title{
   font-size: 18px;
