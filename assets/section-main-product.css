@@ -386,7 +386,7 @@ a.product__text {
 }
 
 .product__info-container > * + * {
-  margin-top: 0.7rem;
+  margin-top: 0.3rem;
 }
 
 .product__text.caption-with-letter-spacing {
