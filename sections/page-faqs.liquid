@@ -1,4 +1,29 @@
 {% style %}
+/* =========================================
+   HIDE THE SMALL BLUE "KICKER" TITLES
+   (PRODUCT DETAILS, ESSENTIALS, etc.)
+   ========================================= */
+#shopify-section-{{ section.id }} :is(
+  .kicker,
+  .eyebrow,
+  .overline,
+  .section-label,
+  .section-kicker,
+  .product-details__label,
+  .product-details__kicker,
+  .tab-label,
+  .mini-title
+) {
+  display: none !important;
+}
+
+/* Extra safety net for themes that name them like "something-kicker" */
+#shopify-section-{{ section.id }} [class*="kicker"],
+#shopify-section-{{ section.id }} [class*="eyebrow"],
+#shopify-section-{{ section.id }} [class*="overline"] {
+  display: none !important;
+}
+
 @media (max-width: 767px) {
   /* Remove the annoying right padding from containers */
   .page-width.container {
@@ -35,130 +60,78 @@
 }
 {% endstyle %}
 
-
-
-
-
 {{ 'page-faqs.css' | asset_url | stylesheet_tag }}
+
 {% if page.metafields.custom.faq -%}
-  <div
-    class="page-width container"
-    <div
-    class="row"
-  >
-    <div class="col-md-12">
-      {% if section.settings.heading != blank %}
-        <h2 class="sh-48 mb-5 text-center">{{ section.settings.heading }}</h2>
-      {% endif %}
+  <div class="page-width container">
+    <div class="row">
+      <div class="col-md-12">
+        {% if section.settings.heading != blank %}
+          <h2 class="sh-48 mb-5 text-center">{{ section.settings.heading }}</h2>
+        {% endif %}
+      </div>
     </div>
 
     <div class="row">
-      <div class="col-md-12" itemscope="" itemtype="https://schema.org/FAQPage">
+      <div class="col-md-12" itemscope itemtype="https://schema.org/FAQPage">
         {%- for faq in page.metafields.custom.faq.value -%}
           {% capture type %}{% cycle 'question', 'answer' %}{% endcapture %}
 
           {% if type == 'question' %}
-            <div class="faq-item" itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
+            <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
               <div class="faq-question" itemprop="name">
-                <div>
-                  {{ faq }}
-                </div>
+                <div>{{ faq }}</div>
+
                 <!-- Plus -->
-                <svg
-                  class="plus"
-                  width="29"
-                  height="28"
-                  viewBox="0 0 29 28"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <line x1="14.5" y1="8.74226e-08" x2="14.5" y2="28" stroke="#8d9db2" stroke-width="4"/>
+                <svg class="plus" width="29" height="28" viewBox="0 0 29 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <line x1="14.5" y1="0" x2="14.5" y2="28" stroke="#8d9db2" stroke-width="4"/>
                   <line x1="28.5" y1="14" x2="0.5" y2="14" stroke="#8d9db2" stroke-width="4"/>
                 </svg>
 
                 <!-- Minus -->
-                <svg
-                  class="minus"
-                  width="29"
-                  height="4"
-                  viewBox="0 0 29 4"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <line x1="28.5" y1="2" x2="0.5" y2="2" stroke="#8d9db2" stroke-width="4"/>
+                <svg class="minus" width="29" height="4" viewBox="0 0 29 4" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <line x1="28.5" y1="2" x2="0.5" y2="2" stroke="#8d9db2" stroke-width="4"/>
                 </svg>
               </div>
           {% endif %}
+
           {% if type == 'answer' %}
-            <div class="faq-answer" itemscope="" itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-              <span itemprop="text">{{ faq }}</span>
-            </div>
+              <div class="faq-answer" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                <span itemprop="text">{{ faq }}</span>
+              </div>
             </div>
           {% endif %}
         {%- endfor -%}
       </div>
     </div>
+
     {% if section.settings.button_url != blank %}
       <div class="row">
         <div class="col-md-12 text-center mt-5">
-          <a class="s-btn" href="{{ section.settings.button_url }}"
-            ><span>{{ section.settings.button_label }}</span></a
-          >
+          <a class="s-btn" href="{{ section.settings.button_url }}">
+            <span>{{ section.settings.button_label }}</span>
+          </a>
         </div>
       </div>
     {% endif %}
   </div>
 {% endif %}
+
 {% schema %}
 {
   "name": "Pages FAQ",
   "class": "page-faqs",
   "settings": [
-    {
-      "type": "text",
-      "id": "heading",
-      "label": "Heading"
-    },
-    {
-      "type": "text",
-      "id": "button_label",
-      "label": "Button Label"
-    },
-     {
-      "type": "url",
-      "id": "button_url",
-      "label": "Button link"
-    },
-    {
-      "type": "text",
-      "id": "padding_top_desktop",
-      "label": "Padding Desktop Top",
-      "default": "80px"
-    },
-     {
-      "type": "text",
-      "id": "padding_bottom_desktop",
-      "label": "Padding Desktop Bottom",
-      "default": "80px"
-    },
-     {
-      "type": "text",
-      "id": "padding_top_mobile",
-      "label": "Padding Mobile Top",
-      "default": "40px"
-    },
-     {
-      "type": "text",
-      "id": "padding_bottom_mobile",
-      "label": "Padding Mobile Bottom",
-      "default": "40px"
-    },
+    { "type": "text", "id": "heading", "label": "Heading" },
+    { "type": "text", "id": "button_label", "label": "Button Label" },
+    { "type": "url", "id": "button_url", "label": "Button link" },
+    { "type": "text", "id": "padding_top_desktop", "label": "Padding Desktop Top", "default": "80px" },
+    { "type": "text", "id": "padding_bottom_desktop", "label": "Padding Desktop Bottom", "default": "80px" },
+    { "type": "text", "id": "padding_top_mobile", "label": "Padding Mobile Top", "default": "40px" },
+    { "type": "text", "id": "padding_bottom_mobile", "label": "Padding Mobile Bottom", "default": "40px" }
   ],
   "presets": [
-    {
-      "name": "Page FAQs"
-    }
- ]
+    { "name": "Page FAQs" }
+  ]
 }
 {% endschema %}
