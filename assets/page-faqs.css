@@ -125,11 +125,11 @@
   font-weight: 700;
   font-size: 26px;
   color: #0f172a;
-  margin: 0;
+  margin: 0px 0px -11px 5px;
 }
 
 .product-details-accordion__subtitle{
-  margin: 0;
+  margin: 6px 0px 8px 6px;
   color: #475569;
   font-size: 15px;
   line-height: 1.6;
