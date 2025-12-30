@@ -2604,14 +2604,6 @@ label.quantity__label.form__label {
 }
 
 
-
-
-
-
-
-
-
-
 /* Product media: gallery + lightbox */
 .caco-media-gallery .product__media-list {
   gap: 1.2rem;
@@ -3531,7 +3523,7 @@ body.template-product .product__media-modal * {
   /* El wrapper gris de la galería: full width, sin empuje lateral */
   #shopify-section-{{ section.id }} .product__media-wrapper {
     margin: 0 !important;
-    padding: 16px 0 18px !important; /* solo vertical */
+    padding: 16px 0 6px !important; /* solo vertical */
     background: #f3f3f3;
     border-radius: 20px;
     box-sizing: border-box;
