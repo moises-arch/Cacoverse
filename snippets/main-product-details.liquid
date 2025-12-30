@@ -111,7 +111,6 @@
       {% if product.metafields.custom.product_details_specifications_name %}
         {% assign specification_values = product.metafields.custom.product_details_specification_values.value %}
         {% assign specification_labels = product.metafields.custom.product_details_specifications_name.value %}
-        {% assign specification_count = specification_labels.size %}
         <div class="faq-item" itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
           <button class="faq-question" type="button" itemprop="name" aria-expanded="false">
             <div class="faq-question__copy">
@@ -178,7 +177,6 @@
       {% if product.metafields.custom.product_details_download_title %}
         {% assign document_links = product.metafields.custom.product_details_download_file_link.value %}
         {% assign document_titles = product.metafields.custom.product_details_download_title.value %}
-        {% assign document_count = document_titles.size %}
         <div class="faq-item" itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
           <button class="faq-question" type="button" itemprop="name" aria-expanded="false">
             <div class="faq-question__copy">
