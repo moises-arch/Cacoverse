@@ -39,6 +39,81 @@
   scrollbar-width: none;
 }
 
+.product-media-slider {
+  position: relative;
+}
+
+.product-media-slider .swiper-container {
+  width: 100%;
+}
+
+.product-media-slider .swiper-wrapper {
+  align-items: stretch;
+}
+
+.product-media-slider .swiper-slide {
+  display: flex;
+  justify-content: center;
+}
+
+.product-media-slider img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.product-media-controls {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+  padding: 0 12px;
+}
+
+.product-media-nav {
+  pointer-events: auto;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid #dce3e8;
+  border-radius: 999px;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 6px 18px rgba(17, 24, 39, 0.08);
+  color: #0d6ba6;
+  font-size: 24px;
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+  background-image: none;
+}
+
+.product-media-nav:hover,
+.product-media-nav:focus-visible {
+  border-color: #0d6ba6;
+  box-shadow: 0 10px 26px rgba(13, 107, 166, 0.18);
+  transform: translateY(-1px);
+}
+
+.product-media-nav.swiper-button-disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+@media (max-width: 768px) {
+  .product-media-controls {
+    padding: 0 6px;
+  }
+
+  .product-media-nav {
+    width: 38px;
+    height: 38px;
+    font-size: 20px;
+  }
+}
+
 .breadcrumbs {
     margin: 0;
     padding: 0;
@@ -266,5 +341,4 @@ shopify-payment-terms {
 .product-grid .price {
   margin-bottom: 20px; /* 👈 ajusta a gusto: 12px–24px es ideal */
 }
-
 
