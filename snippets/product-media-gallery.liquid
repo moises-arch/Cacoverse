@@ -54,16 +54,25 @@
   data-desktop-layout="{{ section.settings.gallery_layout }}"
 >
   <div id="GalleryStatus-{{ section.id }}" class="visually-hidden" role="status"></div>
-  <slider-component id="GalleryViewer-{{ section.id }}" class="slider-mobile-gutter">
+  <slider-component id="GalleryViewer-{{ section.id }}" class="slider-mobile-gutter product-media-slider">
     <a class="skip-to-content-link button visually-hidden quick-add-hidden" href="#ProductInfo-{{ section.id }}">
       {{ 'accessibility.skip_to_product_info' | t }}
     </a>
 
-    <ul
-      id="Slider-Gallery-{{ section.id }}"
-      class="product__media-list contains-media grid grid--peek list-unstyled slider slider--mobile"
-      role="list"
+    <div
+      class="swiper-container product-media-swiper"
+      data-slides-desktop="1"
+      data-slides-tablet="1"
+      data-slides-mobile="1"
+      data-space-between="12"
+      data-loop="true"
     >
+      <ul
+        id="Slider-Gallery-{{ section.id }}"
+        class="product__media-list contains-media list-unstyled swiper-wrapper"
+        role="list"
+        aria-live="polite"
+      >
 
 {%- assign widths_list = "320,480,640,800,960,1200,1500,1800,2048,2560,3000,3840" | split: "," -%}
 {%- capture sizes_main -%}
@@ -115,11 +124,13 @@
 
   <li
     id="Slide-{{ section.id }}-{{ fm.id }}"
-    class="product__media-item grid__item slider__slide is-active{% if single_media_visible %} product__media-item--single{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+    class="product__media-item grid__item slider__slide swiper-slide is-active{% if single_media_visible %} product__media-item--single{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
     data-media-id="{{ section.id }}-{{ fm.id }}"
     selected-color="{{ fm_color }}"
     selected-color-list="{{ fm_color_list }}"
     selected-key="{{ fm_key }}"
+    role="group"
+    aria-label="1 de {{ product.media.size }}"
   >
     <div class="caco-square-box">
       <img
@@ -188,11 +199,13 @@
 
   <li
     id="Slide-{{ section.id }}-{{ media.id }}"
-    class="product__media-item grid__item slider__slide{% if single_media_visible %} product__media-item--single{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+    class="product__media-item grid__item slider__slide swiper-slide{% if single_media_visible %} product__media-item--single{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
     data-media-id="{{ section.id }}-{{ media.id }}"
     selected-color="{{ m_color }}"
     selected-color-list="{{ m_color_list }}"
     selected-key="{{ m_key }}"
+    role="group"
+    aria-label="{{ forloop.index0 | plus: 2 }} de {{ product.media.size }}"
   >
     <div class="caco-square-box">
       <img
@@ -221,20 +234,25 @@
   {%- assign slide_index = slide_index | plus: 1 -%}
 {%- endfor -%}
 
-    </ul>
+      </ul>
+    </div>
 
-    <div class="slider-buttons caco-media-nav quick-add-hidden{% if hide_mobile_slider %} small-hide{% endif %}">
-      <button type="button" class="slider-button slider-button--prev" name="previous" aria-label="{{ 'general.slider.previous_slide' | t }}">
-        <span class="svg-wrapper">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
+    <div class="product-media-controls">
+      <button
+        type="button"
+        class="swiper-button-prev product-media-nav"
+        aria-label="{{ 'general.slider.previous_slide' | t }}"
+        aria-controls="Slider-Gallery-{{ section.id }}"
+      >
+        <span aria-hidden="true">‹</span>
       </button>
-      <div class="slider-counter caption">
-        <span class="slider-counter--current">1</span>
-        <span aria-hidden="true"> / </span>
-        <span class="visually-hidden">{{ 'general.slider.of' | t }}</span>
-        <span class="slider-counter--total">{{ media_count }}</span>
-      </div>
-      <button type="button" class="slider-button slider-button--next" name="next" aria-label="{{ 'general.slider.next_slide' | t }}">
-        <span class="svg-wrapper">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
+      <button
+        type="button"
+        class="swiper-button-next product-media-nav"
+        aria-label="{{ 'general.slider.next_slide' | t }}"
+        aria-controls="Slider-Gallery-{{ section.id }}"
+      >
+        <span aria-hidden="true">›</span>
       </button>
     </div>
   </slider-component>
