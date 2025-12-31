@@ -1,18 +1,27 @@
-<div class="slider">
+{%- assign product_media_slider_id = 'product-media-slider-' | append: product.id -%}
+
+<div
+  class="product-media-slider"
+  role="region"
+  aria-roledescription="carousel"
+  aria-label="{{ product.title | escape }}"
+>
   <div
+    id="{{ product_media_slider_id }}"
     class="swiper-container"
-    data-space-between="10"
-    data-slides-desktop="3"
-    data-slides-tablet="2"
+    data-space-between="12"
+    data-slides-desktop="1"
+    data-slides-tablet="1"
     data-slides-mobile="1"
+    data-loop="true"
   >
-    <div class="swiper-wrapper pmedia">
+    <div class="swiper-wrapper pmedia" aria-live="polite">
       {% for media in product.media %}
-        <div class="swiper-slide">
+        <div class="swiper-slide" role="group" aria-label="{{ forloop.index }} de {{ product.media.size }}">
           {%- assign media_color_tokens = media.alt | downcase | split: ',' -%}
           <img
             src="{{ media | img_url : '636x' }}"
-            alt="{{ media.alt | handleize | downcase }}"
+            alt="{{ media.alt | strip }}"
             width="636"
             height="636"
             loading="lazy"
@@ -22,6 +31,25 @@
           >
         </div>
       {% endfor %}
+    </div>
+
+    <div class="product-media-controls">
+      <button
+        type="button"
+        class="swiper-button-prev product-media-nav"
+        aria-label="Ver la imagen anterior"
+        aria-controls="{{ product_media_slider_id }}"
+      >
+        <span aria-hidden="true">‹</span>
+      </button>
+      <button
+        type="button"
+        class="swiper-button-next product-media-nav"
+        aria-label="Ver la siguiente imagen"
+        aria-controls="{{ product_media_slider_id }}"
+      >
+        <span aria-hidden="true">›</span>
+      </button>
     </div>
   </div>
 </div>
