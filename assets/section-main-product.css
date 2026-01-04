@@ -5239,4 +5239,22 @@ body.template-product .product__media-modal * {
     width: 36px;
     height: 36px;
   }
+
+  /* Emergency Mobile Fixes */
+  .product-media-swiper {
+    min-height: 300px !important;
+  }
+
+  .product-media-swiper .swiper-wrapper {
+    display: flex !important;
+    height: 100% !important;
+  }
+}
+
+/* Ensure wrapper is always flex for Swiper to work */
+.product-media-swiper .swiper-wrapper {
+  display: flex !important;
+  width: 100%;
+  height: auto;
+  box-sizing: content-box;
 }

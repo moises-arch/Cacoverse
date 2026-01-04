@@ -551,6 +551,14 @@
              swiper.update();
         }
     }, 1000);
+
+    // Update Swiper on resize to handle responsive layout changes
+    window.addEventListener('resize', function() {
+        if(swiper) {
+            swiper.update();
+            swiper.emit('resize');
+        }
+    });
   });
 </script>
 
