@@ -677,32 +677,18 @@ a.product__text {
   }
 }
 
-@keyframes buttonPulse {
-
-  0%,
-  100% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(0.97);
-    opacity: 0.9;
-  }
-}
-
 .product-form__submit.loading:not(:disabled) {
-  animation: buttonPulse 1s infinite ease-in-out;
   pointer-events: none;
+  cursor: wait;
 }
 
 .product-form__submit.loading:not(:disabled)::after {
   display: block !important;
-  animation: buttonShimmer 1s infinite linear;
+  animation: buttonShimmer 1.2s infinite linear;
 }
 
 .product-form__submit.loading:not(:disabled)>span {
-  opacity: 0.6;
-  filter: blur(0.5px);
+  opacity: 0.8;
 }
 
 .product-form__submit:disabled>span {
