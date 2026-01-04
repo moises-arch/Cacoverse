@@ -30,7 +30,38 @@ if (!customElements.get('compatible-products-form')) {
             this.loadMoreButton.closest('.compatible-products__load-more-container').style.display = 'none';
         }
 
-        handleCheckboxChange() {
+        handleCheckboxChange(event) {
+            if (event.target.tagName === 'SELECT') {
+                const select = event.target;
+                const card = select.closest('.compatible-product-card');
+                const selectedOption = select.options[select.selectedIndex];
+                const newPrice = selectedOption.dataset.price;
+                const newVariantId = select.value;
+                const newSku = selectedOption.dataset.sku;
+
+                // Update card data
+                card.dataset.price = newPrice;
+                card.dataset.variantId = newVariantId;
+
+                // Update UI text (Price)
+                const priceElement = card.querySelector('.price-item');
+                if (priceElement) {
+                    // Simple formatting, ideally use Shopify.formatMoney if available or just update raw numbers + symbol
+                    // For now, grabbing the text from the option is safest as it's pre-formatted by Liquid
+                    const priceText = selectedOption.textContent.split('-')[1].trim();
+                    priceElement.textContent = priceText;
+                }
+
+                // Update SKU if exists
+                const skuElement = card.querySelector('.compatible-product-card__sku');
+                if (skuElement && newSku) {
+                    skuElement.textContent = newSku;
+                }
+
+                // Update Checkbox value
+                const checkbox = card.querySelector('input[type="checkbox"]');
+                checkbox.value = newVariantId;
+            }
             this.updateTotal();
         }
 

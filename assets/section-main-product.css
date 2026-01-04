@@ -5198,6 +5198,8 @@ body.template-product .product__media-modal * {
   border-radius: 6px;
   transition: box-shadow 0.2s ease;
   min-height: 80px;
+  flex-wrap: wrap;
+  /* Support for variant selector wrapping */
 }
 
 .compatible-product-card:hover {
@@ -5331,4 +5333,29 @@ body.template-product .product__media-modal * {
   width: 100%;
   max-width: 250px;
   /* Limit width */
+}
+
+.compatible-product-card__variants {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.compatible-product-card__variant-select {
+  width: 100%;
+  padding: 0.4rem;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  font-size: 1.2rem;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.compatible-product-card:has(.compatible-product-card__variants) {
+  flex-wrap: wrap;
+  /* Allow wrapping so variants drop to next line if needed, or keep compact */
+}
+
+/* Adjust card height for variants */
+.compatible-product-card:has(.compatible-product-card__variants) {
+  padding-bottom: 1rem;
 }

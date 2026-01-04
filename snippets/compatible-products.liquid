@@ -71,8 +71,25 @@
                       <span class="compatible-product-card__sku">{{ current_variant.sku }}</span>
                     {%- endif -%}
                     <div class="compatible-product-card__price">
-                      {{ current_variant.price | money }}
+                      <span class="price-item">{{ current_variant.price | money }}</span>
                     </div>
+                  </div>
+                  
+                  {%- if item.variants.size > 1 -%}
+                    <div class="compatible-product-card__variants">
+                      <select class="compatible-product-card__variant-select" data-product-id="{{ item.id }}">
+                        {%- for variant in item.variants -%}
+                          <option value="{{ variant.id }}" 
+                                  data-price="{{ variant.price }}"
+                                  data-sku="{{ variant.sku }}"
+                                  {% if variant.id == current_variant.id %}selected{% endif %}
+                                  {% unless variant.available %}disabled{% endunless %}>
+                            {{ variant.title }} - {{ variant.price | money }}
+                          </option>
+                        {%- endfor -%}
+                      </select>
+                    </div>
+                  {%- endif -%}
                   </div>
                 </div>
               </div>
