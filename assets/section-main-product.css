@@ -81,12 +81,7 @@ product-info {
     z-index: 2;
   }
 
-  .product__media-wrapper {
-    position: sticky;
-    top: 3rem;
-    align-self: start;
-    z-index: 1;
-  }
+
 
   .product--thumbnail .thumbnail-list {
     padding-right: var(--media-shadow-horizontal-offset);
