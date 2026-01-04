@@ -571,63 +571,53 @@ a.product__text {
   color: #ffffff !important;
   border-radius: 50px !important;
   padding: 18px 45px !important;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  font-size: 1.15em;
+  font-size: 1.1em;
   position: relative;
   overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 64px;
-  font-weight: 800;
+  min-height: 62px;
+  font-weight: 700;
   width: 100%;
   border: none !important;
   outline: none !important;
-  box-shadow: 0 8px 32px rgba(59, 102, 214, 0.35) !important;
-  transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  /* Ultra-Soft Shadow */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* WOW Hover Effect */
-.product__info-wrapper .product-form__submit:hover {
-  background: linear-gradient(135deg, var(--orange-glow) 0%, var(--orange-primary) 100%) !important;
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(250, 101, 12, 0.45) !important;
-  letter-spacing: 0.15em;
-  animation: pulseGlow 2s infinite;
-}
-
-@keyframes pulseGlow {
-  0% {
-    box-shadow: 0 12px 40px rgba(250, 101, 12, 0.45);
-  }
-
-  50% {
-    box-shadow: 0 12px 60px rgba(250, 101, 12, 0.65);
-  }
-
-  100% {
-    box-shadow: 0 12px 40px rgba(250, 101, 12, 0.45);
-  }
-}
-
-/* The Shimmer (Premium Touch) */
-.product__info-wrapper .product-form__submit::after {
+/* Glassy Reflection Layer */
+.product__info-wrapper .product-form__submit::before {
   content: '';
   position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
-  transform: scale(0);
-  transition: transform 0.6s ease;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+  z-index: 1;
   pointer-events: none;
 }
 
-.product__info-wrapper .product-form__submit:hover::after {
-  transform: scale(1);
+/* Subtler Hover */
+.product__info-wrapper .product-form__submit:hover {
+  background: linear-gradient(135deg, var(--orange-glow) 0%, var(--orange-primary) 100%) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(250, 101, 12, 0.2) !important;
+  letter-spacing: 0.12em;
+}
+
+.product__info-wrapper .product-form__submit:focus,
+.product__info-wrapper .product-form__submit:focus-visible {
+  outline: none !important;
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px var(--blue-primary) !important;
 }
 
 .product__info-wrapper .product-form__submit:active {
@@ -647,9 +637,9 @@ a.product__text {
   pointer-events: none;
 }
 
+/* Modernized Premium Spinner */
 .product-form__submit .loading__spinner {
   display: none !important;
-  /* Force hide by default */
   position: absolute !important;
   top: 50% !important;
   left: 50% !important;
@@ -659,14 +649,13 @@ a.product__text {
 
 .product-form__submit.loading .loading__spinner {
   display: flex !important;
-  /* Show ONLY in loading state */
-  animation: fadeInSpinner 0.3s ease forwards;
+  animation: premiumSpinnerIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
-@keyframes fadeInSpinner {
+@keyframes premiumSpinnerIn {
   from {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.5);
+    transform: translate(-50%, -50%) scale(0.6);
   }
 
   to {
@@ -676,13 +665,26 @@ a.product__text {
 }
 
 .product-form__submit .loading__spinner .spinner {
-  width: 28px !important;
-  height: 28px !important;
+  width: 26px !important;
+  height: 26px !important;
+  animation: premiumRotate 1s linear infinite !important;
+}
+
+@keyframes premiumRotate {
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .product-form__submit .loading__spinner .path {
   stroke: #ffffff !important;
-  stroke-width: 4 !important;
+  stroke-width: 1.5 !important;
+  /* Even thinner and more elegant */
+  stroke-linecap: round !important;
+  stroke-dasharray: 60, 150 !important;
+  stroke-dashoffset: 0 !important;
+  animation: none !important;
+  filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.5));
 }
 
 .product-form__buttons {
