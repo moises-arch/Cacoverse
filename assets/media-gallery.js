@@ -80,10 +80,14 @@ if (!customElements.get('media-gallery')) {
         }
       });
 
-      // Main image click for Lightbox
+      // Main image click for Lightbox - refined to avoid opening during swipe
       this.querySelector('.gallery-main').addEventListener('click', (e) => {
-        const activeSlide = this.mainSwiper.slides[this.mainSwiper.activeIndex];
-        const img = activeSlide.querySelector('img');
+        // Don't open if swipe was intended
+        const swiper = this.mainSwiper;
+        if (!swiper || Math.abs(swiper.touches.diff) > 5) return;
+
+        // Check if user clicked an image inside a slide
+        const img = e.target.closest('.swiper-slide img');
         if (img && img.dataset.zoomUrl) {
           this.openLightbox(img.dataset.zoomUrl);
         }
@@ -92,7 +96,10 @@ if (!customElements.get('media-gallery')) {
       // Thumbnail click sync
       this.addEventListener('click', (e) => {
         const thumb = e.target.closest('.gallery-thumbs .swiper-slide');
-        if (thumb) this.slideToMedia(thumb.dataset.mediaId);
+        if (thumb) {
+          e.stopPropagation();
+          this.slideToMedia(thumb.dataset.mediaId);
+        }
       });
     }
 
@@ -222,7 +229,9 @@ if (!customElements.get('media-gallery')) {
     }
 
     updateLightboxImage() {
-      const lbImg = document.querySelector('.lightbox-image');
+      const lb = document.getElementById('GalleryLightbox');
+      if (!lb) return;
+      const lbImg = lb.querySelector('.lightbox-image');
       if (lbImg) {
         lbImg.style.transform = `translate(${this.translateX}px, ${this.translateY}px) scale(${this.zoomLevel})`;
       }

@@ -178,15 +178,18 @@
     height: 100%;
     background: rgba(0, 0, 0, 0.95);
     z-index: 9999;
-    display: none;
+    display: flex;
+    visibility: hidden;
+    pointer-events: none;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
   }
   .media-lightbox.active {
-    display: flex;
+    visibility: visible;
+    pointer-events: auto;
     opacity: 1;
   }
   .lightbox-close {
