@@ -155,20 +155,23 @@ if (!customElements.get('media-gallery')) {
 
       const filterLogic = (item) => {
         const itemMediaId = item.dataset.mediaId;
-        const rawColorTags = item.dataset.color || '';
-        const itemTags = rawColorTags.split(',').map(t => t.trim().toLowerCase()).filter(t => t);
+        const rawColorTags = (item.dataset.color || '').toLowerCase();
+        const itemTags = rawColorTags.split(',').map(t => t.trim()).filter(t => t);
 
         const isFeatured = featuredMediaId && String(itemMediaId) === String(featuredMediaId);
-        const isAll = itemTags.includes('all') || itemTags.includes('all-show');
 
-        // Matches current selected options (e.g. blue, 10-pack)
+        // Strict all-show check
+        const isAll = itemTags.some(tag => tag === 'all' || tag === 'all-show');
+
+        // Matches current selected options
         const matchesAny = activeTokens.some(token => itemTags.includes(token));
 
-        // Hidden if it has a tag from a category that isn't currently selected
-        // (prevents "Red" showing when "Blue" is picked)
+        // Category collision check
         const hasMismatch = itemTags.some(tag => allPossibleValues.includes(tag) && !activeTokens.includes(tag));
 
-        // Final match condition: Featured wins, then All-show wins, then specific matches without category conflicts
+        // Priority 1: Featured SKU Image
+        // Priority 2: Generic All-Show Content
+        // Priority 3: Matches current selection AND doesn't conflict with other choices
         const isMatch = isFeatured || isAll || (matchesAny && !hasMismatch);
 
         item.style.display = isMatch ? 'flex' : 'none';
@@ -196,7 +199,7 @@ if (!customElements.get('media-gallery')) {
 
         visible.forEach(slide => {
           const tags = (slide.dataset.color || '').toLowerCase().split(',').map(t => t.trim());
-          const isAll = tags.includes('all') || tags.includes('all-show');
+          const isAll = tags.some(tag => tag === 'all' || tag === 'all-show');
           const isFeaturedId = featuredMediaId && String(slide.dataset.mediaId) === String(featuredMediaId);
 
           if (isFeaturedId) {

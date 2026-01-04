@@ -143,15 +143,15 @@
     width: 100%;
   }
   .gallery-thumbs .swiper {
-    padding: 30px 0; /* FURTHER INCREASED PADDING FOR LARGER THUMBS & SHADOWS */
+    padding: 10px 0; /* Reduced padding since shadows are gone */
   }
   .gallery-thumbs .swiper-slide {
-    width: 120px; /* ENLARGED AGAIN TO 120PX */
+    width: 120px;
     aspect-ratio: 1 / 1;
     height: 120px !important;
     opacity: 0.5;
     cursor: pointer;
-    border-radius: 20px; /* Slightly more rounded for the larger size */
+    border-radius: 12px; /* LESS ROUNDED */
     overflow: hidden;
     border: 2px solid transparent;
     transition: all 0.3s ease;
@@ -161,16 +161,16 @@
   .gallery-thumbs .swiper-slide-thumb-active {
     opacity: 1;
     border-color: #0d6ba6;
-    transform: scale(0.95); /* Subtle scale down for active state */
+    transform: scale(0.98); 
     filter: grayscale(0%);
-    /* CENTERED BLUE SHADOW */
-    box-shadow: 0 0 30px rgba(13, 107, 166, 0.35);
+    box-shadow: none !important; /* REMOVED SHADOWS */
   }
   .gallery-thumbs img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
+    border-radius: 12px;
   }
 
   /* Lightbox Styles */
@@ -270,20 +270,20 @@
     width: 100%;
   }
   .thumb-nav-btn {
-    width: 30px;
+    width: 35px;
     height: 120px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: #999;
+    color: #666; /* DARKER FOR VISIBILITY */
     transition: all 0.3s ease;
     user-select: none;
     z-index: 10;
   }
   .thumb-nav-btn:hover {
-    color: #333;
-    transform: scale(1.1);
+    color: #000;
+    transform: scale(1.15);
   }
   .thumb-nav-btn svg {
     width: 24px;
