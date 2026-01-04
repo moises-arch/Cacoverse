@@ -562,13 +562,13 @@ a.product__text {
 }
 
 .product__info-wrapper .product-form__submit {
-  background: linear-gradient(135deg, #0d6ba6 0%, #0a4f8a 100%) !important;
+  background: #0d6ba6 !important;
   color: #ffffff !important;
   border-radius: 999px !important;
   padding: 12px 36px !important;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  font-size: 1.1em;
+  font-size: 1.15em;
   position: relative;
   overflow: hidden;
   display: inline-flex;
@@ -578,14 +578,15 @@ a.product__text {
   font-weight: 800;
   width: 100%;
   border: none !important;
-  box-shadow: 0 10px 20px rgba(13, 107, 166, 0.2);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(13, 107, 166, 0.15);
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .product__info-wrapper .product-form__submit:hover {
+  background: #fa650c !important;
   transform: translateY(-2px);
-  box-shadow: 0 15px 30px rgba(13, 107, 166, 0.3);
-  background: linear-gradient(135deg, #fa650c 0%, #e85500 100%) !important;
+  box-shadow: 0 8px 24px rgba(250, 101, 12, 0.25);
 }
 
 .product__info-wrapper .product-form__submit:active {
@@ -594,11 +595,6 @@ a.product__text {
 
 .product__info-wrapper .product-form__submit::before {
   content: none !important;
-}
-
-.product__info-wrapper .product-form__submit:hover {
-  background: #fa650c !important;
-  border-color: #fa650c !important;
 }
 
 .product-form__buttons {

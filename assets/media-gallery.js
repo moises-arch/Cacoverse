@@ -9,36 +9,29 @@ if (!customElements.get('media-gallery')) {
 
     connectedCallback() {
       this.initSwiper();
+      // Fast initial filter
+      this.filterByCurrentSelections();
+      // Backup filter after a short delay for slow-loading variant data
+      setTimeout(() => this.filterByCurrentSelections(), 300);
       this.bindEvents();
     }
 
     initSwiper() {
       if (!window.Swiper) {
-        console.error('Swiper not loaded');
-        // Retry if Swiper is lazy loaded
         setTimeout(() => this.initSwiper(), 100);
         return;
       }
 
-      // Initialize Thumbnails first
-      const thumbsParams = {
-        spaceBetween: 10,
-        slidesPerView: 4,
+      this.thumbSwiper = new Swiper(`.thumbs-swiper-${this.sectionId}`, {
+        spaceBetween: 12,
+        slidesPerView: 'auto',
         freeMode: true,
         watchSlidesProgress: true,
         observer: true,
         observeParents: true,
-        breakpoints: {
-          320: { slidesPerView: 3 },
-          768: { slidesPerView: 5 },
-          1024: { slidesPerView: 6 }
-        }
-      };
+      });
 
-      this.thumbSwiper = new Swiper(`.thumbs-swiper-${this.sectionId}`, thumbsParams);
-
-      // Initialize Main Swiper
-      const mainParams = {
+      this.mainSwiper = new Swiper(`.main-swiper-${this.sectionId}`, {
         spaceBetween: 0,
         pagination: {
           el: `.swiper-pagination-${this.sectionId}`,
@@ -53,13 +46,8 @@ if (!customElements.get('media-gallery')) {
         },
         observer: true,
         observeParents: true,
-        autoHeight: true, // Crucial for responsive height adaptation
-      };
-
-      this.mainSwiper = new Swiper(`.main-swiper-${this.sectionId}`, mainParams);
-
-      // Ensure visibility on load
-      this.mainSwiper.update();
+        autoHeight: true,
+      });
     }
 
     bindEvents() {
@@ -70,19 +58,18 @@ if (!customElements.get('media-gallery')) {
         }
       });
 
-      // Catch any input change in the product form
+      // Catch manual changes
       document.body.addEventListener('change', (e) => {
-        if (e.target.closest('product-info') || e.target.closest('.product-form') || e.target.closest('[id^="product-form"]')) {
-          // If a variation option changed, we find the new variant object if possible 
-          // or just filter based on all current selections.
+        const productForm = e.target.closest('product-info') || e.target.closest('.product-form');
+        if (productForm) {
           this.filterByCurrentSelections();
         }
       });
 
-      // Fixed Thumbnail click handling
+      // Thumbnail navigation
       this.addEventListener('click', (e) => {
         const thumbSlide = e.target.closest('.gallery-thumbs .swiper-slide');
-        if (thumbSlide && this.mainSwiper) {
+        if (thumbSlide) {
           const mediaId = thumbSlide.dataset.mediaId;
           this.slideToMedia(mediaId);
         }
@@ -95,22 +82,26 @@ if (!customElements.get('media-gallery')) {
     }
 
     filterByCurrentSelections() {
-      // Filter based on currently checked inputs in the DOM
-      const checkedInputs = Array.from(document.querySelectorAll('input[type="radio"]:checked, select'));
-      const tokens = checkedInputs.map(i => i.value.toLowerCase().trim().replace(/\s+/g, '-')).filter(t => t !== '');
-      this.filterSlides(null, tokens);
+      // Find all active options in the product form
+      const productInfo = document.querySelector('product-info') || document.querySelector('.product-form');
+      if (!productInfo) return;
+
+      const checkedInputs = Array.from(productInfo.querySelectorAll('input[type="radio"]:checked, select'));
+      const activeTokens = checkedInputs.map(input => {
+        return input.value.toLowerCase().trim().replace(/\s+/g, '-');
+      }).filter(t => t !== '');
+
+      this.filterSlides(null, activeTokens);
     }
 
     slideToMedia(mediaId) {
       if (!this.mainSwiper || !mediaId) return;
-      const allSlides = Array.from(this.querySelectorAll('.gallery-main .swiper-slide'));
-      const targetSlide = this.querySelector(`.gallery-main .swiper-slide[data-media-id="${mediaId}"]`);
+
+      // Find the slide in the swiper's internal collection
+      const targetSlide = Array.from(this.mainSwiper.slides).find(slide => slide.dataset.mediaId == mediaId);
 
       if (targetSlide) {
-        // Slide works on the index within the current Swiper instance (which includes hidden slides)
-        // but Swiper handles display:none slides usually by skipping them if reached via navigation.
-        // For direct slideTo, we need the index relative to all slides.
-        const index = allSlides.indexOf(targetSlide);
+        const index = Array.from(this.mainSwiper.slides).indexOf(targetSlide);
         if (index !== -1) {
           this.mainSwiper.slideTo(index);
         }
@@ -120,57 +111,73 @@ if (!customElements.get('media-gallery')) {
     filterSlides(variant, manualTokens = null) {
       if (!this.mainSwiper || !this.thumbSwiper) return;
 
+      const productInfo = document.querySelector('product-info') || document.querySelector('.product-form');
+      if (!productInfo) return;
+
+      // 1. Get ALL possible option values to identify which tags are "variable tags"
+      const allPossibleValues = Array.from(productInfo.querySelectorAll('input[type="radio"], select option'))
+        .map(el => (el.value || el.textContent || '').toLowerCase().trim().replace(/\s+/g, '-'))
+        .filter(t => t && t !== 'all');
+
+      // 2. Get CURRENTLY selected tokens
       let activeTokens = [];
       if (variant && variant.options) {
         activeTokens = variant.options.map(opt => opt.toLowerCase().trim().replace(/\s+/g, '-'));
       } else if (manualTokens) {
         activeTokens = manualTokens;
+      } else {
+        // Fallback to reading DOM
+        const checkedInputs = Array.from(productInfo.querySelectorAll('input[type="radio"]:checked, select'));
+        activeTokens = checkedInputs.map(input => input.value.toLowerCase().trim().replace(/\s+/g, '-')).filter(t => t !== '');
       }
 
       if (activeTokens.length === 0) return;
 
-      const slides = this.querySelectorAll('.gallery-main .swiper-slide');
-      const thumbSlides = this.querySelectorAll('.gallery-thumbs .swiper-slide');
-
+      const mainSlides = Array.from(this.querySelectorAll('.gallery-main .swiper-slide'));
+      const thumbSlides = Array.from(this.querySelectorAll('.gallery-thumbs .swiper-slide'));
       const featuredMediaId = variant ? variant.featured_media?.id : null;
 
-      // Filter Logic:
-      // A slide matches if it has 'all', 'all-show', OR if it contains ANY of the active tokens.
-      // Additionally, the variant's featured_media MUST always be shown.
-      slides.forEach(slide => {
-        const slideMediaId = slide.dataset.mediaId;
-        const slideColors = (slide.dataset.color || '').split(',');
+      // 3. Advanced Filtering Logic
+      const filterItem = (item) => {
+        const itemMediaId = item.dataset.mediaId;
+        const itemTags = (item.dataset.color || '').split(',').map(t => t.trim()).filter(t => t !== '');
 
-        const isFeatured = featuredMediaId && slideMediaId == featuredMediaId;
-        const isMatch = isFeatured || slideColors.some(c => c === 'all' || c === 'all-show' || activeTokens.includes(c));
+        const isFeatured = featuredMediaId && itemMediaId == featuredMediaId;
+        const isAll = itemTags.includes('all') || itemTags.includes('all-show');
 
-        slide.style.display = isMatch ? 'flex' : 'none';
-      });
+        // Accurate check: 
+        // a) Must match at least one active token
+        const matchesAny = activeTokens.some(token => itemTags.includes(token));
+        // b) Must NOT have any tag that belongs to another unselected option (prevents "10 Pack" showing when "3 Pack" is selected)
+        const hasMismatch = itemTags.some(tag => allPossibleValues.includes(tag) && !activeTokens.includes(tag));
 
-      thumbSlides.forEach(slide => {
-        const slideMediaId = slide.dataset.mediaId;
-        const slideColors = (slide.dataset.color || '').split(',');
+        const isMatch = isFeatured || isAll || (matchesAny && !hasMismatch);
 
-        const isFeatured = featuredMediaId && slideMediaId == featuredMediaId;
-        const isMatch = isFeatured || slideColors.some(c => c === 'all' || c === 'all-show' || activeTokens.includes(c));
-        slide.style.display = isMatch ? 'block' : 'none';
-      });
+        item.style.display = isMatch ? 'flex' : 'none';
+        if (item.classList.contains('swiper-slide')) {
+          item.style.height = isMatch ? '' : '0px';
+        }
+        return isMatch;
+      };
 
-      // Swiper Update
+      mainSlides.forEach(filterItem);
+      thumbSlides.forEach(filterItem);
+
+      // Crucial: Update Swiper so it can recalculate layout without the hidden slides
       this.mainSwiper.update();
       this.thumbSwiper.update();
 
-      // Priority: Slide to Featured Media if it exists, otherwise first visible
-      if (featuredMediaId) {
-        setTimeout(() => this.slideToMedia(featuredMediaId), 10);
-      } else {
-        setTimeout(() => {
-          const firstVisible = Array.from(slides).find(s => s.style.display !== 'none');
-          if (firstVisible) {
-            this.slideToMedia(firstVisible.dataset.mediaId);
+      // Navigate to the correct starting slide with a slight delay for Swiper stability
+      setTimeout(() => {
+        if (featuredMediaId) {
+          this.slideToMedia(featuredMediaId);
+        } else {
+          const firstMatch = mainSlides.find(s => s.style.display !== 'none');
+          if (firstMatch) {
+            this.slideToMedia(firstMatch.dataset.mediaId);
           }
-        }, 50);
-      }
+        }
+      }, 50);
     }
   });
 }
