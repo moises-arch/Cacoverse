@@ -124,6 +124,9 @@
                 fetchpriority="high"
                 decoding="async"
                 data-full="{{ fm | img_url: 'master' }}"
+                data-color="{{ fm_color }}"
+                data-color-list="{{ fm_color_list }}"
+                data-key="{{ fm_key }}"
               >
               <button
                 type="button"
@@ -197,6 +200,9 @@
                 fetchpriority="{% if first_rendered %}auto{% else %}high{% endif %}"
                 decoding="async"
                 data-full="{{ media | img_url: 'master' }}"
+                data-color="{{ m_color }}"
+                data-color-list="{{ m_color_list }}"
+                data-key="{{ m_key }}"
               >
               <button
                 type="button"
@@ -465,10 +471,15 @@
       on: {
         init: function() {
            updateActiveThumbnail(this.realIndex);
+           this.slides.forEach(s => s.classList.remove('is-active'));
+           if(this.slides[this.activeIndex]) this.slides[this.activeIndex].classList.add('is-active');
         },
         slideChange: function() {
            updateActiveThumbnail(this.realIndex);
-           // Fire custom event for any other listeners
+           this.slides.forEach(s => s.classList.remove('is-active'));
+           if(this.slides[this.activeIndex]) this.slides[this.activeIndex].classList.add('is-active');
+           
+           // Fire custom event
            document.dispatchEvent(new CustomEvent('media:slide:change', { detail: { index: this.realIndex } }));
         }
       }
@@ -560,6 +571,74 @@
 }
 @media (max-width: 989px){
   .caco-zoom-lens{ display:none !important; }
+}
+
+/* Swiper Gallery Styles (Injected for robustness) */
+.product-media-container {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+}
+.product-media-swiper {
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--media-radius);
+  position: relative;
+  display: block; /* Ensure visibility */
+  min-height: 300px; /* Safe default to prevent collapse */
+}
+.product-media-swiper .swiper-slide {
+  width: 100%;
+  height: auto;
+  display: flex !important; /* Force flex to override theme hiding */
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+.product-media-swiper .swiper-slide[style*="display: none"] {
+    display: none !important; /* Allow JS filtering to work */
+}
+.product-media-swiper img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+.caco-square-box {
+  width: 100%;
+  position: relative;
+}
+.swiper-button-prev,
+.swiper-button-next {
+  color: #0d6ba6;
+  background: rgba(255, 255, 255, 0.9);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+.swiper-button-prev:after,
+.swiper-button-next:after {
+  font-size: 18px;
+  font-weight: bold;
+}
+.swiper-button-prev:hover,
+.swiper-button-next:hover {
+  background: #0d6ba6;
+  color: #fff;
+  transform: scale(1.05);
+}
+@media (max-width: 767px) {
+  .swiper-button-prev,
+  .swiper-button-next {
+    width: 36px;
+    height: 36px;
+  }
 }
 </style>
 
