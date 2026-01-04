@@ -40,6 +40,10 @@ if (!customElements.get('media-gallery')) {
       // Initialize Main Swiper
       const mainParams = {
         spaceBetween: 0,
+        pagination: {
+          el: `.swiper-pagination-${this.sectionId}`,
+          clickable: true,
+        },
         navigation: {
           nextEl: `.swiper-button-next-${this.sectionId}`,
           prevEl: `.swiper-button-prev-${this.sectionId}`,
