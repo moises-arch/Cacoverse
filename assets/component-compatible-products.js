@@ -117,21 +117,26 @@ if (!customElements.get('compatible-products-form')) {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        items: selectedVariants
+                        items: selectedVariants,
+                        sections: 'cart-drawer,cart-icon-bubble'
                     })
                 });
 
                 if (response.ok) {
-                    // Dispatch event to update cart drawer
-                    document.dispatchEvent(new CustomEvent('cart:update', {
-                        bubbles: true
-                    }));
+                    const responseJson = await response.json();
 
-                    // Also try to open cart drawer if it exists
+                    // Update Cart Drawer
                     const cartDrawer = document.querySelector('cart-drawer');
                     if (cartDrawer) {
-                        cartDrawer.classList.add('active'); // Basic class check, might be different based on theme
-                        if (cartDrawer.open) cartDrawer.open();
+                        cartDrawer.renderContents(responseJson);
+                    } else {
+                        // Fallback for non-drawer carts (e.g. page refresh or event)
+                        document.dispatchEvent(new CustomEvent('cart:update', {
+                            bubbles: true,
+                            detail: {
+                                cart: responseJson
+                            }
+                        }));
                     }
 
                     // Reset button state
@@ -141,7 +146,6 @@ if (!customElements.get('compatible-products-form')) {
                         setTimeout(() => {
                             this.addButton.textContent = originalText;
                             this.addButton.removeAttribute('disabled');
-                            // Optional: uncheck items? No, Amazon keeps them checked.
                         }, 2000);
                     }, 500);
 
