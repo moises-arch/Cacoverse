@@ -1,0 +1,80 @@
+{% comment %}
+  Renders a list of compatible products from a metafield.
+  Usage:
+  {% render 'compatible-products', block: block, product: product %}
+{% endcomment %}
+
+{%- assign compatible_products = product.metafields.custom.bundle_products.value | default: product.metafields.custom.compatible_products.value | default: product.metafields.custom.custom_compatible_products.value -%}
+
+{%- if compatible_products != blank -%}
+  <div class="compatible-products-wrapper" {{ block.shopify_attributes }}>
+    {%- if block.settings.heading != blank -%}
+      <h3 class="compatible-products__heading h4">{{ block.settings.heading | escape }}</h3>
+    {%- endif -%}
+
+    <div class="compatible-products__container">
+      <compatible-products-form>
+        <div class="compatible-products__list">
+          {%- for item in compatible_products -%}
+            {%- liquid
+              assign current_variant = item.selected_or_first_available_variant
+              unless current_variant
+                assign current_variant = item
+              endunless
+            -%}
+            {%- if current_variant.available -%}
+              <div class="compatible-product-card" data-product-id="{{ item.id }}" data-variant-id="{{ current_variant.id }}" data-price="{{ current_variant.price }}">
+                <div class="compatible-product-card__checkbox">
+                  <input type="checkbox" 
+                         id="compatible-{{ item.id }}" 
+                         name="compatible_product" 
+                         value="{{ current_variant.id }}" 
+                         checked
+                         class="compatible-checkbox">
+                </div>
+                
+                <div class="compatible-product-card__image-wrapper">
+                  {%- if item.featured_image != blank -%}
+                    <img src="{{ item.featured_image | image_url: width: 200 }}" 
+                         alt="{{ item.featured_image.alt | escape }}" 
+                         loading="lazy" 
+                         width="100" 
+                         height="100"
+                         class="compatible-product-card__image">
+                  {%- else -%}
+                    {{ 'product-1' | placeholder_svg_tag: 'compatible-product-card__image placeholder-svg' }}
+                  {%- endif -%}
+                </div>
+
+                <div class="compatible-product-card__info">
+                  <label for="compatible-{{ item.id }}" class="compatible-product-card__title">
+                    {{ item.title }}
+                  </label>
+                  <div class="compatible-product-card__meta">
+                    <span class="compatible-product-card__sku">SKU: {{ current_variant.sku }}</span>
+                    <div class="compatible-product-card__price">
+                      {{ current_variant.price | money }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+
+        <div class="compatible-products__actions">
+          <div class="compatible-products__total">
+            <span class="compatible-products__total-label">{{ 'sections.cart.subtotal' | t }}:</span>
+            <span class="compatible-products__total-price" data-total-price></span>
+            <span class="compatible-products__count" data-count>(0 items)</span>
+          </div>
+          <button type="button" class="button button--primary compatible-products__add-btn" disabled>
+            {{ 'products.product.add_to_cart' | t }}
+          </button>
+        </div>
+      </compatible-products-form>
+    </div>
+  </div>
+
+  <script src="{{ 'component-compatible-products.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}

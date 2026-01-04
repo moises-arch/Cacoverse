@@ -854,6 +854,8 @@
                 show_pickup_availability: true
               -%}
               </div>
+            {%- when 'compatible_products' -%}
+              {% render 'compatible-products', block: block, product: product %}
             {%- when 'rating' -%}
               {%- if product.metafields.reviews.rating.value != blank -%}
                 <div class="rating-wrapper">
@@ -2036,6 +2038,18 @@
         {
           "type": "paragraph",
           "content": "t:sections.main-product.blocks.rating.settings.paragraph.content"
+        }
+      ]
+    },
+    {
+      "type": "compatible_products",
+      "name": "Compatible Products",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Frequently Bought Together"
         }
       ]
     },
