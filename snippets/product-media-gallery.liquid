@@ -139,12 +139,15 @@
 
   /* Thumbnails */
   .gallery-thumbs {
-    margin-top: 5px; /* Further reduced margin to compensate for larger padding */
-    overflow: hidden;
+    margin-top: 10px;
     width: 100%;
+    position: relative;
   }
   .gallery-thumbs .swiper {
-    padding: 10px 0; /* Reduced padding since shadows are gone */
+    padding: 10px 0;
+    flex: 1;
+    min-width: 0;
+    width: 100%;
   }
   .gallery-thumbs .swiper-slide {
     width: 120px;

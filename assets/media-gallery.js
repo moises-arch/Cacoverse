@@ -41,11 +41,14 @@ if (!customElements.get('media-gallery')) {
       this.thumbSwiper = new Swiper(`.thumbs-swiper-${this.sectionId}`, {
         spaceBetween: 12,
         slidesPerView: 'auto',
-        freeMode: true,
+        freeMode: {
+          enabled: true,
+          sticky: false
+        },
         watchSlidesProgress: true,
+        watchOverflow: true,
         observer: true,
         observeParents: true,
-        centerInsufficientSlides: true,
         navigation: {
           nextEl: `.thumb-next-${this.sectionId}`,
           prevEl: `.thumb-prev-${this.sectionId}`,
@@ -267,10 +270,16 @@ if (!customElements.get('media-gallery')) {
             if (swiper.updateSlides) swiper.updateSlides();
             if (swiper.updateSize) swiper.updateSize();
             if (swiper.updateProgress) swiper.updateProgress();
+
+            // Recalculate snap points and bounds
+            if (swiper.scrollbar && swiper.scrollbar.updateSize) swiper.scrollbar.updateSize();
+
             swiper.slideTo(0, 0);
           }
         });
-        this.syncThumbnails();
+
+        // Final sync check
+        setTimeout(() => this.syncThumbnails(), 50);
       };
 
       // Execute update after DOM settles
