@@ -87,10 +87,7 @@
               {%- elsif product.selected_or_first_available_variant.available == false or quantity_rule_soldout -%}
                 {{ 'products.product.sold_out' | t }}
               {%- else -%}
-                <span class="button-icon">
-                  {{ 'icon-padlock.svg' | inline_asset_content }}
-                </span>
-                <span class="button-label">Check out</span>
+                {{ 'products.product.add_to_cart' | t }}
               {%- endif -%}
             </span>
             {%- render 'loading-spinner' -%}
