@@ -30,39 +30,6 @@
 
 {%- style -%}
 
-/* CTA theming */
-button[name="add"],
-.shopify-payment-button__button,
-.product-form__submit {
-  background: linear-gradient(90deg, #3b66d6 0%, #0d6ba6 100%) !important;
-  color: #fff !important;
-  border: none !important;
-  outline: none !important;
-  border-radius: 999px !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.05em !important;
-  font-weight: 800 !important;
-  box-shadow: none !important;
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-button[name="add"]:before,
-button[name="add"]:after,
-.shopify-payment-button__button:before,
-.shopify-payment-button__button:after,
-.product-form__submit:before,
-.product-form__submit:after {
-  content: none !important;
-  display: none !important;
-}
-
-button[name="add"]:hover,
-.shopify-payment-button__button:hover,
-.product-form__submit:hover {
-  background: linear-gradient(90deg, #fa650c 0%, #ff8c00 100%) !important;
-}
-
 /* Section spacing */
 .section-{{ section.id }}-padding {
   padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;

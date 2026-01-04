@@ -562,62 +562,127 @@ a.product__text {
 }
 
 .product__info-wrapper .product-form__submit {
-  background: linear-gradient(90deg, #3b66d6 0%, #0d6ba6 100%) !important;
+  --blue-primary: #3b66d6;
+  --blue-deep: #1a4ab9;
+  --orange-primary: #fa650c;
+  --orange-glow: #ff8c00;
+
+  background: linear-gradient(135deg, var(--blue-primary) 0%, var(--blue-deep) 100%) !important;
   color: #ffffff !important;
-  border-radius: 999px !important;
-  padding: 12px 36px !important;
-  letter-spacing: 0.05em;
+  border-radius: 50px !important;
+  padding: 18px 45px !important;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  font-size: 1.1em;
+  font-size: 1.15em;
   position: relative;
   overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 56px;
+  min-height: 64px;
   font-weight: 800;
   width: 100%;
   border: none !important;
-  box-shadow: none !important;
-  transition: all 0.3s ease;
+  outline: none !important;
+  box-shadow: 0 8px 32px rgba(59, 102, 214, 0.35) !important;
+  transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
   cursor: pointer;
 }
 
+/* WOW Hover Effect */
 .product__info-wrapper .product-form__submit:hover {
-  background: linear-gradient(90deg, #fa650c 0%, #ff8c00 100%) !important;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(250, 101, 12, 0.2);
+  background: linear-gradient(135deg, var(--orange-glow) 0%, var(--orange-primary) 100%) !important;
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(250, 101, 12, 0.45) !important;
+  letter-spacing: 0.15em;
+  animation: pulseGlow 2s infinite;
+}
+
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 12px 40px rgba(250, 101, 12, 0.45);
+  }
+
+  50% {
+    box-shadow: 0 12px 60px rgba(250, 101, 12, 0.65);
+  }
+
+  100% {
+    box-shadow: 0 12px 40px rgba(250, 101, 12, 0.45);
+  }
+}
+
+/* The Shimmer (Premium Touch) */
+.product__info-wrapper .product-form__submit::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+  transform: scale(0);
+  transition: transform 0.6s ease;
+  pointer-events: none;
+}
+
+.product__info-wrapper .product-form__submit:hover::after {
+  transform: scale(1);
 }
 
 .product__info-wrapper .product-form__submit:active {
-  transform: translateY(0);
+  transform: translateY(-1px) scale(0.98);
+  box-shadow: 0 5px 20px rgba(250, 101, 12, 0.3) !important;
 }
 
-.product__info-wrapper .product-form__submit::before,
-.product__info-wrapper .product-form__submit::after {
-  content: none !important;
-  display: none !important;
+/* Strict Spinner Logic (Hide when not loading) */
+.product-form__submit>span {
+  display: inline-block;
+  transition: all 0.4s ease;
 }
 
-/* Spinner centering fix */
+.product-form__submit.loading>span {
+  opacity: 0;
+  transform: scale(0.8) translateY(10px);
+  pointer-events: none;
+}
+
 .product-form__submit .loading__spinner {
+  display: none !important;
+  /* Force hide by default */
   position: absolute !important;
   top: 50% !important;
   left: 50% !important;
   transform: translate(-50%, -50%) !important;
-  width: 20px !important;
-  height: 20px !important;
+  z-index: 10 !important;
+}
+
+.product-form__submit.loading .loading__spinner {
   display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  z-index: 5 !important;
+  /* Show ONLY in loading state */
+  animation: fadeInSpinner 0.3s ease forwards;
+}
+
+@keyframes fadeInSpinner {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
 }
 
 .product-form__submit .loading__spinner .spinner {
-  position: static !important;
-  transform: none !important;
-  width: 20px !important;
-  height: 20px !important;
+  width: 28px !important;
+  height: 28px !important;
+}
+
+.product-form__submit .loading__spinner .path {
+  stroke: #ffffff !important;
+  stroke-width: 4 !important;
 }
 
 .product-form__buttons {
