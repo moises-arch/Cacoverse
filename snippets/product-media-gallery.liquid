@@ -453,9 +453,12 @@
   {%- endif -%}
 
 <script>
+  console.log('Cacoverse: Media Gallery script loaded');
   document.addEventListener('DOMContentLoaded', function() {
+    console.log('Cacoverse: DOMContentLoaded firing for media gallery');
     // Define elements first to avoid ReferenceError during init
     const thumbBtns = document.querySelectorAll('#Slider-Thumbnails-{{ section.id }} button.thumbnail');
+    console.log('Cacoverse: Found ' + thumbBtns.length + ' thumbnails');
     
     function updateActiveThumbnail(index) {
        thumbBtns.forEach(b => b.removeAttribute('aria-current'));
@@ -672,12 +675,19 @@
   color: #fff;
   transform: scale(1.05);
 }
-@media (max-width: 767px) {
   .swiper-button-prev,
   .swiper-button-next {
     width: 36px;
     height: 36px;
   }
+}
+/* Emergency overrides to force visibility */
+#Swiper-Gallery-{{ section.id }} .swiper-wrapper,
+#Swiper-Gallery-{{ section.id }} .swiper-slide {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  height: auto !important;
 }
 </style>
 
