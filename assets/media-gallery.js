@@ -170,7 +170,21 @@ if (!customElements.get('media-gallery')) {
       const mainSlides = Array.from(this.querySelectorAll('.gallery-main .swiper-slide'));
       const thumbSlides = Array.from(this.querySelectorAll('.gallery-thumbs .swiper-slide'));
 
+      // Check if this product actually uses the Alt-Text filtering system
+      // We look for at least ONE image that has a tag matching a real variant option
+      const productUsesFiltering = mainSlides.some(slide => {
+        const itemTags = (slide.dataset.color || '').toLowerCase().split(',').map(t => t.trim());
+        return itemTags.some(tag => allPossibleValues.includes(tag));
+      });
+
       const filterLogic = (item) => {
+        // If the product doesn't use the filtering system at all, everything stays visible
+        if (!productUsesFiltering) {
+          item.style.display = 'flex';
+          item.style.height = '';
+          return true;
+        }
+
         const itemMediaId = item.dataset.mediaId;
         const rawColorTags = (item.dataset.color || '').toLowerCase();
         const itemTags = rawColorTags.split(',').map(t => t.trim()).filter(t => t);
@@ -183,12 +197,10 @@ if (!customElements.get('media-gallery')) {
         // Matches current selected options
         const matchesAny = activeTokens.some(token => itemTags.includes(token));
 
-        // Category collision check
+        // Category collision check (logic to hide 'Red' when 'Blue' is selected)
         const hasMismatch = itemTags.some(tag => allPossibleValues.includes(tag) && !activeTokens.includes(tag));
 
-        // Priority 1: Featured SKU Image
-        // Priority 2: Generic All-Show Content
-        // Priority 3: Matches current selection AND doesn't conflict with other choices
+        // Final match condition for products that DO use filtering
         const isMatch = isFeatured || isAll || (matchesAny && !hasMismatch);
 
         item.style.display = isMatch ? 'flex' : 'none';
