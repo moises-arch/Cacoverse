@@ -63,8 +63,6 @@ if (!customElements.get('media-gallery')) {
     bindEvents() {
       // Listen for standard Shopify variant changes
       document.addEventListener('variant:change', (e) => {
-        // Check if this event belongs to current section or is global
-        // e.detail.variant is usually consistent in Shopify themes
         if (e.detail && e.detail.variant) {
           this.onVariantChange(e.detail.variant);
         }
@@ -72,40 +70,65 @@ if (!customElements.get('media-gallery')) {
 
       // Also listen for manual input changes (fallback)
       document.body.addEventListener('change', (e) => {
-        if (e.target.matches('input[type="radio"][name*="Option"], input[type="radio"][name*="Color"], input[type="radio"][name*="color"]')) {
-          const color = e.target.value.toLowerCase().trim().replace(/\s+/g, '-');
+        if (e.target.matches('input[type="radio"][name*="Option"], input[type="radio"][name*="Color"], input[type="radio"][name*="color"], .swatch-input__input')) {
+          const color = e.target.value;
           this.filterSlides(color);
+        }
+      });
+
+      // Explicitly handle thumbnail clicks to ensure synchronization
+      this.addEventListener('click', (e) => {
+        const thumbSlide = e.target.closest('.gallery-thumbs .swiper-slide');
+        if (thumbSlide && this.mainSwiper) {
+          // Find the index of this media in the current visible set or absolute set
+          const mediaId = thumbSlide.dataset.mediaId;
+          const mainSlide = this.querySelector(`.gallery-main .swiper-slide[data-media-id="${mediaId}"]`);
+          if (mainSlide) {
+            // Get internal swiper index of the matching slide
+            const index = Array.from(this.mainSwiper.slides).indexOf(mainSlide);
+            if (index !== -1) {
+              this.mainSwiper.slideTo(index);
+            }
+          }
         }
       });
     }
 
     onVariantChange(variant) {
-      // Extract color option. Usually Option1, Option2, or Option3
-      // We look for the option name 'Color' or 'Colour'
-      let color = null;
+      if (!variant) return;
 
-      variant.options.forEach((opt, index) => {
-        // Find the option key name (needs access to product options matching)
-        // simplified: assume we get the selected value directly
-      });
+      // Try to find color from options
+      let color = variant.featured_media ? variant.featured_media.alt : null;
 
-      // Better approach: look at the form data or the variant title
-      // For robustness, let's grab the color from the standard variant selector if possible.
-      // Or simply iterate options to find one that looks like a color.
+      // Fallback: Check options for 'Color' or 'Colour'
+      if (!color && variant.options) {
+        // This requires knowledge of which option is color, but often it's one of them
+        // Let's try to find the selected swatch in the DOM if possible
+        const activeSwatch = document.querySelector('.swatch-input__input:checked');
+        if (activeSwatch) {
+          color = activeSwatch.value;
+        }
+      }
 
-      // Hack: Check common option names
-      const colorOption = variant.option1 || variant.option2 || variant.option3; // This is naive
+      if (color) {
+        this.filterSlides(color);
+      } else if (variant.featured_media) {
+        // If no color but has featured media, slide to it
+        this.slideToMedia(variant.featured_media.id);
+      }
+    }
 
-      // Revert to DOM check for selected color input
-      const checkedInput = document.querySelector('input[name="Color"]:checked') || document.querySelector('input[name="color"]:checked') || document.querySelector('.color-option:checked');
-      if (checkedInput) {
-        this.filterSlides(checkedInput.value);
+    slideToMedia(mediaId) {
+      if (!this.mainSwiper || !mediaId) return;
+      const slides = Array.from(this.mainSwiper.slides);
+      const targetIndex = slides.findIndex(s => s.dataset.mediaId == mediaId);
+      if (targetIndex !== -1) {
+        this.mainSwiper.slideTo(targetIndex);
       }
     }
 
     filterSlides(color) {
-      if (!this.mainSwiper) return;
-      if (!color) return;
+      if (!this.mainSwiper || !this.thumbSwiper || !color) return;
 
       const normalizedColor = color.toLowerCase().trim().replace(/\s+/g, '-');
       if (this.currentColor === normalizedColor) return;
@@ -120,8 +143,8 @@ if (!customElements.get('media-gallery')) {
 
       // Filter Main Slides
       slides.forEach((slide, index) => {
-        const slideColorLists = (slide.dataset.color || '').split(',');
-        const isMatch = slideColorLists.some(c => c === 'all' || c === 'all-show' || c === normalizedColor);
+        const slideColor = (slide.dataset.color || '').split(',');
+        const isMatch = slideColor.some(c => c === 'all' || c === normalizedColor);
 
         if (isMatch) {
           slide.style.display = 'flex';
@@ -133,24 +156,25 @@ if (!customElements.get('media-gallery')) {
 
       // Filter Thumbnails
       thumbSlides.forEach((slide) => {
-        const slideColorLists = (slide.dataset.color || '').split(',');
-        const isMatch = slideColorLists.some(c => c === 'all' || c === 'all-show' || c === normalizedColor);
+        const slideColor = (slide.dataset.color || '').split(',');
+        const isMatch = slideColor.some(c => c === 'all' || c === normalizedColor);
         slide.style.display = isMatch ? 'block' : 'none';
       });
 
-      // Update Swiper
+      // Re-update Swiper structures
       this.mainSwiper.update();
       this.thumbSwiper.update();
 
+      // Ensure we are at the first matching slide
       if (firstVisibleIndex >= 0) {
-        this.mainSwiper.slideTo(firstVisibleIndex);
-      } else {
-        // Fallback: Show all if no matches (safety)
-        slides.forEach(s => s.style.display = 'flex');
-        thumbSlides.forEach(s => s.style.display = 'block');
-        this.mainSwiper.update();
-        this.thumbSwiper.update();
-        this.mainSwiper.slideTo(0);
+        // We need to wait a tick for Swiper to realize slides are hidden/shown
+        setTimeout(() => {
+          this.mainSwiper.update();
+          this.thumbSwiper.update();
+          // Find the new index of the first visible slide in the CURRENT list
+          // Actually, slideTo works on the absolute index if slides are still in DOM
+          this.mainSwiper.slideTo(firstVisibleIndex);
+        }, 50);
       }
     }
 
