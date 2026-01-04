@@ -71,7 +71,10 @@ if (!customElements.get('media-gallery')) {
           prevEl: `.swiper-button-prev-${this.sectionId}`,
         },
         on: {
-          slideChange: () => this.syncThumbnails()
+          slideChange: () => {
+            this.syncThumbnails();
+            this.syncLightbox();
+          }
         }
       });
     }
@@ -319,12 +322,7 @@ if (!customElements.get('media-gallery')) {
       const btnIn = lb.querySelector('.zoom-in');
       const btnOut = lb.querySelector('.zoom-out');
 
-      close.onclick = () => {
-        this.zoomLevel = 1;
-        this.updateLightboxImage();
-        lb.classList.remove('active');
-        document.body.style.overflow = '';
-      };
+      close.onclick = () => this.closeLightbox();
 
       btnIn.onclick = () => this.changeZoom(0.5);
       btnOut.onclick = () => this.changeZoom(-0.5);
@@ -380,6 +378,37 @@ if (!customElements.get('media-gallery')) {
       const lbImg = lb.querySelector('.lightbox-image');
       if (lbImg) {
         lbImg.style.transform = `translate(${this.translateX}px, ${this.translateY}px) scale(${this.zoomLevel})`;
+      }
+    }
+
+    closeLightbox() {
+      const lb = document.getElementById('GalleryLightbox');
+      if (!lb) return;
+      this.zoomLevel = 1;
+      this.translateX = 0;
+      this.translateY = 0;
+      this.updateLightboxImage();
+      lb.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    syncLightbox() {
+      const lb = document.getElementById('GalleryLightbox');
+      if (!lb || !lb.classList.contains('active')) return;
+
+      const activeSlide = this.mainSwiper?.slides[this.mainSwiper.activeIndex];
+      if (!activeSlide) return;
+
+      const img = activeSlide.querySelector('img');
+      if (img && img.dataset.zoomUrl) {
+        const lbImg = lb.querySelector('.lightbox-image');
+        if (lbImg.src !== img.dataset.zoomUrl) {
+          lbImg.src = img.dataset.zoomUrl;
+          this.zoomLevel = 1;
+          this.translateX = 0;
+          this.translateY = 0;
+          this.updateLightboxImage();
+        }
       }
     }
   });
