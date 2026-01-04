@@ -264,6 +264,12 @@
           "settings": {
             "custom_liquid": "<p\n                  class=\"product__sku{% if block.settings.text_style == 'uppercase' %} caption-with-letter-spacing{% elsif block.settings.text_style == 'subtitle' %} subtitle{% endif %}{% if product.selected_or_first_available_variant.sku.size == 0 %} visibility-hidden{% endif %}\"\n                  id=\"Sku-{{ section.id }}\"\n                  role=\"status\"\n                  {{ block.shopify_attributes }}\n                >\n                  <span class=\"visually-hidden\">{{ 'products.product.sku' | t }}:</span>\n                  {{- product.selected_or_first_available_variant.sku -}}\n                </p>"
           }
+        },
+        "compatible_products_U9xrW4": {
+          "type": "compatible_products",
+          "settings": {
+            "heading": "Frequently Bought Together"
+          }
         }
       },
       "block_order": [
@@ -275,7 +281,8 @@
         "quantity_selector_3tBddz",
         "buy_buttons_ghREYE",
         "custom_liquid_hWczik",
-        "custom_liquid_zcMTkR"
+        "custom_liquid_zcMTkR",
+        "compatible_products_U9xrW4"
       ],
       "settings": {
         "enable_sticky_info": true,
