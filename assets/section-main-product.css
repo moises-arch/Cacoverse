@@ -612,7 +612,7 @@ a.product__text {
 }
 
 /* Subtler Hover */
-.product__info-wrapper .product-form__submit:hover {
+.product__info-wrapper .product-form__submit:not(:disabled):hover {
   background: linear-gradient(135deg, var(--orange-glow) 0%, var(--orange-primary) 100%) !important;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(250, 101, 12, 0.2) !important;
@@ -625,10 +625,26 @@ a.product__text {
   box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px rgba(59, 102, 214, 0.5) !important;
 }
 
-.product__info-wrapper .product-form__submit:active {
+.product__info-wrapper .product-form__submit:not(:disabled):active {
   transform: translateY(-1px) scale(0.98);
   box-shadow: 0 5px 20px rgba(250, 101, 12, 0.3) !important;
 }
+
+/* Out of Stock Button State */
+.product-form__submit:disabled,
+.product-form__submit[aria-disabled="true"] {
+  background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%) !important;
+  color: #64748b !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: none !important;
+  opacity: 0.8;
+}
+
+.product-form__submit:disabled::before {
+  display: none;
+}
+
 
 /* Pulse Animation for Button Text */
 @keyframes textPulse {
@@ -650,9 +666,14 @@ a.product__text {
   transition: all 0.4s ease;
 }
 
-.product-form__submit.loading>span {
+.product-form__submit.loading:not(:disabled)>span {
   animation: textPulse 1s ease-in-out infinite;
   pointer-events: none;
+}
+
+.product-form__submit:disabled>span {
+  animation: none !important;
+  opacity: 1 !important;
 }
 
 /* Completely hide spinner for Add to Cart */
