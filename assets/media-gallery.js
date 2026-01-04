@@ -143,8 +143,8 @@ if (!customElements.get('media-gallery')) {
 
       // Filter Main Slides
       slides.forEach((slide, index) => {
-        const slideColor = (slide.dataset.color || '').split(',');
-        const isMatch = slideColor.some(c => c === 'all' || c === normalizedColor);
+        const slideColors = (slide.dataset.color || '').split(',');
+        const isMatch = slideColors.some(c => c === 'all' || c === 'all-show' || c === normalizedColor);
 
         if (isMatch) {
           slide.style.display = 'flex';
@@ -156,8 +156,8 @@ if (!customElements.get('media-gallery')) {
 
       // Filter Thumbnails
       thumbSlides.forEach((slide) => {
-        const slideColor = (slide.dataset.color || '').split(',');
-        const isMatch = slideColor.some(c => c === 'all' || c === normalizedColor);
+        const slideColors = (slide.dataset.color || '').split(',');
+        const isMatch = slideColors.some(c => c === 'all' || c === 'all-show' || c === normalizedColor);
         slide.style.display = isMatch ? 'block' : 'none';
       });
 

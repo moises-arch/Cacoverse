@@ -151,20 +151,22 @@
       <div class="swiper-wrapper">
         {%- for media in product.media -%}
             
-            {%- comment -%} Parse Color Data {%- endcomment -%}
-            {%- assign m_parts = media.alt | default: '' | split: '|' -%}
-            {%- assign m_color_source = m_parts[0] | default: '' | downcase -%}
-            {%- assign m_color = 'all' -%}
+            {%- comment -%} Improved Token Parsing {%- endcomment -%}
+            {%- assign raw_alt = media.alt | default: 'all' -%}
+            {%- assign normalized_alt = raw_alt | replace: '|', ',' -%}
+            {%- assign alt_parts = normalized_alt | split: ',' -%}
             
-            {%- if m_color_source != '' -%}
-                 {%- assign m_color = m_color_source | strip | handleize -%}
-            {%- endif -%}
+            {%- capture m_colors -%}
+              {%- for part in alt_parts -%}
+                {{ part | strip | handleize }}{% unless forloop.last %},{% endunless %}
+              {%- endfor -%}
+            {%- endcapture -%}
 
             {%- comment -%} Image tag generation {%- endcomment -%}
             <div class="swiper-slide" 
                  data-media-id="{{ media.id }}" 
-                 data-color="{{ m_color }}"
-                 data-color-tokens="{{ media.alt | downcase | escape }}">
+                 data-color="{{ m_colors | strip }}"
+                 data-color-tokens="{{ raw_alt | downcase | escape }}">
               
               {% if media.media_type == 'image' %}
                   <img src="{{ media | image_url: width: 1440 }}" 
@@ -200,17 +202,20 @@
      <div class="swiper thumbs-swiper-{{ section.id }}">
         <div class="swiper-wrapper">
           {%- for media in product.media -%}
-              <!-- Logic for color filtering applies to thumbs too -->
-              {%- assign m_parts = media.alt | default: '' | split: '|' -%}
-              {%- assign m_color_source = m_parts[0] | default: '' | downcase -%}
-              {%- assign m_color = 'all' -%}
-              {%- if m_color_source != '' -%}
-                  {%- assign m_color = m_color_source | strip | handleize -%}
-              {%- endif -%}
+              {%- comment -%} Improved Token Parsing for Thumbs {%- endcomment -%}
+              {%- assign raw_alt = media.alt | default: 'all' -%}
+              {%- assign normalized_alt = raw_alt | replace: '|', ',' -%}
+              {%- assign alt_parts = normalized_alt | split: ',' -%}
+              
+              {%- capture m_colors -%}
+                {%- for part in alt_parts -%}
+                  {{ part | strip | handleize }}{% unless forloop.last %},{% endunless %}
+                {%- endfor -%}
+              {%- endcapture -%}
 
              <div class="swiper-slide" 
                   data-media-id="{{ media.id }}"
-                  data-color="{{ m_color }}">
+                  data-color="{{ m_colors | strip }}">
                 <img src="{{ media | image_url: width: 200 }}" alt="{{ media.alt | escape }}" loading="lazy">
              </div>
           {%- endfor -%}
