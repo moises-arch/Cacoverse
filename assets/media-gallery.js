@@ -5,7 +5,6 @@ if (!customElements.get('media-gallery')) {
       this.sectionId = this.dataset.section;
       this.mainSwiper = null;
       this.thumbSwiper = null;
-      this.currentColor = null;
     }
 
     connectedCallback() {
@@ -67,10 +66,12 @@ if (!customElements.get('media-gallery')) {
         }
       });
 
-      // Manual input changes (fallback)
+      // Catch any input change in the product form
       document.body.addEventListener('change', (e) => {
-        if (e.target.matches('input[type="radio"][name*="Option"], input[type="radio"][name*="Color"], input[type="radio"][name*="color"], .swatch-input__input')) {
-          this.filterSlides(e.target.value);
+        if (e.target.closest('product-info') || e.target.closest('.product-form') || e.target.closest('[id^="product-form"]')) {
+          // If a variation option changed, we find the new variant object if possible 
+          // or just filter based on all current selections.
+          this.filterByCurrentSelections();
         }
       });
 
@@ -79,86 +80,93 @@ if (!customElements.get('media-gallery')) {
         const thumbSlide = e.target.closest('.gallery-thumbs .swiper-slide');
         if (thumbSlide && this.mainSwiper) {
           const mediaId = thumbSlide.dataset.mediaId;
-          const allSlides = Array.from(this.querySelectorAll('.gallery-main .swiper-slide'));
-
-          // Find the index of the slide that is NOT hidden by display: none
-          const targetSlide = this.querySelector(`.gallery-main .swiper-slide[data-media-id="${mediaId}"]`);
-          if (targetSlide) {
-            const visibleSlides = allSlides.filter(s => s.style.display !== 'none');
-            const targetIndex = visibleSlides.indexOf(targetSlide);
-            if (targetIndex !== -1) {
-              this.mainSwiper.slideTo(targetIndex);
-            }
-          }
+          this.slideToMedia(mediaId);
         }
       });
     }
 
     onVariantChange(variant) {
       if (!variant) return;
+      this.filterSlides(variant);
+    }
 
-      let color = null;
-      // 1. Try to get color from selected swatch in DOM
-      const activeSwatch = document.querySelector('.swatch-input__input:checked');
-      if (activeSwatch) {
-        color = activeSwatch.value;
-      }
-
-      // 2. Fallback to featured media alt if available
-      if (!color && variant.featured_media && variant.featured_media.alt) {
-        color = variant.featured_media.alt;
-      }
-
-      if (color) {
-        this.filterSlides(color);
-      } else if (variant.featured_media) {
-        this.slideToMedia(variant.featured_media.id);
-      }
+    filterByCurrentSelections() {
+      // Filter based on currently checked inputs in the DOM
+      const checkedInputs = Array.from(document.querySelectorAll('input[type="radio"]:checked, select'));
+      const tokens = checkedInputs.map(i => i.value.toLowerCase().trim().replace(/\s+/g, '-')).filter(t => t !== '');
+      this.filterSlides(null, tokens);
     }
 
     slideToMedia(mediaId) {
       if (!this.mainSwiper || !mediaId) return;
-      const visibleSlides = Array.from(this.querySelectorAll('.gallery-main .swiper-slide')).filter(s => s.style.display !== 'none');
-      const targetIndex = visibleSlides.findIndex(s => s.dataset.mediaId == mediaId);
-      if (targetIndex !== -1) {
-        this.mainSwiper.slideTo(targetIndex);
+      const allSlides = Array.from(this.querySelectorAll('.gallery-main .swiper-slide'));
+      const targetSlide = this.querySelector(`.gallery-main .swiper-slide[data-media-id="${mediaId}"]`);
+
+      if (targetSlide) {
+        // Slide works on the index within the current Swiper instance (which includes hidden slides)
+        // but Swiper handles display:none slides usually by skipping them if reached via navigation.
+        // For direct slideTo, we need the index relative to all slides.
+        const index = allSlides.indexOf(targetSlide);
+        if (index !== -1) {
+          this.mainSwiper.slideTo(index);
+        }
       }
     }
 
-    filterSlides(color) {
-      if (!this.mainSwiper || !this.thumbSwiper || !color) return;
+    filterSlides(variant, manualTokens = null) {
+      if (!this.mainSwiper || !this.thumbSwiper) return;
 
-      const normalizedColor = color.toLowerCase().trim().replace(/\s+/g, '-');
-      if (this.currentColor === normalizedColor) return;
-      this.currentColor = normalizedColor;
+      let activeTokens = [];
+      if (variant && variant.options) {
+        activeTokens = variant.options.map(opt => opt.toLowerCase().trim().replace(/\s+/g, '-'));
+      } else if (manualTokens) {
+        activeTokens = manualTokens;
+      }
 
-      console.log('Media Gallery: Filtering by', normalizedColor);
+      if (activeTokens.length === 0) return;
 
       const slides = this.querySelectorAll('.gallery-main .swiper-slide');
       const thumbSlides = this.querySelectorAll('.gallery-thumbs .swiper-slide');
 
-      // Filter Main Slides
+      const featuredMediaId = variant ? variant.featured_media?.id : null;
+
+      // Filter Logic:
+      // A slide matches if it has 'all', 'all-show', OR if it contains ANY of the active tokens.
+      // Additionally, the variant's featured_media MUST always be shown.
       slides.forEach(slide => {
+        const slideMediaId = slide.dataset.mediaId;
         const slideColors = (slide.dataset.color || '').split(',');
-        const isMatch = slideColors.some(c => c === 'all' || c === 'all-show' || c === normalizedColor);
+
+        const isFeatured = featuredMediaId && slideMediaId == featuredMediaId;
+        const isMatch = isFeatured || slideColors.some(c => c === 'all' || c === 'all-show' || activeTokens.includes(c));
+
         slide.style.display = isMatch ? 'flex' : 'none';
       });
 
-      // Filter Thumbnails
       thumbSlides.forEach(slide => {
+        const slideMediaId = slide.dataset.mediaId;
         const slideColors = (slide.dataset.color || '').split(',');
-        const isMatch = slideColors.some(c => c === 'all' || c === 'all-show' || c === normalizedColor);
+
+        const isFeatured = featuredMediaId && slideMediaId == featuredMediaId;
+        const isMatch = isFeatured || slideColors.some(c => c === 'all' || c === 'all-show' || activeTokens.includes(c));
         slide.style.display = isMatch ? 'block' : 'none';
       });
 
-      // Re-update Swiper structures
+      // Swiper Update
       this.mainSwiper.update();
       this.thumbSwiper.update();
 
-      // Go to first image of variant
-      setTimeout(() => {
-        this.mainSwiper.slideTo(0);
-      }, 50);
+      // Priority: Slide to Featured Media if it exists, otherwise first visible
+      if (featuredMediaId) {
+        setTimeout(() => this.slideToMedia(featuredMediaId), 10);
+      } else {
+        setTimeout(() => {
+          const firstVisible = Array.from(slides).find(s => s.style.display !== 'none');
+          if (firstVisible) {
+            this.slideToMedia(firstVisible.dataset.mediaId);
+          }
+        }, 50);
+      }
     }
   });
 }
