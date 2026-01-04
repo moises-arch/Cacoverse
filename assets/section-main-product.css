@@ -570,8 +570,8 @@ a.product__text {
   background: linear-gradient(135deg, var(--blue-primary) 0%, var(--blue-deep) 100%) !important;
   color: #ffffff !important;
   border-radius: 50px !important;
-  padding: 18px 45px !important;
-  letter-spacing: 0.1em;
+  padding: 10px 30px !important;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   font-size: 1.1em;
   position: relative;
@@ -579,18 +579,23 @@ a.product__text {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 62px;
+  min-height: 52px;
+  /* Matched to quantity selector */
   font-weight: 700;
   width: 100%;
   border: none !important;
   outline: none !important;
-  /* Ultra-Soft Shadow */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
-  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: none !important;
+  /* Removed shadow/stroke */
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
   backface-visibility: hidden;
   transform-style: preserve-3d;
   -webkit-font-smoothing: antialiased;
+}
+
+.product__info-wrapper .product-form__submit::after {
+  display: none !important;
 }
 
 /* Glassy Reflection Layer */
@@ -609,15 +614,15 @@ a.product__text {
 /* Subtler Hover */
 .product__info-wrapper .product-form__submit:hover {
   background: linear-gradient(135deg, var(--orange-glow) 0%, var(--orange-primary) 100%) !important;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(250, 101, 12, 0.2) !important;
-  letter-spacing: 0.12em;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(250, 101, 12, 0.2) !important;
+  letter-spacing: 0.06em;
 }
 
 .product__info-wrapper .product-form__submit:focus,
 .product__info-wrapper .product-form__submit:focus-visible {
   outline: none !important;
-  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px var(--blue-primary) !important;
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px rgba(59, 102, 214, 0.5) !important;
 }
 
 .product__info-wrapper .product-form__submit:active {
