@@ -20,9 +20,11 @@
           
           {%- for item in compatible_products -%}
             {%- liquid
+              comment
               if cart_item_ids contains item.id
                 continue
               endif
+              endcomment
 
               assign current_variant = item.selected_or_first_available_variant
               unless current_variant
@@ -89,7 +91,7 @@
 
         <div class="compatible-products__actions">
           <div class="compatible-products__total">
-            <span class="compatible-products__total-label">{{ 'sections.cart.subtotal' | t }}:</span>
+            <span class="compatible-products__total-label">Total:</span>
             <span class="compatible-products__total-price" data-total-price></span>
             <span class="compatible-products__count" data-count>(0 items)</span>
           </div>
