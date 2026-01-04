@@ -111,8 +111,10 @@ if (!customElements.get('media-gallery')) {
       this.handleKeyDown = (e) => {
         if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
         if (e.key === 'ArrowLeft') {
+          e.preventDefault();
           if (this.mainSwiper) this.mainSwiper.slidePrev();
         } else if (e.key === 'ArrowRight') {
+          e.preventDefault();
           if (this.mainSwiper) this.mainSwiper.slideNext();
         } else if (e.key === 'Escape') {
           this.closeLightbox();
