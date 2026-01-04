@@ -64,6 +64,7 @@ if (!customElements.get('media-gallery')) {
         pagination: {
           el: `.swiper-pagination-${this.sectionId}`,
           clickable: true,
+          dynamicBullets: true,
         },
         navigation: {
           nextEl: `.swiper-button-next-${this.sectionId}`,
