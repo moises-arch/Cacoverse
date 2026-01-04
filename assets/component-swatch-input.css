@@ -68,23 +68,20 @@
 .swatch-input__input:disabled+.swatch-input__label>.swatch,
 .swatch-input__input.visually-disabled+.swatch-input__label>.swatch {
   opacity: 0.4;
+  /* Dimmer as requested */
 }
 
 /* Display crossed out line over swatch when input is disabled or sold out */
 .swatch-input__input:disabled+.swatch-input__label>.swatch::after,
 .swatch-input__input.visually-disabled+.swatch-input__label>.swatch::after {
-  /* Diagonal of a square = length of the side * sqrt(2)  */
-  --diagonal--size: calc(var(--swatch-input--size) * 1.414);
-  --crossed-line--size: 0.1rem;
   content: '';
   position: absolute;
-  bottom: calc(var(--crossed-line--size) * -0.5);
-  left: 0;
-  width: var(--diagonal--size);
-  height: var(--crossed-line--size);
+  top: 50%;
+  left: -10%;
+  width: 120%;
+  height: 1px;
   background-color: currentColor;
-  /* Back to original */
-  opacity: 0.6;
+  opacity: 1;
   transform: rotate(-45deg);
-  transform-origin: left;
+  pointer-events: none;
 }

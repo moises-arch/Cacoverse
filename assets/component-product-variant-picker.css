@@ -228,7 +228,8 @@ variant-selects {
 
 
 .product-form__input input[type="radio"].sold-out:not(:disabled):checked+label {
-  opacity: 1;
+  opacity: 0.6;
+  /* Keep it dimmer even when selected */
   border: 2px solid var(--blue-primary);
 }
 

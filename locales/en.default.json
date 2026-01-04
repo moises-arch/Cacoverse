@@ -165,7 +165,7 @@
         "unit_price": "Unit price"
       },
       "share": "Share this product",
-      "sold_out": "OUT OF STOCK",
+      "sold_out": "SOLD OUT",
       "unavailable": "Unavailable",
       "vendor": "Vendor",
       "value_unavailable": "{{ option_value }} - Unavailable",
@@ -272,7 +272,6 @@
       "announcement": "Announcement",
       "announcement_bar": "Announcement bar"
     },
-
     "header": {
       "announcement": "Announcement",
       "menu": "Menu",

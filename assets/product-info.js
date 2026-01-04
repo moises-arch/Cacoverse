@@ -112,7 +112,9 @@ if (!customElements.get("product-info")) {
             ? "product-info[id^='MainProduct']"
             : "product-info";
           const variant = this.getSelectedVariant(html.querySelector(selector));
+          if (variant) window.__lastSelectedVariant = variant;
           this.updateURL(productUrl, variant?.id);
+
 
           if (updateFullPage) {
             document.querySelector("head title").innerHTML =
@@ -215,6 +217,8 @@ if (!customElements.get("product-info")) {
       handleUpdateProductInfo(productUrl) {
         return (html) => {
           const variant = this.getSelectedVariant(html);
+          if (variant) window.__lastSelectedVariant = variant;
+
 
           this.pickupAvailability?.update(variant);
           this.updateOptionValues(html);

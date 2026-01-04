@@ -191,7 +191,7 @@ if (!customElements.get('product-form')) {
 
         // Varios intentos porque el DOM del carrusel puede refrescar
         const tryClick = () => {
-          try { target.click?.(); } catch(e) {}
+          try { target.click?.(); } catch (e) { }
           // Marca como activa y hace scroll al thumb si existe
           btn.classList?.add('is-active');
           btn.scrollIntoView?.({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
@@ -215,7 +215,7 @@ if (!customElements.get('product-form')) {
           if (list) {
             const first = list.querySelector('.product__media-item, [id^="Media-"]');
             if (first) {
-              try { first.scrollIntoView?.({ behavior: 'smooth', block: 'nearest' }); } catch(_) {}
+              try { first.scrollIntoView?.({ behavior: 'smooth', block: 'nearest' }); } catch (_) { }
             }
           }
         }
@@ -230,7 +230,7 @@ if (!customElements.get('product-form')) {
             selectedVariant: passedVariant || null
           };
           document.dispatchEvent(new CustomEvent('variant:changed', { detail }));
-        } catch (_) {}
+        } catch (_) { }
 
         // 1) Hard reset agresivo del grupo Quantity/Pack
         const qtyGroup = this._findQtyGroup();
@@ -245,9 +245,16 @@ if (!customElements.get('product-form')) {
           this._softFilterAllowed(qtyGroup, variants, this._getCurrentSelection());
         }
 
-        // 3) Botón Add to cart: habilita si hay variant id
+        // 3) Botón Add to cart: habilita si el variant id existe Y está disponible
         const vid = this.variantIdInput?.value;
-        if (vid) this.toggleSubmitButton(false);
+        const isAvailable = passedVariant ? passedVariant.available : true; // fallback a true si no hay objeto variant pero sí ID
+
+        if (vid && isAvailable) {
+          this.toggleSubmitButton(false);
+        } else if (vid && !isAvailable) {
+          this.toggleSubmitButton(true, window.variantStrings.soldOut);
+        }
+
 
         // 4) NUEVO: sincroniza galería con el featured_media de la variante
         this._syncGalleryToVariant(passedVariant);
