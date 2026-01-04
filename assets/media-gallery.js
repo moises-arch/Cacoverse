@@ -178,23 +178,32 @@ if (!customElements.get('media-gallery')) {
       const sortSlides = (slides, wrapper) => {
         if (!wrapper) return;
 
-        // Filter slides based on the new display style set by filterLogic
         const visible = slides.filter(s => s.style.display !== 'none');
         const hidden = slides.filter(s => s.style.display === 'none');
 
-        // Priority: move featured image to absolute front of visible set
-        if (featuredMediaId) {
-          const featuredIndex = visible.findIndex(s => s.dataset.mediaId == featuredMediaId);
-          if (featuredIndex > -1) {
-            const [featuredSlide] = visible.splice(featuredIndex, 1);
-            visible.unshift(featuredSlide);
-          }
-        }
+        // Tiered sorting for visible slides
+        const featured = [];
+        const specific = [];
+        const generic = [];
 
-        // Clear and Re-append in correct order
-        // Note: Using fragment for performance
+        visible.forEach(slide => {
+          const tags = (slide.dataset.color || '').split(',').map(t => t.trim());
+          const isAll = tags.includes('all') || tags.includes('all-show');
+
+          if (featuredMediaId && slide.dataset.mediaId == featuredMediaId) {
+            featured.push(slide);
+          } else if (isAll) {
+            generic.push(slide);
+          } else {
+            specific.push(slide);
+          }
+        });
+
+        // Final Order: [Featured] -> [Specific Matches] -> [Generic All-Show]
+        const sortedVisible = [...featured, ...specific, ...generic];
+
         const fragment = document.createDocumentFragment();
-        visible.forEach(s => fragment.appendChild(s));
+        sortedVisible.forEach(s => fragment.appendChild(s));
         hidden.forEach(s => fragment.appendChild(s));
 
         wrapper.innerHTML = '';

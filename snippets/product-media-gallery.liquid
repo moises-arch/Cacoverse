@@ -66,7 +66,7 @@
     object-fit: contain;
   }
 
-  /* Instagram/Story Style Bar Pagination */
+  /* Refined Pill + Dots Pagination */
   .gallery-pagination {
     position: absolute;
     bottom: 24px !important;
@@ -74,26 +74,29 @@
     transform: translateX(-50%);
     z-index: 20;
     display: flex !important;
-    gap: 10px !important;
+    align-items: center !important;
+    gap: 12px !important;
     width: auto !important;
-    justify-content: center;
+    padding: 0;
     background: none !important;
   }
   .gallery-pagination .swiper-pagination-bullet {
-    width: 45px !important; /* WIDER BARS */
-    height: 5px !important; /* THINNER MODERN BARS */
-    background: rgba(255, 255, 255, 0.45) !important;
+    width: 12px !important; 
+    height: 12px !important;
+    background: rgba(255, 255, 255, 0.35) !important;
     opacity: 1 !important;
     margin: 0 !important;
-    border-radius: 10px !important; /* ROUNDED BARS */
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    border-radius: 50% !important;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     border: none !important;
   }
   .gallery-pagination .swiper-pagination-bullet-active {
-    width: 70px !important; /* LONGER ACTIVE BAR */
-    background: #0d6ba6 !important;
-    box-shadow: 0 4px 15px rgba(13, 107, 166, 0.5);
+    width: 38px !important; /* ELONGATED PILL */
+    height: 12px !important;
+    border-radius: 20px !important;
+    background: #fff !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   }
 
   /* Navigation Buttons - Glassmorphism */
