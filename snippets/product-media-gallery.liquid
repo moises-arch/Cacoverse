@@ -1,896 +1,217 @@
 {% comment %}
-  Renders a product media gallery. Used by media-gallery.js and product-media-modal.
-  Adds data attributes for filtering:
-    selected-color / thumbnail-color => color (from media.alt before first "|")
-    selected-key   / thumbnail-key   => color--series  (color and series from media.alt split by "|")
+  Professional Product Media Gallery
+  Uses Swiper JS wrapped in a custom <media-gallery> element.
+  Supports variant filtering, zoom, and thumbnails.
 {% endcomment %}
 
-{%- liquid
-  if section.settings.hide_variants and variant_images.size == product.media.size
-    assign single_media_visible = true
-  endif
-
-  if limit == 1
-    assign single_media_visible = true
-  endif
-
-  assign media_count = product.media.size
-  if section.settings.hide_variants and media_count > 1 and variant_images.size > 0
-    assign media_count = media_count | minus: variant_images.size | plus: 1
-  endif
-
-  if media_count == 1 or single_media_visible
-    assign single_media_visible_mobile = true
-  endif
-
-  if media_count == 0 or single_media_visible_mobile or section.settings.mobile_thumbnails == 'show' or section.settings.mobile_thumbnails == 'columns' and media_count < 3
-    assign hide_mobile_slider = true
-  endif
-
-  if section.settings.media_size == 'large'
-    assign media_width = 0.65
-  elsif section.settings.media_size == 'medium'
-    assign media_width = 0.55
-  elsif section.settings.media_size == 'small'
-    assign media_width = 0.45
-  endif
--%}
-
-{%- comment -%} 🔒 Single source of truth for current media {%- endcomment -%}
-{%- assign featured_media = product.selected_or_first_available_variant.featured_media | default: product.featured_media -%}
-
-{%- comment -%} Utility to normalize media.alt into primary token and list {%- endcomment -%}
-{%- liquid
-  assign color_token_source = ''
-  assign color_token_list = ''
-  assign color_token_primary = 'all-show'
--%}
-
-<div
-  id="MediaGallery-{{ section.id }}"
-  class="{% if section.settings.enable_sticky_info %}product__column-sticky {% endif %}caco-media-gallery"
-  data-desktop-layout="{{ section.settings.gallery_layout }}"
->
-  <div id="GalleryStatus-{{ section.id }}" class="visually-hidden" role="status"></div>
-  <div class="product-media-container">
-    <div class="swiper product-media-swiper p-0" id="Swiper-Gallery-{{ section.id }}">
-      <div 
-        class="swiper-wrapper product__media-list contains-media list-unstyled" 
-        id="Slider-Gallery-{{ section.id }}"
-      >
-        {%- assign widths_list = "320,480,640,800,960,1200,1500,1800,2048,2560,3000,3840" | split: "," -%}
-        {%- capture sizes_main -%}
-          (min-width: {{ settings.page_width }}px) {{ settings.page_width | times: media_width | round | minus: 64 }}px,
-          (min-width: 990px) calc({{ media_width | times: 100 }}vw - 4rem),
-          100vw
-        {%- endcapture -%}
-
-        {%- assign first_rendered = false -%}
-        {%- assign slide_index = 0 -%}
-
-        {%- if featured_media and featured_media.media_type == 'image' -%}
-          {%- assign fm = featured_media -%}
-          
-          {%- assign fm_parts = fm.alt | default: '' | split: '|' -%}
-          {%- assign fm_color_source = fm_parts[0] | default: '' | downcase -%}
-          {%- assign fm_color_tokens = fm_color_source | replace: '|', ',' | replace: '/', ',' | split: ',' -%}
-          {%- assign fm_color = 'all-show' -%}
-          {%- assign fm_color_list = '' -%}
-          {%- for token in fm_color_tokens -%}
-            {%- assign cleaned = token | strip | handleize -%}
-            {%- if cleaned != '' -%}
-              {%- if fm_color == 'all-show' -%}{%- assign fm_color = cleaned -%}{%- endif -%}
-              {%- if fm_color_list != '' -%}{%- assign fm_color_list = fm_color_list | append: ',' -%}{%- endif -%}
-              {%- assign fm_color_list = fm_color_list | append: cleaned -%}
-            {%- endif -%}
-          {%- endfor -%}
-          {%- assign fm_alt_tokens = fm.alt | default: '' | downcase | replace: '|', ',' | replace: '/', ',' | split: ',' -%}
-          {%- for token in fm_alt_tokens -%}
-            {%- assign cleaned = token | strip | handleize -%}
-            {%- if cleaned == 'all' or cleaned == 'all-show' -%}
-              {%- unless fm_color_list contains cleaned -%}
-                {%- if fm_color_list != '' -%}{%- assign fm_color_list = fm_color_list | append: ',' -%}{%- endif -%}
-                {%- assign fm_color_list = fm_color_list | append: cleaned -%}
-              {%- endunless -%}
-              {%- if fm_color == 'all-show' -%}{%- assign fm_color = cleaned -%}{%- endif -%}
-            {%- endif -%}
-          {%- endfor -%}
-          {%- assign fm_series = fm_parts[1] | default: '' | strip | handleize -%}
-          {%- assign fm_key    = fm_color | append: '--' | append: fm_series -%}
-
-          {%- capture srcset_featured -%}
-            {%- for w in widths_list -%}
-              {%- assign ww = w | plus: 0 -%}
-              {{ fm | image_url: width: ww }} {{ ww }}w{%- unless forloop.last -%}, {%- endunless -%}
-            {%- endfor -%}
-          {%- endcapture -%}
-
-          <div
-            id="Slide-{{ section.id }}-{{ fm.id }}"
-            class="swiper-slide product__media-item grid__item is-active{% if single_media_visible %} product__media-item--single{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
-            data-media-id="{{ section.id }}-{{ fm.id }}"
-            selected-color="{{ fm_color }}"
-            selected-color-list="{{ fm_color_list }}"
-            selected-key="{{ fm_key }}"
-          >
-            <div class="caco-square-box">
-              <img
-                class="product__media-img caco-zoomable"
-                src="{{ fm | image_url: width: 3000 }}"
-                srcset="{{ srcset_featured | strip }}"
-                sizes="{{ sizes_main | strip }}"
-                alt="{{ fm.alt | escape }}"
-                loading="eager"
-                fetchpriority="high"
-                decoding="async"
-                data-full="{{ fm | img_url: 'master' }}"
-                data-color="{{ fm_color }}"
-                data-color-list="{{ fm_color_list }}"
-                data-key="{{ fm_key }}"
-              >
-              <button
-                type="button"
-                class="caco-media-overlay"
-                tabindex="-1"
-                data-lightbox-index="{{ slide_index }}"
-                aria-label="Open gallery view for {{ fm.alt | default: product.title | escape }}"
-              >
-                <span class="caco-media-pill">Open gallery</span>
-              </button>
-            </div>
-          </div>
-          {%- assign first_rendered = true -%}
-          {%- assign slide_index = slide_index | plus: 1 -%}
-        {%- endif -%}
-
-        {%- for media in product.media -%}
-          {%- if media.media_type != 'image' -%}{% continue %}{%- endif -%}
-          {%- if featured_media and media.id == featured_media.id -%}{% continue %}{%- endif -%}
-
-          {%- assign m_parts = media.alt | default: '' | split: '|' -%}
-          {%- assign m_color_source = m_parts[0] | default: '' | downcase -%}
-          {%- assign m_color_tokens = m_color_source | replace: '|', ',' | replace: '/', ',' | split: ',' -%}
-          {%- assign m_color  = 'all-show' -%}
-          {%- assign m_color_list = '' -%}
-          {%- for token in m_color_tokens -%}
-            {%- assign cleaned = token | strip | handleize -%}
-            {%- if cleaned != '' -%}
-              {%- if m_color == 'all-show' -%}{%- assign m_color = cleaned -%}{%- endif -%}
-              {%- if m_color_list != '' -%}{%- assign m_color_list = m_color_list | append: ',' -%}{%- endif -%}
-              {%- assign m_color_list = m_color_list | append: cleaned -%}
-            {%- endif -%}
-          {%- endfor -%}
-          {%- assign m_alt_tokens = media.alt | default: '' | downcase | replace: '|', ',' | replace: '/', ',' | split: ',' -%}
-          {%- for token in m_alt_tokens -%}
-            {%- assign cleaned = token | strip | handleize -%}
-            {%- if cleaned == 'all' or cleaned == 'all-show' -%}
-              {%- unless m_color_list contains cleaned -%}
-                {%- if m_color_list != '' -%}{%- assign m_color_list = m_color_list | append: ',' -%}{%- endif -%}
-                {%- assign m_color_list = m_color_list | append: cleaned -%}
-              {%- endunless -%}
-              {%- if m_color == 'all-show' -%}{%- assign m_color = cleaned -%}{%- endif -%}
-            {%- endif -%}
-          {%- endfor -%}
-          {%- assign m_series = m_parts[1] | default: '' | strip | handleize -%}
-          {%- assign m_key    = m_color | append: '--' | append: m_series -%}
-
-          {%- capture srcset_attr -%}
-            {%- for w in widths_list -%}
-              {%- assign ww = w | plus: 0 -%}
-              {{ media | image_url: width: ww }} {{ ww }}w{%- unless forloop.last -%}, {%- endunless -%}
-            {%- endfor -%}
-          {%- endcapture -%}
-
-          <div
-            id="Slide-{{ section.id }}-{{ media.id }}"
-            class="swiper-slide product__media-item grid__item{% if single_media_visible %} product__media-item--single{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
-            data-media-id="{{ section.id }}-{{ media.id }}"
-            selected-color="{{ m_color }}"
-            selected-color-list="{{ m_color_list }}"
-            selected-key="{{ m_key }}"
-          >
-            <div class="caco-square-box">
-              <img
-                class="product__media-img caco-zoomable"
-                src="{{ media | image_url: width: 3000 }}"
-                srcset="{{ srcset_attr | strip }}"
-                sizes="{{ sizes_main | strip }}"
-                alt="{{ media.alt | escape }}"
-                loading="{% if first_rendered %}lazy{% else %}eager{% endif %}"
-                fetchpriority="{% if first_rendered %}auto{% else %}high{% endif %}"
-                decoding="async"
-                data-full="{{ media | img_url: 'master' }}"
-                data-color="{{ m_color }}"
-                data-color-list="{{ m_color_list }}"
-                data-key="{{ m_key }}"
-              >
-              <button
-                type="button"
-                class="caco-media-overlay"
-                tabindex="-1"
-                data-lightbox-index="{{ slide_index }}"
-                aria-label="Open gallery view for {{ media.alt | default: product.title | escape }}"
-              >
-                <span class="caco-media-pill">Open gallery</span>
-              </button>
-            </div>
-          </div>
-          {%- assign first_rendered = true -%}
-          {%- assign slide_index = slide_index | plus: 1 -%}
-        {%- endfor -%}
-
-      </div>
-      
-      <!-- Arrows -->
-      <div class="swiper-button-prev swiper-button-prev-{{ section.id }}"></div>
-      <div class="swiper-button-next swiper-button-next-{{ section.id }}"></div>
-    </div>
-  </div>
-
-
-  {%- if first_3d_model -%}
-    <button
-      class="button button--full-width product__xr-button"
-      type="button"
-      aria-label="{{ 'products.product.xr_button_label' | t }}"
-      data-shopify-xr
-      data-shopify-model3d-id="{{ first_3d_model.id }}"
-      data-shopify-title="{{ product.title | escape }}"
-      data-shopify-xr-hidden
-    >
-      <span class="svg-wrapper">{{- 'icon-3d-model.svg' | inline_asset_content -}}</span>
-      {{ 'products.product.xr_button' | t }}
-    </button>
-  {%- endif -%}
-
-  {%- comment -%} 
-    NOTE: Thumbnails section is typically dependent on the main slider. 
-    If you want to sync thumbnails with Swiper, you'd usually convert this to Swiper as well.
-    For now, we are focusing on the main media box as requested. 
-    We will hide the old thumbnail slider if it conflicts or doesn't work, 
-    but the user request was specifically about the media box.
-  {%- endcomment -%}
-
-  {%- liquid
-    assign is_not_limited_to_single_item = false
-    if limit == null or limit > 1
-      assign is_not_limited_to_single_item = true
-    endif
-  -%}
-
-  {%- if is_not_limited_to_single_item
-    and media_count > 1
-    and section.settings.gallery_layout contains 'thumbnail'
-    or section.settings.mobile_thumbnails == 'show'
-  -%}
-    <slider-component
-      id="GalleryThumbnails-{{ section.id }}"
-      class="thumbnail-slider slider-mobile-gutter quick-add-hidden{% unless section.settings.gallery_layout contains 'thumbnail' %} medium-hide large-up-hide{% endunless %}{% if section.settings.mobile_thumbnails != 'show' %} small-hide{% endif %}{% if media_count <= 3 %} thumbnail-slider--no-slide{% endif %}"
-    >
-      <button
-        type="button"
-        class="slider-button slider-button--prev{% if media_count <= 3 %} small-hide{% endif %}{% if media_count <= 4 %} medium-hide large-up-hide{% endif %}"
-        name="previous"
-        aria-label="{{ 'general.slider.previous_slide' | t }}"
-        aria-controls="GalleryThumbnails-{{ section.id }}"
-        data-step="3"
-      >
-        <span class="svg-wrapper">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
-      </button>
-
-      {%- capture sizes -%}
-        (min-width: {{ settings.page_width }}px) calc(({{ settings.page_width | minus: 100 | times: media_width | round }} - 4rem) / 4),
-        (min-width: 990px) calc(({{ media_width | times: 100 }}vw - 4rem) / 4),
-        (min-width: 750px) calc((100vw - 15rem) / 8),
-        calc((100vw - 8rem) / 3)
-      {%- endcapture -%}
-
-      <ul
-        id="Slider-Thumbnails-{{ section.id }}"
-        class="thumbnail-list list-unstyled slider slider--mobile{% if section.settings.gallery_layout == 'thumbnail_slider' %} slider--tablet-up{% endif %}"
-      >
-        {%- if featured_media != null -%}
-          {%- liquid
-            capture media_index
-              if featured_media.media_type == 'model'
-                increment model_index
-              elsif featured_media.media_type == 'video' or featured_media.media_type == 'external_video'
-                increment video_index
-              elsif featured_media.media_type == 'image'
-                increment image_index
-              endif
-            endcapture
-            assign media_index = media_index | plus: 1
-          -%}
-          {%- assign fm_parts = featured_media.alt | default: '' | split: '|' -%}
-          {%- assign fm_color_source = fm_parts[0] | default: '' | downcase -%}
-          {%- assign fm_color_tokens = fm_color_source | replace: '|', ',' | replace: '/', ',' | split: ',' -%}
-          {%- assign fm_color  = 'all-show' -%}
-          {%- assign fm_color_list = '' -%}
-          {%- for token in fm_color_tokens -%}
-            {%- assign cleaned = token | strip | handleize -%}
-            {%- if cleaned != '' -%}
-              {%- if fm_color == 'all-show' -%}{%- assign fm_color = cleaned -%}{%- endif -%}
-              {%- if fm_color_list != '' -%}{%- assign fm_color_list = fm_color_list | append: ',' -%}{%- endif -%}
-              {%- assign fm_color_list = fm_color_list | append: cleaned -%}
-            {%- endif -%}
-          {%- endfor -%}
-          {%- assign fm_alt_tokens = featured_media.alt | default: '' | downcase | replace: '|', ',' | replace: '/', ',' | split: ',' -%}
-          {%- for token in fm_alt_tokens -%}
-            {%- assign cleaned = token | strip | handleize -%}
-            {%- if cleaned == 'all' or cleaned == 'all-show' -%}
-              {%- unless fm_color_list contains cleaned -%}
-                {%- if fm_color_list != '' -%}{%- assign fm_color_list = fm_color_list | append: ',' -%}{%- endif -%}
-                {%- assign fm_color_list = fm_color_list | append: cleaned -%}
-              {%- endunless -%}
-              {%- if fm_color == 'all-show' -%}{%- assign fm_color = cleaned -%}{%- endif -%}
-            {%- endif -%}
-          {%- endfor -%}
-          {%- assign fm_series = fm_parts[1] | default: '' | strip | handleize -%}
-          {%- assign fm_composite = fm_color | append: '--' | append: fm_series -%}
-
-          <li
-            id="Slide-Thumbnails-{{ section.id }}-0"
-            class="thumbnail-list__item slider__slide{% if section.settings.hide_variants and variant_images contains featured_media.src %} thumbnail-list_item--variant{% endif %}"
-            data-target="{{ section.id }}-{{ featured_media.id }}"
-            data-media-position="{{ media_index }}"
-            thumbnail-color="{{ fm_color }}"
-            thumbnail-color-list="{{ fm_color_list }}"
-            thumbnail-key="{{ fm_composite }}"
-          >
-            {%- capture thumbnail_id -%}Thumbnail-{{ section.id }}-0{%- endcapture -%}
-            <button
-              class="thumbnail global-media-settings global-media-settings--no-shadow"
-              aria-label="{%- if featured_media.media_type == 'image' -%}{{ 'products.product.media.load_image' | t: index: media_index }}{%- elsif featured_media.media_type == 'model' -%}{{ 'products.product.media.load_model' | t: index: media_index }}{%- elsif featured_media.media_type == 'video' or featured_media.media_type == 'external_video' -%}{{ 'products.product.media.load_video' | t: index: media_index }}{%- endif -%}"
-              aria-current="true"
-              aria-controls="GalleryViewer-{{ section.id }}"
-              aria-describedby="{{ thumbnail_id }}"
-            >
-              {{
-                featured_media.preview_image
-                | image_url: width: 416
-                | image_tag:
-                  loading: 'lazy',
-                  sizes: sizes,
-                  widths: '54, 74, 104, 162, 208, 324, 416',
-                  id: thumbnail_id,
-                  alt: featured_media.alt | escape
-              }}
-            </button>
-          </li>
-        {%- endif -%}
-
-        {%- for media in product.media -%}
-          {%- unless featured_media and media.id == featured_media.id -%}
-            {%- liquid
-              capture media_index
-                if media.media_type == 'model'
-                  increment model_index
-                elsif media.media_type == 'video' or media.media_type == 'external_video'
-                  increment video_index
-                elsif media.media_type == 'image'
-                  increment image_index
-                endif
-              endcapture
-              assign media_index = media_index | plus: 1
-            -%}
-            {%- assign m_parts = media.alt | default: '' | split: '|' -%}
-            {%- assign m_color_source = m_parts[0] | default: '' | downcase -%}
-            {%- assign m_color_tokens = m_color_source | replace: '|', ',' | replace: '/', ',' | split: ',' -%}
-            {%- assign m_color  = 'all-show' -%}
-            {%- assign m_color_list = '' -%}
-            {%- for token in m_color_tokens -%}
-              {%- assign cleaned = token | strip | handleize -%}
-              {%- if cleaned != '' -%}
-                {%- if m_color == 'all-show' -%}{%- assign m_color = cleaned -%}{%- endif -%}
-                {%- if m_color_list != '' -%}{%- assign m_color_list = m_color_list | append: ',' -%}{%- endif -%}
-                {%- assign m_color_list = m_color_list | append: cleaned -%}
-              {%- endif -%}
-            {%- endfor -%}
-            {%- assign m_alt_tokens = media.alt | default: '' | downcase | replace: '|', ',' | replace: '/', ',' | split: ',' -%}
-            {%- for token in m_alt_tokens -%}
-              {%- assign cleaned = token | strip | handleize -%}
-              {%- if cleaned == 'all' or cleaned == 'all-show' -%}
-                {%- unless m_color_list contains cleaned -%}
-                  {%- if m_color_list != '' -%}{%- assign m_color_list = m_color_list | append: ',' -%}{%- endif -%}
-                  {%- assign m_color_list = m_color_list | append: cleaned -%}
-                {%- endunless -%}
-                {%- if m_color == 'all-show' -%}{%- assign m_color = cleaned -%}{%- endif -%}
-              {%- endif -%}
-            {%- endfor -%}
-            {%- assign m_series = m_parts[1] | default: '' | strip | handleize -%}
-            {%- assign m_composite = m_color | append: '--' | append: m_series -%}
-
-            <li
-              id="Slide-Thumbnails-{{ section.id }}-{{ forloop.index }}"
-              class="thumbnail-list__item slider__slide{% if section.settings.hide_variants and variant_images contains media.src %} thumbnail-list_item--variant{% endif %}"
-              data-target="{{ section.id }}-{{ media.id }}"
-              data-media-position="{{ media_index }}"
-              thumbnail-color="{{ m_color }}"
-              thumbnail-color-list="{{ m_color_list }}"
-              thumbnail-key="{{ m_composite }}"
-            >
-              {%- if media.media_type == 'model' -%}
-                <span class="thumbnail__badge" aria-hidden="true"><span class="svg-wrapper">{{- 'icon-3d-model.svg' | inline_asset_content -}}</span></span>
-              {%- elsif media.media_type == 'video' or media.media_type == 'external_video' -%}
-                <span class="thumbnail__badge" aria-hidden="true"><span class="svg-wrapper">{{- 'icon-play.svg' | inline_asset_content -}}</span></span>
-              {%- endif -%}
-              {%- capture thumbnail_id -%}Thumbnail-{{ section.id }}-{{ forloop.index }}{%- endcapture -%}
-              <button
-                class="thumbnail global-media-settings global-media-settings--no-shadow"
-                aria-label="{%- if media.media_type == 'image' -%}{{ 'products.product.media.load_image' | t: index: media_index }}{%- elsif media.media_type == 'model' -%}{{ 'products.product.media.load_model' | t: index: media_index }}{%- elsif media.media_type == 'video' or media.media_type == 'external_video' -%}{{ 'products.product.media.load_video' | t: index: media_index }}{%- endif -%}"
-                {% if featured_media == null and forloop.index == 1 %} aria-current="true"{% endif %}
-                aria-controls="GalleryViewer-{{ section.id }}"
-                aria-describedby="{{ thumbnail_id }}"
-              >
-                {{
-                  media.preview_image
-                  | image_url: width: 416
-                  | image_tag:
-                    loading: 'lazy',
-                    sizes: sizes,
-                    widths: '54, 74, 104, 162, 208, 324, 416',
-                    id: thumbnail_id,
-                    alt: media.alt | escape
-                }}
-              </button>
-            </li>
-          {%- endunless -%}
-        {%- endfor -%}
-      </ul>
-
-      <button
-        type="button"
-        class="slider-button slider-button--next{% if media_count <= 3 %} small-hide{% endif %}{% if media_count <= 4 %} medium-hide large-up-hide{% endif %}"
-        name="next"
-        aria-label="{{ 'general.slider.next_slide' | t }}"
-        aria-controls="GalleryThumbnails-{{ section.id }}"
-        data-step="3"
-      >
-        <span class="svg-wrapper">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
-      </button>
-    </slider-component>
-  {%- endif -%}
-
-<script>
-  console.log('Cacoverse: Media Gallery script loaded');
-  document.addEventListener('DOMContentLoaded', function() {
-    console.log('Cacoverse: DOMContentLoaded firing for media gallery');
-    // Define elements first to avoid ReferenceError during init
-    const thumbBtns = document.querySelectorAll('#Slider-Thumbnails-{{ section.id }} button.thumbnail');
-    console.log('Cacoverse: Found ' + thumbBtns.length + ' thumbnails');
-    
-    function updateActiveThumbnail(index) {
-       thumbBtns.forEach(b => b.removeAttribute('aria-current'));
-       if(thumbBtns[index]) {
-         thumbBtns[index].setAttribute('aria-current', 'true');
-         // Scroll thumbnail into view
-         const li = thumbBtns[index].closest('li');
-         if(li && li.parentElement) {
-            li.parentElement.scrollTo({
-              left: li.offsetLeft - li.parentElement.offsetLeft - 20, 
-              behavior: 'smooth'
-            });
-         }
-       }
-    }
-
-    const swiperSelector = '#Swiper-Gallery-{{ section.id }}';
-    if (!document.querySelector(swiperSelector)) return;
-
-    const swiper = new Swiper(swiperSelector, {
-      slidesPerView: 1,
-      spaceBetween: 0,
-      loop: true, // Enable infinite loop
-      observer: true,
-      observeParents: true,
-      autoHeight: true,
-      navigation: {
-        nextEl: '.swiper-button-next-{{ section.id }}',
-        prevEl: '.swiper-button-prev-{{ section.id }}',
-      },
-      on: {
-        init: function() {
-           updateActiveThumbnail(this.realIndex);
-           this.slides.forEach(s => s.classList.remove('is-active'));
-           if(this.slides[this.activeIndex]) this.slides[this.activeIndex].classList.add('is-active');
-        },
-        slideChange: function() {
-           updateActiveThumbnail(this.realIndex);
-           this.slides.forEach(s => s.classList.remove('is-active'));
-           if(this.slides[this.activeIndex]) this.slides[this.activeIndex].classList.add('is-active');
-           
-           // Fire custom event
-           document.dispatchEvent(new CustomEvent('media:slide:change', { detail: { index: this.realIndex } }));
-        }
-      }
-    });
-
-    // Thumbnails interaction
-    thumbBtns.forEach((btn, idx) => {
-      btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        swiper.slideToLoop(idx); 
-      });
-    });
-
-    function updateActiveThumbnail(index) {
-       thumbBtns.forEach(b => b.removeAttribute('aria-current'));
-       if(thumbBtns[index]) {
-         thumbBtns[index].setAttribute('aria-current', 'true');
-         // Scroll thumbnail into view
-         const li = thumbBtns[index].closest('li');
-         if(li && li.parentElement) {
-            li.parentElement.scrollTo({
-              left: li.offsetLeft - li.parentElement.offsetLeft - 20, 
-              behavior: 'smooth'
-            });
-         }
-       }
-    }
-
-    // React to filtering
-    document.addEventListener('media:filtered', function() {
-        if(swiper) {
-             swiper.update();
-             // If active slide is now hidden, move to first visible
-             if(swiper.slides[swiper.activeIndex] && swiper.slides[swiper.activeIndex].style.display == 'none'){
-                 let firstVisible = Array.from(swiper.slides).findIndex(s => s.style.display != 'none');
-                 if(firstVisible >= 0) swiper.slideTo(firstVisible);
-             }
-        }
-    });
-
-    // Failsafe: If after 1000ms everything is hidden, show all
-    setTimeout(() => {
-        const visibleSlides = document.querySelectorAll(swiperSelector + ' .swiper-slide:not([style*="display: none"])');
-        if(visibleSlides.length === 0) {
-             console.warn('Cacoverse: No slides visible. Forcing display.');
-             document.querySelectorAll(swiperSelector + ' .swiper-slide').forEach(s => s.style.display = '');
-             swiper.update();
-        }
-    }, 1000);
-
-    // Update Swiper on resize to handle responsive layout changes
-    window.addEventListener('resize', function() {
-        if(swiper) {
-            swiper.update();
-            swiper.emit('resize');
-        }
-    });
-  });
-</script>
-
-
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+{%- assign media_count = product.media.size -%}
+{%- if media_count > 0 -%}
 
 <style>
-@media (min-width: 990px){
-  /* El slide activo debe ser relative y cortar la lente */
-  .product__media-item{ position:relative; overflow:hidden; }
-
-  /* Lente circular con el zoom dentro de la misma imagen */
-.caco-zoom-lens{
-  --lens-size: 250px; /* tamaño base más grande */
-  position:absolute; display:none; pointer-events:none;
-  z-index:60;
-  width:var(--lens-size); height:var(--lens-size);
-  border-radius: 12px; /* ahora sí es una lupa circular */
-  border:1px solid rgba(176, 176, 176, 0.28);
-  background: rgba(255, 255, 255, 0.96) no-repeat center / cover;
-  box-shadow:0 18px 32px rgba(0,0,0,.26), inset 0 0 0 1px rgba(255,255,255,.18);
-  transition:opacity .08s ease, box-shadow 180ms ease;
-}
-
-
-  /* Asegura que el overlay de Dawn no tape la lente */
-  .product__media-toggle::after{ z-index:40; pointer-events:none; }
-}
-@media (max-width: 989px){
-  .caco-zoom-lens{ display:none !important; }
-}
-
-/* Swiper Gallery Styles (Injected for robustness) */
-.product-media-container {
-  position: relative;
-  width: 100%;
-  max-width: 100%;
-  margin: 0 auto;
-}
-.product-media-swiper {
-  width: 100%;
-  overflow: hidden;
-  border-radius: var(--media-radius);
-  position: relative;
-  display: block; /* Ensure visibility */
-  min-height: 300px; /* Safe default to prevent collapse */
-}
-.product-media-swiper .swiper-slide {
-  width: 100%;
-  height: auto;
-  display: flex !important; /* Force flex to override theme hiding */
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-.product-media-swiper .swiper-slide[style*="display: none"] {
-    display: none !important; /* Allow JS filtering to work */
-}
-.product-media-swiper img {
-  width: 100%;
-  height: auto;
-  display: block;
-  object-fit: contain;
-}
-.caco-square-box {
-  width: 100%;
-  position: relative;
-}
-.swiper-button-prev,
-.swiper-button-next {
-  color: #0d6ba6;
-  background: rgba(255, 255, 255, 0.9);
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  transition: all 0.3s ease;
-  z-index: 10;
-}
-.swiper-button-prev:after,
-.swiper-button-next:after {
-  font-size: 18px;
-  font-weight: bold;
-}
-.swiper-button-prev:hover,
-.swiper-button-next:hover {
-  background: #0d6ba6;
-  color: #fff;
-  transform: scale(1.05);
-}
-  .swiper-button-prev,
-  .swiper-button-next {
-    width: 36px;
-    height: 36px;
+  media-gallery {
+    display: block;
+    width: 100%;
+    position: relative;
+    --swiper-theme-color: #000;
   }
-}
-/* Emergency overrides to force visibility */
-#Swiper-Gallery-{{ section.id }} .swiper-wrapper,
-#Swiper-Gallery-{{ section.id }} .swiper-slide {
-  display: flex !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  height: auto !important;
-}
+  
+  /* Main Slider */
+  .gallery-main {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--media-radius, 8px);
+    background-color: #f4f4f4; /* Placeholder bg */
+  }
+
+  .gallery-main .swiper {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1; /* Default square, can be overridden */
+  }
+
+  /* Force visible slides */
+  .gallery-main .swiper-wrapper {
+    display: flex;
+    align-items: center;
+  }
+  
+  .gallery-main .swiper-slide {
+    height: auto;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    visibility: visible;
+    flex-shrink: 0;
+  }
+
+  .gallery-main img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Or cover, depending on preference */
+    display: block;
+  }
+  .gallery-main video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  /* Navigation Buttons */
+  .gallery-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: all 0.2s ease;
+    opacity: 0; /* Hidden by default, shown on hover/init */
+  }
+  media-gallery:hover .gallery-nav-btn {
+    opacity: 1;
+  }
+  .gallery-nav-btn:hover {
+    background: white;
+    transform: translateY(-50%) scale(1.1);
+  }
+  .gallery-prev { left: 10px; }
+  .gallery-next { right: 10px; }
+  
+  @media(max-width: 768px) {
+    .gallery-nav-btn { display: none; } /* Use touch on mobile */
+  }
+
+  /* Thumbnails */
+  .gallery-thumbs {
+    margin-top: 10px;
+    overflow: hidden;
+    width: 100%;
+  }
+  .gallery-thumbs .swiper {
+    padding: 2px 0;
+  }
+  .gallery-thumbs .swiper-slide {
+    width: 80px;
+    height: 80px;
+    opacity: 0.5;
+    cursor: pointer;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .gallery-thumbs .swiper-slide-thumb-active {
+    opacity: 1;
+    border-color: #000;
+  }
+  .gallery-thumbs img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Zoom Lens */
+  .zoom-lens {
+    position: absolute;
+    border: 1px solid rgba(255,255,255,0.5);
+    background-color: rgba(255,255,255,0.2);
+    width: 200px;
+    height: 200px;
+    display: none;
+    pointer-events: none;
+    z-index: 20;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  }
 </style>
 
-<script>
-(() => {
-  const sec = "{{ section.id }}";
-  const galleryList = document.getElementById("Slider-Gallery-"+sec);
-  const galleryRoot = document.getElementById("MediaGallery-"+sec) || galleryList;
-  if(!galleryList) return;
+<media-gallery data-section="{{ section.id }}" class="media-gallery-component">
+  
+  <!-- Main Slider -->
+  <div class="gallery-main">
+    <div class="swiper main-swiper-{{ section.id }}">
+      <div class="swiper-wrapper">
+        {%- for media in product.media -%}
+            
+            {%- comment -%} Parse Color Data {%- endcomment -%}
+            {%- assign m_parts = media.alt | default: '' | split: '|' -%}
+            {%- assign m_color_source = m_parts[0] | default: '' | downcase -%}
+            {%- assign m_color = 'all' -%}
+            
+            {%- if m_color_source != '' -%}
+                 {%- assign m_color = m_color_source | strip | handleize -%}
+            {%- endif -%}
 
-  const $ = (s,root=document)=>root.querySelector(s);
-  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-  const mq = matchMedia('(min-width: 990px)');
-  const allowZoom = () => mq.matches;
-  const activeItem = ()=>$('.swiper-slide-active', galleryList);
-  const activeImg  = ()=>$('.swiper-slide-active .product__media-img', galleryList);
+            {%- comment -%} Image tag generation {%- endcomment -%}
+            <div class="swiper-slide" 
+                 data-media-id="{{ media.id }}" 
+                 data-color="{{ m_color }}"
+                 data-color-tokens="{{ media.alt | downcase | escape }}">
+              
+              {% if media.media_type == 'image' %}
+                  <img src="{{ media | image_url: width: 1440 }}" 
+                       alt="{{ media.alt | escape }}" 
+                       loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                       data-zoom="{{ media | image_url: width: 3000 }}"
+                       class="gallery-image">
+              {% elsif media.media_type == 'video' %}
+                  {{ media | video_tag: controls: true, class: 'gallery-video' }}
+              {% elsif media.media_type == 'external_video' %}
+                   {{ media | external_video_tag: class: 'gallery-video' }}
+              {% endif %}
 
-  let S = {
-    img:null,item:null,lens:null,
-    fullW:0, fullH:0, ratioX:1, ratioY:1,
-    lensW:0, lensH:0,
-    ready:false, ticking:false
-  };
+            </div>
+        {%- endfor -%}
+      </div>
+      
+      <!-- Navigation -->
+      <div class="gallery-nav-btn gallery-prev swiper-button-prev-{{ section.id }}">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      </div>
+      <div class="gallery-nav-btn gallery-next swiper-button-next-{{ section.id }}">
+         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      </div>
+    </div>
+    
+    <!-- Zoom Container -->
+    <div class="zoom-lens"></div>
+  </div>
 
-  async function primeImage(img, fullUrl){
-    // Espera a que la imagen full esté decodificada antes de calcular
-    const pre = new Image();
-    pre.src = fullUrl;
-    try{ await (pre.decode ? pre.decode() : new Promise(r => pre.complete ? r() : pre.onload = r)); }
-    catch(_e){ /* fallback igual */ }
-    return pre;
-  }
+  <!-- Thumbnails -->
+  <div class="gallery-thumbs">
+     <div class="swiper thumbs-swiper-{{ section.id }}">
+        <div class="swiper-wrapper">
+          {%- for media in product.media -%}
+              <!-- Logic for color filtering applies to thumbs too -->
+              {%- assign m_parts = media.alt | default: '' | split: '|' -%}
+              {%- assign m_color_source = m_parts[0] | default: '' | downcase -%}
+              {%- assign m_color = 'all' -%}
+              {%- if m_color_source != '' -%}
+                  {%- assign m_color = m_color_source | strip | handleize -%}
+              {%- endif -%}
 
+             <div class="swiper-slide" 
+                  data-media-id="{{ media.id }}"
+                  data-color="{{ m_color }}">
+                <img src="{{ media | image_url: width: 200 }}" alt="{{ media.alt | escape }}" loading="lazy">
+             </div>
+          {%- endfor -%}
+        </div>
+     </div>
+  </div>
 
+</media-gallery>
 
+<script src="{{ 'media-gallery.js' | asset_url }}" defer="defer"></script>
 
-function computeLens(pre){
-  const img = S.img; if(!img) return;
-  const r = img.getBoundingClientRect();
-
-  S.fullW = pre.naturalWidth || pre.width || r.width;
-  S.fullH = pre.naturalHeight|| pre.height|| r.height;
-
-  S.ratioX = (S.fullW / r.width)  || 1;
-  S.ratioY = (S.fullH / r.height) || 1;
-
-  // Lente más grande y responsiva
-  const baseSize = Math.min(r.width, r.height) * 0.5; // 50% del lado menor
-  const size = clamp(baseSize, 160, 260);             // límites para desktop
-  S.lensW = size;
-  S.lensH = size;
-
-  S.lens.style.width  = S.lensW+'px';
-  S.lens.style.height = S.lensH+'px';
-  S.lens.style.setProperty('--lens-size', size+'px');
-
-  const fullUrl = img.getAttribute('data-full') || img.currentSrc || img.src;
-  S.lens.style.backgroundImage = `url("${fullUrl}")`;
-
-  // Aumenta el factor de zoom (1.4x sobre la resolución real)
-  const zoomFactor = 1.0;
-  S.lens.style.backgroundSize  = `${S.fullW * zoomFactor}px ${S.fullH * zoomFactor}px`;
-
-  S.ready = true;
-}
-
-
-  async function bindToActive(force=false){
-    if(!allowZoom()) return false;
-
-    const item = activeItem(), img = activeImg();
-    if(!item || !img) return false;
-
-    // Crear/mover lente al item activo
-    if(!S.lens){
-      S.lens = document.createElement('div');
-      S.lens.className = 'caco-zoom-lens';
-    }
-    if(S.lens.parentNode !== item) item.appendChild(S.lens);
-
-    const changed = (S.img !== img) || force;
-    S.img = img; S.item = item;
-
-    if(changed){
-      S.ready = false;
-      const full = img.getAttribute('data-full') || img.currentSrc || img.src;
-      const pre  = await primeImage(img, full);
-      computeLens(pre);
-      // Primer paint del lente (por si alguien inspecciona)
-      S.lens.style.display = 'block';
-      S.lens.style.display = 'none';
-    }
-    return true;
-  }
-
-  const within=(el,x,y)=>{ const r=el.getBoundingClientRect(); return x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom; };
-  const show = ()=>{ if(S.lens) S.lens.style.display='block'; };
-  const hide = ()=>{ if(S.lens) S.lens.style.display='none'; };
-
-  function rafMove(e){
-    if(S.ticking) return;
-    S.ticking = true;
-    requestAnimationFrame(() => {
-      S.ticking = false;
-      move(e);
-    });
-  }
-
-  function move(e){
-    // Bind perezoso en el primer movimiento (si algo no estaba listo)
-    if(!allowZoom()) { hide(); return; }
-    if(!S.img || !S.ready){ bindToActive(true).then(()=>{ if(!S.ready) return; position(e); }); return; }
-    position(e);
-  }
-
-function position(e){
-  if (!S.img) return;
-  if (!allowZoom()) { hide(); return; }
-
-  // Punto real del cursor / touch
-  const cx = e.touches ? e.touches[0].clientX : e.clientX;
-  const cy = e.touches ? e.touches[0].clientY : e.clientY;
-
-  if (!within(S.img, cx, cy)) { hide(); return; }
-
-  const r = S.img.getBoundingClientRect();
-  const x = cx - r.left;  // posición dentro de la imagen
-  const y = cy - r.top;
-
-  // La LUPA no se sale visualmente del contenedor
-  const left = clamp(x - S.lensW / 2, 0, r.width  - S.lensW);
-  const top  = clamp(y - S.lensH / 2, 0, r.height - S.lensH);
-
-  S.lens.style.left = left + 'px';
-  S.lens.style.top  = top  + 'px';
-
-  // Punto de zoom en la imagen grande
-  let fullX = x * S.ratioX;
-  let fullY = y * S.ratioY;
-
-  // 🔑 Clamp para que la imagen SIEMPRE llene la lupa
-  const minX = S.lensW / 2;
-  const maxX = S.fullW - S.lensW / 2;
-  const minY = S.lensH / 2;
-  const maxY = S.fullH - S.lensH / 2;
-
-  fullX = clamp(fullX, minX, maxX);
-  fullY = clamp(fullY, minY, maxY);
-
-  const bgX = -(fullX - S.lensW / 2);
-  const bgY = -(fullY - S.lensH / 2);
-
-  S.lens.style.backgroundPosition = `${bgX}px ${bgY}px`;
-
-  show();
-}
-
-
-
-  // ===== Robustness hooks =====
-  const mo = new MutationObserver(() => { S.img=null; S.ready=false; hide(); bindToActive(true); });
-  mo.observe(galleryList, {subtree:true, attributes:true, attributeFilter:['class']});
-
-  document.addEventListener('variant:change', () => { S.img=null; S.ready=false; hide(); bindToActive(true); });
-  galleryRoot && galleryRoot.addEventListener('change', () => { S.img=null; S.ready=false; hide(); bindToActive(true); });
-  document.addEventListener('shopify:section:load', () => { S.img=null; S.ready=false; hide(); bindToActive(true); });
-
-  const thumbList = document.getElementById('Slider-Thumbnails-'+sec);
-  if (thumbList) {
-    thumbList.addEventListener('pointerenter', hide, {capture:true});
-    thumbList.addEventListener('pointermove', hide, {capture:true});
-    thumbList.addEventListener('pointerleave', hide, {capture:true});
-  }
-
-  // Pointer/touch (solo en el viewer principal, no thumbnails)
-  galleryList.addEventListener('pointerenter', e => {
-    if(!allowZoom()) return;
-    bindToActive(true).then(() => rafMove(e));
-  }, true);
-  galleryList.addEventListener('pointermove',  e => { if(allowZoom()) rafMove(e); else hide(); }, {passive:true, capture:true});
-  galleryList.addEventListener('pointerleave', () => { hide(); }, true);
-  galleryList.addEventListener('touchstart',  e => { if(allowZoom()) bindToActive(true); else hide(); }, {passive:true, capture:true});
-  galleryList.addEventListener('touchmove',   e => { if(allowZoom()) rafMove(e); else hide(); }, {passive:true, capture:true});
-  galleryList.addEventListener('touchend',    hide, true);
-
-  window.addEventListener('resize', ()=>{ S.img=null; S.ready=false; hide(); }, {passive:true});
-
-  // Primer bind
-  bindToActive(true);
-})();
-</script>
-
-
-
-
-
-
-</div>
+{% endif %}

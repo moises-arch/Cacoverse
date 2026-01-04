@@ -1,137 +1,225 @@
 if (!customElements.get('media-gallery')) {
-  customElements.define(
-    'media-gallery',
-    class MediaGallery extends HTMLElement {
-      constructor() {
-        super();
-        this.elements = {
-          liveRegion: this.querySelector('[id^="GalleryStatus"]'),
-          viewer: this.querySelector('[id^="GalleryViewer"]'),
-          thumbnails: this.querySelector('[id^="GalleryThumbnails"]'),
-        };
-        this.mql = window.matchMedia('(min-width: 750px)');
-        if (!this.elements.thumbnails) return;
+  customElements.define('media-gallery', class MediaGallery extends HTMLElement {
+    constructor() {
+      super();
+      this.sectionId = this.dataset.section;
+      this.mainSwiper = null;
+      this.thumbSwiper = null;
+      this.currentColor = null;
+    }
 
-        this.elements.viewer.addEventListener('slideChanged', debounce(this.onSlideChanged.bind(this), 500));
-        this.elements.thumbnails.querySelectorAll('[data-target]').forEach((mediaToSwitch) => {
-          mediaToSwitch
-            .querySelector('button')
-            .addEventListener('click', this.setActiveMedia.bind(this, mediaToSwitch.dataset.target, false));
-        });
-        if (this.dataset.desktopLayout.includes('thumbnail') && this.mql.matches) this.removeListSemantic();
+    connectedCallback() {
+      this.initSwiper();
+      this.bindEvents();
+      this.initZoom();
+    }
+
+    initSwiper() {
+      if (!window.Swiper) {
+        console.error('Swiper not loaded');
+        // Retry if Swiper is lazy loaded
+        setTimeout(() => this.initSwiper(), 100);
+        return;
       }
 
-      onSlideChanged(event) {
-        console.log('Slide changed:', event.detail);
-        const thumbnail = this.elements.thumbnails.querySelector(
-          `[data-target="${event.detail.currentElement.dataset.mediaId}"]`
-        );
-        this.setActiveThumbnail(thumbnail);
-         
-      }
-
-      setActiveMedia(mediaId, prepend) {
-        const activeMedia =
-          this.elements.viewer.querySelector(`[data-media-id="${mediaId}"]`) ||
-          this.elements.viewer.querySelector('[data-media-id]');
-        if (!activeMedia) {
-          return;
+      // Initialize Thumbnails first
+      const thumbsParams = {
+        spaceBetween: 10,
+        slidesPerView: 4,
+        freeMode: true,
+        watchSlidesProgress: true,
+        observer: true,
+        observeParents: true,
+        breakpoints: {
+          320: { slidesPerView: 3 },
+          768: { slidesPerView: 5 },
+          1024: { slidesPerView: 6 }
         }
-        this.elements.viewer.querySelectorAll('[data-media-id]').forEach((element) => {
-          element.classList.remove('is-active');
-        });
-        activeMedia?.classList?.add('is-active');
+      };
 
-        if (prepend) {
-          activeMedia.parentElement.firstChild !== activeMedia && activeMedia.parentElement.prepend(activeMedia);
+      this.thumbSwiper = new Swiper(`.thumbs-swiper-${this.sectionId}`, thumbsParams);
 
-          if (this.elements.thumbnails) {
-            const activeThumbnail = this.elements.thumbnails.querySelector(`[data-target="${mediaId}"]`);
-            activeThumbnail.parentElement.firstChild !== activeThumbnail && activeThumbnail.parentElement.prepend(activeThumbnail);
-          }
+      // Initialize Main Swiper
+      const mainParams = {
+        spaceBetween: 0,
+        navigation: {
+          nextEl: `.swiper-button-next-${this.sectionId}`,
+          prevEl: `.swiper-button-prev-${this.sectionId}`,
+        },
+        thumbs: {
+          swiper: this.thumbSwiper,
+        },
+        observer: true,
+        observeParents: true,
+        autoHeight: true, // Crucial for responsive height adaptation
+      };
 
-          if (this.elements.viewer.slider) this.elements.viewer.resetPages();
+      this.mainSwiper = new Swiper(`.main-swiper-${this.sectionId}`, mainParams);
+
+      // Ensure visibility on load
+      this.mainSwiper.update();
+    }
+
+    bindEvents() {
+      // Listen for standard Shopify variant changes
+      document.addEventListener('variant:change', (e) => {
+        // Check if this event belongs to current section or is global
+        // e.detail.variant is usually consistent in Shopify themes
+        if (e.detail && e.detail.variant) {
+          this.onVariantChange(e.detail.variant);
         }
+      });
 
-        this.preventStickyHeader();
-        window.setTimeout(() => {
-          if (!this.mql.matches || this.elements.thumbnails) {
-            activeMedia.parentElement.scrollTo({ left: activeMedia.offsetLeft });
-          }
-          const activeMediaRect = activeMedia.getBoundingClientRect();
-          // Don't scroll if the image is already in view
-          if (activeMediaRect.top > -0.5) return;
-          const top = activeMediaRect.top + window.scrollY;
-          window.scrollTo({ top: top, behavior: 'smooth' });
-        });
-        this.playActiveMedia(activeMedia);
+      // Also listen for manual input changes (fallback)
+      document.body.addEventListener('change', (e) => {
+        if (e.target.matches('input[type="radio"][name*="Option"], input[type="radio"][name*="Color"], input[type="radio"][name*="color"]')) {
+          const color = e.target.value.toLowerCase().trim().replace(/\s+/g, '-');
+          this.filterSlides(color);
+        }
+      });
+    }
 
-        if (!this.elements.thumbnails) return;
-        const activeThumbnail = this.elements.thumbnails.querySelector(`[data-target="${mediaId}"]`);
-        this.setActiveThumbnail(activeThumbnail);
-        this.announceLiveRegion(activeMedia, activeThumbnail.dataset.mediaPosition);
-      }
+    onVariantChange(variant) {
+      // Extract color option. Usually Option1, Option2, or Option3
+      // We look for the option name 'Color' or 'Colour'
+      let color = null;
 
-      setActiveThumbnail(thumbnail) {
-        if (!this.elements.thumbnails || !thumbnail) return;
+      variant.options.forEach((opt, index) => {
+        // Find the option key name (needs access to product options matching)
+        // simplified: assume we get the selected value directly
+      });
 
-        this.elements.thumbnails
-          .querySelectorAll('button')
-          .forEach((element) => element.removeAttribute('aria-current'));
-        thumbnail.querySelector('button').setAttribute('aria-current', true);
-        if (this.elements.thumbnails.isSlideVisible(thumbnail, 10)) return;
+      // Better approach: look at the form data or the variant title
+      // For robustness, let's grab the color from the standard variant selector if possible.
+      // Or simply iterate options to find one that looks like a color.
 
-        this.elements.thumbnails.slider.scrollTo({ left: thumbnail.offsetLeft });
-      }
+      // Hack: Check common option names
+      const colorOption = variant.option1 || variant.option2 || variant.option3; // This is naive
 
-      announceLiveRegion(activeItem, position) {
-        const image = activeItem.querySelector('.product__modal-opener--image img');
-        if (!image) return;
-        image.onload = () => {
-          this.elements.liveRegion.setAttribute('aria-hidden', false);
-          this.elements.liveRegion.innerHTML = window.accessibilityStrings.imageAvailable.replace('[index]', position);
-          setTimeout(() => {
-            this.elements.liveRegion.setAttribute('aria-hidden', true);
-          }, 2000);
-        };
-        image.src = image.src;
-      }
-
-      playActiveMedia(activeItem) {
-        window.pauseAllMedia();
-        const deferredMedia = activeItem.querySelector('.deferred-media');
-        if (deferredMedia) deferredMedia.loadContent(false);
-      }
-
-      preventStickyHeader() {
-        this.stickyHeader = this.stickyHeader || document.querySelector('sticky-header');
-        if (!this.stickyHeader) return;
-        this.stickyHeader.dispatchEvent(new Event('preventHeaderReveal'));
-      }
-
-      removeListSemantic() {
-        if (!this.elements.viewer.slider) return;
-        this.elements.viewer.slider.setAttribute('role', 'presentation');
-        this.elements.viewer.sliderItems.forEach((slide) => slide.setAttribute('role', 'presentation'));
+      // Revert to DOM check for selected color input
+      const checkedInput = document.querySelector('input[name="Color"]:checked') || document.querySelector('input[name="color"]:checked') || document.querySelector('.color-option:checked');
+      if (checkedInput) {
+        this.filterSlides(checkedInput.value);
       }
     }
-  );
+
+    filterSlides(color) {
+      if (!this.mainSwiper) return;
+      if (!color) return;
+
+      const normalizedColor = color.toLowerCase().trim().replace(/\s+/g, '-');
+      if (this.currentColor === normalizedColor) return;
+      this.currentColor = normalizedColor;
+
+      console.log('Media Gallery: Filtering by', normalizedColor);
+
+      const slides = this.querySelectorAll('.gallery-main .swiper-slide');
+      const thumbSlides = this.querySelectorAll('.gallery-thumbs .swiper-slide');
+
+      let firstVisibleIndex = -1;
+
+      // Filter Main Slides
+      slides.forEach((slide, index) => {
+        const slideColorLists = (slide.dataset.color || '').split(',');
+        const isMatch = slideColorLists.some(c => c === 'all' || c === 'all-show' || c === normalizedColor);
+
+        if (isMatch) {
+          slide.style.display = 'flex';
+          if (firstVisibleIndex === -1) firstVisibleIndex = index;
+        } else {
+          slide.style.display = 'none';
+        }
+      });
+
+      // Filter Thumbnails
+      thumbSlides.forEach((slide) => {
+        const slideColorLists = (slide.dataset.color || '').split(',');
+        const isMatch = slideColorLists.some(c => c === 'all' || c === 'all-show' || c === normalizedColor);
+        slide.style.display = isMatch ? 'block' : 'none';
+      });
+
+      // Update Swiper
+      this.mainSwiper.update();
+      this.thumbSwiper.update();
+
+      if (firstVisibleIndex >= 0) {
+        this.mainSwiper.slideTo(firstVisibleIndex);
+      } else {
+        // Fallback: Show all if no matches (safety)
+        slides.forEach(s => s.style.display = 'flex');
+        thumbSlides.forEach(s => s.style.display = 'block');
+        this.mainSwiper.update();
+        this.thumbSwiper.update();
+        this.mainSwiper.slideTo(0);
+      }
+    }
+
+    // Zoom Functionality
+    initZoom() {
+      if (window.matchMedia('(max-width: 990px)').matches) return; // Disable on mobile
+
+      const mainContainer = this.querySelector('.gallery-main');
+      const lens = this.querySelector('.zoom-lens');
+
+      mainContainer.addEventListener('mousemove', (e) => this.onZoomMove(e, mainContainer, lens));
+      mainContainer.addEventListener('mouseleave', () => {
+        lens.style.display = 'none';
+      });
+      mainContainer.addEventListener('mouseenter', () => {
+        // Activate lens only if we have an image
+        const activeSlide = this.mainSwiper.slides[this.mainSwiper.activeIndex];
+        if (activeSlide && activeSlide.querySelector('img')) {
+          lens.style.display = 'block';
+        }
+      });
+    }
+
+    onZoomMove(e, container, lens) {
+      const activeSlide = this.mainSwiper.slides[this.mainSwiper.activeIndex];
+      const img = activeSlide ? activeSlide.querySelector('img[data-zoom]') : null;
+      if (!img) { lens.style.display = 'none'; return; }
+
+      lens.style.display = 'block';
+
+      const rect = container.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      // Lens dimensions
+      const lw = lens.offsetWidth;
+      const lh = lens.offsetHeight;
+
+      // Positioning lens
+      let lx = x - lw / 2;
+      let ly = y - lh / 2;
+
+      // Boundary checks
+      if (lx < 0) lx = 0;
+      if (lx > rect.width - lw) lx = rect.width - lw;
+      if (ly < 0) ly = 0;
+      if (ly > rect.height - lh) ly = rect.height - lh;
+
+      lens.style.left = lx + 'px';
+      lens.style.top = ly + 'px';
+
+      // Background Position for Zoom
+      // Calculate ratio
+      const fullImageSrc = img.dataset.zoom;
+
+      // We set the background image of the lens
+      lens.style.backgroundImage = `url('${fullImageSrc}')`;
+
+      // Calculate percentages
+      const ratioX = (lx / (rect.width - lw)) * 100;
+      const ratioY = (ly / (rect.height - lh)) * 100;
+
+      lens.style.backgroundPosition = `${ratioX}% ${ratioY}%`;
+      // We assume zoom image is essentially larger than container. 
+      // Typically standard background-size: cover working against the lens size creates the zoom effect
+      // But for exact zoom we usually do:
+      // background-size: (img.width * ratio) (img.height * ratio)
+      // Simplest "Good enough" approach:
+      lens.style.backgroundSize = `${rect.width * 2.5}px ${rect.height * 2.5}px`;
+    }
+  });
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
