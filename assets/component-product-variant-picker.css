@@ -119,14 +119,26 @@ variant-selects {
 .product-form__input--pill input[type='radio']:disabled+label,
 .product-form__input--pill input[type='radio'].disabled+label {
   border-color: rgba(var(--color-foreground), 0.1);
-  color: rgba(var(--color-foreground), 0.6);
-  text-decoration: line-through;
+  color: rgba(var(--color-foreground), 0.4);
+  text-decoration: none;
+  background-color: transparent !important;
+  opacity: 0.4;
 }
 
-.product-form__input--pill input[type='radio'].disabled:checked+label,
-.product-form__input--pill input[type='radio']:disabled:checked+label {
-  color: rgba(var(--color-background), 0.6);
+.product-form__input--pill input[type='radio']:disabled+label::after,
+.product-form__input--pill input[type='radio'].disabled+label::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+  transform: rotate(-15deg);
+  pointer-events: none;
 }
+
 
 .product-form__input--pill input[type='radio']:focus-visible+label {
   box-shadow: 0 0 0 0.3rem rgb(var(--color-background)), 0 0 0 0.5rem rgba(var(--color-foreground), 0.55);
@@ -200,9 +212,26 @@ variant-selects {
   position: relative;
   pointer-events: none !important;
   opacity: 0.4 !important;
-  text-decoration: line-through;
+  text-decoration: none;
   cursor: not-allowed;
+  background: transparent !important;
+  border-color: rgba(var(--color-foreground), 0.1) !important;
+  color: rgba(var(--color-foreground), 0.6) !important;
 }
+
+.product-form__input input[type="radio"]:disabled+label::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+  transform: rotate(-15deg);
+  pointer-events: none;
+}
+
 
 /* Sold-out variants (exists but out of stock) - Clickable */
 .product-form__input input[type="radio"].sold-out:not(:disabled)+label {
@@ -233,20 +262,20 @@ variant-selects {
   border: 2px solid var(--blue-primary);
 }
 
-/* Redefine unavailable overlay for truly disabled only */
+/* Removed the dark overlay and ✕ to keep it consistent with sold-out style */
 .product-form__input input[type="radio"]:disabled+label::after {
-  content: "✕";
+  content: "";
   position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  font-weight: 800;
-  font-size: 18px;
-  color: #fff;
-  background: rgba(0, 0, 0, .55);
-  border-radius: 10px;
-  line-height: 1;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+  transform: rotate(-15deg);
+  pointer-events: none;
 }
+
 
 .swatch--circle .swatch__label::after {
   border-radius: 999px;

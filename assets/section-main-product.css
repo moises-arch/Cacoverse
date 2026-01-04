@@ -587,12 +587,18 @@ a.product__text {
   outline: none !important;
   box-shadow: none !important;
   /* Removed shadow/stroke */
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background 0.15s ease, transform 0.15s ease, opacity 0.15s ease;
   cursor: pointer;
   backface-visibility: hidden;
   transform-style: preserve-3d;
   -webkit-font-smoothing: antialiased;
 }
+
+.product__info-wrapper .product-form__submit span {
+  transition: opacity 0.1s ease !important;
+  /* Extremely fast or no transition */
+}
+
 
 .product__info-wrapper .product-form__submit::after {
   display: none !important;
@@ -638,8 +644,10 @@ a.product__text {
   cursor: not-allowed !important;
   transform: none !important;
   box-shadow: none !important;
-  opacity: 0.8;
+  opacity: 1;
+  /* Keep it at 1 to avoid jarring fade-out */
 }
+
 
 .product-form__submit:disabled::before {
   display: none;
@@ -647,28 +655,16 @@ a.product__text {
 
 
 /* Pulse Animation for Button Text */
-@keyframes textPulse {
-  0% {
-    opacity: 1;
-  }
-
-  50% {
-    opacity: 0.4;
-  }
-
-  100% {
-    opacity: 1;
-  }
-}
 
 .product-form__submit>span {
   display: inline-block;
-  transition: all 0.4s ease;
+  transition: opacity 0.1s ease;
 }
 
+
 .product-form__submit.loading:not(:disabled)>span {
-  animation: textPulse 1s ease-in-out infinite;
-  pointer-events: none;
+  opacity: 0.5;
+  /* Simple static loading state */
 }
 
 .product-form__submit:disabled>span {
@@ -2083,6 +2079,29 @@ variant-selects .form__label strong {
   z-index: 0;
   margin: .2rem .2rem .3rem .2rem !important;
 
+}
+
+.product-form__input--pill input[type='radio']:disabled+label,
+.product-form__input--pill input[type='radio'].disabled+label {
+  border-color: rgba(var(--color-foreground), 0.1);
+  color: rgba(var(--color-foreground), 0.4);
+  text-decoration: none;
+  background-color: transparent !important;
+  opacity: 0.4;
+}
+
+.product-form__input--pill input[type='radio']:disabled+label::after,
+.product-form__input--pill input[type='radio'].disabled+label::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+  transform: rotate(-15deg);
+  pointer-events: none;
 }
 
 .product-form__input--pill.options-color input[type=radio]+label img {
@@ -5156,10 +5175,12 @@ body.template-product .product__media-modal * {
 .product-form__input input[aria-disabled="true"]+label {
   cursor: not-allowed !important;
   pointer-events: none !important;
-  opacity: 0.45 !important;
-  background: #f3f4f6 !important;
-  filter: grayscale(0.8);
+  opacity: 0.4 !important;
+  text-decoration: none !important;
+  background: transparent !important;
+  filter: none !important;
 }
+
 
 #shopify-section- {
     {

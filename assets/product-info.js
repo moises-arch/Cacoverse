@@ -205,14 +205,11 @@ if (!customElements.get("product-info")) {
 
       updateOptionValues(html) {
         const variantSelects = html.querySelector("variant-selects");
-        if (variantSelects) {
-          HTMLUpdateUtility.viewTransition(
-            this.variantSelectors,
-            variantSelects,
-            this.preProcessHtmlCallbacks
-          );
+        if (variantSelects && this.variantSelectors) {
+          this.variantSelectors.innerHTML = variantSelects.innerHTML;
         }
       }
+
 
       handleUpdateProductInfo(productUrl) {
         return (html) => {
