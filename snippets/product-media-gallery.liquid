@@ -135,20 +135,20 @@
 
   /* Thumbnails */
   .gallery-thumbs {
-    margin-top: 20px;
+    margin-top: 24px;
     overflow: hidden;
     width: 100%;
   }
   .gallery-thumbs .swiper {
-    padding: 4px 0;
+    padding: 8px 0;
   }
   .gallery-thumbs .swiper-slide {
-    width: 80px; /* FIXED WIDTH FOR STABILITY */
+    width: 100px; /* INCREASED SIZE */
     aspect-ratio: 1 / 1;
-    height: 80px !important;
+    height: 100px !important;
     opacity: 0.5;
     cursor: pointer;
-    border-radius: 14px;
+    border-radius: 16px;
     overflow: hidden;
     border: 2px solid transparent;
     transition: all 0.3s ease;
@@ -260,13 +260,46 @@
 
 <media-gallery data-section="{{ section.id }}" class="media-gallery-component">
   
+  {%- assign featured_media = product.selected_or_first_available_variant.featured_media -%}
+
   <!-- Main Slider -->
   <div class="gallery-main">
     <div class="swiper main-swiper-{{ section.id }}">
       <div class="swiper-wrapper">
-        {%- for media in product.media -%}
+        {%- comment -%} ALWAYS PLACE FEATURED MEDIA FIRST {%- endcomment -%}
+        {%- if featured_media -%}
+          {%- assign media = featured_media -%}
+          {%- assign raw_alt = media.alt | default: 'all' -%}
+          {%- assign normalized_alt = raw_alt | replace: '|', ',' -%}
+          {%- assign alt_parts = normalized_alt | split: ',' -%}
+          
+          {%- capture m_colors -%}
+            {%- for part in alt_parts -%}
+              {{ part | strip | handleize }}{% unless forloop.last %},{% endunless %}
+            {%- endfor -%}
+          {%- endcapture -%}
+
+          <div class="swiper-slide" 
+               data-media-id="{{ media.id }}" 
+               data-color="{{ m_colors | strip }}"
+               data-color-tokens="{{ raw_alt | downcase | escape }}"
+               data-index="0">
             
-            {%- comment -%} Improved Token Parsing {%- endcomment -%}
+            {% if media.media_type == 'image' %}
+                <img src="{{ media | image_url: width: 1440 }}" 
+                     alt="{{ media.alt | escape }}" 
+                     loading="eager"
+                     data-zoom-url="{{ media | image_url: width: 3000 }}"
+                     class="gallery-image">
+            {% elsif media.media_type == 'video' %}
+                {{ media | video_tag: controls: true, class: 'gallery-video' }}
+            {% endif %}
+
+          </div>
+        {%- endif -%}
+
+        {%- for media in product.media -%}
+          {%- if featured_media == nil or media.id != featured_media.id -%}
             {%- assign raw_alt = media.alt | default: 'all' -%}
             {%- assign normalized_alt = raw_alt | replace: '|', ',' -%}
             {%- assign alt_parts = normalized_alt | split: ',' -%}
@@ -277,17 +310,16 @@
               {%- endfor -%}
             {%- endcapture -%}
 
-            {%- comment -%} Image tag generation {%- endcomment -%}
             <div class="swiper-slide" 
                  data-media-id="{{ media.id }}" 
                  data-color="{{ m_colors | strip }}"
                  data-color-tokens="{{ raw_alt | downcase | escape }}"
-                 data-index="{{ forloop.index0 }}">
+                 data-index="{{ forloop.index }}">
               
               {% if media.media_type == 'image' %}
                   <img src="{{ media | image_url: width: 1440 }}" 
                        alt="{{ media.alt | escape }}" 
-                       loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                       loading="lazy"
                        data-zoom-url="{{ media | image_url: width: 3000 }}"
                        class="gallery-image">
               {% elsif media.media_type == 'video' %}
@@ -295,6 +327,7 @@
               {% endif %}
 
             </div>
+          {%- endif -%}
         {%- endfor -%}
       </div>
       
@@ -313,8 +346,27 @@
   <div class="gallery-thumbs">
      <div class="swiper thumbs-swiper-{{ section.id }}">
         <div class="swiper-wrapper">
+          {%- if featured_media -%}
+            {%- assign media = featured_media -%}
+            {%- assign raw_alt = media.alt | default: 'all' -%}
+            {%- assign normalized_alt = raw_alt | replace: '|', ',' -%}
+            {%- assign alt_parts = normalized_alt | split: ',' -%}
+            
+            {%- capture m_colors -%}
+              {%- for part in alt_parts -%}
+                {{ part | strip | handleize }}{% unless forloop.last %},{% endunless %}
+              {%- endfor -%}
+            {%- endcapture -%}
+
+            <div class="swiper-slide" 
+                 data-media-id="{{ media.id }}"
+                 data-color="{{ m_colors | strip }}">
+              <img src="{{ media | image_url: width: 200 }}" alt="{{ media.alt | escape }}" loading="lazy">
+            </div>
+          {%- endif -%}
+          
           {%- for media in product.media -%}
-              {%- comment -%} Improved Token Parsing for Thumbs {%- endcomment -%}
+            {%- if featured_media == nil or media.id != featured_media.id -%}
               {%- assign raw_alt = media.alt | default: 'all' -%}
               {%- assign normalized_alt = raw_alt | replace: '|', ',' -%}
               {%- assign alt_parts = normalized_alt | split: ',' -%}

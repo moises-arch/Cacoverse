@@ -167,17 +167,45 @@ if (!customElements.get('media-gallery')) {
       mainSlides.forEach(filterLogic);
       thumbSlides.forEach(filterLogic);
 
-      if (this.mainSwiper) this.mainSwiper.update();
-      if (this.thumbSwiper) this.thumbSwiper.update();
+      // --- REORDERING LOGIC ---
+      const mainWrapper = this.querySelector('.gallery-main .swiper-wrapper');
+      const thumbWrapper = this.querySelector('.gallery-thumbs .swiper-wrapper');
+
+      const sortSlides = (slides, wrapper) => {
+        // Move visible slides to the front
+        const visible = slides.filter(s => s.style.display !== 'none');
+        const hidden = slides.filter(s => s.style.display === 'none');
+
+        // If featured exists, move it to the absolute front of visible
+        if (featuredMediaId) {
+          const featuredIndex = visible.findIndex(s => s.dataset.mediaId == featuredMediaId);
+          if (featuredIndex > -1) {
+            const [featuredSlide] = visible.splice(featuredIndex, 1);
+            visible.unshift(featuredSlide);
+          }
+        }
+
+        // Re-append to DOM
+        wrapper.innerHTML = '';
+        visible.forEach(s => wrapper.appendChild(s));
+        hidden.forEach(s => wrapper.appendChild(s));
+      };
+
+      sortSlides(mainSlides, mainWrapper);
+      sortSlides(thumbSlides, thumbWrapper);
+
+      if (this.mainSwiper) {
+        this.mainSwiper.update();
+        this.mainSwiper.slideTo(0, 0); // Always jump to start after reorder
+      }
+      if (this.thumbSwiper) {
+        this.thumbSwiper.update();
+        this.thumbSwiper.slideTo(0, 0);
+      }
 
       setTimeout(() => {
-        if (featuredMediaId) this.slideToMedia(featuredMediaId);
-        else {
-          const first = mainSlides.find(s => s.style.display !== 'none');
-          if (first) this.slideToMedia(first.dataset.mediaId);
-        }
         this.syncThumbnails();
-      }, 100);
+      }, 150);
     }
 
     slideToMedia(mediaId) {
