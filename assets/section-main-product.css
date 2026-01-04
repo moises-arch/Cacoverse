@@ -661,39 +661,10 @@ a.product__text {
   display: none !important;
 }
 
-@keyframes premiumSpinnerIn {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.6);
-  }
-
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-}
-
-.product-form__submit .loading__spinner .spinner {
-  width: 26px !important;
-  height: 26px !important;
-  animation: premiumRotate 1s linear infinite !important;
-}
-
 @keyframes premiumRotate {
   100% {
     transform: rotate(360deg);
   }
-}
-
-.product-form__submit .loading__spinner .path {
-  stroke: #ffffff !important;
-  stroke-width: 1.5 !important;
-  /* Even thinner and more elegant */
-  stroke-linecap: round !important;
-  stroke-dasharray: 60, 150 !important;
-  stroke-dashoffset: 0 !important;
-  animation: none !important;
-  filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.5));
 }
 
 .product-form__buttons {
