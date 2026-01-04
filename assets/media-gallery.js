@@ -364,7 +364,16 @@ if (!customElements.get('media-gallery')) {
     }
 
     changeZoom(delta) {
-      this.zoomLevel = Math.max(1, Math.min(4, this.zoomLevel + delta));
+      const lbImg = document.querySelector('#GalleryLightbox .lightbox-image');
+      let maxZoom = 4;
+
+      if (lbImg && lbImg.naturalWidth && lbImg.offsetWidth > 0) {
+        // Limit zoom to 100% of the natural image size
+        maxZoom = Math.max(1, lbImg.naturalWidth / lbImg.offsetWidth);
+      }
+
+      this.zoomLevel = Math.max(1, Math.min(maxZoom, this.zoomLevel + delta));
+
       if (this.zoomLevel === 1) {
         this.translateX = 0;
         this.translateY = 0;
