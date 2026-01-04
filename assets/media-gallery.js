@@ -177,6 +177,8 @@ if (!customElements.get('media-gallery')) {
         return itemTags.some(tag => allPossibleValues.includes(tag));
       });
 
+      const currentVariantId = String(variant?.id || this.dataset.selectedVariantId || '');
+
       const filterLogic = (item) => {
         // If the product doesn't use the filtering system at all, everything stays visible
         if (!productUsesFiltering) {
@@ -185,23 +187,30 @@ if (!customElements.get('media-gallery')) {
           return true;
         }
 
-        const itemMediaId = item.dataset.mediaId;
+        const itemMediaId = String(item.dataset.mediaId || '');
+        const itemVariantIds = (item.dataset.variants || '').split(',').map(v => v.trim()).filter(v => v);
         const rawColorTags = (item.dataset.color || '').toLowerCase();
         const itemTags = rawColorTags.split(',').map(t => t.trim()).filter(t => t);
 
         const isFeatured = featuredMediaId && String(itemMediaId) === String(featuredMediaId);
-
-        // Strict all-show check
         const isAll = itemTags.some(tag => tag === 'all' || tag === 'all-show');
 
-        // Matches current selected options
-        const matchesAny = activeTokens.some(token => itemTags.includes(token));
+        // SKU IMAGE PROTECTION:
+        // If the image is explicitly assigned to OTHER variants, and not the current one, hide it.
+        const isAssignedToOtherVariant = itemVariantIds.length > 0 && !itemVariantIds.includes(currentVariantId);
+
+        // Matches current selected alt-text tokens (e.g. blue, 10-pack)
+        const matchesAnyAlt = activeTokens.some(token => itemTags.includes(token));
 
         // Category collision check (logic to hide 'Red' when 'Blue' is selected)
-        const hasMismatch = itemTags.some(tag => allPossibleValues.includes(tag) && !activeTokens.includes(tag));
+        const hasAltMismatch = itemTags.some(tag => allPossibleValues.includes(tag) && !activeTokens.includes(tag));
 
-        // Final match condition for products that DO use filtering
-        const isMatch = isFeatured || isAll || (matchesAny && !hasMismatch);
+        // FINAL MATCH CONDITION:
+        // Priority 1: Featured SKU Image always shows.
+        // Priority 2: Generic All-Show content always shows.
+        // Priority 3: Hide if assigned specifically to a different SKU.
+        // Priority 4: Show if matches current selections AND has no tag category conflicts.
+        const isMatch = isFeatured || isAll || (!isAssignedToOtherVariant && (matchesAnyAlt && !hasAltMismatch));
 
         item.style.display = isMatch ? 'flex' : 'none';
         item.style.height = isMatch ? '' : '0px';

@@ -302,7 +302,10 @@
   }
 </style>
 
-<media-gallery data-section="{{ section.id }}" class="media-gallery-component">
+<media-gallery 
+  data-section="{{ section.id }}" 
+  data-selected-variant-id="{{ product.selected_or_first_available_variant.id }}"
+  class="media-gallery-component">
   
   {%- assign featured_media = product.selected_or_first_available_variant.featured_media -%}
 
@@ -323,9 +326,15 @@
             {%- endfor -%}
           {%- endcapture -%}
 
+          {%- capture variant_ids -%}
+            {%- for variant in product.variants -%}
+              {%- if variant.featured_media.id == media.id -%}{{ variant.id }},{%- endif -%}
+            {%- endfor -%}
+          {%- endcapture -%}
           <div class="swiper-slide" 
                data-media-id="{{ media.id }}" 
                data-color="{{ m_colors | strip }}"
+               data-variants="{{ variant_ids | strip | remove_last: ',' }}"
                data-color-tokens="{{ raw_alt | downcase | escape }}"
                data-index="0">
             
@@ -354,9 +363,15 @@
               {%- endfor -%}
             {%- endcapture -%}
 
+            {%- capture variant_ids -%}
+              {%- for variant in product.variants -%}
+                {%- if variant.featured_media.id == media.id -%}{{ variant.id }},{%- endif -%}
+              {%- endfor -%}
+            {%- endcapture -%}
             <div class="swiper-slide" 
                  data-media-id="{{ media.id }}" 
                  data-color="{{ m_colors | strip }}"
+                 data-variants="{{ variant_ids | strip | remove_last: ',' }}"
                  data-color-tokens="{{ raw_alt | downcase | escape }}"
                  data-index="{{ forloop.index }}">
               
@@ -407,8 +422,14 @@
               {%- endfor -%}
             {%- endcapture -%}
 
+            {%- capture variant_ids -%}
+              {%- for variant in product.variants -%}
+                {%- if variant.featured_media.id == media.id -%}{{ variant.id }},{%- endif -%}
+              {%- endfor -%}
+            {%- endcapture -%}
             <div class="swiper-slide" 
                  data-media-id="{{ media.id }}"
+                 data-variants="{{ variant_ids | strip | remove_last: ',' }}"
                  data-color="{{ m_colors | strip }}">
               <img src="{{ media | image_url: width: 200 }}" alt="{{ media.alt | escape }}" loading="lazy">
             </div>
@@ -426,8 +447,14 @@
                 {%- endfor -%}
               {%- endcapture -%}
 
+             {%- capture variant_ids -%}
+               {%- for variant in product.variants -%}
+                 {%- if variant.featured_media.id == media.id -%}{{ variant.id }},{%- endif -%}
+               {%- endfor -%}
+             {%- endcapture -%}
              <div class="swiper-slide" 
                   data-media-id="{{ media.id }}"
+                  data-variants="{{ variant_ids | strip | remove_last: ',' }}"
                   data-color="{{ m_colors | strip }}">
                 <img src="{{ media | image_url: width: 200 }}" alt="{{ media.alt | escape }}" loading="lazy">
              </div>
