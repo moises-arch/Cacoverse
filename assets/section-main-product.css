@@ -5055,11 +5055,6 @@ body.template-product .product__media-modal * {
 /* ============================
    SWATCHES — POLISHED LOOK
    ============================ */
-#shopify-section- {
-    {
-    section.id
-  }
-}
 
 .product-form__input--swatch {
   --swatch-input--size: 3.2rem;
@@ -5073,21 +5068,11 @@ body.template-product .product__media-modal * {
   margin-top: 6px;
 }
 
-#shopify-section- {
-    {
-    section.id
-  }
-}
 
 .product-form__input--swatch legend {
   margin-bottom: 2px;
 }
 
-#shopify-section- {
-    {
-    section.id
-  }
-}
 
 .swatch-input__input+.swatch-input__label {
   --swatch-input--border-radius: 20px !important;
@@ -5145,7 +5130,6 @@ body.template-product .product__media-modal * {
 }
 
 /* Tooltips removed by request */
-[data-tooltip],
 [data-tooltip]::before,
 [data-tooltip]::after {
   display: none !important;
