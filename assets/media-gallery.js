@@ -176,11 +176,13 @@ if (!customElements.get('media-gallery')) {
       const thumbWrapper = this.querySelector('.gallery-thumbs .swiper-wrapper');
 
       const sortSlides = (slides, wrapper) => {
-        // Move visible slides to the front
+        if (!wrapper) return;
+
+        // Filter slides based on the new display style set by filterLogic
         const visible = slides.filter(s => s.style.display !== 'none');
         const hidden = slides.filter(s => s.style.display === 'none');
 
-        // If featured exists, move it to the absolute front of visible
+        // Priority: move featured image to absolute front of visible set
         if (featuredMediaId) {
           const featuredIndex = visible.findIndex(s => s.dataset.mediaId == featuredMediaId);
           if (featuredIndex > -1) {
@@ -189,27 +191,33 @@ if (!customElements.get('media-gallery')) {
           }
         }
 
-        // Re-append to DOM
+        // Clear and Re-append in correct order
+        // Note: Using fragment for performance
+        const fragment = document.createDocumentFragment();
+        visible.forEach(s => fragment.appendChild(s));
+        hidden.forEach(s => fragment.appendChild(s));
+
         wrapper.innerHTML = '';
-        visible.forEach(s => wrapper.appendChild(s));
-        hidden.forEach(s => wrapper.appendChild(s));
+        wrapper.appendChild(fragment);
       };
 
+      // Perform reordering on the actual elements
       sortSlides(mainSlides, mainWrapper);
       sortSlides(thumbSlides, thumbWrapper);
 
+      // Re-query the slides in their new DOM order for Swiper
       if (this.mainSwiper) {
         this.mainSwiper.update();
-        this.mainSwiper.slideTo(0, 0); // Always jump to start after reorder
+        setTimeout(() => this.mainSwiper.slideTo(0, 0), 50);
       }
       if (this.thumbSwiper) {
         this.thumbSwiper.update();
-        this.thumbSwiper.slideTo(0, 0);
+        setTimeout(() => this.thumbSwiper.slideTo(0, 0), 50);
       }
 
       setTimeout(() => {
         this.syncThumbnails();
-      }, 150);
+      }, 200);
     }
 
     slideToMedia(mediaId) {
