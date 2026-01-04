@@ -44,6 +44,17 @@ button[name="add"],
   font-weight: 800 !important;
   box-shadow: none !important;
   transition: all 0.3s ease;
+  position: relative;
+}
+
+button[name="add"]:before,
+button[name="add"]:after,
+.shopify-payment-button__button:before,
+.shopify-payment-button__button:after,
+.product-form__submit:before,
+.product-form__submit:after {
+  content: none !important;
+  display: none !important;
 }
 
 button[name="add"]:hover,
