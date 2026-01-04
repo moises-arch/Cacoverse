@@ -104,13 +104,24 @@ if (!customElements.get('media-gallery')) {
         }
       });
 
-      // Main image click for Lightbox - refined to avoid opening during swipe
-      this.querySelector('.gallery-main').addEventListener('click', (e) => {
-        // Don't open if swipe was intended
-        const swiper = this.mainSwiper;
-        if (!swiper || Math.abs(swiper.touches.diff) > 5) return;
+      // Keyboard Navigation
+      this.handleKeyDown = (e) => {
+        if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+          if (this.mainSwiper) this.mainSwiper.slidePrev();
+        } else if (e.key === 'ArrowRight') {
+          if (this.mainSwiper) this.mainSwiper.slideNext();
+        } else if (e.key === 'Escape') {
+          this.closeLightbox();
+        }
+      };
+      document.addEventListener('keydown', this.handleKeyDown);
 
-        // Check if user clicked an image inside a slide
+      // Main image click for Lightbox (checks if not swiping)
+      this.querySelector('.gallery-main').addEventListener('click', (e) => {
+        const swiper = this.mainSwiper;
+        if (!swiper || (swiper.touches && Math.abs(swiper.touches.diff) > 5)) return;
+
         const img = e.target.closest('.swiper-slide img');
         if (img && img.dataset.zoomUrl) {
           this.openLightbox(img.dataset.zoomUrl);
@@ -125,6 +136,12 @@ if (!customElements.get('media-gallery')) {
           this.slideToMedia(thumb.dataset.mediaId);
         }
       });
+    }
+
+    disconnectedCallback() {
+      if (this.handleKeyDown) {
+        document.removeEventListener('keydown', this.handleKeyDown);
+      }
     }
 
     filterByCurrentSelections() {
@@ -182,14 +199,12 @@ if (!customElements.get('media-gallery')) {
       mainSlides.forEach(filterLogic);
       thumbSlides.forEach(filterLogic);
 
-      // --- REORDERING LOGIC ---
       const mainWrapper = this.querySelector('.gallery-main .swiper-wrapper');
       const thumbWrapper = this.querySelector('.gallery-thumbs .swiper-wrapper');
 
-      const sortSlidesArr = (slides, wrapper) => {
+      const sortSlides = (slides, wrapper) => {
         if (!wrapper) return;
 
-        // Re-calculate visible based on updated styles
         const visible = slides.filter(s => s.style.display !== 'none');
         const hidden = slides.filter(s => s.style.display === 'none');
 
@@ -205,15 +220,13 @@ if (!customElements.get('media-gallery')) {
           if (isFeaturedId) {
             featured.push(slide);
           } else if (isAll) {
-            generic.push(slide); // Move to the end
+            generic.push(slide);
           } else {
             specific.push(slide);
           }
         });
 
-        // Combined Order: [Variant Principal] -> [Other Variant Images] -> [General All-Show]
         const sortedVisible = [...featured, ...specific, ...generic];
-
         const fragment = document.createDocumentFragment();
         sortedVisible.forEach(s => fragment.appendChild(s));
         hidden.forEach(s => fragment.appendChild(s));
@@ -222,22 +235,26 @@ if (!customElements.get('media-gallery')) {
         wrapper.appendChild(fragment);
       };
 
-      sortSlidesArr(mainSlides, mainWrapper);
-      sortSlidesArr(thumbSlides, thumbWrapper);
+      sortSlides(mainSlides, mainWrapper);
+      sortSlides(thumbSlides, thumbWrapper);
 
-      // Re-query the slides in their new DOM order for Swiper
-      if (this.mainSwiper) {
-        this.mainSwiper.update();
-        setTimeout(() => this.mainSwiper.slideTo(0, 0), 100);
-      }
-      if (this.thumbSwiper) {
-        this.thumbSwiper.update();
-        setTimeout(() => this.thumbSwiper.slideTo(0, 0), 100);
-      }
-
-      setTimeout(() => {
+      // Robust Swiper Update
+      const updateSwipers = () => {
+        [this.mainSwiper, this.thumbSwiper].forEach(swiper => {
+          if (swiper) {
+            swiper.update();
+            if (swiper.updateSlides) swiper.updateSlides();
+            if (swiper.updateSize) swiper.updateSize();
+            if (swiper.updateProgress) swiper.updateProgress();
+            swiper.slideTo(0, 0);
+          }
+        });
         this.syncThumbnails();
-      }, 250);
+      };
+
+      // Execute update after DOM settles
+      setTimeout(updateSwipers, 150);
+      setTimeout(updateSwipers, 400); // Second pass to handle lazy loads/reflows
     }
 
     slideToMedia(mediaId) {
