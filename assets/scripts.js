@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const swiperInstances = [];
   const $swiperSelector = $('.swiper-container');
 
-  $swiperSelector.each(function(index) {
+  $swiperSelector.each(function (index) {
     const $this = $(this);
     const uniqueClass = 'swiper-slider-' + index;
     $this.addClass(uniqueClass);
@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   $('.nav-tabs a').on('click', function () {
-    $swiperSelector.each(function(index) {
+    $swiperSelector.each(function (index) {
       swiperInstances[index].update();
     });
   });
@@ -84,7 +84,7 @@ buttons.forEach(button => {
 
 
 // FAQS
-$('.faq-question').on('click', function(){
+$('.faq-question').on('click', function () {
   const $question = $(this);
   const $item = $question.parent();
   const $answer = $question.next('.faq-answer');
@@ -133,7 +133,7 @@ document.addEventListener("DOMContentLoaded", function () {
 //     // Temporarily store the current scroll position
 //     //const scrollTop = window.scrollY || document.documentElement.scrollTop;
 //     //const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
-    
+
 //     const target = e.target;
 
 //     // Dynamically fetch the filterDiv and checkboxes to account for AJAX changes
@@ -160,7 +160,7 @@ document.addEventListener("DOMContentLoaded", function () {
 //         btn.classList.remove('active'); // Remove active class from all buttons
 //       });
 //       target.classList.add('active'); // Add active class to the "All" button
-      
+
 //     }
 
 //     // Handle individual checkbox buttons
@@ -189,7 +189,7 @@ document.addEventListener("DOMContentLoaded", function () {
 //         btn.classList.remove('active'); // Remove active class from all buttons
 //       });
 //       target.classList.add('active'); // Add active class to the clicked button
-      
+
 //     }
 //   });
 
@@ -236,7 +236,7 @@ document.addEventListener("DOMContentLoaded", function () {
 //           button.classList.add('active');
 //           allButton.classList.remove('active');
 //         }
-        
+
 //       });
 //     } else {
 //       // Remove the buttons div if checkboxes are insufficient
@@ -262,7 +262,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // });
 
 
-document.body.addEventListener('click', function(event) {
+document.body.addEventListener('click', function (event) {
   // Check if the clicked element is a checkbox within the custom-price-filter-ul
   if (event.target.matches('.custom-price-filter-ul input[type="checkbox"]')) {
     const input = event.target;
@@ -312,7 +312,7 @@ document.body.addEventListener('click', function(event) {
 //     document.querySelectorAll('.section-header .nav-item.dropdown').forEach(function(otherDropdown) {
 //       const otherDropdownMenu = otherDropdown.querySelector('.dropdown-menu');
 //       const otherCaretIcon = otherDropdown.querySelector('.icon-caret');
-      
+
 //       // Close the other dropdowns and reset their icons
 //       if (otherDropdownMenu !== dropdownMenu) {
 //         otherDropdownMenu.classList.remove('show1');
@@ -352,7 +352,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 // Detect when the page is scrolled past the header
-window.addEventListener('scroll', function() {
+window.addEventListener('scroll', function () {
   const navbarCollapse = document.querySelector('.navbar-collapse');
   const header = document.querySelector('.page-width');
 
@@ -416,8 +416,8 @@ function filterImagesByColor() {
         .map(normalizeColorToken)
         .filter(Boolean);
 
-      if (imageColors.includes(selectedColor)) {
-        // Show images that match the selected color
+      if (imageColors.includes(selectedColor) || imageColors.includes('all-show') || imageColors.includes('all')) {
+        // Show images that match the selected color or are generic
         image.closest('.swiper-slide').style.display = '';
         matchFound = true;
       } else {
@@ -426,7 +426,7 @@ function filterImagesByColor() {
       }
     });
 
-    // If no match is found, show all images
+    // If no match is found, show all images (fallback)
     if (!matchFound) {
       swiperImages.forEach(image => {
         image.closest('.swiper-slide').style.display = '';
@@ -438,6 +438,9 @@ function filterImagesByColor() {
       image.closest('.swiper-slide').style.display = '';
     });
   }
+
+  // Notify Swiper instances to update
+  document.dispatchEvent(new CustomEvent('media:filtered'));
 }
 
 // Initial call on page load
@@ -451,23 +454,23 @@ document.body.addEventListener('change', (event) => {
   if (event.target.matches('.color-options input[name="color"]')) {
     document.getElementById('loader').style.display = 'block';
     filterImagesByColor();
-    setTimeout(function(){
-       document.getElementById('loader').style.display = 'none';
+    setTimeout(function () {
+      document.getElementById('loader').style.display = 'none';
     }, 500);
-   
+
   }
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    const currentUrl = window.location.pathname;
-    const filterButtons = document.querySelectorAll('.product-types-filter-buttons a');
+  const currentUrl = window.location.pathname;
+  const filterButtons = document.querySelectorAll('.product-types-filter-buttons a');
 
-    filterButtons.forEach(button => {
-        button.classList.remove('active'); // Remove active class from all buttons
+  filterButtons.forEach(button => {
+    button.classList.remove('active'); // Remove active class from all buttons
 
-        if (button.getAttribute('href') === currentUrl) {
-            button.classList.add('active'); // Add active class to the matching button
-        }
-    });
+    if (button.getAttribute('href') === currentUrl) {
+      button.classList.add('active'); // Add active class to the matching button
+    }
+  });
 });
 

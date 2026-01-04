@@ -509,6 +509,28 @@
          }
        }
     }
+
+    // React to filtering
+    document.addEventListener('media:filtered', function() {
+        if(swiper) {
+             swiper.update();
+             // If active slide is now hidden, move to first visible
+             if(swiper.slides[swiper.activeIndex] && swiper.slides[swiper.activeIndex].style.display == 'none'){
+                 let firstVisible = Array.from(swiper.slides).findIndex(s => s.style.display != 'none');
+                 if(firstVisible >= 0) swiper.slideTo(firstVisible);
+             }
+        }
+    });
+
+    // Failsafe: If after 1000ms everything is hidden, show all
+    setTimeout(() => {
+        const visibleSlides = document.querySelectorAll(swiperSelector + ' .swiper-slide:not([style*="display: none"])');
+        if(visibleSlides.length === 0) {
+             console.warn('Cacoverse: No slides visible. Forcing display.');
+             document.querySelectorAll(swiperSelector + ' .swiper-slide').forEach(s => s.style.display = '');
+             swiper.update();
+        }
+    }, 1000);
   });
 </script>
 
