@@ -352,17 +352,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 // Detect when the page is scrolled past the header
+// Detect when the page is scrolled past the header
 window.addEventListener('scroll', function () {
   const navbarCollapse = document.querySelector('.navbar-collapse');
   const header = document.querySelector('.page-width');
 
-  // Check if the header has reached the sticky state
-  if (window.scrollY > header.offsetHeight) {
-    // If the header is sticky, change the `top` value for navbar-collapse
-    navbarCollapse.classList.add('sticky-header');
-  } else {
-    // If the header is not sticky, reset the `top` value for navbar-collapse
-    navbarCollapse.classList.remove('sticky-header');
+  // Check if elements exist before accessing properties
+  if (header && navbarCollapse) {
+    // Check if the header has reached the sticky state
+    if (window.scrollY > header.offsetHeight) {
+      // If the header is sticky, change the `top` value for navbar-collapse
+      navbarCollapse.classList.add('sticky-header');
+    } else {
+      // If the header is not sticky, reset the `top` value for navbar-collapse
+      navbarCollapse.classList.remove('sticky-header');
+    }
   }
 });
 

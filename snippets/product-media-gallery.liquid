@@ -454,6 +454,24 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    // Define elements first to avoid ReferenceError during init
+    const thumbBtns = document.querySelectorAll('#Slider-Thumbnails-{{ section.id }} button.thumbnail');
+    
+    function updateActiveThumbnail(index) {
+       thumbBtns.forEach(b => b.removeAttribute('aria-current'));
+       if(thumbBtns[index]) {
+         thumbBtns[index].setAttribute('aria-current', 'true');
+         // Scroll thumbnail into view
+         const li = thumbBtns[index].closest('li');
+         if(li && li.parentElement) {
+            li.parentElement.scrollTo({
+              left: li.offsetLeft - li.parentElement.offsetLeft - 20, 
+              behavior: 'smooth'
+            });
+         }
+       }
+    }
+
     const swiperSelector = '#Swiper-Gallery-{{ section.id }}';
     if (!document.querySelector(swiperSelector)) return;
 
@@ -486,7 +504,6 @@
     });
 
     // Thumbnails interaction
-    const thumbBtns = document.querySelectorAll('#Slider-Thumbnails-{{ section.id }} button.thumbnail');
     thumbBtns.forEach((btn, idx) => {
       btn.addEventListener('click', function(e) {
         e.preventDefault();
