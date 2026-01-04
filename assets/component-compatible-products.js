@@ -11,23 +11,55 @@ if (!customElements.get('compatible-products-form')) {
             this.addButton = this.querySelector('.compatible-products__add-btn');
             this.form = this.closest('form') || this.querySelector('form');
 
+            this.addEventListener('click', this.handleEvent.bind(this));
             this.addEventListener('change', this.handleCheckboxChange.bind(this));
-            this.addButton.addEventListener('click', this.handleAddToCart.bind(this));
-            if (this.loadMoreButton) {
-                this.loadMoreButton.addEventListener('click', this.handleLoadMore.bind(this));
-            }
 
             this.updateTotal();
         }
 
-        handleLoadMore() {
-            const hiddenItems = this.querySelectorAll('.hidden-compatible-product');
-            hiddenItems.forEach(item => {
-                item.style.display = 'flex';
-                item.classList.remove('hidden-compatible-product');
-                // Trigger animation if desired
-            });
-            this.loadMoreButton.closest('.compatible-products__load-more-container').style.display = 'none';
+        handleEvent(event) {
+            // Handle Add to Cart
+            if (event.target.closest('.compatible-products__add-btn')) {
+                this.handleAddToCart(event);
+                return;
+            }
+
+            // Handle Remove (X) button
+            if (event.target.closest('.compatible-product__remove')) {
+                this.handleRemove(event.target.closest('.compatible-product__remove'));
+                return;
+            }
+        }
+
+        handleRemove(button) {
+            const cardToRemove = button.closest('.compatible-product-card');
+
+            // 1. Uncheck the item so it's removed from total
+            const checkbox = cardToRemove.querySelector('input[type="checkbox"]');
+            if (checkbox) checkbox.checked = false;
+
+            // 2. Hide the card (remove from flow)
+            cardToRemove.classList.add('hidden-queue-item');
+            cardToRemove.style.display = 'none';
+
+            // 3. Find the next hidden item in the queue to show
+            const nextHidden = this.querySelector('.compatible-product-card.hidden-queue-item:not([style*="display: none"])')
+                || this.querySelector('.compatible-product-card.hidden-queue-item');
+
+            if (nextHidden) {
+                // Determine if we should check it by default. 
+                // The visual queue implies "these are the recommended bundle". 
+                // Usually user expects the new item to be part of the deal unless they remove it too.
+                const nextCheckbox = nextHidden.querySelector('input[type="checkbox"]');
+                if (nextCheckbox) nextCheckbox.checked = true;
+
+                nextHidden.classList.remove('hidden-queue-item');
+                nextHidden.style.display = 'flex';
+                // Optional: Fade in animation class could go here
+            }
+
+            // 4. Update totals
+            this.updateTotal();
         }
 
         handleCheckboxChange(event) {
@@ -46,9 +78,7 @@ if (!customElements.get('compatible-products-form')) {
                 // Update UI text (Price)
                 const priceElement = card.querySelector('.price-item');
                 if (priceElement) {
-                    // Simple formatting, ideally use Shopify.formatMoney if available or just update raw numbers + symbol
-                    // For now, grabbing the text from the option is safest as it's pre-formatted by Liquid
-                    const priceText = selectedOption.textContent.split('-')[1].trim();
+                    const priceText = selectedOption.textContent.split('-')[1] ? selectedOption.textContent.split('-')[1].trim() : selectedOption.textContent.trim();
                     priceElement.textContent = priceText;
                 }
 
