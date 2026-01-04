@@ -14,6 +14,27 @@ if (!customElements.get('compatible-products-form')) {
             this.addEventListener('click', this.handleEvent.bind(this));
             this.addEventListener('change', this.handleCheckboxChange.bind(this));
 
+            this.initializeQueue();
+            this.updateTotal();
+        }
+
+        initializeQueue() {
+            const cards = this.querySelectorAll('.compatible-product-card');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const checkbox = card.querySelector('input[type="checkbox"]');
+                const isHidden = card.classList.contains('hidden-queue-item') || card.style.display === 'none';
+
+                if (!isHidden && visibleCount < 4) {
+                    if (checkbox) checkbox.checked = true;
+                    visibleCount++;
+                } else {
+                    if (checkbox) checkbox.checked = false;
+                    card.classList.add('hidden-queue-item');
+                    card.style.display = 'none';
+                }
+            });
             this.updateTotal();
         }
 
@@ -98,11 +119,15 @@ if (!customElements.get('compatible-products-form')) {
         updateTotal() {
             let total = 0;
             let count = 0;
-            const currencySymbol = window.Shopify ? (window.Shopify.currency.active === 'USD' ? '$' : '') : '$'; // Fallback
+            const currencySymbol = window.Shopify ? (window.Shopify.currency.active === 'USD' ? '$' : '') : '$';
 
-            this.checkboxes.forEach(checkbox => {
-                if (checkbox.checked) {
-                    const price = parseFloat(checkbox.closest('.compatible-product-card').dataset.price);
+            // Only count checked boxes
+            const checkedBoxes = this.querySelectorAll('input[type="checkbox"]:checked');
+
+            checkedBoxes.forEach(checkbox => {
+                const card = checkbox.closest('.compatible-product-card');
+                if (card) {
+                    const price = parseFloat(card.dataset.price);
                     total += price;
                     count++;
                 }
@@ -115,8 +140,10 @@ if (!customElements.get('compatible-products-form')) {
 
             if (count === 0) {
                 this.addButton.setAttribute('disabled', 'true');
+                this.addButton.textContent = 'Add Bundle';
             } else {
                 this.addButton.removeAttribute('disabled');
+                this.addButton.textContent = 'Add all to Cart';
             }
         }
 
@@ -124,13 +151,13 @@ if (!customElements.get('compatible-products-form')) {
             event.preventDefault();
 
             const selectedVariants = [];
-            this.checkboxes.forEach(checkbox => {
-                if (checkbox.checked) {
-                    selectedVariants.push({
-                        id: parseInt(checkbox.value),
-                        quantity: 1
-                    });
-                }
+            const checkedBoxes = this.querySelectorAll('input[type="checkbox"]:checked');
+
+            checkedBoxes.forEach(checkbox => {
+                selectedVariants.push({
+                    id: parseInt(checkbox.value),
+                    quantity: 1
+                });
             });
 
             if (selectedVariants.length === 0) return;
@@ -160,7 +187,7 @@ if (!customElements.get('compatible-products-form')) {
                     if (cartDrawer) {
                         cartDrawer.renderContents(responseJson);
                     } else {
-                        // Fallback for non-drawer carts (e.g. page refresh or event)
+                        // Fallback for non-drawer carts
                         document.dispatchEvent(new CustomEvent('cart:update', {
                             bubbles: true,
                             detail: {
@@ -178,7 +205,6 @@ if (!customElements.get('compatible-products-form')) {
                             this.addButton.removeAttribute('disabled');
                         }, 2000);
                     }, 500);
-
 
                 } else {
                     const error = await response.json();

@@ -16,7 +16,6 @@
       <compatible-products-form>
         <div class="compatible-products__main-layout">
           <div class="compatible-products__list">
-            {%- assign cart_item_ids = cart.items | map: 'product_id' -%}
             {%- assign visible_counter = 0 -%}
             
             {%- for item in compatible_products -%}
@@ -29,11 +28,11 @@
               
               {%- if current_variant.available -%}
                 {%- assign visible_counter = visible_counter | plus: 1 -%}
-                <div class="compatible-product-card {% if visible_counter > 3 %}hidden-queue-item{% endif %}" 
+                <div class="compatible-product-card {% if visible_counter > 4 %}hidden-queue-item{% endif %}" 
                      data-product-id="{{ item.id }}" 
                      data-variant-id="{{ current_variant.id }}" 
                      data-price="{{ current_variant.price }}"
-                     {% if visible_counter > 3 %}style="display: none;"{% endif %}>
+                     {% if visible_counter > 4 %}style="display: none;"{% endif %}>
                   
                   <button type="button" class="compatible-product__remove" aria-label="Remove product">
                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
@@ -46,17 +45,17 @@
                            id="compatible-{{ item.id }}" 
                            name="compatible_product" 
                            value="{{ current_variant.id }}" 
-                           checked
+                           {% if visible_counter <= 4 %}checked{% endif %}
                            class="compatible-checkbox">
                   </div>
                   
                   <div class="compatible-product-card__image-wrapper">
                     {%- if item.featured_image != blank -%}
-                      <img src="{{ item.featured_image | image_url: width: 100 }}" 
+                      <img src="{{ item.featured_image | image_url: width: 300 }}" 
                            alt="{{ item.featured_image.alt | escape }}" 
                            loading="lazy" 
-                           width="50" 
-                           height="50"
+                           width="140" 
+                           height="140"
                            class="compatible-product-card__image">
                     {%- else -%}
                       {{ 'product-1' | placeholder_svg_tag: 'compatible-product-card__image placeholder-svg' }}
@@ -66,7 +65,7 @@
                   <div class="compatible-product-card__info">
                     <div class="compatible-product-card__header">
                       <label for="compatible-{{ item.id }}" class="compatible-product-card__title">
-                        {{ item.title | truncate: 30 }}
+                        {{ item.title }}
                       </label>
                       <div class="compatible-product-card__price">
                         <span class="price-item">{{ current_variant.price | money }}</span>
@@ -94,20 +93,15 @@
             {%- endfor -%}
           </div>
 
-          <div class="compatible-products__summary-panel">
+          <div class="compatible-products__actions">
             <div class="compatible-products__total">
-              <span class="compatible-products__total-label">Total:</span>
+              <span class="compatible-products__total-label">Total Bundle Price:</span>
               <span class="compatible-products__total-price" data-total-price></span>
-              <span class="compatible-products__count" data-count>(0)</span>
             </div>
-            <button type="button" class="button button--primary compatible-products__add-btn" disabled>
-              Add Bundle
+            <button type="button" class="button button--primary compatible-products__add-btn">
+              Add all to Cart
             </button>
           </div>
-        </div>
-      </compatible-products-form>
-    </div>
-  </div>
 
   <script src="{{ 'component-compatible-products.js' | asset_url }}" defer="defer"></script>
 {%- endif -%}
