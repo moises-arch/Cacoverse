@@ -166,13 +166,36 @@ if (!customElements.get('media-gallery')) {
       const productInfo = document.querySelector('product-info') || document.querySelector('.product-form');
       if (!productInfo) return;
 
+      // Ensure we have the latest variant ID
+      let currentVariantId = String(variant?.id || '');
+      if (!currentVariantId) {
+        const idInput = productInfo.querySelector('[name="id"]');
+        currentVariantId = idInput ? idInput.value : this.dataset.selectedVariantId;
+      }
+      this.dataset.selectedVariantId = currentVariantId;
+
       const allPossibleValues = Array.from(productInfo.querySelectorAll('input[type="radio"], select option'))
         .map(el => (el.value || el.textContent || '').toLowerCase().trim().replace(/\s+/g, '-'))
         .filter(t => t && t !== 'all');
 
       let activeTokens = manualTokens || (variant?.options ? variant.options.map(o => o.toLowerCase().trim().replace(/\s+/g, '-')) : []);
 
-      const featuredMediaId = variant?.featured_media?.id;
+      // If we don't have active tokens (e.g. variant passed but no options array), try to get them
+      if (activeTokens.length === 0) {
+        const checkedInputs = Array.from(productInfo.querySelectorAll('input[type="radio"]:checked, select'));
+        activeTokens = checkedInputs.map(input =>
+          input.value.toLowerCase().trim().replace(/\s+/g, '-')
+        ).filter(t => t !== '');
+      }
+
+      // Identify Featured Media
+      let featuredMediaId = variant?.featured_media?.id;
+      if (!featuredMediaId && currentVariantId) {
+        // Fallback: search for a slide that specifically claims this variant ID
+        const matchingSlide = this.querySelector(`.swiper-slide[data-variants*="${currentVariantId}"]`);
+        if (matchingSlide) featuredMediaId = matchingSlide.dataset.mediaId;
+      }
+
       const mainSlides = Array.from(this.querySelectorAll('.gallery-main .swiper-slide'));
       const thumbSlides = Array.from(this.querySelectorAll('.gallery-thumbs .swiper-slide'));
 
@@ -182,8 +205,6 @@ if (!customElements.get('media-gallery')) {
         const itemTags = (slide.dataset.color || '').toLowerCase().split(',').map(t => t.trim());
         return itemTags.some(tag => allPossibleValues.includes(tag));
       });
-
-      const currentVariantId = String(variant?.id || this.dataset.selectedVariantId || '');
 
       const filterLogic = (item) => {
         // If the product doesn't use the filtering system at all, everything stays visible
@@ -201,21 +222,15 @@ if (!customElements.get('media-gallery')) {
         const isFeatured = featuredMediaId && String(itemMediaId) === String(featuredMediaId);
         const isAll = itemTags.some(tag => tag === 'all' || tag === 'all-show');
 
-        // SKU IMAGE PROTECTION:
-        // If the image is explicitly assigned to OTHER variants, and not the current one, hide it.
+        // SKU PROTECTION:
+        // Exclude if it belongs to a different variant entirely
         const isAssignedToOtherVariant = itemVariantIds.length > 0 && !itemVariantIds.includes(currentVariantId);
 
-        // Matches current selected alt-text tokens (e.g. blue, 10-pack)
+        // Alt-Text Matching
         const matchesAnyAlt = activeTokens.some(token => itemTags.includes(token));
-
-        // Category collision check (logic to hide 'Red' when 'Blue' is selected)
         const hasAltMismatch = itemTags.some(tag => allPossibleValues.includes(tag) && !activeTokens.includes(tag));
 
-        // FINAL MATCH CONDITION:
-        // Priority 1: Featured SKU Image always shows.
-        // Priority 2: Generic All-Show content always shows.
-        // Priority 3: Hide if assigned specifically to a different SKU.
-        // Priority 4: Show if matches current selections AND has no tag category conflicts.
+        // FINAL DECISION
         const isMatch = isFeatured || isAll || (!isAssignedToOtherVariant && (matchesAnyAlt && !hasAltMismatch));
 
         item.style.display = isMatch ? 'flex' : 'none';
