@@ -601,7 +601,20 @@ a.product__text {
 
 
 .product__info-wrapper .product-form__submit::after {
-  display: none !important;
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent);
+  transition: none;
+  z-index: 5;
+  pointer-events: none;
+  display: none;
 }
 
 /* Glassy Reflection Layer */
@@ -654,17 +667,42 @@ a.product__text {
 }
 
 
-/* Pulse Animation for Button Text */
+@keyframes buttonShimmer {
+  0% {
+    left: -100%;
+  }
 
-.product-form__submit>span {
-  display: inline-block;
-  transition: opacity 0.1s ease;
+  100% {
+    left: 100%;
+  }
 }
 
+@keyframes buttonPulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(0.97);
+    opacity: 0.9;
+  }
+}
+
+.product-form__submit.loading:not(:disabled) {
+  animation: buttonPulse 1s infinite ease-in-out;
+  pointer-events: none;
+}
+
+.product-form__submit.loading:not(:disabled)::after {
+  display: block !important;
+  animation: buttonShimmer 1s infinite linear;
+}
 
 .product-form__submit.loading:not(:disabled)>span {
-  opacity: 0.5;
-  /* Simple static loading state */
+  opacity: 0.6;
+  filter: blur(0.5px);
 }
 
 .product-form__submit:disabled>span {
