@@ -15,15 +15,29 @@
     <div class="compatible-products__container">
       <compatible-products-form>
         <div class="compatible-products__list">
+          {%- assign cart_item_ids = cart.items | map: 'product_id' -%}
+          {%- assign visible_count = 0 -%}
+          
           {%- for item in compatible_products -%}
             {%- liquid
+              if cart_item_ids contains item.id
+                continue
+              endif
+
               assign current_variant = item.selected_or_first_available_variant
               unless current_variant
                 assign current_variant = item
               endunless
             -%}
+            
             {%- if current_variant.available -%}
-              <div class="compatible-product-card" data-product-id="{{ item.id }}" data-variant-id="{{ current_variant.id }}" data-price="{{ current_variant.price }}">
+              {%- assign visible_count = visible_count | plus: 1 -%}
+              <div class="compatible-product-card {% if visible_count > 6 %}hidden-compatible-product{% endif %}" 
+                   data-product-id="{{ item.id }}" 
+                   data-variant-id="{{ current_variant.id }}" 
+                   data-price="{{ current_variant.price }}"
+                   {% if visible_count > 6 %}style="display: none;"{% endif %}>
+                
                 <div class="compatible-product-card__checkbox">
                   <input type="checkbox" 
                          id="compatible-{{ item.id }}" 
@@ -35,11 +49,11 @@
                 
                 <div class="compatible-product-card__image-wrapper">
                   {%- if item.featured_image != blank -%}
-                    <img src="{{ item.featured_image | image_url: width: 200 }}" 
+                    <img src="{{ item.featured_image | image_url: width: 120 }}" 
                          alt="{{ item.featured_image.alt | escape }}" 
                          loading="lazy" 
-                         width="100" 
-                         height="100"
+                         width="60" 
+                         height="60"
                          class="compatible-product-card__image">
                   {%- else -%}
                     {{ 'product-1' | placeholder_svg_tag: 'compatible-product-card__image placeholder-svg' }}
@@ -48,10 +62,12 @@
 
                 <div class="compatible-product-card__info">
                   <label for="compatible-{{ item.id }}" class="compatible-product-card__title">
-                    {{ item.title }}
+                    {{ item.title | truncate: 40 }}
                   </label>
                   <div class="compatible-product-card__meta">
-                    <span class="compatible-product-card__sku">SKU: {{ current_variant.sku }}</span>
+                    {%- if current_variant.sku != blank -%}
+                      <span class="compatible-product-card__sku">{{ current_variant.sku }}</span>
+                    {%- endif -%}
                     <div class="compatible-product-card__price">
                       {{ current_variant.price | money }}
                     </div>
@@ -60,6 +76,15 @@
               </div>
             {%- endif -%}
           {%- endfor -%}
+        </div>
+        
+        {%- if visible_count > 6 -%}
+          <div class="compatible-products__load-more-container">
+            <button type="button" class="link compatible-products__load-more-btn">
+              {{ 'sections.collection_template.load_more' | t | default: 'Load more' }}
+            </button>
+          </div>
+        {%- endif -%}
         </div>
 
         <div class="compatible-products__actions">

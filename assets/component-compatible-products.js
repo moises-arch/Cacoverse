@@ -3,6 +3,8 @@ if (!customElements.get('compatible-products-form')) {
         constructor() {
             super();
 
+            this.loadMoreButton = this.querySelector('.compatible-products__load-more-btn');
+
             this.checkboxes = this.querySelectorAll('input[type="checkbox"]');
             this.totalPriceElement = this.querySelector('[data-total-price]');
             this.countElement = this.querySelector('[data-count]');
@@ -11,8 +13,21 @@ if (!customElements.get('compatible-products-form')) {
 
             this.addEventListener('change', this.handleCheckboxChange.bind(this));
             this.addButton.addEventListener('click', this.handleAddToCart.bind(this));
+            if (this.loadMoreButton) {
+                this.loadMoreButton.addEventListener('click', this.handleLoadMore.bind(this));
+            }
 
             this.updateTotal();
+        }
+
+        handleLoadMore() {
+            const hiddenItems = this.querySelectorAll('.hidden-compatible-product');
+            hiddenItems.forEach(item => {
+                item.style.display = 'flex';
+                item.classList.remove('hidden-compatible-product');
+                // Trigger animation if desired
+            });
+            this.loadMoreButton.closest('.compatible-products__load-more-container').style.display = 'none';
         }
 
         handleCheckboxChange() {

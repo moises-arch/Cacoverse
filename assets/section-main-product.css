@@ -5163,18 +5163,19 @@ body.template-product .product__media-modal * {
   visibility: hidden !important;
   opacity: 0 !important;
 }
+
 /* Compatible Products Module */
 .compatible-products-wrapper {
   margin: 3rem 0;
-  padding: 2rem;
-  background-color: #f9f9f9;
+  padding: 1.5rem;
+  background-color: #fafafa;
   border-radius: 8px;
   border: 1px solid #e5e5e5;
 }
 
 .compatible-products__heading {
-  margin-bottom: 1.5rem;
-  font-size: 1.8rem;
+  margin-bottom: 1.2rem;
+  font-size: 1.6rem;
   font-weight: 600;
   color: #333;
 }
@@ -5182,44 +5183,42 @@ body.template-product .product__media-modal * {
 .compatible-products__list {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
+/* Compact Cards */
 .compatible-product-card {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-  padding: 1rem;
+  gap: 1rem;
+  padding: 0.8rem;
   background: #fff;
   border: 1px solid #eee;
   border-radius: 6px;
   transition: box-shadow 0.2s ease;
+  min-height: 80px;
 }
 
 .compatible-product-card:hover {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
-
-.compatible-product-card__checkbox {
-  flex-shrink: 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .compatible-product-card__checkbox input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   cursor: pointer;
-  accent-color: var(--gradient-base-accent-1); 
+  accent-color: var(--gradient-base-accent-1);
 }
 
 .compatible-product-card__image-wrapper {
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   flex-shrink: 0;
   border-radius: 4px;
   overflow: hidden;
-  background-color: #f0f0f0;
-  display: flex; /* Center placeholder if needed */
+  background-color: #f4f4f4;
+  display: flex;
   align-items: center;
   justify-content: center;
 }
@@ -5227,37 +5226,36 @@ body.template-product .product__media-modal * {
 .compatible-product-card__image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.placeholder-svg {
-  width: 100%;
-  height: 100%;
-  opacity: 0.5;
+  object-fit: contain;
+  /* Changed to contain for better visibility */
 }
 
 .compatible-product-card__info {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.2rem;
+  overflow: hidden;
+  /* For truncation */
 }
 
 .compatible-product-card__title {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   font-weight: 500;
   color: #333;
   cursor: pointer;
   line-height: 1.2;
   margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .compatible-product-card__meta {
   display: flex;
-  gap: 1rem;
+  gap: 0.8rem;
   align-items: center;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: #666;
 }
 
@@ -5266,25 +5264,62 @@ body.template-product .product__media-modal * {
   color: #000;
 }
 
+/* Load More Button */
+.compatible-products__load-more-container {
+  text-align: center;
+  margin-top: -0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.compatible-products__load-more-btn {
+  font-size: 1.3rem;
+  color: #666;
+  text-decoration: underline;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+}
+
+.compatible-products__load-more-btn:hover {
+  color: #000;
+}
+
+/* Actions Area */
 .compatible-products__actions {
   display: flex;
-  flex-direction: column; 
-  align-items: flex-end; /* Align right */
-  gap: 1rem;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.8rem;
   border-top: 1px solid #eee;
-  padding-top: 1.5rem;
+  padding-top: 1.2rem;
 }
 
 .compatible-products__total {
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
+/* Desktop Grid Layout (2 columns) */
+@media screen and (min-width: 990px) {
+  .compatible-products__list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .compatible-products-wrapper {
+    padding: 2rem;
+  }
+}
+
+
 .compatible-products__total-price {
   font-weight: 700;
-  color: #b53939; /* Use theme accent color if possible, or red */
+  color: #b53939;
+  /* Use theme accent color if possible, or red */
 }
 
 .compatible-products__count {
@@ -5294,11 +5329,6 @@ body.template-product .product__media-modal * {
 
 .compatible-products__add-btn {
   width: 100%;
-  max-width: 250px; /* Limit width */
-}
-
-@media screen and (min-width: 750px) {
-  .compatible-products-wrapper {
-    padding: 2.5rem;
-  }
+  max-width: 250px;
+  /* Limit width */
 }
