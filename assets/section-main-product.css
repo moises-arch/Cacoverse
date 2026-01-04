@@ -630,31 +630,35 @@ a.product__text {
   box-shadow: 0 5px 20px rgba(250, 101, 12, 0.3) !important;
 }
 
-/* Strict Spinner Logic (Hide when not loading) */
+/* Pulse Animation for Button Text */
+@keyframes textPulse {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.4;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
 .product-form__submit>span {
   display: inline-block;
   transition: all 0.4s ease;
 }
 
 .product-form__submit.loading>span {
-  opacity: 0;
-  transform: scale(0.8) translateY(10px);
+  animation: textPulse 1s ease-in-out infinite;
   pointer-events: none;
 }
 
-/* Modernized Premium Spinner */
-.product-form__submit .loading__spinner {
-  display: none !important;
-  position: absolute !important;
-  top: 50% !important;
-  left: 50% !important;
-  transform: translate(-50%, -50%) !important;
-  z-index: 10 !important;
-}
-
+/* Completely hide spinner for Add to Cart */
+.product-form__submit .loading__spinner,
 .product-form__submit.loading .loading__spinner {
-  display: flex !important;
-  animation: premiumSpinnerIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  display: none !important;
 }
 
 @keyframes premiumSpinnerIn {
@@ -696,6 +700,8 @@ a.product__text {
   display: flex;
   align-items: center;
   gap: 12px;
+  width: 100%;
+  max-width: none;
 }
 
 .product-form__buttons .product-form__quantity {

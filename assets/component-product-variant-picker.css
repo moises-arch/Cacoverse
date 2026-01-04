@@ -39,7 +39,7 @@ variant-selects {
   width: 1px;
 }
 
-.product-form__input input[type='radio']:not(.disabled):not(.visually-disabled) + label > .label-unavailable {
+.product-form__input input[type='radio']:not(.disabled):not(.visually-disabled)+label>.label-unavailable {
   display: none;
 }
 
@@ -48,7 +48,7 @@ variant-selects {
   margin-bottom: 1.6rem;
 }
 
-.product-form__input--dropdown .dropdown-swatch + select {
+.product-form__input--dropdown .dropdown-swatch+select {
   padding-left: calc(2.4rem + var(--swatch-input--size));
 }
 
@@ -62,7 +62,7 @@ variant-selects {
 }
 
 /* Custom styles for Pill display type */
-.product-form__input--pill input[type='radio'] + label {
+.product-form__input--pill input[type='radio']+label {
   border: var(--variant-pills-border-width) solid rgba(var(--color-foreground), var(--variant-pills-border-opacity));
   background-color: rgb(var(--color-background));
   color: rgba(var(--color-foreground));
@@ -80,7 +80,7 @@ variant-selects {
   position: relative;
 }
 
-.product-form__input--pill input[type='radio'] + label:before {
+.product-form__input--pill input[type='radio']+label:before {
   content: '';
   position: absolute;
   top: calc(var(--variant-pills-border-width) * -1);
@@ -89,51 +89,51 @@ variant-selects {
   left: calc(var(--variant-pills-border-width) * -1);
   z-index: -1;
   border-radius: var(--variant-pills-radius);
-  box-shadow: var(--variant-pills-shadow-horizontal-offset) var(--variant-pills-shadow-vertical-offset)
-    var(--variant-pills-shadow-blur-radius) rgba(var(--color-shadow), var(--variant-pills-shadow-opacity));
+  box-shadow: var(--variant-pills-shadow-horizontal-offset) var(--variant-pills-shadow-vertical-offset) var(--variant-pills-shadow-blur-radius) rgba(var(--color-shadow), var(--variant-pills-shadow-opacity));
 }
 
-.product-form__input--pill input[type='radio'] + label:hover {
+.product-form__input--pill input[type='radio']+label:hover {
   border-color: rgb(var(--color-foreground));
 }
 
-.product-form__input--pill input[type='radio']:checked + label {
+.product-form__input--pill input[type='radio']:checked+label {
   background-color: rgb(var(--color-foreground));
   color: rgb(var(--color-background));
 }
 
 @media screen and (forced-colors: active) {
-  .product-form__input--pill input[type='radio']:checked + label {
+  .product-form__input--pill input[type='radio']:checked+label {
     text-decoration: underline;
   }
 
-  .product-form__input--pill input[type='radio']:focus-visible + label {
+  .product-form__input--pill input[type='radio']:focus-visible+label {
     outline: transparent solid 1px;
     outline-offset: 2px;
   }
 }
 
-.product-form__input--pill input[type='radio']:checked + label::selection {
+.product-form__input--pill input[type='radio']:checked+label::selection {
   background-color: rgba(var(--color-background), 0.3);
 }
 
-.product-form__input--pill input[type='radio']:disabled + label,
-.product-form__input--pill input[type='radio'].disabled + label {
+.product-form__input--pill input[type='radio']:disabled+label,
+.product-form__input--pill input[type='radio'].disabled+label {
   border-color: rgba(var(--color-foreground), 0.1);
   color: rgba(var(--color-foreground), 0.6);
   text-decoration: line-through;
 }
 
-.product-form__input--pill input[type='radio'].disabled:checked + label,
-.product-form__input--pill input[type='radio']:disabled:checked + label {
+.product-form__input--pill input[type='radio'].disabled:checked+label,
+.product-form__input--pill input[type='radio']:disabled:checked+label {
   color: rgba(var(--color-background), 0.6);
 }
-.product-form__input--pill input[type='radio']:focus-visible + label {
+
+.product-form__input--pill input[type='radio']:focus-visible+label {
   box-shadow: 0 0 0 0.3rem rgb(var(--color-background)), 0 0 0 0.5rem rgba(var(--color-foreground), 0.55);
 }
 
 /* Fallback */
-.product-form__input--pill input[type='radio'].focused + label {
+.product-form__input--pill input[type='radio'].focused+label {
   box-shadow: 0 0 0 0.3rem rgb(var(--color-background)), 0 0 0 0.5rem rgba(var(--color-foreground), 0.55);
 }
 
@@ -144,28 +144,30 @@ variant-selects {
   padding-top: 0.6rem;
 }
 
-.product-form__input--swatch .swatch-input__input + .swatch-input__label {
+.product-form__input--swatch .swatch-input__input+.swatch-input__label {
   --swatch-input--size: 3.6rem;
 
   margin: 0.7rem 1.2rem 0.2rem 0;
 }
 
 @media screen and (min-width: 750px) {
-  .product-form__input--swatch .swatch-input__input + .swatch-input__label {
+  .product-form__input--swatch .swatch-input__input+.swatch-input__label {
     --swatch-input--size: 2.8rem;
   }
 }
+
 /* End custom styles for Swatch display type */
 
 /* Change color of the pack discount text */
-.product-form__input input[type="radio"] + label .pack-discount,
-.product-form__input input[type="radio"] + label [class*="discount"],
-.product-form__input input[type="radio"] + label [class*="percent"] {
-  color: #005EB8 !important; /* your new color */
+.product-form__input input[type="radio"]+label .pack-discount,
+.product-form__input input[type="radio"]+label [class*="discount"],
+.product-form__input input[type="radio"]+label [class*="percent"] {
+  color: #005EB8 !important;
+  /* your new color */
 }
 
 /* If the percentage is injected via a pseudo-element */
-.product-form__input input[type="radio"] + label::after {
+.product-form__input input[type="radio"]+label::after {
   /* keeps existing content/positioning, just changes color */
   color: #005EB8 !important;
 }
@@ -175,61 +177,73 @@ variant-selects {
 
 
 /* === PACK DISCOUNT BADGE CUSTOM STYLE === */
-.product-form__input input[type="radio"] + label .pack-discount,
-.product-form__input input[type="radio"] + label [class*="discount"],
-.product-form__input input[type="radio"] + label [class*="percent"] {
-  color: #ffffff !important;             /* text color */
-  background-color: #f6542c !important;  /* new background color */
-  border-radius: 4px;                    /* optional: soft corners */
-padding: 3px 14px;                      /* optional: space inside */
-  font-weight: 500;                      /* optional: bolder text */
+.product-form__input input[type="radio"]+label .pack-discount,
+.product-form__input input[type="radio"]+label [class*="discount"],
+.product-form__input input[type="radio"]+label [class*="percent"] {
+  color: #ffffff !important;
+  /* text color */
+  background-color: #f6542c !important;
+  /* new background color */
+  border-radius: 4px;
+  /* optional: soft corners */
+  padding: 3px 14px;
+  /* optional: space inside */
+  font-weight: 500;
+  /* optional: bolder text */
 }
 
 
 
 
-  /* Botones/labels de opciones inhabilitados = X blanca y no clickeables */
-  /* Soporta: radios Dawn (input + label), swatches con .swatch__label y chips botón */
-  .option-chip--unavailable,
-  .swatch input[disabled] + .swatch__label,
-  .product-form__input input[type="radio"][disabled] + label,
-  .product-form__input button[aria-disabled="true"] {
-    position: relative;
-    pointer-events: none !important;
-    opacity: 1 !important;               /* mantenemos visibilidad total */
-    filter: grayscale(0.2) brightness(0.85);
-  }
+/* Botones/labels de opciones inhabilitados (truly unavailable) */
+.product-form__input input[type="radio"]:disabled+label {
+  position: relative;
+  pointer-events: none !important;
+  opacity: 0.4 !important;
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
 
-  .option-chip--unavailable::after,
-  .swatch input[disabled] + .swatch__label::after,
-  .product-form__input input[type="radio"][disabled] + label::after,
-  .product-form__input button[aria-disabled="true"]::after {
-    content: "✕";
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    font-weight: 800;
-    font-size: 18px;        /* ajusta si tus chips son más grandes */
-    color: #fff;
-    background: rgba(0,0,0,.55);
-    border-radius: 10px;    /* chips cuadrados redondeados */
-    line-height: 1;
-  }
+/* Sold-out variants (exists but out of stock) - Clickable */
+.product-form__input input[type="radio"].sold-out:not(:disabled)+label {
+  position: relative;
+  opacity: 0.7;
+  cursor: pointer;
+}
 
-  /* Si tus swatches son círculos, redondeo total */
-  .swatch--circle .swatch__label::after { border-radius: 999px; }
+.product-form__input input[type="radio"].sold-out:not(:disabled)+label::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.5;
+  transform: rotate(-15deg);
+  pointer-events: none;
+}
 
-  /* Asegura focus/hover apagados cuando está disabled */
-  .product-form__input input[type="radio"][disabled] + label:hover,
-  .product-form__input input[type="radio"][disabled] + label:focus { box-shadow: none !important; }
+.product-form__input input[type="radio"].sold-out:not(:disabled):checked+label {
+  opacity: 1;
+  border: 2px solid var(--blue-primary);
+}
 
+/* Redefine unavailable overlay for truly disabled only */
+.product-form__input input[type="radio"]:disabled+label::after {
+  content: "✕";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 18px;
+  color: #fff;
+  background: rgba(0, 0, 0, .55);
+  border-radius: 10px;
+  line-height: 1;
+}
 
-
-
-
-
-
-
-
-  
+.swatch--circle .swatch__label::after {
+  border-radius: 999px;
+}
