@@ -66,34 +66,34 @@
     object-fit: contain;
   }
 
-  /* Swiper Pagination */
+  /* Modern Bar Pagination */
   .gallery-pagination {
     position: absolute;
-    bottom: 20px !important;
+    bottom: 24px !important;
     left: 50% !important;
     transform: translateX(-50%);
     z-index: 10;
-    background: rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(8px);
-    padding: 6px 12px;
-    border-radius: 20px;
     display: flex;
-    gap: 6px;
+    gap: 8px;
     width: auto !important;
+    padding: 0;
+    background: none;
+    backdrop-filter: none;
   }
   .gallery-pagination .swiper-pagination-bullet {
-    width: 6px;
-    height: 6px;
-    background: #000;
-    opacity: 0.2;
+    width: 40px; /* MODERN BAR WIDTH */
+    height: 4px; /* THIN BARS */
+    background: rgba(255, 255, 255, 0.4);
+    opacity: 1;
     margin: 0 !important;
-    transition: all 0.3s ease;
+    border-radius: 2px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
   }
   .gallery-pagination .swiper-pagination-bullet-active {
-    width: 20px;
-    border-radius: 4px;
-    opacity: 1;
+    width: 60px; /* EXPANDS WHEN ACTIVE */
     background: #0d6ba6;
+    box-shadow: 0 2px 15px rgba(13, 107, 166, 0.4);
   }
 
   /* Navigation Buttons - Glassmorphism */
@@ -135,20 +135,20 @@
 
   /* Thumbnails */
   .gallery-thumbs {
-    margin-top: 24px;
+    margin-top: 5px; /* Further reduced margin to compensate for larger padding */
     overflow: hidden;
     width: 100%;
   }
   .gallery-thumbs .swiper {
-    padding: 8px 0;
+    padding: 30px 0; /* FURTHER INCREASED PADDING FOR LARGER THUMBS & SHADOWS */
   }
   .gallery-thumbs .swiper-slide {
-    width: 100px; /* INCREASED SIZE */
+    width: 120px; /* ENLARGED AGAIN TO 120PX */
     aspect-ratio: 1 / 1;
-    height: 100px !important;
+    height: 120px !important;
     opacity: 0.5;
     cursor: pointer;
-    border-radius: 16px;
+    border-radius: 20px; /* Slightly more rounded for the larger size */
     overflow: hidden;
     border: 2px solid transparent;
     transition: all 0.3s ease;
@@ -158,9 +158,10 @@
   .gallery-thumbs .swiper-slide-thumb-active {
     opacity: 1;
     border-color: #0d6ba6;
-    transform: scale(0.92);
+    transform: scale(0.95); /* Subtle scale down for active state */
     filter: grayscale(0%);
-    box-shadow: 0 4px 15px rgba(13, 107, 166, 0.2);
+    /* CENTERED BLUE SHADOW */
+    box-shadow: 0 0 30px rgba(13, 107, 166, 0.35);
   }
   .gallery-thumbs img {
     width: 100%;
