@@ -11,7 +11,6 @@ if (!customElements.get('media-gallery')) {
     connectedCallback() {
       this.initSwiper();
       this.bindEvents();
-      this.initZoom();
     }
 
     initSwiper() {
@@ -68,26 +67,27 @@ if (!customElements.get('media-gallery')) {
         }
       });
 
-      // Also listen for manual input changes (fallback)
+      // Manual input changes (fallback)
       document.body.addEventListener('change', (e) => {
         if (e.target.matches('input[type="radio"][name*="Option"], input[type="radio"][name*="Color"], input[type="radio"][name*="color"], .swatch-input__input')) {
-          const color = e.target.value;
-          this.filterSlides(color);
+          this.filterSlides(e.target.value);
         }
       });
 
-      // Explicitly handle thumbnail clicks to ensure synchronization
+      // Fixed Thumbnail click handling
       this.addEventListener('click', (e) => {
         const thumbSlide = e.target.closest('.gallery-thumbs .swiper-slide');
         if (thumbSlide && this.mainSwiper) {
-          // Find the index of this media in the current visible set or absolute set
           const mediaId = thumbSlide.dataset.mediaId;
-          const mainSlide = this.querySelector(`.gallery-main .swiper-slide[data-media-id="${mediaId}"]`);
-          if (mainSlide) {
-            // Get internal swiper index of the matching slide
-            const index = Array.from(this.mainSwiper.slides).indexOf(mainSlide);
-            if (index !== -1) {
-              this.mainSwiper.slideTo(index);
+          const allSlides = Array.from(this.querySelectorAll('.gallery-main .swiper-slide'));
+
+          // Find the index of the slide that is NOT hidden by display: none
+          const targetSlide = this.querySelector(`.gallery-main .swiper-slide[data-media-id="${mediaId}"]`);
+          if (targetSlide) {
+            const visibleSlides = allSlides.filter(s => s.style.display !== 'none');
+            const targetIndex = visibleSlides.indexOf(targetSlide);
+            if (targetIndex !== -1) {
+              this.mainSwiper.slideTo(targetIndex);
             }
           }
         }
@@ -97,31 +97,29 @@ if (!customElements.get('media-gallery')) {
     onVariantChange(variant) {
       if (!variant) return;
 
-      // Try to find color from options
-      let color = variant.featured_media ? variant.featured_media.alt : null;
+      let color = null;
+      // 1. Try to get color from selected swatch in DOM
+      const activeSwatch = document.querySelector('.swatch-input__input:checked');
+      if (activeSwatch) {
+        color = activeSwatch.value;
+      }
 
-      // Fallback: Check options for 'Color' or 'Colour'
-      if (!color && variant.options) {
-        // This requires knowledge of which option is color, but often it's one of them
-        // Let's try to find the selected swatch in the DOM if possible
-        const activeSwatch = document.querySelector('.swatch-input__input:checked');
-        if (activeSwatch) {
-          color = activeSwatch.value;
-        }
+      // 2. Fallback to featured media alt if available
+      if (!color && variant.featured_media && variant.featured_media.alt) {
+        color = variant.featured_media.alt;
       }
 
       if (color) {
         this.filterSlides(color);
       } else if (variant.featured_media) {
-        // If no color but has featured media, slide to it
         this.slideToMedia(variant.featured_media.id);
       }
     }
 
     slideToMedia(mediaId) {
       if (!this.mainSwiper || !mediaId) return;
-      const slides = Array.from(this.mainSwiper.slides);
-      const targetIndex = slides.findIndex(s => s.dataset.mediaId == mediaId);
+      const visibleSlides = Array.from(this.querySelectorAll('.gallery-main .swiper-slide')).filter(s => s.style.display !== 'none');
+      const targetIndex = visibleSlides.findIndex(s => s.dataset.mediaId == mediaId);
       if (targetIndex !== -1) {
         this.mainSwiper.slideTo(targetIndex);
       }
@@ -139,23 +137,15 @@ if (!customElements.get('media-gallery')) {
       const slides = this.querySelectorAll('.gallery-main .swiper-slide');
       const thumbSlides = this.querySelectorAll('.gallery-thumbs .swiper-slide');
 
-      let firstVisibleIndex = -1;
-
       // Filter Main Slides
-      slides.forEach((slide, index) => {
+      slides.forEach(slide => {
         const slideColors = (slide.dataset.color || '').split(',');
         const isMatch = slideColors.some(c => c === 'all' || c === 'all-show' || c === normalizedColor);
-
-        if (isMatch) {
-          slide.style.display = 'flex';
-          if (firstVisibleIndex === -1) firstVisibleIndex = index;
-        } else {
-          slide.style.display = 'none';
-        }
+        slide.style.display = isMatch ? 'flex' : 'none';
       });
 
       // Filter Thumbnails
-      thumbSlides.forEach((slide) => {
+      thumbSlides.forEach(slide => {
         const slideColors = (slide.dataset.color || '').split(',');
         const isMatch = slideColors.some(c => c === 'all' || c === 'all-show' || c === normalizedColor);
         slide.style.display = isMatch ? 'block' : 'none';
@@ -165,85 +155,10 @@ if (!customElements.get('media-gallery')) {
       this.mainSwiper.update();
       this.thumbSwiper.update();
 
-      // Ensure we are at the first matching slide
-      if (firstVisibleIndex >= 0) {
-        // We need to wait a tick for Swiper to realize slides are hidden/shown
-        setTimeout(() => {
-          this.mainSwiper.update();
-          this.thumbSwiper.update();
-          // Find the new index of the first visible slide in the CURRENT list
-          // Actually, slideTo works on the absolute index if slides are still in DOM
-          this.mainSwiper.slideTo(firstVisibleIndex);
-        }, 50);
-      }
-    }
-
-    // Zoom Functionality
-    initZoom() {
-      if (window.matchMedia('(max-width: 990px)').matches) return; // Disable on mobile
-
-      const mainContainer = this.querySelector('.gallery-main');
-      const lens = this.querySelector('.zoom-lens');
-
-      mainContainer.addEventListener('mousemove', (e) => this.onZoomMove(e, mainContainer, lens));
-      mainContainer.addEventListener('mouseleave', () => {
-        lens.style.display = 'none';
-      });
-      mainContainer.addEventListener('mouseenter', () => {
-        // Activate lens only if we have an image
-        const activeSlide = this.mainSwiper.slides[this.mainSwiper.activeIndex];
-        if (activeSlide && activeSlide.querySelector('img')) {
-          lens.style.display = 'block';
-        }
-      });
-    }
-
-    onZoomMove(e, container, lens) {
-      const activeSlide = this.mainSwiper.slides[this.mainSwiper.activeIndex];
-      const img = activeSlide ? activeSlide.querySelector('img[data-zoom]') : null;
-      if (!img) { lens.style.display = 'none'; return; }
-
-      lens.style.display = 'block';
-
-      const rect = container.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-
-      // Lens dimensions
-      const lw = lens.offsetWidth;
-      const lh = lens.offsetHeight;
-
-      // Positioning lens
-      let lx = x - lw / 2;
-      let ly = y - lh / 2;
-
-      // Boundary checks
-      if (lx < 0) lx = 0;
-      if (lx > rect.width - lw) lx = rect.width - lw;
-      if (ly < 0) ly = 0;
-      if (ly > rect.height - lh) ly = rect.height - lh;
-
-      lens.style.left = lx + 'px';
-      lens.style.top = ly + 'px';
-
-      // Background Position for Zoom
-      // Calculate ratio
-      const fullImageSrc = img.dataset.zoom;
-
-      // We set the background image of the lens
-      lens.style.backgroundImage = `url('${fullImageSrc}')`;
-
-      // Calculate percentages
-      const ratioX = (lx / (rect.width - lw)) * 100;
-      const ratioY = (ly / (rect.height - lh)) * 100;
-
-      lens.style.backgroundPosition = `${ratioX}% ${ratioY}%`;
-      // We assume zoom image is essentially larger than container. 
-      // Typically standard background-size: cover working against the lens size creates the zoom effect
-      // But for exact zoom we usually do:
-      // background-size: (img.width * ratio) (img.height * ratio)
-      // Simplest "Good enough" approach:
-      lens.style.backgroundSize = `${rect.width * 2.5}px ${rect.height * 2.5}px`;
+      // Go to first image of variant
+      setTimeout(() => {
+        this.mainSwiper.slideTo(0);
+      }, 50);
     }
   });
 }

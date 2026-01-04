@@ -127,20 +127,6 @@
     object-fit: cover;
     display: block;
   }
-
-  /* Zoom Lens */
-  .zoom-lens {
-    position: absolute;
-    border: 1px solid rgba(255,255,255,0.5);
-    background-color: rgba(255,255,255,0.2);
-    width: 200px;
-    height: 200px;
-    display: none;
-    pointer-events: none;
-    z-index: 20;
-    border-radius: 50%;
-    box-shadow: 0 0 10px rgba(0,0,0,0.2);
-  }
 </style>
 
 <media-gallery data-section="{{ section.id }}" class="media-gallery-component">
@@ -192,9 +178,6 @@
          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
       </div>
     </div>
-    
-    <!-- Zoom Container -->
-    <div class="zoom-lens"></div>
   </div>
 
   <!-- Thumbnails -->
