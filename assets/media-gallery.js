@@ -45,7 +45,11 @@ if (!customElements.get('media-gallery')) {
         watchSlidesProgress: true,
         observer: true,
         observeParents: true,
-        centerInsufficientSlides: true
+        centerInsufficientSlides: true,
+        navigation: {
+          nextEl: `.thumb-next-${this.sectionId}`,
+          prevEl: `.thumb-prev-${this.sectionId}`,
+        },
       });
 
       this.mainSwiper = new Swiper(`.main-swiper-${this.sectionId}`, {

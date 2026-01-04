@@ -257,6 +257,44 @@
     transition: opacity 0.2s;
   }
   .zoom-btn:hover { opacity: 0.7; }
+
+  /* Thumbnails Navigation */
+  .thumb-nav-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+  }
+  .thumb-nav-btn {
+    width: 30px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #999;
+    transition: all 0.3s ease;
+    user-select: none;
+    z-index: 10;
+  }
+  .thumb-nav-btn:hover {
+    color: #333;
+    transform: scale(1.1);
+  }
+  .thumb-nav-btn svg {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .thumb-nav-btn.swiper-button-disabled {
+    opacity: 0.2;
+    cursor: default;
+  }
 </style>
 
 <media-gallery data-section="{{ section.id }}" class="media-gallery-component">
@@ -345,7 +383,12 @@
 
   <!-- Thumbnails -->
   <div class="gallery-thumbs">
-     <div class="swiper thumbs-swiper-{{ section.id }}">
+    <div class="thumb-nav-wrapper">
+      <div class="thumb-nav-btn thumb-prev-{{ section.id }}">
+        <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      </div>
+
+      <div class="swiper thumbs-swiper-{{ section.id }}">
         <div class="swiper-wrapper">
           {%- if featured_media -%}
             {%- assign media = featured_media -%}
@@ -383,9 +426,15 @@
                   data-color="{{ m_colors | strip }}">
                 <img src="{{ media | image_url: width: 200 }}" alt="{{ media.alt | escape }}" loading="lazy">
              </div>
+            {%- endif -%}
           {%- endfor -%}
         </div>
-     </div>
+      </div>
+
+      <div class="thumb-nav-btn thumb-next-{{ section.id }}">
+        <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+      </div>
+    </div>
   </div>
 
   <!-- Lightbox Structure -->
