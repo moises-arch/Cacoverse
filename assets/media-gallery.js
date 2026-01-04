@@ -155,14 +155,22 @@ if (!customElements.get('media-gallery')) {
 
       const filterLogic = (item) => {
         const itemMediaId = item.dataset.mediaId;
-        const itemTags = (item.dataset.color || '').split(',').map(t => t.trim()).filter(t => t);
+        const rawColorTags = item.dataset.color || '';
+        const itemTags = rawColorTags.split(',').map(t => t.trim().toLowerCase()).filter(t => t);
 
-        const isFeatured = featuredMediaId && itemMediaId == featuredMediaId;
+        const isFeatured = featuredMediaId && String(itemMediaId) === String(featuredMediaId);
         const isAll = itemTags.includes('all') || itemTags.includes('all-show');
+
+        // Matches current selected options (e.g. blue, 10-pack)
         const matchesAny = activeTokens.some(token => itemTags.includes(token));
+
+        // Hidden if it has a tag from a category that isn't currently selected
+        // (prevents "Red" showing when "Blue" is picked)
         const hasMismatch = itemTags.some(tag => allPossibleValues.includes(tag) && !activeTokens.includes(tag));
 
+        // Final match condition: Featured wins, then All-show wins, then specific matches without category conflicts
         const isMatch = isFeatured || isAll || (matchesAny && !hasMismatch);
+
         item.style.display = isMatch ? 'flex' : 'none';
         item.style.height = isMatch ? '' : '0px';
         return isMatch;
@@ -175,31 +183,32 @@ if (!customElements.get('media-gallery')) {
       const mainWrapper = this.querySelector('.gallery-main .swiper-wrapper');
       const thumbWrapper = this.querySelector('.gallery-thumbs .swiper-wrapper');
 
-      const sortSlides = (slides, wrapper) => {
+      const sortSlidesArr = (slides, wrapper) => {
         if (!wrapper) return;
 
+        // Re-calculate visible based on updated styles
         const visible = slides.filter(s => s.style.display !== 'none');
         const hidden = slides.filter(s => s.style.display === 'none');
 
-        // Tiered sorting for visible slides
         const featured = [];
         const specific = [];
         const generic = [];
 
         visible.forEach(slide => {
-          const tags = (slide.dataset.color || '').split(',').map(t => t.trim());
+          const tags = (slide.dataset.color || '').toLowerCase().split(',').map(t => t.trim());
           const isAll = tags.includes('all') || tags.includes('all-show');
+          const isFeaturedId = featuredMediaId && String(slide.dataset.mediaId) === String(featuredMediaId);
 
-          if (featuredMediaId && slide.dataset.mediaId == featuredMediaId) {
+          if (isFeaturedId) {
             featured.push(slide);
           } else if (isAll) {
-            generic.push(slide);
+            generic.push(slide); // Move to the end
           } else {
             specific.push(slide);
           }
         });
 
-        // Final Order: [Featured] -> [Specific Matches] -> [Generic All-Show]
+        // Combined Order: [Variant Principal] -> [Other Variant Images] -> [General All-Show]
         const sortedVisible = [...featured, ...specific, ...generic];
 
         const fragment = document.createDocumentFragment();
@@ -210,23 +219,22 @@ if (!customElements.get('media-gallery')) {
         wrapper.appendChild(fragment);
       };
 
-      // Perform reordering on the actual elements
-      sortSlides(mainSlides, mainWrapper);
-      sortSlides(thumbSlides, thumbWrapper);
+      sortSlidesArr(mainSlides, mainWrapper);
+      sortSlidesArr(thumbSlides, thumbWrapper);
 
       // Re-query the slides in their new DOM order for Swiper
       if (this.mainSwiper) {
         this.mainSwiper.update();
-        setTimeout(() => this.mainSwiper.slideTo(0, 0), 50);
+        setTimeout(() => this.mainSwiper.slideTo(0, 0), 100);
       }
       if (this.thumbSwiper) {
         this.thumbSwiper.update();
-        setTimeout(() => this.thumbSwiper.slideTo(0, 0), 50);
+        setTimeout(() => this.thumbSwiper.slideTo(0, 0), 100);
       }
 
       setTimeout(() => {
         this.syncThumbnails();
-      }, 200);
+      }, 250);
     }
 
     slideToMedia(mediaId) {
