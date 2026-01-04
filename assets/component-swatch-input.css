@@ -75,17 +75,16 @@
 .swatch-input__input.visually-disabled+.swatch-input__label>.swatch::after {
   /* Diagonal of a square = length of the side * sqrt(2)  */
   --diagonal--size: calc(var(--swatch-input--size) * 1.414);
-  --crossed-line--size: 0.2rem;
+  --crossed-line--size: 0.1rem;
   content: '';
   position: absolute;
   bottom: calc(var(--crossed-line--size) * -0.5);
   left: 0;
   width: var(--diagonal--size);
   height: var(--crossed-line--size);
-  background-color: #f43f5e;
-  /* Rose-500 red */
-  opacity: 0.8;
+  background-color: currentColor;
+  /* Back to original */
+  opacity: 0.6;
   transform: rotate(-45deg);
   transform-origin: left;
-  border-radius: 99px;
 }

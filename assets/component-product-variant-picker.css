@@ -207,24 +207,23 @@ variant-selects {
 /* Sold-out variants (exists but out of stock) - Clickable */
 .product-form__input input[type="radio"].sold-out:not(:disabled)+label {
   position: relative;
-  opacity: 0.8;
+  opacity: 0.4;
+  /* Much dimmer as requested */
   cursor: pointer;
-  color: #94a3b8;
 }
 
 .product-form__input input[type="radio"].sold-out:not(:disabled)+label::after {
   content: "";
   position: absolute;
   top: 50%;
-  left: 10%;
-  width: 80%;
-  height: 2px;
-  background: #f43f5e;
-  /* Rose-500 red for visibility */
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  /* Back to original as requested */
   opacity: 0.6;
   transform: rotate(-15deg);
   pointer-events: none;
-  border-radius: 99px;
 }
 
 

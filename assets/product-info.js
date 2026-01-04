@@ -178,7 +178,7 @@ if (!customElements.get("product-info")) {
         //     discountedEls.forEach(el => el.classList.add("hidden"));
         //   }
         // }, 0); // adjust delay if needed
-        
+
         const selectedVariant = productInfoNode.querySelector(
           "variant-selects [data-selected-variant]"
         )?.innerHTML;
@@ -276,12 +276,19 @@ if (!customElements.get("product-info")) {
             `#Volume-Note-${this.dataset.section}`
           )?.classList.remove("hidden");
 
-          this.productForm?.toggleSubmitButton(
-            html
-              .getElementById(`ProductSubmitButton-${this.sectionId}`)
-              ?.hasAttribute("disabled") ?? true,
-            window.variantStrings.soldOut
-          );
+          // Explicit check for variant availability to force button state
+          const submitButton = document.getElementById(`ProductSubmitButton-${this.dataset.section}`);
+          if (variant && !variant.available) {
+            this.productForm?.toggleSubmitButton(true, window.variantStrings.soldOut);
+            if (submitButton) submitButton.disabled = true;
+          } else if (variant && variant.available) {
+            this.productForm?.toggleSubmitButton(false);
+            if (submitButton) submitButton.disabled = false;
+          } else {
+            this.productForm?.toggleSubmitButton(true, window.variantStrings.unavailable);
+            if (submitButton) submitButton.disabled = true;
+          }
+
 
           publish(PUB_SUB_EVENTS.variantChange, {
             data: {
@@ -571,7 +578,7 @@ if (!customElements.get("product-info")) {
       get sectionId() {
         return this.dataset.originalSection || this.dataset.section;
       }
-      
+
       filterMedia(currentVariant) {
         const selectedTokens = this.tokensFromVariant(currentVariant);
         if (!selectedTokens.length) return;
@@ -619,7 +626,7 @@ if (!customElements.get("product-info")) {
           .replace(/[^a-z0-9]+/g, '-')     // replace non-alphanumerics with hyphen
           .replace(/^-+|-+$/g, '');        // remove leading/trailing hyphens
       }
-      
+
       filterMediaGallery(currentVariant) {
         const selectedTokens = this.tokensFromVariant(currentVariant);
         if (!selectedTokens.length) return;
