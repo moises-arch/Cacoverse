@@ -72,8 +72,10 @@ class CartDrawer extends HTMLElement {
   }
 
   renderContents(parsedState) {
-    this.querySelector('.drawer__inner').classList.contains('is-empty') &&
+    this.classList.remove('is-empty');
+    if (this.querySelector('.drawer__inner')) {
       this.querySelector('.drawer__inner').classList.remove('is-empty');
+    }
     this.productId = parsedState.id;
     this.getSectionsToRender().forEach((section) => {
       const sectionElement = section.selector
@@ -133,7 +135,7 @@ class CartDrawerItems extends CartItems {
         section: 'cart-icon-bubble',
         selector: '.shopify-section',
       },
-       {
+      {
         id: 'cart-icon-bubble1',
         section: 'cart-icon-bubble',
         selector: '.shopify-section',
