@@ -5166,31 +5166,43 @@ body.template-product .product__media-modal * {
 
 /* --- Bundle Module (Compatible Accessories) --- */
 .bundle-module {
-  margin: 4rem 0;
+  margin: 2.5rem 0 3rem;
   border-top: 1px solid rgba(0, 0, 0, 0.08);
-  padding-top: 3rem;
+  padding-top: 2rem;
 }
 
 .bundle-module__header {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 2rem;
+  align-items: center;
+  margin-bottom: 1.2rem;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 0.8rem;
+}
+
+.bundle-module__title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.bundle-module__icon {
+  color: #0d6ba6;
+  opacity: 0.8;
+  flex-shrink: 0;
 }
 
 .bundle-module__title {
   margin: 0;
-  font-size: 2rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  color: #121212;
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #1a1a1a;
 }
 
 .bundle-module__status-text {
-  font-size: 1.3rem;
-  color: #666;
+  font-size: 1.2rem;
+  color: #888;
   font-weight: 400;
 }
 
@@ -5198,8 +5210,15 @@ body.template-product .product__media-modal * {
 .bundle-items-list {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1.2rem;
-  margin-bottom: 3rem;
+  gap: 0.8rem;
+  margin-bottom: 2rem;
+}
+
+@media screen and (min-width: 750px) {
+  .bundle-items-list {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.1rem;
+  }
 }
 
 /* Bundle Card */
@@ -5395,36 +5414,35 @@ body.template-product .product__media-modal * {
 .bundle-card__badge-label {
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  padding: 0.2rem 0.6rem;
-  background: transparent;
-  color: #888;
-  border: 1px solid #e0e0e0;
+  gap: 0.35rem;
+  padding: 0.3rem 0.6rem;
+  background: #f4f6f8;
+  color: #555;
+  border: none;
   border-radius: 6px;
   font-size: 0.6rem;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.03em;
   pointer-events: none;
-  transition: all 0.2s;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
 }
 
 .bundle-card__badge-label svg {
-  width: 0.7rem;
-  height: 0.7rem;
+  width: 11px;
+  height: 11px;
   flex-shrink: 0;
-  opacity: 0.5;
+  opacity: 0.7;
 }
 
 .bundle-card:hover .bundle-card__badge-label {
-  background: #f8f8f8;
-  border-color: #121212;
-  color: #121212;
+  background: #eef1f5;
+  color: #000;
 }
 
 .bundle-card:hover .bundle-card__badge-label svg {
-  opacity: 0.9;
+  opacity: 1;
 }
 
 /* Summary Bar */
