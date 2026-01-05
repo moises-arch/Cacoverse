@@ -3266,6 +3266,11 @@ document.addEventListener('DOMContentLoaded', function() {
   var ticking = false;
 
   function computeHeaderHeight() {
+    // Prevent layout thrashing: Do not update spacer height if header is in a hidden/collapsed state due to scroll
+    if (headerWrapper.classList.contains('caco-hide-announcement') || headerWrapper.classList.contains('caco-hide-nav')) {
+      return;
+    }
+
     var h = headerWrapper.offsetHeight || 0;
     document.documentElement.style.setProperty('--caco-header-height', h + 'px');
     document.body.classList.add('has-caco-sticky');
