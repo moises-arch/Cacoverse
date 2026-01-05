@@ -5170,9 +5170,9 @@ body.template-product .product__media-modal * {
 }
 
 .product-bundle-wrapper {
-  margin-top: 1.5rem;
+  margin-top: 3rem;
   margin-bottom: 0rem;
-  padding-top: 0rem;
+  padding: 0px 7px 0px 7px;
 }
 
 .bundle-module__header {
