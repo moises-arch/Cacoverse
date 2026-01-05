@@ -60,12 +60,12 @@
                     <img src="{{ item.featured_image | image_url: width: 160 }}" 
                          alt="{{ item.featured_image.alt | escape }}" 
                          loading="lazy" 
-                         width="64" 
-                         height="64"
+                         width="50" 
+                         height="50"
                          class="bundle-card__image">
-                  {%- else -%}
-                    {{ 'product-1' | placeholder_svg_tag: 'bundle-card__image placeholder' }}
-                  {%- endif -%}
+{%- else -%}
+  {{ 'product-1' | placeholder_svg_tag: 'bundle-card__image placeholder' }}
+{%- endif -%}
                 </div>
 
                 <div class="bundle-card__details">
