@@ -5187,14 +5187,14 @@ body.template-product .product__media-modal * {
 }
 
 .bundle-module__icon {
-  color: #0d6ba6;
-  opacity: 0.8;
+  color: #7a7a7a;
+  opacity: 1;
   flex-shrink: 0;
 }
 
 .bundle-module__title {
   margin: 0;
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   font-weight: 700;
   letter-spacing: -0.01em;
   color: #1a1a1a;
