@@ -157,9 +157,9 @@
     width: 100%;
   }
   .gallery-thumbs .swiper-slide {
-    width: 120px;
+    width: 90px;
     aspect-ratio: 1 / 1;
-    height: 120px !important;
+    height: 90px !important;
     opacity: 0.5;
     cursor: pointer;
     border-radius: 12px; /* LESS ROUNDED */
@@ -283,7 +283,7 @@
   }
   .thumb-nav-btn {
     width: 35px;
-    height: 120px;
+    height: 90px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -450,7 +450,7 @@
                  data-media-id="{{ media.id }}"
                  data-variants="{{ variant_ids | strip | remove_last: ',' }}"
                  data-color="{{ m_colors | strip }}">
-              <img src="{{ media | image_url: width: 200 }}" alt="{{ media.alt | escape }}" loading="lazy">
+              <img src="{{ media | image_url: width: 400 }}" alt="{{ media.alt | escape }}" loading="lazy">
             </div>
           {%- endif -%}
           
@@ -475,7 +475,7 @@
                   data-media-id="{{ media.id }}"
                   data-variants="{{ variant_ids | strip | remove_last: ',' }}"
                   data-color="{{ m_colors | strip }}">
-                <img src="{{ media | image_url: width: 200 }}" alt="{{ media.alt | escape }}" loading="lazy">
+                <img src="{{ media | image_url: width: 400 }}" alt="{{ media.alt | escape }}" loading="lazy">
              </div>
             {%- endif -%}
           {%- endfor -%}
