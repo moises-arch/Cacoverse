@@ -152,7 +152,8 @@
           {% endif %}
         </div>
         <!-- type=text para evitar el cancel nativo (doble X) -->
-        <input id="mhSearchInput" type="text" placeholder="Search products…" autocomplete="off" />
+        <label class="visually-hidden" for="mhSearchInput">Search products…</label>
+        <input id="mhSearchInput" name="q" type="text" placeholder="Search products…" autocomplete="off" />
         <button id="mhSearchClear" class="mh-search-clear" aria-label="Clear">×</button>
       </div>
 

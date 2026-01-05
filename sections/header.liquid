@@ -224,7 +224,9 @@
               </svg>
             </button>
 
+            <label class="visually-hidden" for="CacoSearchInputDesktop">Search gloves, helmets, tools and more…</label>
             <input
+              id="CacoSearchInputDesktop"
               class="caco-search-input caco-search-input--desktop"
               type="search"
               name="q"
@@ -989,7 +991,9 @@
             </svg>
           </button>
 
+          <label class="visually-hidden" for="CacoSearchInputMobile">Search gloves, helmets, tools and more…</label>
           <input
+            id="CacoSearchInputMobile"
             class="caco-search-input caco-search-input--mobile"
             type="search"
             name="q"
@@ -4196,8 +4200,8 @@ document.addEventListener('visibilitychange', function () {
       });
     }
 
-    setupPredictive('.caco-search-form--desktop', '.caco-search-input--desktop');
-    setupPredictive('.caco-search-form--mobile',  '.caco-search-input--mobile');
+    setupPredictive('.caco-search-form--desktop', '#CacoSearchInputDesktop');
+    setupPredictive('.caco-search-form--mobile',  '#CacoSearchInputMobile');
   })();
 
 /* ----------------------------------------------------------------------------
@@ -4530,8 +4534,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  setupVoiceSearch('.caco-search-voice-btn--desktop', '.caco-search-input--desktop', '.caco-search-form--desktop');
-  setupVoiceSearch('.caco-search-voice-btn--mobile',  '.caco-search-input--mobile',  '.caco-search-form--mobile');
+  setupVoiceSearch('.caco-search-voice-btn--desktop', '#CacoSearchInputDesktop', '.caco-search-form--desktop');
+  setupVoiceSearch('.caco-search-voice-btn--mobile',  '#CacoSearchInputMobile',  '.caco-search-form--mobile');
 });
 </script>
 
@@ -4541,8 +4545,8 @@ document.addEventListener('DOMContentLoaded', function() {
      ============================================================================ -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  var desktopInput = document.querySelector('.caco-search-input--desktop');
-  var mobileInput  = document.querySelector('.caco-search-input--mobile');
+  var desktopInput = document.getElementById('CacoSearchInputDesktop');
+  var mobileInput  = document.getElementById('CacoSearchInputMobile');
 
   if (!desktopInput && !mobileInput) return;
 

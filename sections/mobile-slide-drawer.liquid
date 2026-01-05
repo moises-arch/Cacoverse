@@ -61,7 +61,8 @@ No dependency on Bootstrap. Desktop remains untouched.
           {%- if section.settings.show_search -%}
             <li class="msd__item">
               <form action="{{ routes.search_url }}" method="get" role="search" class="msd__search">
-                <input type="search" name="q" placeholder="{{ 'general.search.search' | t | default: 'Search' }}" aria-label="Search">
+                <label class="visually-hidden" for="CacoSearchInputDrawer-{{ section.id }}">Search</label>
+                <input id="CacoSearchInputDrawer-{{ section.id }}" type="search" name="q" placeholder="{{ 'general.search.search' | t | default: 'Search' }}" aria-label="Search">
                 <button type="submit">{{ 'general.search.submit' | t | default: 'Search' }}</button>
               </form>
             </li>

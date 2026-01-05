@@ -138,7 +138,9 @@
 
   <div class="ai-search-header__right-{{ ai_gen_id }}">
     <form action="{{ routes.search_url }}" method="get" role="search" class="ai-search-header__form-{{ ai_gen_id }}">
+      <label class="visually-hidden" for="CacoSearchInputAI-{{ ai_gen_id }}">Search</label>
       <input
+        id="CacoSearchInputAI-{{ ai_gen_id }}"
         type="search"
         name="q"
         value="{{ search.terms | escape }}"
