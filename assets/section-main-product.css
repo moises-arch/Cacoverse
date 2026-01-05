@@ -566,6 +566,20 @@ a.product__text {
   border: none;
 }
 
+@media (max-width: 749px) {
+  .product__info-wrapper .quantity__input {
+    min-width: 30px;
+    padding: 0;
+    font-size: 1.1rem;
+  }
+
+  .product__info-wrapper .quantity {
+    min-height: 48px;
+    padding: 2px;
+    gap: 0;
+  }
+}
+
 .product__info-wrapper .product-form__submit {
   --blue-primary: #3b66d6;
   --blue-deep: #1a4ab9;
