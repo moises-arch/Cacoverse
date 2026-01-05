@@ -33,7 +33,7 @@
           {%- if current_variant.available -%}
             {%- assign visible_counter = visible_counter | plus: 1 -%}
             
-            <div class="bundle-card" 
+            <div class="bundle-card {% if visible_counter > 4 %}is-hidden{% endif %}" 
                  data-product-id="{{ item.id }}" 
                  data-variant-id="{{ current_variant.id }}" 
                  data-price="{{ current_variant.price }}">
@@ -97,19 +97,11 @@
                             </option>
                           {%- endfor -%}
                         </select>
-                        <span class="bundle-card__badge-label" aria-label="Configure your product">
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="icon icon-sliders">
-                            <line x1="4" y1="21" x2="4" y2="14"></line>
-                            <line x1="4" y1="10" x2="4" y2="3"></line>
-                            <line x1="12" y1="21" x2="12" y2="12"></line>
-                            <line x1="12" y1="8" x2="12" y2="3"></line>
-                            <line x1="20" y1="21" x2="20" y2="16"></line>
-                            <line x1="20" y1="12" x2="20" y2="3"></line>
-                            <line x1="2" y1="14" x2="6" y2="14"></line>
-                            <line x1="10" y1="8" x2="14" y2="8"></line>
-                            <line x1="18" y1="16" x2="22" y2="16"></line>
+                        <span class="bundle-card__badge-label" aria-label="Configure options">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="icon icon-settings-plus">
+                            <path d="M12 20v-8m0 0V4m0 8h8m-8 0H4"></path>
                           </svg>
-                          <span class="bundle-card__tooltip">Configure product</span>
+                          <span class="bundle-card__tooltip">Configure options</span>
                         </span>
                       </div>
                     {%- endif -%}
@@ -118,8 +110,18 @@
               </div>
             </div>
           {%- endif -%}
-        {%- endfor -%}
       </div>
+
+      {%- if visible_counter > 4 -%}
+        <div class="bundle-items-footer">
+          <button type="button" class="bundle-show-more-button" data-show-more>
+            Discover All Accessory Recommendations
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+        </div>
+      {%- endif -%}
 
       <div class="bundle-summary">
         <div class="bundle-summary__info">

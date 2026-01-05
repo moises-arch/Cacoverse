@@ -5241,9 +5241,13 @@ body.template-product .product__media-modal * {
   height: 84px;
   min-height: 84px;
   max-height: 84px;
-  overflow: hidden;
+  /* overflow: hidden; -- Removed to fix tooltip clipping */
   filter: grayscale(100%);
   opacity: 0.6;
+}
+
+.bundle-card.is-hidden {
+  display: none !important;
 }
 
 .bundle-card:hover,
@@ -5486,7 +5490,44 @@ body.template-product .product__media-modal * {
   transform: translateX(-50%) translateY(0);
 }
 
-/* Summary Bar */
+/* Footer & Show More */
+.bundle-items-footer {
+  text-align: center;
+  margin: 1rem 0 2rem;
+}
+
+.bundle-show-more-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: none;
+  border: 1px solid #eee;
+  padding: 0.8rem 1.4rem;
+  border-radius: 30px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  justify-content: center;
+}
+
+.bundle-show-more-button:hover {
+  background: #f9f9f9;
+  border-color: #ddd;
+  color: #000;
+  transform: translateY(-1px);
+}
+
+.bundle-show-more-button svg {
+  transition: transform 0.3s ease;
+}
+
+.bundle-show-more-button:hover svg {
+  transform: translateY(2px);
+}
+
 .bundle-summary {
   display: flex;
   align-items: center;

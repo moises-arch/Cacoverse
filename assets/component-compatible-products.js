@@ -121,6 +121,16 @@ if (!customElements.get('compatible-products-form')) {
                 return;
             }
 
+            // Show More Action
+            const showMoreBtn = event.target.closest('[data-show-more]');
+            if (showMoreBtn) {
+                this.querySelectorAll('.bundle-card.is-hidden').forEach(card => {
+                    card.classList.remove('is-hidden');
+                });
+                showMoreBtn.closest('.bundle-items-footer')?.remove();
+                return;
+            }
+
             // Card Toggle Action
             const card = event.target.closest('.bundle-card');
             const checkbox = card?.querySelector('input[type="checkbox"]');
