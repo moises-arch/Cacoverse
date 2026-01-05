@@ -5172,7 +5172,7 @@ body.template-product .product__media-modal * {
 .product-bundle-wrapper {
   margin-top: 3rem;
   margin-bottom: 0rem;
-  padding: 0px 7px 0px 7px;
+  padding: 0px 10px 0px 10px;
 }
 
 .bundle-module__header {
@@ -5659,7 +5659,7 @@ body.template-product .product__media-modal * {
   .bundle-summary {
     flex-direction: column;
     text-align: center;
-    padding: 2.4rem;
+    padding: 0rem;
   }
 
   .bundle-summary__button {
