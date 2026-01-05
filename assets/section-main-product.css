@@ -746,21 +746,26 @@ a.product__text {
 
 @media (max-width: 749px) {
   .product-form__buttons {
-    flex-wrap: nowrap;
-    gap: 8px;
-    /* Tighter gap */
+    flex-wrap: wrap;
+    gap: 12px;
   }
 
   .product-form__buttons .product-form__quantity {
-    flex: 0 0 32%;
-    /* Smaller fixed width */
-    max-width: 110px;
+    flex: 0 0 auto;
+    width: auto;
+    max-width: fit-content;
+    margin-bottom: 0;
+  }
+
+  .product-form__buttons .product-form__quantity .quantity {
+    width: auto;
+    min-width: 80px;
   }
 
   .product-form__buttons .product-form__submit {
-    flex: 1 1 auto;
-    /* Take remaining space */
-    width: auto;
+    flex: 1 1 100%;
+    width: 100%;
+    margin-top: 0;
   }
 }
 
