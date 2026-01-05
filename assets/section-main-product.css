@@ -5206,9 +5206,28 @@ body.template-product .product__media-modal * {
 }
 
 .bundle-module__status-text {
-  font-size: 1.2rem;
-  color: #888;
-  font-weight: 400;
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bundle-module__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #0d6ba6;
+  color: #fff;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 4px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-left: 4px;
 }
 
 /* Items List */
@@ -5495,14 +5514,14 @@ body.template-product .product__media-modal * {
   z-index: 1;
 }
 
-.bundle-card__config-button:hover {
-  color: #000;
+.bundle-card__variant-container:hover .bundle-card__config-button svg {
   transform: rotate(180deg);
 }
 
 .bundle-card__config-button svg {
   color: currentColor;
   flex-shrink: 0;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Tooltip */

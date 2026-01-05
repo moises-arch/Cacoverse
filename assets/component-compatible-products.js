@@ -283,7 +283,11 @@ if (!customElements.get('compatible-products-form')) {
 
             // Update Label
             if (this.statusLabel) {
-                this.statusLabel.textContent = count > 0 ? `${count} selected` : 'Select items to bundle';
+                if (count > 0) {
+                    this.statusLabel.innerHTML = `Selected Items <span class="bundle-module__badge">${count}</span>`;
+                } else {
+                    this.statusLabel.textContent = 'Select items to bundle';
+                }
             }
 
             // Update Action Button
