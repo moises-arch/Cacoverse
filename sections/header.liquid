@@ -3265,8 +3265,23 @@ document.addEventListener('DOMContentLoaded', function() {
   var ANNOUNCEMENT_HIDE_AFTER = 120; // px que debes scrollear antes de ocultar la barra
   var ticking = false;
 
+  // Debounce and transition lock to prevent flicker
+  var resizeDebounceTimer = null;
+  var isTransitioning = false;
+
+  // Listen for transition events on announcement bar
+  var announcementBar = headerWrapper.querySelector('.caco-announcement-bar');
+  if (announcementBar) {
+    announcementBar.addEventListener('transitionstart', function() { isTransitioning = true; });
+    announcementBar.addEventListener('transitionend', function() {
+      isTransitioning = false;
+      safeRecalcHeaderHeight();
+    });
+  }
+
   function computeHeaderHeight() {
-    // Prevent layout thrashing: Do not update spacer height if header is in a hidden/collapsed state due to scroll
+    // Prevent layout thrashing: Do not update during transitions or if header is hidden
+    if (isTransitioning) return;
     if (headerWrapper.classList.contains('caco-hide-announcement') || headerWrapper.classList.contains('caco-hide-nav')) {
       return;
     }
@@ -3284,9 +3299,12 @@ document.addEventListener('DOMContentLoaded', function() {
   setTimeout(computeHeaderHeight, 300);
 }
 
-// Keep height synced when the header changes size
+// Keep height synced when the header changes size (debounced)
 if ('ResizeObserver' in window) {
-  var ro = new ResizeObserver(safeRecalcHeaderHeight);
+  var ro = new ResizeObserver(function() {
+    clearTimeout(resizeDebounceTimer);
+    resizeDebounceTimer = setTimeout(safeRecalcHeaderHeight, 100);
+  });
   ro.observe(headerWrapper);
 }
 
