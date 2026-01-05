@@ -54,31 +54,50 @@ if (!customElements.get('compatible-products-form')) {
                 const card = select.closest('.bundle-card');
                 const selectedOption = select.options[select.selectedIndex];
                 const newPrice = selectedOption.dataset.price;
+                const newComparePrice = selectedOption.dataset.comparePrice;
                 const newVariantId = select.value;
                 const newSku = selectedOption.dataset.sku;
 
-                // 1. Update card data attributes first
                 if (card) {
+                    // 1. Update card data attributes for price calculation
                     card.dataset.price = newPrice;
                     card.dataset.variantId = newVariantId;
 
-                    // 2. Update card UI
-                    const priceElement = card.querySelector('.bundle-card__price');
+                    // 2. Update visible prices
+                    const priceElement = card.querySelector('[data-item-price]');
+                    const compareElement = card.querySelector('[data-item-compare-price]');
+                    const moneyFormat = window.theme?.moneyFormat || "${{amount}}";
+
                     if (priceElement) {
-                        priceElement.textContent = Shopify.formatMoney(newPrice, window.theme?.moneyFormat || "${{amount}}");
+                        priceElement.textContent = Shopify.formatMoney(newPrice, moneyFormat);
+                        // Toggle sale class
+                        if (newComparePrice && parseInt(newComparePrice) > parseInt(newPrice)) {
+                            priceElement.classList.add('on-sale');
+                        } else {
+                            priceElement.classList.remove('on-sale');
+                        }
                     }
 
+                    if (compareElement) {
+                        if (newComparePrice && parseInt(newComparePrice) > parseInt(newPrice)) {
+                            compareElement.style.display = 'inline';
+                            compareElement.textContent = Shopify.formatMoney(newComparePrice, moneyFormat);
+                        } else {
+                            compareElement.style.display = 'none';
+                        }
+                    }
+
+                    // 3. Update SKU
                     const skuElement = card.querySelector('[data-sku-display]');
                     if (skuElement) {
                         skuElement.textContent = newSku || '';
                     }
 
-                    // 3. Sync hidden checkbox value
+                    // 4. Sync hidden checkbox value
                     const checkbox = card.querySelector('input[type="checkbox"]');
                     if (checkbox) checkbox.value = newVariantId;
                 }
             }
-            // 4. Force total recalculation
             this.updateTotal();
         }
 
@@ -90,9 +109,9 @@ if (!customElements.get('compatible-products-form')) {
             checkedBoxes.forEach(checkbox => {
                 const card = checkbox.closest('.bundle-card');
                 if (card && card.dataset.price) {
-                    const price = parseFloat(card.dataset.price);
-                    if (!isNaN(price)) {
-                        total += price;
+                    const priceInCents = parseInt(card.dataset.price);
+                    if (!isNaN(priceInCents)) {
+                        total += priceInCents;
                         count++;
                     }
                 }
