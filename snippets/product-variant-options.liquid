@@ -185,10 +185,10 @@
         and matched_variant.featured_image != blank
       -%}
         <img
-          src="{% if matched_variant and matched_variant.featured_image %}{{ matched_variant.featured_image | image_url: width: 64 }}{% else %}{{ 'no-image.png' | asset_url }}{% endif %}"
+          src="{% if matched_variant and matched_variant.featured_image %}{{ matched_variant.featured_image | image_url: width: 200 }}{% else %}{{ 'no-image.png' | asset_url }}{% endif %}"
           alt="{{ value | escape }}"
-          width="64"
-          height="64"
+          width="200"
+          height="200"
           loading="lazy"
         >
       {%- else -%}
