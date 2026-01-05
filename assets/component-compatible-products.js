@@ -121,13 +121,26 @@ if (!customElements.get('compatible-products-form')) {
                 return;
             }
 
+            // Clear All Action
+            const clearBtn = event.target.closest('[data-clear-all]');
+            if (clearBtn) {
+                this.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+                    checkbox.checked = false;
+                    const card = checkbox.closest('.bundle-card');
+                    this.updateCardState(card, false);
+                });
+                this.updateTotal();
+                this.saveToStorage();
+                return;
+            }
+
             // Show More Action
             const showMoreBtn = event.target.closest('[data-show-more]');
             if (showMoreBtn) {
                 this.querySelectorAll('.bundle-card.is-hidden').forEach(card => {
                     card.classList.remove('is-hidden');
                 });
-                showMoreBtn.closest('.bundle-items-footer')?.remove();
+                showMoreBtn.remove();
                 return;
             }
 
@@ -144,8 +157,10 @@ if (!customElements.get('compatible-products-form')) {
                 return;
             }
 
-            // If click was on the card but NOT on a control (select, checkbox label box)
-            const isControl = event.target.closest('select') || event.target.closest('.bundle-card__checkbox-label');
+            // If click was on the card but NOT on a control (select, checkbox label box, config button)
+            const isControl = event.target.closest('select') ||
+                event.target.closest('.bundle-card__checkbox-label') ||
+                event.target.closest('.bundle-card__config-button');
 
             if (card && !isControl) {
                 if (checkbox) {
@@ -237,6 +252,14 @@ if (!customElements.get('compatible-products-form')) {
             this.querySelectorAll('input[type="checkbox"]:not(:checked)').forEach(checkbox => {
                 const card = checkbox.closest('.bundle-card');
                 if (card) card.classList.remove('is-selected');
+            });
+
+            // Sync Visibility: items that are checked MUST NOT be hidden
+            this.querySelectorAll('.bundle-card.is-hidden').forEach(card => {
+                const checkbox = card.querySelector('input[type="checkbox"]');
+                if (checkbox && checkbox.checked) {
+                    card.classList.remove('is-hidden');
+                }
             });
 
             if (this.totalPriceElement) {
