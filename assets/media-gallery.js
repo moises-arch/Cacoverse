@@ -60,7 +60,11 @@ if (!customElements.get('media-gallery')) {
         autoHeight: true,
         observer: true,
         observeParents: true,
-        threshold: 5,
+        threshold: 0, // Removed threshold for instant reaction
+        touchStartPreventDefault: false, // Allow vertical scrolling
+        passiveListeners: true, // Improve scroll performance
+        resistance: true,
+        resistanceRatio: 0.85,
         pagination: {
           el: `.swiper-pagination-${this.sectionId}`,
           clickable: true,
