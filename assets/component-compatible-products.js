@@ -229,7 +229,7 @@ if (!customElements.get('compatible-products-form')) {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         items: selectedVariants,
-                        sections: 'cart-drawer,cart-icon-bubble'
+                        sections: 'cart-drawer,cart-icon-bubble,cart-icon-bubble1'
                     })
                 });
 
