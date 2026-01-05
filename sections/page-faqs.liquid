@@ -1,123 +1,103 @@
-{% style %}
-@media (max-width: 767px) {
-  /* Remove the annoying right padding from containers */
-  .page-width.container {
-    padding-left: 16px !important;
-    padding-right: 16px !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
+{%- style -%}
+  .refined-faqs-section-{{ section.id }} {
+    --padding-top-desktop: {{ section.settings.padding_top_desktop | default: '80px' }};
+    --padding-bottom-desktop: {{ section.settings.padding_bottom_desktop | default: '80px' }};
+    --padding-top-mobile: {{ section.settings.padding_top_mobile | default: '40px' }};
+    --padding-bottom-mobile: {{ section.settings.padding_bottom_mobile | default: '40px' }};
   }
+{%- endstyle -%}
 
-  /* Prevent the FAQ items from shrinking weirdly */
-  .faq-item {
-    width: 100%;
-    box-sizing: border-box;
-    padding-right: 0 !important;
-  }
+{{ 'refined-faqs.css' | asset_url | stylesheet_tag }}
 
-  /* Align the + icon flush to the right edge */
-  .faq-question {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    padding-right: 0 !important;
-  }
-
-  /* Optional: make it feel tighter and cleaner */
-  .faq-item + .faq-item {
-    border-top: 1px solid #e5e7eb;
-  }
-
-  h2.sh-48 {
-    margin-bottom: 1.5rem;
-  }
-}
-{% endstyle %}
-
-
-
-
-
-{{ 'page-faqs.css' | asset_url | stylesheet_tag }}
-{% if page.metafields.custom.faq -%}
-  <div
-    class="page-width container"
-    <div
-    class="row"
-  >
-    <div class="col-md-12">
+{% if page.metafields.custom.faq.value != blank %}
+  <div class="refined-faqs-section refined-faqs-section-{{ section.id }}">
+    <div class="refined-faqs-container">
       {% if section.settings.heading != blank %}
-        <h2 class="sh-48 mb-5 text-center">{{ section.settings.heading }}</h2>
+        <h2 class="refined-faqs-heading">{{ section.settings.heading }}</h2>
       {% endif %}
-    </div>
 
-    <div class="row">
-      <div class="col-md-12" itemscope="" itemtype="https://schema.org/FAQPage">
-        {%- for faq in page.metafields.custom.faq.value -%}
-          {% capture type %}{% cycle 'question', 'answer' %}{% endcapture %}
-
-          {% if type == 'question' %}
-           
-                <div>
-                  {{ faq }}
+      <div class="refined-faq-list">
+        {%- for faq_item in page.metafields.custom.faq.value -%}
+          {%- capture row_type -%}{%- cycle 'question', 'answer' -%}{%- endcapture -%}
+          
+          {%- if row_type == 'question' -%}
+            <div class="refined-faq-item">
+              <button type="button" class="refined-faq-question" aria-expanded="false">
+                <span class="refined-faq-question-text">{{ faq_item }}</span>
+                <span class="refined-faq-icon">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+              </button>
+          {%- else -%}
+              <div class="refined-faq-answer-wrapper">
+                <div class="refined-faq-answer">
+                  {{ faq_item }}
                 </div>
-                <!-- Plus -->
-                <svg
-                  class="plus"
-                  width="29"
-                  height="28"
-                  viewBox="0 0 29 28"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <line x1="14.5" y1="8.74226e-08" x2="14.5" y2="28" stroke="#8d9db2" stroke-width="4"/>
-                  <line x1="28.5" y1="14" x2="0.5" y2="14" stroke="#8d9db2" stroke-width="4"/>
-                </svg>
-
-                <!-- Minus -->
-                <svg
-                  class="minus"
-                  width="29"
-                  height="4"
-                  viewBox="0 0 29 4"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <line x1="28.5" y1="2" x2="0.5" y2="2" stroke="#8d9db2" stroke-width="4"/>
-                  <line x1="28.5" y1="2" x2="0.5" y2="2" stroke="#8d9db2" stroke-width="4"/>
-                </svg>
               </div>
-          {% endif %}
-          {% if type == 'answer' %}
-            <div class="faq-answer" itemscope="" itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-              <span itemprop="text">{{ faq }}</span>
             </div>
-            </div>
-          {% endif %}
+          {%- endif -%}
         {%- endfor -%}
       </div>
-    </div>
-    {% if section.settings.button_url != blank %}
-      <div class="row">
-        <div class="col-md-12 text-center mt-5">
-          <a class="s-btn" href="{{ section.settings.button_url }}"
-            ><span>{{ section.settings.button_label }}</span></a
-          >
+
+      {% if section.settings.button_url != blank %}
+        <div class="refined-faqs-button-wrapper">
+          <a class="refined-btn" href="{{ section.settings.button_url }}">
+            {{ section.settings.button_label | default: "Learn More" }}
+          </a>
         </div>
-      </div>
-    {% endif %}
+      {% endif %}
+    </div>
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const faqContainer = document.querySelector('.refined-faqs-section-{{ section.id }}');
+      if (!faqContainer) return;
+
+      faqContainer.addEventListener('click', function(e) {
+        const button = e.target.closest('.refined-faq-question');
+        if (!button) return;
+
+        const item = button.closest('.refined-faq-item');
+        const wrapper = item.querySelector('.refined-faq-answer-wrapper');
+        const isActive = item.classList.contains('active');
+
+        // Close other items (optional - currently allowing multiple open)
+        // To strictly allow one: 
+        // faqContainer.querySelectorAll('.refined-faq-item.active').forEach(otherItem => {
+        //   if (otherItem !== item) {
+        //      otherItem.classList.remove('active');
+        //      otherItem.querySelector('.refined-faq-answer-wrapper').style.maxHeight = null;
+        //      otherItem.querySelector('.refined-faq-question').setAttribute('aria-expanded', 'false');
+        //   }
+        // });
+
+        if (isActive) {
+          item.classList.remove('active');
+          button.setAttribute('aria-expanded', 'false');
+          wrapper.style.maxHeight = null;
+        } else {
+          item.classList.add('active');
+          button.setAttribute('aria-expanded', 'true');
+          wrapper.style.maxHeight = wrapper.scrollHeight + "px";
+        }
+      });
+    });
+  </script>
 {% endif %}
+
 {% schema %}
 {
   "name": "Pages FAQ",
-  "class": "page-faqs",
+  "class": "page-section-faqs",
   "settings": [
     {
       "type": "text",
       "id": "heading",
-      "label": "Heading"
+      "label": "Heading",
+      "default": "Frequently Asked Questions"
     },
     {
       "type": "text",
@@ -127,37 +107,41 @@
      {
       "type": "url",
       "id": "button_url",
-      "label": "Button link"
+      "label": "Button Link"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
     },
     {
       "type": "text",
       "id": "padding_top_desktop",
-      "label": "Padding Desktop Top",
+      "label": "Padding Top (Desktop)",
       "default": "80px"
     },
      {
       "type": "text",
       "id": "padding_bottom_desktop",
-      "label": "Padding Desktop Bottom",
+      "label": "Padding Bottom (Desktop)",
       "default": "80px"
     },
      {
       "type": "text",
       "id": "padding_top_mobile",
-      "label": "Padding Mobile Top",
+      "label": "Padding Top (Mobile)",
       "default": "40px"
     },
      {
       "type": "text",
       "id": "padding_bottom_mobile",
-      "label": "Padding Mobile Bottom",
+      "label": "Padding Bottom (Mobile)",
       "default": "40px"
-    },
+    }
   ],
   "presets": [
     {
-      "name": "Page FAQs"
+      "name": "Refined Page FIGS"
     }
- ]
+  ]
 }
 {% endschema %}

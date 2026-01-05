@@ -233,8 +233,9 @@ if (!customElements.get('compatible-products-form')) {
 
                     if (newImageUrl) {
                         const imageElement = card.querySelector('.bundle-card__image');
-                        if (imageElement) {
+                        if (imageElement && imageElement.tagName === 'IMG') {
                             imageElement.src = newImageUrl;
+                            imageElement.removeAttribute('srcset');
                         }
                     }
 
