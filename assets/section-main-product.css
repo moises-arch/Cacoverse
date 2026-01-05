@@ -5219,10 +5219,10 @@ body.template-product .product__media-modal * {
   margin-bottom: 2rem;
 }
 
-@media screen and (min-width: 990px) {
+@media screen and (min-width: 750px) {
   .bundle-items-list {
     grid-template-columns: repeat(3, 1fr);
-    gap: 0.8rem;
+    gap: 0.6rem;
   }
 }
 
@@ -5233,14 +5233,14 @@ body.template-product .product__media-modal * {
   background: #fff;
   border: 1px solid #e1e1e1;
   border-radius: 12px;
-  padding: 0.5rem 0.8rem;
+  padding: 0.3rem 0.4rem;
   transition: all 0.3s ease;
   position: relative;
   cursor: pointer;
   user-select: none;
-  height: 90px;
-  min-height: 90px;
-  max-height: 90px;
+  height: 84px;
+  min-height: 84px;
+  max-height: 84px;
   overflow: hidden;
   filter: grayscale(100%);
   opacity: 0.6;
@@ -5318,7 +5318,7 @@ body.template-product .product__media-modal * {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 1rem;
+  margin-right: 0.6rem;
   flex-shrink: 0;
   overflow: hidden;
 }
