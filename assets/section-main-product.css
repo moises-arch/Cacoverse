@@ -5355,7 +5355,7 @@ body.template-product .product__media-modal * {
 }
 
 .bundle-card__show-more-label {
-  font-size: 0.9rem;
+  font-size: 1.1rem;
   font-weight: 800;
   text-transform: none;
 }
@@ -5366,13 +5366,14 @@ body.template-product .product__media-modal * {
   flex-grow: 1;
   align-items: center;
   min-width: 0;
-  padding-left: 0.6rem;
+  padding-left: 0.2rem;
 }
 
 .bundle-card__media {
   width: 50px;
   height: 50px;
-  background: #f7f7f7;
+  background: #fff;
+  border: 1px solid #e1e1e1;
   border-radius: 6px;
   display: flex;
   align-items: center;
@@ -5420,14 +5421,14 @@ body.template-product .product__media-modal * {
   font-size: 0.82rem;
   color: #a0a0a0;
   font-weight: 400;
-  margin-top: -0.1rem;
+  margin-top: -0.2rem;
 }
 
 .bundle-card__price-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 0.2rem;
+  margin-top: 0rem;
   gap: 0.8rem;
 }
 
@@ -5477,26 +5478,25 @@ body.template-product .product__media-modal * {
 
 /* Configuration Button */
 .bundle-card__config-button {
+  position: absolute;
+  right: 0.4rem;
+  bottom: 0.65rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
-  background: #f4f6f8;
-  border: 1px solid #e1e1e1;
-  border-radius: 50%;
+  width: auto;
+  height: auto;
+  background: none;
+  border: none;
   color: #555;
   cursor: pointer;
   transition: all 0.2s ease;
   z-index: 1;
-  position: relative;
 }
 
 .bundle-card__config-button:hover {
-  background: #fff;
-  border-color: #000;
   color: #000;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transform: rotate(30deg);
 }
 
 .bundle-card__config-button svg {
@@ -5660,38 +5660,65 @@ body.template-product .product__media-modal * {
     font-size: 1rem;
   }
 }
+
 /* Final Mobile Optimizations */
 @media screen and (max-width: 749px) {
   .bundle-items-list {
     grid-template-columns: 1fr !important;
-    gap: 1.25rem !important;
+    gap: 1.1rem !important;
   }
 
   .bundle-module__header {
     flex-direction: column !important;
     align-items: flex-start !important;
-    gap: 0.5rem !important;
-    margin-bottom: 1.5rem !important;
+    gap: 0.25rem !important;
+    margin-bottom: 1.25rem !important;
   }
 
   .bundle-card {
-    padding: 1rem !important;
+    padding: 0.75rem !important;
     min-height: auto !important;
+    height: auto !important;
+    max-height: none !important;
   }
 
   .bundle-card__media {
     width: 60px !important;
     height: 60px !important;
+    background: #fff !important;
+    border: 1px solid #e1e1e1 !important;
   }
 
   .bundle-card__product-title {
     font-size: 0.95rem !important;
-    line-height: 1.4 !important;
+    line-height: 1.3 !important;
+  }
+
+  .bundle-card__sku {
+    margin-top: -0.2rem !important;
+  }
+
+  .bundle-card__price-row {
+    margin-top: 0rem !important;
+  }
+
+  .bundle-card__config-button {
+    right: 0.25rem !important;
+    bottom: 0.5rem !important;
+    width: auto !important;
+    height: auto !important;
   }
 
   .bundle-summary__button {
-    height: 56px !important;
+    height: 52px !important;
     font-size: 1rem !important;
     border-radius: 12px !important;
+  }
+}
+
+/* Additional Mobile Refinements */
+@media screen and (max-width: 749px) {
+  .bundle-card__show-more-label {
+    font-size: 1.15rem !important;
   }
 }
