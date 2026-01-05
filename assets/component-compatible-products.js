@@ -9,6 +9,7 @@ if (!customElements.get('compatible-products-form')) {
 
         connectedCallback() {
             this.totalPriceElement = this.querySelector('[data-total-price]');
+            this.selectedCountElement = this.querySelector('[data-selected-count]');
             this.statusLabel = this.querySelector('[data-count-label]');
             this.addButton = this.querySelector('.bundle-summary__button');
             this.addButtonText = this.querySelector('.bundle-summary__button-text');
@@ -140,7 +141,8 @@ if (!customElements.get('compatible-products-form')) {
                 this.querySelectorAll('.bundle-card.is-hidden').forEach(card => {
                     card.classList.remove('is-hidden');
                 });
-                showMoreBtn.remove();
+                const cardWrap = showMoreBtn.closest('[data-show-more-card]');
+                if (cardWrap) cardWrap.remove();
                 return;
             }
 
@@ -266,6 +268,10 @@ if (!customElements.get('compatible-products-form')) {
                 this.totalPriceElement.textContent = this.formatMoney(total);
             }
 
+            if (this.selectedCountElement) {
+                this.selectedCountElement.textContent = count;
+            }
+
             // Update Label
             if (this.statusLabel) {
                 this.statusLabel.textContent = count > 0 ? `${count} selected` : 'Select items to bundle';
@@ -276,13 +282,9 @@ if (!customElements.get('compatible-products-form')) {
                 if (count === 0) {
                     this.addButton.setAttribute('disabled', 'true');
                     this.addButton.classList.add('is-disabled');
-                    if (this.addButtonText) this.addButtonText.textContent = 'Add Bundle';
                 } else {
                     this.addButton.removeAttribute('disabled');
                     this.addButton.classList.remove('is-disabled');
-                    if (this.addButtonText) {
-                        this.addButtonText.textContent = count === 1 ? 'Add selection' : `Add all ${count} to Cart`;
-                    }
                 }
             }
         }

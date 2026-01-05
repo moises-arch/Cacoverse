@@ -111,31 +111,26 @@
             </div>
           {%- endif -%}
         {%- endfor -%}
+
+        {%- if visible_counter > 4 -%}
+          <div class="bundle-card bundle-card--show-more" data-show-more-card>
+            <button type="button" class="bundle-card__show-more-button" data-show-more>
+              <span class="bundle-card__show-more-content">
+                <span class="bundle-card__show-more-label">Show all</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </span>
+            </button>
+          </div>
+        {%- endif -%}
       </div>
 
       <div class="bundle-summary">
-        <div class="bundle-summary__header">
-          <div class="bundle-summary__info">
-            <span class="bundle-summary__label">Bundle Total</span>
-            <span class="bundle-summary__total" data-total-price></span>
-          </div>
-          <div class="bundle-summary__actions">
-            {%- if visible_counter > 4 -%}
-              <button type="button" class="bundle-summary__show-more" data-show-more>
-                Show all
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </button>
-            {%- endif -%}
-            <button type="button" class="bundle-summary__clear" data-clear-all>
-              Clear all
-            </button>
-          </div>
-        </div>
-        
-        <button type="button" class="bundle-summary__button button">
-          <span class="bundle-summary__button-text">Add Bundle</span>
+        <button type="button" class="bundle-summary__button button" data-bundle-submit>
+          <span class="bundle-summary__button-text">
+            Add <span data-selected-count>0</span> items to Cart — <span data-total-price></span>
+          </span>
           <div class="bundle-summary__loader hidden">
              <svg class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
                 <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
