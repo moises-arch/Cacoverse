@@ -391,6 +391,7 @@
       "block_order": [
         "junip_junip_product_review_gPCpTG"
       ],
+      "disabled": true,
       "settings": {
         "include_margins": true
       }
