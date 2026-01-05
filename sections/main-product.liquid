@@ -855,7 +855,7 @@
               -%}
               </div>
             {%- when 'compatible_products' -%}
-              {% render 'compatible-products', block: block, product: product %}
+              {%- comment -%} Rendered outside the main info container {%- endcomment -%}
             {%- when 'rating' -%}
               {%- if product.metafields.reviews.rating.value != blank -%}
                 <div class="rating-wrapper">
@@ -1061,6 +1061,14 @@
       {% endif %}
     </div>
   </div>
+
+  {%- for block in section.blocks -%}
+    {%- if block.type == 'compatible_products' -%}
+      <div class="product-bundle-wrapper page-width">
+        {% render 'compatible-products', block: block, product: product %}
+      </div>
+    {%- endif -%}
+  {%- endfor -%}
 
   {% assign popups = section.blocks | where: 'type', 'popup' %}
   {%- for block in popups -%}
