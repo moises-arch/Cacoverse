@@ -5206,7 +5206,7 @@ body.template-product .product__media-modal * {
 }
 
 .bundle-module__status-text {
-  font-size: 0.85rem;
+  font-size: 1.1rem;
   color: #666;
   font-weight: 500;
   display: flex;
@@ -5220,14 +5220,15 @@ body.template-product .product__media-modal * {
   justify-content: center;
   background: #0d6ba6;
   color: #fff;
-  min-width: 20px;
-  height: 20px;
-  padding: 0 4px;
-  border-radius: 10px;
-  font-size: 0.7rem;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 6px;
+  border-radius: 12px;
+  font-size: 0.8rem;
   font-weight: 700;
   line-height: 1;
-  margin-left: 4px;
+  margin-left: 6px;
+  box-shadow: 0 2px 4px rgba(13, 107, 166, 0.2);
 }
 
 /* Items List */
