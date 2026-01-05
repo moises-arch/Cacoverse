@@ -1,111 +1,118 @@
 {% comment %}
-  Renders a list of compatible products from a metafield.
-  Usage:
-  {% render 'compatible-products', block: block, product: product %}
+  Renders the compatible products bundle module.
+  BEM Structure: .bundle-bundle
 {% endcomment %}
 
 {%- assign compatible_products = product.metafields.custom.bundle_products.value | default: product.metafields.custom.compatible_products.value | default: product.metafields.custom.custom_compatible_products.value -%}
 
 {%- if compatible_products != blank -%}
-  <div class="compatible-products-wrapper" {{ block.shopify_attributes }}>
-    {%- if block.settings.heading != blank -%}
-      <div class="compatible-products__header-group">
-        <h3 class="compatible-products__heading">{{ block.settings.heading | escape }}</h3>
-        <span class="compatible-products__count" data-count-label>Select items to bundle</span>
-      </div>
-    {%- endif -%}
+  <section class="bundle-module" {{ block.shopify_attributes }}>
+    <div class="bundle-module__header">
+      <h3 class="bundle-module__title">{{ block.settings.heading | default: "Compatible Accessories" }}</h3>
+      <span class="bundle-module__status-text" data-count-label>Select items to bundle</span>
+    </div>
 
-    <div class="compatible-products__container">
-      <compatible-products-form>
-        <div class="compatible-products__main-layout">
-          <div class="compatible-products__list">
-            {%- assign visible_counter = 0 -%}
+    <compatible-products-form class="bundle-form">
+      <div class="bundle-items-list">
+        {%- assign visible_counter = 0 -%}
+        {%- for item in compatible_products -%}
+          {%- liquid
+            assign current_variant = item.selected_or_first_available_variant
+            unless current_variant
+              assign current_variant = item
+            endunless
+          -%}
+          
+          {%- if current_variant.available -%}
+            {%- assign visible_counter = visible_counter | plus: 1 -%}
             
-            {%- for item in compatible_products -%}
-              {%- liquid
-                assign current_variant = item.selected_or_first_available_variant
-                unless current_variant
-                  assign current_variant = item
-                endunless
-              -%}
+            <div class="bundle-card {% if visible_counter > 4 %}is-hidden{% endif %}" 
+                 data-product-id="{{ item.id }}" 
+                 data-variant-id="{{ current_variant.id }}" 
+                 data-price="{{ current_variant.price }}"
+                 {% if visible_counter > 4 %}style="display: none;"{% endif %}>
               
-              {%- if current_variant.available -%}
-                {%- assign visible_counter = visible_counter | plus: 1 -%}
-                <div class="compatible-product-card {% if visible_counter > 4 %}hidden-queue-item{% endif %}" 
-                     data-product-id="{{ item.id }}" 
-                     data-variant-id="{{ current_variant.id }}" 
-                     data-price="{{ current_variant.price }}"
-                     {% if visible_counter > 4 %}style="display: none;"{% endif %}>
-                  
-                  <input type="checkbox" 
-                         id="compatible-{{ item.id }}-{{ forloop.index }}" 
-                         name="compatible_product" 
-                         value="{{ current_variant.id }}" 
-                         {% if visible_counter <= 4 %}checked{% endif %}
-                         class="compatible-checkbox hidden">
-                  
-                  <div class="compatible-product-card__content">
-                    <div class="compatible-product-card__image-wrapper">
-                      {%- if item.featured_image != blank -%}
-                        <img src="{{ item.featured_image | image_url: width: 120 }}" 
-                             alt="{{ item.featured_image.alt | escape }}" 
-                             loading="lazy" 
-                             width="54" 
-                             height="54"
-                             class="compatible-product-card__image">
-                      {%- else -%}
-                        {{ 'product-1' | placeholder_svg_tag: 'compatible-product-card__image placeholder-svg' }}
-                      {%- endif -%}
-                    </div>
+              <div class="bundle-card__selection">
+                <input type="checkbox" 
+                       id="bundle-item-{{ item.id }}-{{ forloop.index }}" 
+                       name="compatible_product" 
+                       value="{{ current_variant.id }}" 
+                       {% if visible_counter <= 4 %}checked{% endif %}
+                       class="bundle-card__checkbox">
+                <label for="bundle-item-{{ item.id }}-{{ forloop.index }}" class="bundle-card__checkbox-label">
+                  <span class="bundle-card__checkbox-box">
+                    <svg class="icon icon-checkmark" width="10" height="8" viewBox="0 0 10 8" fill="none">
+                      <path d="M1 4L3.5 6.5L9 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                </label>
+              </div>
 
-                    <div class="compatible-product-card__info">
-                      <div class="compatible-product-card__header">
-                        <span class="compatible-product-card__title">{{ item.title }}</span>
-                        <div class="compatible-product-card__price">
-                          <span class="price-item">{{ current_variant.price | money }}</span>
-                        </div>
+              <div class="bundle-card__main">
+                <div class="bundle-card__media">
+                  {%- if item.featured_image != blank -%}
+                    <img src="{{ item.featured_image | image_url: width: 160 }}" 
+                         alt="{{ item.featured_image.alt | escape }}" 
+                         loading="lazy" 
+                         width="64" 
+                         height="64"
+                         class="bundle-card__image">
+                  {%- else -%}
+                    {{ 'product-1' | placeholder_svg_tag: 'bundle-card__image placeholder' }}
+                  {%- endif -%}
+                </div>
+
+                <div class="bundle-card__details">
+                  <div class="bundle-card__top">
+                    <h4 class="bundle-card__product-title">{{ item.title }}</h4>
+                    <span class="bundle-card__price">{{ current_variant.price | money }}</span>
+                  </div>
+
+                  <div class="bundle-card__controls">
+                    {%- if item.variants.size > 1 -%}
+                      <div class="bundle-card__variant-picker">
+                        <select class="bundle-card__select" aria-label="Select variant">
+                          {%- for variant in item.variants -%}
+                            <option value="{{ variant.id }}" 
+                                    data-price="{{ variant.price }}"
+                                    {% if variant.id == current_variant.id %}selected{% endif %}
+                                    {% unless variant.available %}disabled{% endunless %}>
+                              {{ variant.title }}
+                            </option>
+                          {%- endfor -%}
+                        </select>
+                        <svg class="icon icon-caret" width="10" height="6" viewBox="0 0 10 6">
+                          <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
                       </div>
-                      
-                      <div class="compatible-product-card__bottom-row">
-                        {%- if item.variants.size > 1 -%}
-                          <div class="compatible-product-card__variants">
-                            <select class="compatible-product-card__variant-select" data-product-id="{{ item.id }}" aria-label="Select variant">
-                              {%- for variant in item.variants -%}
-                                <option value="{{ variant.id }}" 
-                                        data-price="{{ variant.price }}"
-                                        data-sku="{{ variant.sku }}"
-                                        {% if variant.id == current_variant.id %}selected{% endif %}
-                                        {% unless variant.available %}disabled{% endunless %}>
-                                  {{ variant.title }}
-                                </option>
-                              {%- endfor -%}
-                            </select>
-                          </div>
-                        {%- endif -%}
-                        <span class="compatible-product-card__status-hint"></span>
-                      </div>
-                    </div>
+                    {%- endif -%}
                   </div>
                 </div>
-              {%- endif -%}
-            {%- endfor -%}
-          </div>
-
-          <div class="compatible-products__actions">
-            <div class="compatible-products__total-group">
-              <span class="compatible-products__total-label">Total Bundle Price:</span>
-              <span class="compatible-products__total-price" data-total-price></span>
+              </div>
             </div>
-            <button type="button" class="button button--secondary compatible-products__add-btn">
-              Add bundle
-            </button>
-          </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      <div class="bundle-summary">
+        <div class="bundle-summary__info">
+          <span class="bundle-summary__label">Bundle Total</span>
+          <span class="bundle-summary__total" data-total-price></span>
         </div>
-      </compatible-products-form>
-    </div>
-  </div>
+        <button type="button" class="bundle-summary__button button">
+          <span class="bundle-summary__button-text">Add Bundle</span>
+          <div class="bundle-summary__loader hidden">
+             <svg class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+                <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+             </svg>
+          </div>
+        </button>
+      </div>
+    </compatible-products-form>
+  </section>
 
   <script src="{{ 'component-compatible-products.js' | asset_url }}" defer="defer"></script>
 {%- endif -%}
+
 
 
