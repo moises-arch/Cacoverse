@@ -747,6 +747,20 @@ a.product__text {
 @media (max-width: 749px) {
   .product-form__buttons {
     flex-wrap: nowrap;
+    gap: 8px;
+    /* Tighter gap */
+  }
+
+  .product-form__buttons .product-form__quantity {
+    flex: 0 0 32%;
+    /* Smaller fixed width */
+    max-width: 110px;
+  }
+
+  .product-form__buttons .product-form__submit {
+    flex: 1 1 auto;
+    /* Take remaining space */
+    width: auto;
   }
 }
 
