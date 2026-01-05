@@ -57,26 +57,28 @@ if (!customElements.get('compatible-products-form')) {
                 const newVariantId = select.value;
                 const newSku = selectedOption.dataset.sku;
 
-                // Update card data attributes for price calculation
-                card.dataset.price = newPrice;
-                card.dataset.variantId = newVariantId;
+                // 1. Update card data attributes first
+                if (card) {
+                    card.dataset.price = newPrice;
+                    card.dataset.variantId = newVariantId;
 
-                // Update visible price in card
-                const priceElement = card.querySelector('.bundle-card__price');
-                if (priceElement) {
-                    priceElement.textContent = Shopify.formatMoney(newPrice, window.theme?.moneyFormat || "${{amount}}");
+                    // 2. Update card UI
+                    const priceElement = card.querySelector('.bundle-card__price');
+                    if (priceElement) {
+                        priceElement.textContent = Shopify.formatMoney(newPrice, window.theme?.moneyFormat || "${{amount}}");
+                    }
+
+                    const skuElement = card.querySelector('[data-sku-display]');
+                    if (skuElement) {
+                        skuElement.textContent = newSku || '';
+                    }
+
+                    // 3. Sync hidden checkbox value
+                    const checkbox = card.querySelector('input[type="checkbox"]');
+                    if (checkbox) checkbox.value = newVariantId;
                 }
-
-                // Update visible SKU
-                const skuElement = card.querySelector('[data-sku-display]');
-                if (skuElement) {
-                    skuElement.textContent = newSku || '';
-                }
-
-                // Sync variant ID to hidden checkbox value
-                const checkbox = card.querySelector('input[type="checkbox"]');
-                if (checkbox) checkbox.value = newVariantId;
             }
+            // 4. Force total recalculation
             this.updateTotal();
         }
 
@@ -87,18 +89,21 @@ if (!customElements.get('compatible-products-form')) {
             const checkedBoxes = this.querySelectorAll('input[type="checkbox"]:checked');
             checkedBoxes.forEach(checkbox => {
                 const card = checkbox.closest('.bundle-card');
-                if (card) {
-                    total += parseFloat(card.dataset.price);
-                    count++;
+                if (card && card.dataset.price) {
+                    const price = parseFloat(card.dataset.price);
+                    if (!isNaN(price)) {
+                        total += price;
+                        count++;
+                    }
                 }
             });
 
-            // Update Price Display
+            // Update Total Display
             if (this.totalPriceElement) {
                 this.totalPriceElement.textContent = Shopify.formatMoney(total, window.theme?.moneyFormat || "${{amount}}");
             }
 
-            // Update Count Label
+            // Update Label
             if (this.statusLabel) {
                 this.statusLabel.textContent = count > 0 ? `${count} selected` : 'Select items to bundle';
             }

@@ -5208,12 +5208,13 @@ body.template-product .product__media-modal * {
   align-items: center;
   background: #fff;
   border: 1px solid #e1e1e1;
-  border-radius: 12px;
-  padding: 1.6rem;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 8px;
+  padding: 1.2rem;
+  transition: all 0.2s ease;
   position: relative;
   cursor: pointer;
   user-select: none;
+  min-height: 90px;
 }
 
 .bundle-card:hover {
@@ -5229,10 +5230,10 @@ body.template-product .product__media-modal * {
 
 /* Selection / Checkbox */
 .bundle-card__selection {
-  margin-right: 1.6rem;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
+  position: absolute;
+  top: 0.8rem;
+  right: 0.8rem;
+  z-index: 2;
 }
 
 .bundle-card__checkbox {
@@ -5247,10 +5248,10 @@ body.template-product .product__media-modal * {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   border: 1.5px solid #dcdcdc;
-  border-radius: 4px;
+  border-radius: 3px;
   background: #fff;
   transition: all 0.2s;
   color: #fff;
@@ -5316,34 +5317,35 @@ body.template-product .product__media-modal * {
 
 .bundle-card__product-title {
   margin: 0;
-  font-size: 1rem;
-  font-weight: 500;
+  font-size: 0.95rem;
+  font-weight: 700;
   line-height: 1.2;
   color: #1a1a1a;
-  overflow: hidden;
-  text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .bundle-card__sku {
-  font-size: 0.9rem;
-  color: #999;
+  font-size: 0.82rem;
+  color: #a0a0a0;
   font-weight: 400;
   margin-top: -0.1rem;
 }
 
 .bundle-card__price {
-  font-size: 1.15rem;
+  font-size: 1.05rem;
   font-weight: 700;
   color: #000;
   white-space: nowrap;
+  margin-top: 0.1rem;
 }
 
 .bundle-card__controls {
   display: flex;
   align-items: center;
+  margin-top: 0.4rem;
 }
 
 .bundle-card__variant-picker {
@@ -5356,15 +5358,16 @@ body.template-product .product__media-modal * {
   -webkit-appearance: none;
   appearance: none;
   background: transparent;
-  border: 1px solid #eee;
+  border: 1px solid #efefef;
   border-radius: 4px;
-  padding: 0.3rem 2.2rem 0.3rem 0.6rem;
-  font-size: 0.9rem;
-  color: #666;
+  padding: 0.2rem 2rem 0.2rem 0.5rem;
+  font-size: 0.85rem;
+  color: #777;
   cursor: pointer;
   outline: none;
   transition: all 0.2s;
-  width: 100%;
+  width: auto;
+  min-width: 100px;
 }
 
 .bundle-card__select:hover {
