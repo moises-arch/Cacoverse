@@ -3,7 +3,6 @@ if (!customElements.get('compatible-products-form')) {
         constructor() {
             super();
 
-            this.checkboxes = this.querySelectorAll('input[type="checkbox"]');
             this.totalPriceElement = this.querySelector('[data-total-price]');
             this.countLabel = this.querySelector('[data-count-label]');
             this.addButton = this.querySelector('.compatible-products__add-btn');
@@ -11,20 +10,7 @@ if (!customElements.get('compatible-products-form')) {
             this.addEventListener('click', this.handleEvent.bind(this));
             this.addEventListener('change', this.handleCheckboxChange.bind(this));
 
-            this.initializeState();
             this.updateTotal();
-        }
-
-        initializeState() {
-            const cards = this.querySelectorAll('.compatible-product-card');
-            cards.forEach(card => {
-                const checkbox = card.querySelector('input[type="checkbox"]');
-                if (checkbox && checkbox.checked) {
-                    card.classList.add('is-selected');
-                } else {
-                    card.classList.remove('is-selected');
-                }
-            });
         }
 
         handleEvent(event) {
@@ -37,7 +23,7 @@ if (!customElements.get('compatible-products-form')) {
 
             // Handle Card Click (Toggle selection)
             const card = event.target.closest('.compatible-product-card');
-            if (card && !event.target.closest('select') && !event.target.closest('.compatible-checkbox-label')) {
+            if (card && !event.target.closest('select')) {
                 const checkbox = card.querySelector('input[type="checkbox"]');
                 if (checkbox) {
                     checkbox.checked = !checkbox.checked;
@@ -56,13 +42,6 @@ if (!customElements.get('compatible-products-form')) {
         }
 
         handleCheckboxChange(event) {
-            if (event.target.classList.contains('compatible-checkbox')) {
-                const card = event.target.closest('.compatible-product-card');
-                this.updateCardState(card, event.target.checked);
-                this.updateTotal();
-                return;
-            }
-
             if (event.target.tagName === 'SELECT') {
                 const select = event.target;
                 const card = select.closest('.compatible-product-card');
@@ -77,9 +56,9 @@ if (!customElements.get('compatible-products-form')) {
                 // Update UI text (Price)
                 const priceElement = card.querySelector('.price-item');
                 if (priceElement) {
-                   const currencySymbol = window.Shopify ? (window.Shopify.currency.active === 'USD' ? '$' : '') : '$';
-                   const formattedPrice = (parseFloat(newPrice) / 100).toFixed(2);
-                   priceElement.textContent = `${currencySymbol}${formattedPrice}`;
+                    const currencySymbol = window.Shopify ? (window.Shopify.currency.active === 'USD' ? '$' : '') : '$';
+                    const formattedPrice = (parseFloat(newPrice) / 100).toFixed(2);
+                    priceElement.textContent = `${currencySymbol}${formattedPrice}`;
                 }
 
                 // Update Checkbox value
@@ -106,24 +85,24 @@ if (!customElements.get('compatible-products-form')) {
                 }
             });
 
-            // Format total price (assuming cents)
-            const formattedTotal = (total / 100).toFixed(2);
+            // Format total price
+            const formattedTotal = (total / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             if (this.totalPriceElement) {
                 this.totalPriceElement.textContent = `${currencySymbol}${formattedTotal}`;
             }
 
             // Update Label
             if (this.countLabel) {
-                this.countLabel.textContent = count > 0 ? `${count} item${count !== 1 ? 's' : ''} selected` : 'Select items to bundle';
+                this.countLabel.textContent = count > 0 ? `${count} selected` : 'Select items';
             }
 
             if (this.addButton) {
                 if (count === 0) {
                     this.addButton.setAttribute('disabled', 'true');
-                    this.addButton.textContent = 'Select items';
+                    this.addButton.textContent = 'Add Bundle';
                 } else {
                     this.addButton.removeAttribute('disabled');
-                    this.addButton.textContent = count === 1 ? 'Add to Cart' : `Add all ${count} to Cart`;
+                    this.addButton.textContent = count === 1 ? 'Add selection' : `Add all ${count} to Cart`;
                 }
             }
         }
@@ -204,4 +183,5 @@ if (!customElements.get('compatible-products-form')) {
         }
     });
 }
+
 

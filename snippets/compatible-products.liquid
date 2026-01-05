@@ -37,30 +37,21 @@
                      data-price="{{ current_variant.price }}"
                      {% if visible_counter > 4 %}style="display: none;"{% endif %}>
                   
-                  <div class="compatible-product-card__checkbox-container">
-                    <input type="checkbox" 
-                           id="compatible-{{ item.id }}-{{ forloop.index }}" 
-                           name="compatible_product" 
-                           value="{{ current_variant.id }}" 
-                           {% if visible_counter <= 4 %}checked{% endif %}
-                           class="compatible-checkbox">
-                    <label for="compatible-{{ item.id }}-{{ forloop.index }}" class="compatible-checkbox-label" aria-label="Select {{ item.title }}">
-                      <span class="compatible-checkbox-tick">
-                        <svg viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M1 4L3.5 6.5L9 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                      </span>
-                    </label>
-                  </div>
+                  <input type="checkbox" 
+                         id="compatible-{{ item.id }}-{{ forloop.index }}" 
+                         name="compatible_product" 
+                         value="{{ current_variant.id }}" 
+                         {% if visible_counter <= 4 %}checked{% endif %}
+                         class="compatible-checkbox hidden">
                   
                   <div class="compatible-product-card__content">
                     <div class="compatible-product-card__image-wrapper">
                       {%- if item.featured_image != blank -%}
-                        <img src="{{ item.featured_image | image_url: width: 240 }}" 
+                        <img src="{{ item.featured_image | image_url: width: 120 }}" 
                              alt="{{ item.featured_image.alt | escape }}" 
                              loading="lazy" 
-                             width="110" 
-                             height="110"
+                             width="54" 
+                             height="54"
                              class="compatible-product-card__image">
                       {%- else -%}
                         {{ 'product-1' | placeholder_svg_tag: 'compatible-product-card__image placeholder-svg' }}
@@ -75,21 +66,24 @@
                         </div>
                       </div>
                       
-                      {%- if item.variants.size > 1 -%}
-                        <div class="compatible-product-card__variants">
-                          <select class="compatible-product-card__variant-select" data-product-id="{{ item.id }}" aria-label="Select variant">
-                            {%- for variant in item.variants -%}
-                              <option value="{{ variant.id }}" 
-                                      data-price="{{ variant.price }}"
-                                      data-sku="{{ variant.sku }}"
-                                      {% if variant.id == current_variant.id %}selected{% endif %}
-                                      {% unless variant.available %}disabled{% endunless %}>
-                                {{ variant.title }}
-                              </option>
-                            {%- endfor -%}
-                          </select>
-                        </div>
-                      {%- endif -%}
+                      <div class="compatible-product-card__bottom-row">
+                        {%- if item.variants.size > 1 -%}
+                          <div class="compatible-product-card__variants">
+                            <select class="compatible-product-card__variant-select" data-product-id="{{ item.id }}" aria-label="Select variant">
+                              {%- for variant in item.variants -%}
+                                <option value="{{ variant.id }}" 
+                                        data-price="{{ variant.price }}"
+                                        data-sku="{{ variant.sku }}"
+                                        {% if variant.id == current_variant.id %}selected{% endif %}
+                                        {% unless variant.available %}disabled{% endunless %}>
+                                  {{ variant.title }}
+                                </option>
+                              {%- endfor -%}
+                            </select>
+                          </div>
+                        {%- endif -%}
+                        <span class="compatible-product-card__status-hint"></span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -103,7 +97,7 @@
               <span class="compatible-products__total-price" data-total-price></span>
             </div>
             <button type="button" class="button button--secondary compatible-products__add-btn">
-              Add all to Cart
+              Add bundle
             </button>
           </div>
         </div>
@@ -113,4 +107,5 @@
 
   <script src="{{ 'component-compatible-products.js' | asset_url }}" defer="defer"></script>
 {%- endif -%}
+
 
