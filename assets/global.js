@@ -7,66 +7,72 @@ function getFocusableElements(container) {
   );
 }
 
-class SectionId {
-  static #separator = '__';
+if (typeof SectionId === 'undefined') {
+  class SectionId {
+    static #separator = '__';
 
-  // for a qualified section id (e.g. 'template--22224696705326__main'), return just the section id (e.g. 'template--22224696705326')
-  static parseId(qualifiedSectionId) {
-    return qualifiedSectionId.split(SectionId.#separator)[0];
-  }
+    // for a qualified section id (e.g. 'template--22224696705326__main'), return just the section id (e.g. 'template--22224696705326')
+    static parseId(qualifiedSectionId) {
+      return qualifiedSectionId.split(SectionId.#separator)[0];
+    }
 
-  // for a qualified section id (e.g. 'template--22224696705326__main'), return just the section name (e.g. 'main')
-  static parseSectionName(qualifiedSectionId) {
-    return qualifiedSectionId.split(SectionId.#separator)[1];
-  }
+    // for a qualified section id (e.g. 'template--22224696705326__main'), return just the section name (e.g. 'main')
+    static parseSectionName(qualifiedSectionId) {
+      return qualifiedSectionId.split(SectionId.#separator)[1];
+    }
 
-  // for a section id (e.g. 'template--22224696705326') and a section name (e.g. 'recommended-products'), return a qualified section id (e.g. 'template--22224696705326__recommended-products')
-  static getIdForSection(sectionId, sectionName) {
-    return `${sectionId}${SectionId.#separator}${sectionName}`;
+    // for a section id (e.g. 'template--22224696705326') and a section name (e.g. 'recommended-products'), return a qualified section id (e.g. 'template--22224696705326__recommended-products')
+    static getIdForSection(sectionId, sectionName) {
+      return `${sectionId}${SectionId.#separator}${sectionName}`;
+    }
   }
+  window.SectionId = SectionId;
 }
 
-class HTMLUpdateUtility {
-  /**
-   * Used to swap an HTML node with a new node.
-   * The new node is inserted as a previous sibling to the old node, the old node is hidden, and then the old node is removed.
-   *
-   * The function currently uses a double buffer approach, but this should be replaced by a view transition once it is more widely supported https://developer.mozilla.org/en-US/docs/Web/API/View_Transitions_API
-   */
-  static viewTransition(oldNode, newContent, preProcessCallbacks = [], postProcessCallbacks = []) {
-    preProcessCallbacks?.forEach((callback) => callback(newContent));
+if (typeof HTMLUpdateUtility === 'undefined') {
+  class HTMLUpdateUtility {
+    /**
+     * Used to swap an HTML node with a new node.
+     * The new node is inserted as a previous sibling to the old node, the old node is hidden, and then the old node is removed.
+     *
+     * The function currently uses a double buffer approach, but this should be replaced by a view transition once it is more widely supported https://developer.mozilla.org/en-US/docs/Web/API/View_Transitions_API
+     */
+    static viewTransition(oldNode, newContent, preProcessCallbacks = [], postProcessCallbacks = []) {
+      preProcessCallbacks?.forEach((callback) => callback(newContent));
 
-    const newNodeWrapper = document.createElement('div');
-    HTMLUpdateUtility.setInnerHTML(newNodeWrapper, newContent.outerHTML);
-    const newNode = newNodeWrapper.firstChild;
+      const newNodeWrapper = document.createElement('div');
+      HTMLUpdateUtility.setInnerHTML(newNodeWrapper, newContent.outerHTML);
+      const newNode = newNodeWrapper.firstChild;
 
-    // dedupe IDs
-    const uniqueKey = Date.now();
-    oldNode.querySelectorAll('[id], [form]').forEach((element) => {
-      element.id && (element.id = `${element.id}-${uniqueKey}`);
-      element.form && element.setAttribute('form', `${element.form.getAttribute('id')}-${uniqueKey}`);
-    });
-
-    oldNode.parentNode.insertBefore(newNode, oldNode);
-    oldNode.style.display = 'none';
-
-    postProcessCallbacks?.forEach((callback) => callback(newNode));
-
-    setTimeout(() => oldNode.remove(), 500);
-  }
-
-  // Sets inner HTML and reinjects the script tags to allow execution. By default, scripts are disabled when using element.innerHTML.
-  static setInnerHTML(element, html) {
-    element.innerHTML = html;
-    element.querySelectorAll('script').forEach((oldScriptTag) => {
-      const newScriptTag = document.createElement('script');
-      Array.from(oldScriptTag.attributes).forEach((attribute) => {
-        newScriptTag.setAttribute(attribute.name, attribute.value);
+      // dedupe IDs
+      const uniqueKey = Date.now();
+      oldNode.querySelectorAll('[id], [form]').forEach((element) => {
+        element.id && (element.id = `${element.id}-${uniqueKey}`);
+        element.form && element.setAttribute('form', `${element.form.getAttribute('id')}-${uniqueKey}`);
       });
-      newScriptTag.appendChild(document.createTextNode(oldScriptTag.innerHTML));
-      oldScriptTag.parentNode.replaceChild(newScriptTag, oldScriptTag);
-    });
+
+      oldNode.parentNode.insertBefore(newNode, oldNode);
+      oldNode.style.display = 'none';
+
+      postProcessCallbacks?.forEach((callback) => callback(newNode));
+
+      setTimeout(() => oldNode.remove(), 500);
+    }
+
+    // Sets inner HTML and reinjects the script tags to allow execution. By default, scripts are disabled when using element.innerHTML.
+    static setInnerHTML(element, html) {
+      element.innerHTML = html;
+      element.querySelectorAll('script').forEach((oldScriptTag) => {
+        const newScriptTag = document.createElement('script');
+        Array.from(oldScriptTag.attributes).forEach((attribute) => {
+          newScriptTag.setAttribute(attribute.name, attribute.value);
+        });
+        newScriptTag.appendChild(document.createTextNode(oldScriptTag.innerHTML));
+        oldScriptTag.parentNode.replaceChild(newScriptTag, oldScriptTag);
+      });
+    }
   }
+  window.HTMLUpdateUtility = HTMLUpdateUtility;
 }
 
 document.querySelectorAll('[id^="Details-"] summary').forEach((summary) => {
@@ -215,70 +221,72 @@ function onKeyUpEscape(event) {
   summaryElement.focus();
 }
 
-class QuantityInput extends HTMLElement {
-  constructor() {
-    super();
-    this.input = this.querySelector('input');
-    this.changeEvent = new Event('change', { bubbles: true });
-    this.input.addEventListener('change', this.onInputChange.bind(this));
-    this.querySelectorAll('button').forEach((button) =>
-      button.addEventListener('click', this.onButtonClick.bind(this))
-    );
-  }
-
-  quantityUpdateUnsubscriber = undefined;
-
-  connectedCallback() {
-    this.validateQtyRules();
-    this.quantityUpdateUnsubscriber = subscribe(PUB_SUB_EVENTS.quantityUpdate, this.validateQtyRules.bind(this));
-  }
-
-  disconnectedCallback() {
-    if (this.quantityUpdateUnsubscriber) {
-      this.quantityUpdateUnsubscriber();
+if (!customElements.get('quantity-input')) {
+  class QuantityInput extends HTMLElement {
+    constructor() {
+      super();
+      this.input = this.querySelector('input');
+      this.changeEvent = new Event('change', { bubbles: true });
+      this.input.addEventListener('change', this.onInputChange.bind(this));
+      this.querySelectorAll('button').forEach((button) =>
+        button.addEventListener('click', this.onButtonClick.bind(this))
+      );
     }
-  }
 
-  onInputChange(event) {
-    this.validateQtyRules();
-  }
+    quantityUpdateUnsubscriber = undefined;
 
-  onButtonClick(event) {
-    event.preventDefault();
-    const previousValue = this.input.value;
+    connectedCallback() {
+      this.validateQtyRules();
+      this.quantityUpdateUnsubscriber = subscribe(PUB_SUB_EVENTS.quantityUpdate, this.validateQtyRules.bind(this));
+    }
 
-    if (event.target.name === 'plus') {
-      if (parseInt(this.input.dataset.min) > parseInt(this.input.step) && this.input.value == 0) {
-        this.input.value = this.input.dataset.min;
-      } else {
-        this.input.stepUp();
+    disconnectedCallback() {
+      if (this.quantityUpdateUnsubscriber) {
+        this.quantityUpdateUnsubscriber();
       }
-    } else {
-      this.input.stepDown();
     }
 
-    if (previousValue !== this.input.value) this.input.dispatchEvent(this.changeEvent);
+    onInputChange(event) {
+      this.validateQtyRules();
+    }
 
-    if (this.input.dataset.min === previousValue && event.target.name === 'minus') {
-      this.input.value = parseInt(this.input.min);
+    onButtonClick(event) {
+      event.preventDefault();
+      const previousValue = this.input.value;
+
+      if (event.target.name === 'plus') {
+        if (parseInt(this.input.dataset.min) > parseInt(this.input.step) && this.input.value == 0) {
+          this.input.value = this.input.dataset.min;
+        } else {
+          this.input.stepUp();
+        }
+      } else {
+        this.input.stepDown();
+      }
+
+      if (previousValue !== this.input.value) this.input.dispatchEvent(this.changeEvent);
+
+      if (this.input.dataset.min === previousValue && event.target.name === 'minus') {
+        this.input.value = parseInt(this.input.min);
+      }
+    }
+
+    validateQtyRules() {
+      const value = parseInt(this.input.value);
+      if (this.input.min) {
+        const buttonMinus = this.querySelector(".quantity__button[name='minus']");
+        buttonMinus.classList.toggle('disabled', parseInt(value) <= parseInt(this.input.min));
+      }
+      if (this.input.max) {
+        const max = parseInt(this.input.max);
+        const buttonPlus = this.querySelector(".quantity__button[name='plus']");
+        buttonPlus.classList.toggle('disabled', value >= max);
+      }
     }
   }
 
-  validateQtyRules() {
-    const value = parseInt(this.input.value);
-    if (this.input.min) {
-      const buttonMinus = this.querySelector(".quantity__button[name='minus']");
-      buttonMinus.classList.toggle('disabled', parseInt(value) <= parseInt(this.input.min));
-    }
-    if (this.input.max) {
-      const max = parseInt(this.input.max);
-      const buttonPlus = this.querySelector(".quantity__button[name='plus']");
-      buttonPlus.classList.toggle('disabled', value >= max);
-    }
-  }
+  customElements.define('quantity-input', QuantityInput);
 }
-
-customElements.define('quantity-input', QuantityInput);
 
 function debounce(fn, wait) {
   let t;
@@ -419,230 +427,236 @@ Shopify.CountryProvinceSelector.prototype = {
   },
 };
 
-class MenuDrawer extends HTMLElement {
-  constructor() {
-    super();
+if (!customElements.get('menu-drawer')) {
+  class MenuDrawer extends HTMLElement {
+    constructor() {
+      super();
 
-    this.mainDetailsToggle = this.querySelector('details');
+      this.mainDetailsToggle = this.querySelector('details');
 
-    this.addEventListener('keyup', this.onKeyUp.bind(this));
-    this.addEventListener('focusout', this.onFocusOut.bind(this));
-    this.bindEvents();
-  }
-
-  bindEvents() {
-    this.querySelectorAll('summary').forEach((summary) =>
-      summary.addEventListener('click', this.onSummaryClick.bind(this))
-    );
-    this.querySelectorAll(
-      'button:not(.localization-selector):not(.country-selector__close-button):not(.country-filter__reset-button)'
-    ).forEach((button) => button.addEventListener('click', this.onCloseButtonClick.bind(this)));
-  }
-
-  onKeyUp(event) {
-    if (event.code.toUpperCase() !== 'ESCAPE') return;
-
-    const openDetailsElement = event.target.closest('details[open]');
-    if (!openDetailsElement) return;
-
-    openDetailsElement === this.mainDetailsToggle
-      ? this.closeMenuDrawer(event, this.mainDetailsToggle.querySelector('summary'))
-      : this.closeSubmenu(openDetailsElement);
-  }
-
-  onSummaryClick(event) {
-    const summaryElement = event.currentTarget;
-    const detailsElement = summaryElement.parentNode;
-    const parentMenuElement = detailsElement.closest('.has-submenu');
-    const isOpen = detailsElement.hasAttribute('open');
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-
-    function addTrapFocus() {
-      trapFocus(summaryElement.nextElementSibling, detailsElement.querySelector('button'));
-      summaryElement.nextElementSibling.removeEventListener('transitionend', addTrapFocus);
+      this.addEventListener('keyup', this.onKeyUp.bind(this));
+      this.addEventListener('focusout', this.onFocusOut.bind(this));
+      this.bindEvents();
     }
 
-    if (detailsElement === this.mainDetailsToggle) {
-      if (isOpen) event.preventDefault();
-      isOpen ? this.closeMenuDrawer(event, summaryElement) : this.openMenuDrawer(summaryElement);
-
-      if (window.matchMedia('(max-width: 990px)')) {
-        document.documentElement.style.setProperty('--viewport-height', `${window.innerHeight}px`);
-      }
-    } else {
-      setTimeout(() => {
-        detailsElement.classList.add('menu-opening');
-        summaryElement.setAttribute('aria-expanded', true);
-        parentMenuElement && parentMenuElement.classList.add('submenu-open');
-        !reducedMotion || reducedMotion.matches
-          ? addTrapFocus()
-          : summaryElement.nextElementSibling.addEventListener('transitionend', addTrapFocus);
-      }, 100);
+    bindEvents() {
+      this.querySelectorAll('summary').forEach((summary) =>
+        summary.addEventListener('click', this.onSummaryClick.bind(this))
+      );
+      this.querySelectorAll(
+        'button:not(.localization-selector):not(.country-selector__close-button):not(.country-filter__reset-button)'
+      ).forEach((button) => button.addEventListener('click', this.onCloseButtonClick.bind(this)));
     }
-  }
 
-  openMenuDrawer(summaryElement) {
-    setTimeout(() => {
-      this.mainDetailsToggle.classList.add('menu-opening');
-    });
-    summaryElement.setAttribute('aria-expanded', true);
-    trapFocus(this.mainDetailsToggle, summaryElement);
-    document.body.classList.add(`overflow-hidden-${this.dataset.breakpoint}`);
-  }
+    onKeyUp(event) {
+      if (event.code.toUpperCase() !== 'ESCAPE') return;
 
-  closeMenuDrawer(event, elementToFocus = false) {
-    if (event === undefined) return;
+      const openDetailsElement = event.target.closest('details[open]');
+      if (!openDetailsElement) return;
 
-    this.mainDetailsToggle.classList.remove('menu-opening');
-    this.mainDetailsToggle.querySelectorAll('details').forEach((details) => {
-      details.removeAttribute('open');
-      details.classList.remove('menu-opening');
-    });
-    this.mainDetailsToggle.querySelectorAll('.submenu-open').forEach((submenu) => {
-      submenu.classList.remove('submenu-open');
-    });
-    document.body.classList.remove(`overflow-hidden-${this.dataset.breakpoint}`);
-    removeTrapFocus(elementToFocus);
-    this.closeAnimation(this.mainDetailsToggle);
+      openDetailsElement === this.mainDetailsToggle
+        ? this.closeMenuDrawer(event, this.mainDetailsToggle.querySelector('summary'))
+        : this.closeSubmenu(openDetailsElement);
+    }
 
-    if (event instanceof KeyboardEvent) elementToFocus?.setAttribute('aria-expanded', false);
-  }
+    onSummaryClick(event) {
+      const summaryElement = event.currentTarget;
+      const detailsElement = summaryElement.parentNode;
+      const parentMenuElement = detailsElement.closest('.has-submenu');
+      const isOpen = detailsElement.hasAttribute('open');
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-  onFocusOut() {
-    setTimeout(() => {
-      if (this.mainDetailsToggle.hasAttribute('open') && !this.mainDetailsToggle.contains(document.activeElement))
-        this.closeMenuDrawer();
-    });
-  }
-
-  onCloseButtonClick(event) {
-    const detailsElement = event.currentTarget.closest('details');
-    this.closeSubmenu(detailsElement);
-  }
-
-  closeSubmenu(detailsElement) {
-    const parentMenuElement = detailsElement.closest('.submenu-open');
-    parentMenuElement && parentMenuElement.classList.remove('submenu-open');
-    detailsElement.classList.remove('menu-opening');
-    detailsElement.querySelector('summary').setAttribute('aria-expanded', false);
-    removeTrapFocus(detailsElement.querySelector('summary'));
-    this.closeAnimation(detailsElement);
-  }
-
-  closeAnimation(detailsElement) {
-    let animationStart;
-
-    const handleAnimation = (time) => {
-      if (animationStart === undefined) {
-        animationStart = time;
+      function addTrapFocus() {
+        trapFocus(summaryElement.nextElementSibling, detailsElement.querySelector('button'));
+        summaryElement.nextElementSibling.removeEventListener('transitionend', addTrapFocus);
       }
 
-      const elapsedTime = time - animationStart;
+      if (detailsElement === this.mainDetailsToggle) {
+        if (isOpen) event.preventDefault();
+        isOpen ? this.closeMenuDrawer(event, summaryElement) : this.openMenuDrawer(summaryElement);
 
-      if (elapsedTime < 400) {
-        window.requestAnimationFrame(handleAnimation);
-      } else {
-        detailsElement.removeAttribute('open');
-        if (detailsElement.closest('details[open]')) {
-          trapFocus(detailsElement.closest('details[open]'), detailsElement.querySelector('summary'));
+        if (window.matchMedia('(max-width: 990px)')) {
+          document.documentElement.style.setProperty('--viewport-height', `${window.innerHeight}px`);
         }
+      } else {
+        setTimeout(() => {
+          detailsElement.classList.add('menu-opening');
+          summaryElement.setAttribute('aria-expanded', true);
+          parentMenuElement && parentMenuElement.classList.add('submenu-open');
+          !reducedMotion || reducedMotion.matches
+            ? addTrapFocus()
+            : summaryElement.nextElementSibling.addEventListener('transitionend', addTrapFocus);
+        }, 100);
       }
-    };
+    }
 
-    window.requestAnimationFrame(handleAnimation);
+    openMenuDrawer(summaryElement) {
+      setTimeout(() => {
+        this.mainDetailsToggle.classList.add('menu-opening');
+      });
+      summaryElement.setAttribute('aria-expanded', true);
+      trapFocus(this.mainDetailsToggle, summaryElement);
+      document.body.classList.add(`overflow-hidden-${this.dataset.breakpoint}`);
+    }
+
+    closeMenuDrawer(event, elementToFocus = false) {
+      if (event === undefined) return;
+
+      this.mainDetailsToggle.classList.remove('menu-opening');
+      this.mainDetailsToggle.querySelectorAll('details').forEach((details) => {
+        details.removeAttribute('open');
+        details.classList.remove('menu-opening');
+      });
+      this.mainDetailsToggle.querySelectorAll('.submenu-open').forEach((submenu) => {
+        submenu.classList.remove('submenu-open');
+      });
+      document.body.classList.remove(`overflow-hidden-${this.dataset.breakpoint}`);
+      removeTrapFocus(elementToFocus);
+      this.closeAnimation(this.mainDetailsToggle);
+
+      if (event instanceof KeyboardEvent) elementToFocus?.setAttribute('aria-expanded', false);
+    }
+
+    onFocusOut() {
+      setTimeout(() => {
+        if (this.mainDetailsToggle.hasAttribute('open') && !this.mainDetailsToggle.contains(document.activeElement))
+          this.closeMenuDrawer();
+      });
+    }
+
+    onCloseButtonClick(event) {
+      const detailsElement = event.currentTarget.closest('details');
+      this.closeSubmenu(detailsElement);
+    }
+
+    closeSubmenu(detailsElement) {
+      const parentMenuElement = detailsElement.closest('.submenu-open');
+      parentMenuElement && parentMenuElement.classList.remove('submenu-open');
+      detailsElement.classList.remove('menu-opening');
+      detailsElement.querySelector('summary').setAttribute('aria-expanded', false);
+      removeTrapFocus(detailsElement.querySelector('summary'));
+      this.closeAnimation(detailsElement);
+    }
+
+    closeAnimation(detailsElement) {
+      let animationStart;
+
+      const handleAnimation = (time) => {
+        if (animationStart === undefined) {
+          animationStart = time;
+        }
+
+        const elapsedTime = time - animationStart;
+
+        if (elapsedTime < 400) {
+          window.requestAnimationFrame(handleAnimation);
+        } else {
+          detailsElement.removeAttribute('open');
+          if (detailsElement.closest('details[open]')) {
+            trapFocus(detailsElement.closest('details[open]'), detailsElement.querySelector('summary'));
+          }
+        }
+      };
+
+      window.requestAnimationFrame(handleAnimation);
+    }
   }
+
+  customElements.define('menu-drawer', MenuDrawer);
 }
 
-customElements.define('menu-drawer', MenuDrawer);
+if (!customElements.get('header-drawer')) {
+  class HeaderDrawer extends MenuDrawer {
+    constructor() {
+      super();
+    }
 
-class HeaderDrawer extends MenuDrawer {
-  constructor() {
-    super();
-  }
-
-  openMenuDrawer(summaryElement) {
-    this.header = this.header || document.querySelector('.section-header');
-    this.borderOffset =
-      this.borderOffset || this.closest('.header-wrapper').classList.contains('header-wrapper--border-bottom') ? 1 : 0;
-    document.documentElement.style.setProperty(
-      '--header-bottom-position',
-      `${parseInt(this.header.getBoundingClientRect().bottom - this.borderOffset)}px`
-    );
-    this.header.classList.add('menu-open');
-
-    setTimeout(() => {
-      this.mainDetailsToggle.classList.add('menu-opening');
-    });
-
-    summaryElement.setAttribute('aria-expanded', true);
-    window.addEventListener('resize', this.onResize);
-    trapFocus(this.mainDetailsToggle, summaryElement);
-    document.body.classList.add(`overflow-hidden-${this.dataset.breakpoint}`);
-  }
-
-  closeMenuDrawer(event, elementToFocus) {
-    if (!elementToFocus) return;
-    super.closeMenuDrawer(event, elementToFocus);
-    this.header.classList.remove('menu-open');
-    window.removeEventListener('resize', this.onResize);
-  }
-
-  onResize = () => {
-    this.header &&
+    openMenuDrawer(summaryElement) {
+      this.header = this.header || document.querySelector('.section-header');
+      this.borderOffset =
+        this.borderOffset || this.closest('.header-wrapper').classList.contains('header-wrapper--border-bottom') ? 1 : 0;
       document.documentElement.style.setProperty(
         '--header-bottom-position',
         `${parseInt(this.header.getBoundingClientRect().bottom - this.borderOffset)}px`
       );
-    document.documentElement.style.setProperty('--viewport-height', `${window.innerHeight}px`);
-  };
+      this.header.classList.add('menu-open');
+
+      setTimeout(() => {
+        this.mainDetailsToggle.classList.add('menu-opening');
+      });
+
+      summaryElement.setAttribute('aria-expanded', true);
+      window.addEventListener('resize', this.onResize);
+      trapFocus(this.mainDetailsToggle, summaryElement);
+      document.body.classList.add(`overflow-hidden-${this.dataset.breakpoint}`);
+    }
+
+    closeMenuDrawer(event, elementToFocus) {
+      if (!elementToFocus) return;
+      super.closeMenuDrawer(event, elementToFocus);
+      this.header.classList.remove('menu-open');
+      window.removeEventListener('resize', this.onResize);
+    }
+
+    onResize = () => {
+      this.header &&
+        document.documentElement.style.setProperty(
+          '--header-bottom-position',
+          `${parseInt(this.header.getBoundingClientRect().bottom - this.borderOffset)}px`
+        );
+      document.documentElement.style.setProperty('--viewport-height', `${window.innerHeight}px`);
+    };
+  }
+
+  customElements.define('header-drawer', HeaderDrawer);
 }
 
-customElements.define('header-drawer', HeaderDrawer);
+if (!customElements.get('modal-dialog')) {
+  class ModalDialog extends HTMLElement {
+    constructor() {
+      super();
+      this.querySelector('[id^="ModalClose-"]').addEventListener('click', this.hide.bind(this, false));
+      this.addEventListener('keyup', (event) => {
+        if (event.code.toUpperCase() === 'ESCAPE') this.hide();
+      });
+      if (this.classList.contains('media-modal')) {
+        this.addEventListener('pointerup', (event) => {
+          if (event.pointerType === 'mouse' && !event.target.closest('deferred-media, product-model')) this.hide();
+        });
+      } else {
+        this.addEventListener('click', (event) => {
+          if (event.target === this) this.hide();
+        });
+      }
+    }
 
-class ModalDialog extends HTMLElement {
-  constructor() {
-    super();
-    this.querySelector('[id^="ModalClose-"]').addEventListener('click', this.hide.bind(this, false));
-    this.addEventListener('keyup', (event) => {
-      if (event.code.toUpperCase() === 'ESCAPE') this.hide();
-    });
-    if (this.classList.contains('media-modal')) {
-      this.addEventListener('pointerup', (event) => {
-        if (event.pointerType === 'mouse' && !event.target.closest('deferred-media, product-model')) this.hide();
-      });
-    } else {
-      this.addEventListener('click', (event) => {
-        if (event.target === this) this.hide();
-      });
+    connectedCallback() {
+      if (this.moved) return;
+      this.moved = true;
+      this.dataset.section = this.closest('.shopify-section').id.replace('shopify-section-', '');
+      document.body.appendChild(this);
+    }
+
+    show(opener) {
+      this.openedBy = opener;
+      const popup = this.querySelector('.template-popup');
+      document.body.classList.add('overflow-hidden');
+      this.setAttribute('open', '');
+      if (popup) popup.loadContent();
+      trapFocus(this, this.querySelector('[role="dialog"]'));
+      window.pauseAllMedia();
+    }
+
+    hide() {
+      document.body.classList.remove('overflow-hidden');
+      document.body.dispatchEvent(new CustomEvent('modalClosed'));
+      this.removeAttribute('open');
+      removeTrapFocus(this.openedBy);
+      window.pauseAllMedia();
     }
   }
-
-  connectedCallback() {
-    if (this.moved) return;
-    this.moved = true;
-    this.dataset.section = this.closest('.shopify-section').id.replace('shopify-section-', '');
-    document.body.appendChild(this);
-  }
-
-  show(opener) {
-    this.openedBy = opener;
-    const popup = this.querySelector('.template-popup');
-    document.body.classList.add('overflow-hidden');
-    this.setAttribute('open', '');
-    if (popup) popup.loadContent();
-    trapFocus(this, this.querySelector('[role="dialog"]'));
-    window.pauseAllMedia();
-  }
-
-  hide() {
-    document.body.classList.remove('overflow-hidden');
-    document.body.dispatchEvent(new CustomEvent('modalClosed'));
-    this.removeAttribute('open');
-    removeTrapFocus(this.openedBy);
-    window.pauseAllMedia();
-  }
+  customElements.define('modal-dialog', ModalDialog);
 }
-customElements.define('modal-dialog', ModalDialog);
 
 class BulkModal extends HTMLElement {
   constructor() {
@@ -1044,7 +1058,7 @@ class SlideshowComponent extends SliderComponent {
     const slideScrollPosition =
       this.slider.scrollLeft +
       this.sliderFirstItemNode.clientWidth *
-        (this.sliderControlLinksArray.indexOf(event.currentTarget) + 1 - this.currentPage);
+      (this.sliderControlLinksArray.indexOf(event.currentTarget) + 1 - this.currentPage);
     this.slider.scrollTo({
       left: slideScrollPosition,
     });
@@ -1271,25 +1285,25 @@ if (!customElements.get('bulk-add')) {
 
 
 document.addEventListener("DOMContentLoaded", function () {
-    // Get all checkboxes
-    const checkboxes = document.querySelectorAll('input[name="custom_category"]');
+  // Get all checkboxes
+  const checkboxes = document.querySelectorAll('input[name="custom_category"]');
 
-    // Get current URL path
-    const currentPath = window.location.pathname;
+  // Get current URL path
+  const currentPath = window.location.pathname;
 
-    checkboxes.forEach(checkbox => {
-        // If checkbox value matches current URL, mark it as checked
-        if (currentPath.includes(checkbox.value)) {
-            checkbox.checked = true;
-        }
+  checkboxes.forEach(checkbox => {
+    // If checkbox value matches current URL, mark it as checked
+    if (currentPath.includes(checkbox.value)) {
+      checkbox.checked = true;
+    }
 
-        // Redirect on click
-        checkbox.addEventListener("click", function () {
-            //if (this.checked) {
-                window.location.href = this.value;
-            //}
-        });
+    // Redirect on click
+    checkbox.addEventListener("click", function () {
+      //if (this.checked) {
+      window.location.href = this.value;
+      //}
     });
+  });
 });
 
 // document.addEventListener("DOMContentLoaded", function () {
@@ -1306,7 +1320,7 @@ document.addEventListener("DOMContentLoaded", function () {
 //   const observer = new MutationObserver(() => {
 //     targetInput.value = sourceInput.value;
 //   });
-  
+
 //   observer.observe(sourceInput, { attributes: true, attributeFilter: ['value'] });
 // });
 
