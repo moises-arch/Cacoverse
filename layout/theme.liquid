@@ -10,22 +10,42 @@
 
     <script>
       (function() {
-        const originalLog = console.log;
-        const originalInfo = console.info;
-        const forbiddenSubstring = "Globo Form Builder";
-        const forbiddenSubstring2 = "Powerful Contact FormBuilder";
+        const forbiddenKeywords = [
+          "Globo Form Builder",
+          "Powerful Contact Form Builder",
+          "Top 1 Form App",
+          "global merchants",
+          "Learn more:"
+        ];
 
-        const filter = (args, originalFn) => {
-          if (args.length > 0 && typeof args[0] === 'string') {
-            if (args[0].includes(forbiddenSubstring) || args[0].includes("Powerful Contact Form Builder")) {
-              return;
-            }
-          }
-          originalFn.apply(console, args);
+        const originalConsole = {
+          log: console.log,
+          info: console.info,
+          warn: console.warn,
+          debug: console.debug,
+          error: console.error
         };
 
-        console.log = function(...args) { filter(args, originalLog); };
-        console.info = function(...args) { filter(args, originalInfo); };
+        const createFilteredMethod = (methodName) => {
+          return function(...args) {
+            const shouldFilter = args.some(arg => {
+              if (typeof arg === 'string') {
+                return forbiddenKeywords.some(keyword => arg.includes(keyword));
+              }
+              return false;
+            });
+
+            if (!shouldFilter) {
+              originalConsole[methodName].apply(console, args);
+            }
+          };
+        };
+
+        console.log = createFilteredMethod('log');
+        console.info = createFilteredMethod('info');
+        console.warn = createFilteredMethod('warn');
+        console.debug = createFilteredMethod('debug');
+        console.error = createFilteredMethod('error');
       })();
     </script>
 
