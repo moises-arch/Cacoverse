@@ -3,94 +3,72 @@ if (!customElements.get('compatible-products-form')) {
         constructor() {
             super();
 
-            this.loadMoreButton = this.querySelector('.compatible-products__load-more-btn');
-
             this.checkboxes = this.querySelectorAll('input[type="checkbox"]');
             this.totalPriceElement = this.querySelector('[data-total-price]');
-            this.countElement = this.querySelector('[data-count]');
+            this.countLabel = this.querySelector('[data-count-label]');
             this.addButton = this.querySelector('.compatible-products__add-btn');
-            this.form = this.closest('form') || this.querySelector('form');
 
             this.addEventListener('click', this.handleEvent.bind(this));
             this.addEventListener('change', this.handleCheckboxChange.bind(this));
 
-            this.initializeQueue();
+            this.initializeState();
             this.updateTotal();
         }
 
-        initializeQueue() {
+        initializeState() {
             const cards = this.querySelectorAll('.compatible-product-card');
-            let visibleCount = 0;
-
             cards.forEach(card => {
                 const checkbox = card.querySelector('input[type="checkbox"]');
-                const isHidden = card.classList.contains('hidden-queue-item') || card.style.display === 'none';
-
-                if (!isHidden && visibleCount < 4) {
-                    if (checkbox) checkbox.checked = true;
-                    visibleCount++;
+                if (checkbox && checkbox.checked) {
+                    card.classList.add('is-selected');
                 } else {
-                    if (checkbox) checkbox.checked = false;
-                    card.classList.add('hidden-queue-item');
-                    card.style.display = 'none';
+                    card.classList.remove('is-selected');
                 }
             });
-            this.updateTotal();
         }
 
         handleEvent(event) {
             // Handle Add to Cart
-            if (event.target.closest('.compatible-products__add-btn')) {
+            const addBtn = event.target.closest('.compatible-products__add-btn');
+            if (addBtn) {
                 this.handleAddToCart(event);
                 return;
             }
 
-            // Handle Remove (X) button
-            if (event.target.closest('.compatible-product__remove')) {
-                this.handleRemove(event.target.closest('.compatible-product__remove'));
-                return;
+            // Handle Card Click (Toggle selection)
+            const card = event.target.closest('.compatible-product-card');
+            if (card && !event.target.closest('select') && !event.target.closest('.compatible-checkbox-label')) {
+                const checkbox = card.querySelector('input[type="checkbox"]');
+                if (checkbox) {
+                    checkbox.checked = !checkbox.checked;
+                    this.updateCardState(card, checkbox.checked);
+                    this.updateTotal();
+                }
             }
         }
 
-        handleRemove(button) {
-            const cardToRemove = button.closest('.compatible-product-card');
-
-            // 1. Uncheck the item so it's removed from total
-            const checkbox = cardToRemove.querySelector('input[type="checkbox"]');
-            if (checkbox) checkbox.checked = false;
-
-            // 2. Hide the card (remove from flow)
-            cardToRemove.classList.add('hidden-queue-item');
-            cardToRemove.style.display = 'none';
-
-            // 3. Find the next hidden item in the queue to show
-            const nextHidden = this.querySelector('.compatible-product-card.hidden-queue-item:not([style*="display: none"])')
-                || this.querySelector('.compatible-product-card.hidden-queue-item');
-
-            if (nextHidden) {
-                // Determine if we should check it by default. 
-                // The visual queue implies "these are the recommended bundle". 
-                // Usually user expects the new item to be part of the deal unless they remove it too.
-                const nextCheckbox = nextHidden.querySelector('input[type="checkbox"]');
-                if (nextCheckbox) nextCheckbox.checked = true;
-
-                nextHidden.classList.remove('hidden-queue-item');
-                nextHidden.style.display = 'flex';
-                // Optional: Fade in animation class could go here
+        updateCardState(card, isSelected) {
+            if (isSelected) {
+                card.classList.add('is-selected');
+            } else {
+                card.classList.remove('is-selected');
             }
-
-            // 4. Update totals
-            this.updateTotal();
         }
 
         handleCheckboxChange(event) {
+            if (event.target.classList.contains('compatible-checkbox')) {
+                const card = event.target.closest('.compatible-product-card');
+                this.updateCardState(card, event.target.checked);
+                this.updateTotal();
+                return;
+            }
+
             if (event.target.tagName === 'SELECT') {
                 const select = event.target;
                 const card = select.closest('.compatible-product-card');
                 const selectedOption = select.options[select.selectedIndex];
                 const newPrice = selectedOption.dataset.price;
                 const newVariantId = select.value;
-                const newSku = selectedOption.dataset.sku;
 
                 // Update card data
                 card.dataset.price = newPrice;
@@ -99,19 +77,14 @@ if (!customElements.get('compatible-products-form')) {
                 // Update UI text (Price)
                 const priceElement = card.querySelector('.price-item');
                 if (priceElement) {
-                    const priceText = selectedOption.textContent.split('-')[1] ? selectedOption.textContent.split('-')[1].trim() : selectedOption.textContent.trim();
-                    priceElement.textContent = priceText;
-                }
-
-                // Update SKU if exists
-                const skuElement = card.querySelector('.compatible-product-card__sku');
-                if (skuElement && newSku) {
-                    skuElement.textContent = newSku;
+                   const currencySymbol = window.Shopify ? (window.Shopify.currency.active === 'USD' ? '$' : '') : '$';
+                   const formattedPrice = (parseFloat(newPrice) / 100).toFixed(2);
+                   priceElement.textContent = `${currencySymbol}${formattedPrice}`;
                 }
 
                 // Update Checkbox value
                 const checkbox = card.querySelector('input[type="checkbox"]');
-                checkbox.value = newVariantId;
+                if (checkbox) checkbox.value = newVariantId;
             }
             this.updateTotal();
         }
@@ -135,15 +108,23 @@ if (!customElements.get('compatible-products-form')) {
 
             // Format total price (assuming cents)
             const formattedTotal = (total / 100).toFixed(2);
-            this.totalPriceElement.textContent = `${currencySymbol}${formattedTotal}`;
-            this.countElement.textContent = `(${count} item${count !== 1 ? 's' : ''})`;
+            if (this.totalPriceElement) {
+                this.totalPriceElement.textContent = `${currencySymbol}${formattedTotal}`;
+            }
 
-            if (count === 0) {
-                this.addButton.setAttribute('disabled', 'true');
-                this.addButton.textContent = 'Add Bundle';
-            } else {
-                this.addButton.removeAttribute('disabled');
-                this.addButton.textContent = 'Add all to Cart';
+            // Update Label
+            if (this.countLabel) {
+                this.countLabel.textContent = count > 0 ? `${count} item${count !== 1 ? 's' : ''} selected` : 'Select items to bundle';
+            }
+
+            if (this.addButton) {
+                if (count === 0) {
+                    this.addButton.setAttribute('disabled', 'true');
+                    this.addButton.textContent = 'Select items';
+                } else {
+                    this.addButton.removeAttribute('disabled');
+                    this.addButton.textContent = count === 1 ? 'Add to Cart' : `Add all ${count} to Cart`;
+                }
             }
         }
 
@@ -223,3 +204,4 @@ if (!customElements.get('compatible-products-form')) {
         }
     });
 }
+
