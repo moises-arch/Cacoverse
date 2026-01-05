@@ -91,6 +91,7 @@
                                     data-price="{{ variant.price }}"
                                     data-compare-price="{{ variant.compare_at_price }}"
                                     data-sku="{{ variant.sku }}"
+                                    data-image-url="{{ variant.featured_media | image_url: width: 160 }}"
                                     {% if variant.id == current_variant.id %}selected{% endif %}
                                     {% unless variant.available %}disabled{% endunless %}>
                               {{ variant.title }}

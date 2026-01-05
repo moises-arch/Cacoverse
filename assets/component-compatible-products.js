@@ -201,6 +201,7 @@ if (!customElements.get('compatible-products-form')) {
                 const newComparePrice = selectedOption.dataset.comparePrice;
                 const newVariantId = select.value;
                 const newSku = selectedOption.dataset.sku;
+                const newImageUrl = selectedOption.dataset.imageUrl;
 
                 if (card) {
                     card.dataset.price = newPrice;
@@ -228,6 +229,13 @@ if (!customElements.get('compatible-products-form')) {
                     const skuElement = card.querySelector('[data-sku-display]');
                     if (skuElement) {
                         skuElement.textContent = newSku || '';
+                    }
+
+                    if (newImageUrl) {
+                        const imageElement = card.querySelector('.bundle-card__image');
+                        if (imageElement) {
+                            imageElement.src = newImageUrl;
+                        }
                     }
 
                     const checkbox = card.querySelector('input[type="checkbox"]');
