@@ -1,43 +1,43 @@
 .page-faqs .page-width {
-    max-width: 60rem;
+  max-width: 60rem;
 }
 
-.page-faqs .faq-item{
-    padding: 20px 0px 20px 0;
-    background: #FFFFFF;
-    border-bottom: 1px solid #EBF0F5;
+.page-faqs .faq-item {
+  padding: 20px 0px 20px 0;
+  background: #FFFFFF;
+  border-bottom: 1px solid #EBF0F5;
 }
 
 .page-faqs .faq-question {
-    cursor: pointer;
-    height: 32px;
-    font-family: 'Poppins';
-    font-style: normal;
-    font-weight: 600;
-    font-size: 24px;
-    line-height: 32px;
-    display: flex;
-    align-items: center;
-    color: var(--font-secondary-color);
-    justify-content: space-between;
+  cursor: pointer;
+  height: 32px;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 32px;
+  display: flex;
+  align-items: center;
+  color: var(--font-secondary-color);
+  justify-content: space-between;
   gap: 20px;
 }
 
 .page-faqs .faq-item:last-child {
-    border-bottom: 0;
+  border-bottom: 0;
 }
 
 
-.page-faqs .faq-item.active .faq-question{
+.page-faqs .faq-item.active .faq-question {
   color: var(--primary-color);
 }
 
 .page-faqs .faq-answer {
-    display: none;
+  display: none;
 }
 
-.page-faqs .faq-item.active .faq-answer{
- 
+.page-faqs .faq-item.active .faq-answer {
+
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 400;
@@ -45,59 +45,61 @@
   line-height: 32px;
   color: var(--font-secondary-color);
   margin-top: 20px;
-  
+
 }
 
 
-.page-faqs .faq-item .minus{
-  display:none;
+.page-faqs .faq-item .minus {
+  display: none;
 }
-.page-faqs .faq-item .plus{
- display: block;
+
+.page-faqs .faq-item .plus {
+  display: block;
   flex-shrink: 0;
 }
-.page-faqs .faq-item.active .minus{
- display: block;
- flex-shrink: 0;
+
+.page-faqs .faq-item.active .minus {
+  display: block;
+  flex-shrink: 0;
 }
 
-.page-faqs .faq-item.active .plus{
- display: none;
+.page-faqs .faq-item.active .plus {
+  display: none;
 }
 
-.page-faqs .s-btn{
+.page-faqs .s-btn {
   padding: 16px 32px;
   min-width: 216px;
   min-height: 56px;
 }
 
 @media (max-width: 767px) {
-  
-  .page-faqs .faq-question{
+
+  .page-faqs .faq-question {
     font-size: 18px;
     line-height: 28px;
   }
-  
+
 }
 
-.product-details-accordion{
+.product-details-accordion {
   background: transparent;
   border: none;
   border-radius: 0;
   padding: 0;
 }
 
-.product-details-accordion-wrapper{
-  margin-top: 24px;
+.product-details-accordion-wrapper {
+  margin-top: 8px;
 }
 
-@media screen and (min-width: 990px){
-  .product-details-accordion-wrapper{
-    margin-top: 32px;
+@media screen and (min-width: 990px) {
+  .product-details-accordion-wrapper {
+    margin-top: 12px;
   }
 }
 
-.product-details-accordion__shell{
+.product-details-accordion__shell {
   background: transparent;
   border-radius: 0;
   box-shadow: none;
@@ -105,14 +107,14 @@
   padding-bottom: 0;
 }
 
-.product-details-accordion__header{
-  padding: 25px 0 14px;
+.product-details-accordion__header {
+  padding: 10px 0 14px;
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.product-details-accordion__eyebrow{
+.product-details-accordion__eyebrow {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-weight: 700;
@@ -121,34 +123,34 @@
   margin: 0;
 }
 
-.product-details-accordion__title{
+.product-details-accordion__title {
   font-weight: 700;
   font-size: 21px;
   color: #0f172a;
   margin: 6px 0px -14px 5px;
 }
 
-.product-details-accordion__subtitle{
+.product-details-accordion__subtitle {
   margin: 6px 0px 8px 6px;
   color: #475569;
   font-size: 15px;
   line-height: 1.6;
 }
 
-.product-details-accordion .faq-item{
+.product-details-accordion .faq-item {
   background: #ffffff;
-  border: 1px ;
+  border: 1px;
   border-radius: 12px;
   margin: 0 0 12px;
   box-shadow: none;
   overflow: hidden;
 }
 
-.product-details-accordion .faq-item:last-child{
+.product-details-accordion .faq-item:last-child {
   margin-bottom: 8px;
 }
 
-.product-details-accordion .faq-question{
+.product-details-accordion .faq-question {
   width: 100%;
   display: flex;
   align-items: center;
@@ -160,29 +162,36 @@
   text-align: left;
 }
 
-.product-details-accordion .faq-question:focus-visible{
+.product-details-accordion .faq-question:focus-visible {
   outline: 2px solid #0a5ba6;
   outline-offset: 4px;
   border-radius: 12px;
 }
 
-.faq-question__copy{
+.faq-question__copy {
   display: grid;
   gap: 4px;
 }
 
-.faq-question__eyebrow{
+.faq-question__eyebrow {
   font-size: 12px;
   font-weight: 700;
   color: #0a5ba6;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
-#shopify-section-{{ section.id }} [class*="__eyebrow"]{
-  display:none !important;
+
+#shopify-section- {
+    {
+    section.id
+  }
 }
 
-.faq-question__title{
+[class*="__eyebrow"] {
+  display: none !important;
+}
+
+.faq-question__title {
   font-size: 22px;
   font-weight: 700;
   color: #0f172a;
@@ -192,7 +201,7 @@
 
 
 /* Set the icon size once */
-.faq-question__icon{
+.faq-question__icon {
   --icon-size: 42px;
 
   width: var(--icon-size);
@@ -213,15 +222,16 @@
 }
 
 /* Make the SVG (or icon element) scale with the container */
-.faq-question__icon svg{
-  width: calc(var(--icon-size) * 0.45);   /* tweak 0.40–0.55 to taste */
+.faq-question__icon svg {
+  width: calc(var(--icon-size) * 0.45);
+  /* tweak 0.40–0.55 to taste */
   height: calc(var(--icon-size) * 0.45);
   display: block;
 }
 
 /* If the icon is not an SVG but an <i> or <span> */
 .faq-question__icon i,
-.faq-question__icon span{
+.faq-question__icon span {
   font-size: calc(var(--icon-size) * 0.45);
   line-height: 1;
 }
@@ -231,35 +241,37 @@
 
 
 
-.product-details-accordion .faq-item.active .faq-question__icon{
+.product-details-accordion .faq-item.active .faq-question__icon {
   background: #f7fafc;
   border-color: #d7e1ec;
-    color: #a6b1bf;
+  color: #a6b1bf;
 
 }
 
-.product-details-accordion .faq-answer{
+.product-details-accordion .faq-answer {
   display: none;
   border-top: 1px dashed #e2e8f0;
   padding-bottom: 0;
 }
 
-.product-details-accordion .faq-item.active .faq-answer{
+.product-details-accordion .faq-item.active .faq-answer {
   display: block;
 }
 
-.faq-answer__inner{
+.faq-answer__inner {
   padding: 9px 20px 0px 20px;
 
 }
 
-.faq-answer__lede{
+.faq-answer__lede {
   margin: 0px 0 14px;
   color: #0f172a;
   font-weight: 600;
 }
 
-.feature-grid, .spec-grid, .resource-grid{
+.feature-grid,
+.spec-grid,
+.resource-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   column-gap: 12px;
@@ -268,7 +280,7 @@
   margin: 0;
 }
 
-.feature-pill{
+.feature-pill {
   display: flex;
   align-items: flex-start;
   gap: 8px;
@@ -278,7 +290,7 @@
   border-radius: 12px;
 }
 
-.feature-pill__icon{
+.feature-pill__icon {
   width: 32px;
   height: 32px;
   display: grid;
@@ -288,7 +300,7 @@
   flex-shrink: 0;
 }
 
-.feature-pill__label{
+.feature-pill__label {
   font-weight: 600;
   color: #0f172a;
   font-size: 16px;
@@ -296,7 +308,7 @@
 
 }
 
-.spec-grid__item{
+.spec-grid__item {
   background: #ffffff;
   border: 1px solid #e3eaf5;
   border-radius: 12px;
@@ -304,20 +316,20 @@
   box-shadow: inset 0 1px 0 #f2f6fb;
 }
 
-.spec-grid__label{
+.spec-grid__label {
   color: #475569;
   font-size: 14px;
   margin: 0 0px 0px;
 }
 
-.spec-grid__value{
+.spec-grid__value {
   font-weight: 700;
   color: #0f172a;
   font-size: 18px;
   margin: 0px 0px 10px 0px;
 }
 
-.resource-chip{
+.resource-chip {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -328,24 +340,24 @@
   border-radius: 14px;
 }
 
-.resource-chip__title{
+.resource-chip__title {
   display: block;
   color: #0f172a;
   font-weight: 700;
 }
 
-.resource-chip__meta{
+.resource-chip__meta {
   color: #64748b;
   font-size: 13px;
 }
 
-.resource-chip__cta img{
+.resource-chip__cta img {
   width: 50px;
   height: 50px;
 }
 
-@media (max-width: 767px){
-  .resource-grid{
+@media (max-width: 767px) {
+  .resource-grid {
     grid-template-columns: 1fr !important;
   }
 }
@@ -353,24 +365,26 @@
 
 
 @media (max-width: 767px) {
-  .product-details-accordion{
+  .product-details-accordion {
     padding: 0;
     border-radius: 0;
   }
 
-  .product-details-accordion__title{
+  .product-details-accordion__title {
     font-size: 22px;
   }
 
-  .product-details-accordion__subtitle{
+  .product-details-accordion__subtitle {
     font-size: 14px;
   }
 
-  .product-details-accordion .faq-item{
+  .product-details-accordion .faq-item {
     margin: 0px 0px 12px 0px;
   }
 
-  .feature-grid, .spec-grid, .resource-grid{
+  .feature-grid,
+  .spec-grid,
+  .resource-grid {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   }
 }
