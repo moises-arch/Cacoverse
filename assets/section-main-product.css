@@ -490,6 +490,11 @@ a.product__text {
   background: #f5f7fa !important;
   color: #4d5b68 !important;
   font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 90px;
+  text-align: center;
 }
 
 .product-form__input input[type="radio"]+label:not([class*="color"]):not([class*="swatch"]):not([class*="thumbnail"]):hover {
@@ -502,9 +507,12 @@ a.product__text {
   background: #f0f7fb !important;
   color: #0d6ba6 !important;
   border-width: 1.8px !important;
-  font-weight: 700;
-  box-shadow: 0 4px 12px rgba(13, 107, 166, 0.1) !important;
-  transform: translateY(-1px);
+  font-weight: 600;
+  /* Igual que el default para evitar saltos de ancho */
+  box-shadow: none !important;
+  /* Quitar sombra para que el tamaño visual sea idéntico */
+  transform: none !important;
+  /* Quitar movimiento para que mida lo mismo en el layout */
 }
 
 .product-form__input input[type="radio"]+label .pack-discount,
