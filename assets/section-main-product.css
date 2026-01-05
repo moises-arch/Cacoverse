@@ -766,6 +766,11 @@ a.product__text {
     flex: 1 1 100%;
     width: 100%;
     margin-top: 0;
+    font-size: 1.3rem;
+    /* Increased size */
+    font-weight: 800 !important;
+    /* Bolder */
+    letter-spacing: 0.08em;
   }
 }
 
