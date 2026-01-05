@@ -15,7 +15,7 @@ if (!customElements.get('cart-remove-button')) {
 }
 
 if (!customElements.get('cart-items')) {
-  class CartItems extends HTMLElement {
+  window.CartItems = class CartItems extends HTMLElement {
     constructor() {
       super();
       this.lineItemStatusElement =
@@ -282,9 +282,9 @@ if (!customElements.get('cart-items')) {
       cartItemElements.forEach((overlay) => overlay.classList.add('hidden'));
       cartDrawerItemElements.forEach((overlay) => overlay.classList.add('hidden'));
     }
-  }
+  };
 
-  customElements.define('cart-items', CartItems);
+  customElements.define('cart-items', window.CartItems);
 }
 
 
