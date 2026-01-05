@@ -34,8 +34,8 @@
     <div class="faq-list" itemscope="" itemtype="https://schema.org/FAQPage">
       <!-- Features -->
       {% if product.metafields.custom.product_details_features %}
-        <div class="faq-item active" itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
-          <button class="faq-question" type="button" itemprop="name" aria-expanded="true">
+        <div class="faq-item{% unless closed %} active{% endunless %}" itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
+          <button class="faq-question" type="button" itemprop="name" aria-expanded="{% if closed %}false{% else %}true{% endif %}">
             <div class="faq-question__copy">
               <span class="faq-question__eyebrow">Essentials</span>
               <span class="faq-question__title">Features</span>
@@ -66,7 +66,7 @@
             </span>
           </button>
 
-          <div class="faq-answer" itemscope="" itemprop="acceptedAnswer" itemtype="https://schema.org/Answer" aria-hidden="false" style="display: block;">
+          <div class="faq-answer" itemscope="" itemprop="acceptedAnswer" itemtype="https://schema.org/Answer" aria-hidden="{% if closed %}true{% else %}false{% endif %}" {% unless closed %}style="display: block;"{% endunless %}>
             <div class="faq-answer__inner">
               <p class="faq-answer__lede">Top benefits and standout attributes for this product.</p>
               <div class="meta-fields-details">

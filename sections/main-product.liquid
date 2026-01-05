@@ -466,23 +466,6 @@
   <div class="product product--{{ section.settings.media_size }} product--{{ section.settings.media_position }} product--{{ section.settings.gallery_layout }} product--mobile-{{ section.settings.mobile_thumbnails }} grid grid--1-col {% if product.media.size > 0 %}grid--2-col-tablet{% else %}product--no-media{% endif %}">
     <div class="grid__item product__media-wrapper">
       {% render 'product-media-gallery', variant_images: variant_images %}
-
-      {%- assign has_bundle = false -%}
-      {%- for block in section.blocks -%}
-        {%- if block.type == 'compatible_products' -%}
-          {%- assign has_bundle = true -%}
-          {%- break -%}
-        {%- endif -%}
-      {%- endfor -%}
-
-      {%- if has_bundle -%}
-        <!-- FAQs/Features moved here because bundle is active in right column -->
-        {% if product.metafields.custom.product_details_features != blank or product.metafields.custom.product_details_specifications_name != blank or product.metafields.custom.product_details_download_title != blank or product.metafields.custom.product_details_title and product.metafields.custom.product_detail_description != blank or product.metafields.custom.product_details_sub_title != blank %}
-          <div class="product-details-accordion-wrapper" style="margin-top: 3rem;">
-            {% render 'main-product-details', product: product %}
-          </div>
-        {% endif %}
-      {%- endif -%}
     </div>
     <div class="product__info-wrapper grid__item{% if settings.page_width > 1400 and section.settings.media_size == "small" %} product__info-wrapper--extra-padding{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
       <div
@@ -1078,14 +1061,20 @@
         {%- endif -%}
       {%- endfor -%}
 
+      {%- assign has_bundle = false -%}
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'compatible_products' -%}
+          {%- assign has_bundle = true -%}
+          {%- break -%}
+        {%- endif -%}
+      {%- endfor -%}
+
       <!-- Other Product Features -->
-      {%- unless has_bundle -%}
-        {% if product.metafields.custom.product_details_features != blank or product.metafields.custom.product_details_specifications_name != blank or product.metafields.custom.product_details_download_title != blank or product.metafields.custom.product_details_title and product.metafields.custom.product_detail_description != blank or product.metafields.custom.product_details_sub_title != blank %}
-          <div class="product-details-accordion-wrapper">
-            {% render 'main-product-details', product: product %}
-          </div>
-        {% endif %}
-      {%- endunless -%}
+      {% if product.metafields.custom.product_details_features != blank or product.metafields.custom.product_details_specifications_name != blank or product.metafields.custom.product_details_download_title != blank or product.metafields.custom.product_details_title and product.metafields.custom.product_detail_description != blank or product.metafields.custom.product_details_sub_title != blank %}
+        <div class="product-details-accordion-wrapper">
+          {% render 'main-product-details', product: product, closed: has_bundle %}
+        </div>
+      {% endif %}
     </div>
   </div>
 
