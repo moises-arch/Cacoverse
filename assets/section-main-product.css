@@ -5497,7 +5497,7 @@ body.template-product .product__media-modal * {
 
 .bundle-card__config-button:hover {
   color: #000;
-  transform: rotate(30deg);
+  transform: rotate(180deg);
 }
 
 .bundle-card__config-button svg {
@@ -5665,59 +5665,61 @@ body.template-product .product__media-modal * {
 /* Final Mobile Optimizations */
 @media screen and (max-width: 749px) {
   .bundle-items-list {
-    grid-template-columns: 1fr !important;
-    gap: 1.1rem !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.6rem !important;
   }
 
   .bundle-module__header {
     flex-direction: column !important;
     align-items: flex-start !important;
-    gap: 0.25rem !important;
-    margin-bottom: 1.25rem !important;
+    gap: 0.2rem !important;
+    margin-bottom: 1rem !important;
   }
 
   .bundle-card {
-    padding: 0.75rem !important;
-    min-height: auto !important;
-    height: auto !important;
-    max-height: none !important;
+    padding: 0.5rem !important;
+    min-height: 80px !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+  }
+
+  .bundle-card__main {
+    padding-left: 0 !important;
+    flex-direction: row !important;
+    width: 100% !important;
   }
 
   .bundle-card__media {
-    width: 60px !important;
-    height: 60px !important;
-    background: #fff !important;
-    border: 1px solid #e1e1e1 !important;
+    width: 44px !important;
+    height: 44px !important;
+    margin-right: 0.4rem !important;
   }
 
   .bundle-card__product-title {
-    font-size: 0.95rem !important;
-    line-height: 1.3 !important;
+    font-size: 0.75rem !important;
+    -webkit-line-clamp: 1 !important;
   }
 
   .bundle-card__sku {
-    margin-top: -0.2rem !important;
+    font-size: 0.65rem !important;
   }
 
-  .bundle-card__price-row {
-    margin-top: 0rem !important;
+  .bundle-card__price {
+    font-size: 0.8rem !important;
   }
 
   .bundle-card__variant-container {
-    right: 0.2rem !important;
-    bottom: 0.4rem !important;
+    right: 0.15rem !important;
+    bottom: 0.15rem !important;
   }
 
   .bundle-summary__button {
-    height: 52px !important;
-    font-size: 1rem !important;
-    border-radius: 12px !important;
+    height: 50px !important;
+    font-size: 0.9rem !important;
   }
-}
 
-/* Additional Mobile Refinements */
-@media screen and (max-width: 749px) {
   .bundle-card__show-more-label {
-    font-size: 1.15rem !important;
+    font-size: 0.9rem !important;
   }
 }
