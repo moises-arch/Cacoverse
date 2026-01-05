@@ -3462,53 +3462,15 @@ label.quantity__label.form__label {
 /* FIN — CACO HOTFIX PACK */
 
 /* Section-specific layout overrides */
-.section- {
-    {
-    section.id
-  }
-}
-
--padding {
-  padding-top: {
-      {
-      section.settings.padding_top | times: 0.75 | round: 0
-    }
-  }
-
-  px;
-
-  padding-bottom: {
-      {
-      section.settings.padding_bottom | times: 0.75 | round: 0
-    }
-  }
-
-  px;
+.section-padding {
+  padding-top: 27px;
+  padding-bottom: 27px;
 }
 
 @media screen and (min-width: 750px) {
-  .section- {
-      {
-      section.id
-    }
-  }
-
-  -padding {
-    padding-top: {
-        {
-        section.settings.padding_top
-      }
-    }
-
-    px;
-
-    padding-bottom: {
-        {
-        section.settings.padding_bottom
-      }
-    }
-
-    px;
+  .section-padding {
+    padding-top: 36px;
+    padding-bottom: 36px;
   }
 }
 
@@ -3517,79 +3479,19 @@ label.quantity__label.form__label {
    ============================ */
 
 /* Sin “hand” ni hover loco en media items */
-#shopify-section- {
-    {
-    section.id
-  }
-}
-
 .product__media-item,
-#shopify-section- {
-    {
-    section.id
-  }
-}
-
 .product__media-item *,
-#shopify-section- {
-    {
-    section.id
-  }
-}
-
 .product__media,
-#shopify-section- {
-    {
-    section.id
-  }
-}
-
 .product__media img,
-#shopify-section- {
-    {
-    section.id
-  }
-}
-
 .product__modal-opener,
-#shopify-section- {
-    {
-    section.id
-  }
-}
-
 .product__modal-opener * {
   cursor: default !important;
   transition: none !important;
 }
 
-#shopify-section- {
-    {
-    section.id
-  }
-}
-
 .product__media-item:hover,
-#shopify-section- {
-    {
-    section.id
-  }
-}
-
 .product__media-item:hover *,
-#shopify-section- {
-    {
-    section.id
-  }
-}
-
 .product__modal-opener:hover,
-#shopify-section- {
-    {
-    section.id
-  }
-}
-
 .product__modal-opener:hover * {
   transform: none !important;
   box-shadow: none !important;
@@ -3598,22 +3500,10 @@ label.quantity__label.form__label {
 }
 
 /* Centrar la imagen principal en su frame */
-#shopify-section- {
-    {
-    section.id
-  }
-}
-
 .product__media-item {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-#shopify-section- {
-    {
-    section.id
-  }
 }
 
 .product__media-item img {
@@ -3627,54 +3517,12 @@ label.quantity__label.form__label {
    3.B – LIMPIAR “OPEN GALLERY”
    ============================ */
 
-#shopify-section- {
-    {
-    section.id
-  }
-}
-
 .product__media-toggle,
-#shopify-section- {
-    {
-    section.id
-  }
-}
-
 .product__media-toggle *,
-#shopify-section- {
-    {
-    section.id
-  }
-}
-
 .product__modal-opener .product__media-toggle,
-#shopify-section- {
-    {
-    section.id
-  }
-}
-
 .product__modal-opener .product__media-toggle *,
-#shopify-section- {
-    {
-    section.id
-  }
-}
-
 .product__modal-opener .product__media-icon,
-#shopify-section- {
-    {
-    section.id
-  }
-}
-
 .product__modal-opener .product__media-button,
-#shopify-section- {
-    {
-    section.id
-  }
-}
-
 .product__modal-opener .product__media-button * {
   display: none !important;
   background: transparent !important;
@@ -3682,19 +3530,7 @@ label.quantity__label.form__label {
   border: none !important;
 }
 
-#shopify-section- {
-    {
-    section.id
-  }
-}
-
 .product__media-toggle::before,
-#shopify-section- {
-    {
-    section.id
-  }
-}
-
 .product__media-toggle::after {
   display: none !important;
   content: none !important;
@@ -3870,27 +3706,17 @@ label.quantity__label.form__label {
   /* ======================
      MEDIA BOX FULL WIDTH
      ====================== */
-  #shopify-section- {
-      {
-      section.id
-    }
-  }
-
+  /* ======================
+     MEDIA BOX FULL WIDTH
+     ====================== */
   .product__media-wrapper {
     width: 100%;
     max-width: 100%;
     margin: 12px 0 20px;
     padding: 16px 0 20px;
-    /* sin padding lateral */
     background: #f3f3f3;
     border-radius: 24px;
     box-sizing: border-box;
-  }
-
-  #shopify-section- {
-      {
-      section.id
-    }
   }
 
   .product__media-list {
@@ -3898,12 +3724,6 @@ label.quantity__label.form__label {
   }
 
   /* Frame blanco interno */
-  #shopify-section- {
-      {
-      section.id
-    }
-  }
-
   .product__media-item {
     padding: 10px;
     background: #ffffff;
@@ -3913,32 +3733,13 @@ label.quantity__label.form__label {
   /* ======================
      STRIP DE THUMBS + FLECHAS
      ====================== */
-
-  #shopify-section- {
-      {
-      section.id
-    }
-  }
-
   .product__media-wrapper .thumbnail-slider,
-  #shopify-section- {
-      {
-      section.id
-    }
-  }
-
   .product__media-wrapper .thumbnail-slider--mobile {
     position: relative;
     margin-top: 14px;
   }
 
   /* Thumbs en una sola fila */
-  #shopify-section- {
-      {
-      section.id
-    }
-  }
-
   .product__media-wrapper .thumbnail-list {
     display: flex !important;
     flex-wrap: nowrap !important;
@@ -3949,21 +3750,9 @@ label.quantity__label.form__label {
     overflow: hidden;
   }
 
-  #shopify-section- {
-      {
-      section.id
-    }
-  }
-
   .product__media-wrapper .thumbnail-list__item {
-    flex: 0 0 24%;
-    max-width: 24%;
-  }
-
-  #shopify-section- {
-      {
-      section.id
-    }
+    flex: 0 0 90px;
+    max-width: 90px;
   }
 
   .product__media-wrapper .thumbnail {
@@ -3973,21 +3762,9 @@ label.quantity__label.form__label {
     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
   }
 
-  #shopify-section- {
-      {
-      section.id
-    }
-  }
-
   .product__media-wrapper .thumbnail__media {
     border-radius: 10px;
     overflow: hidden;
-  }
-
-  #shopify-section- {
-      {
-      section.id
-    }
   }
 
   .product__media-wrapper .thumbnail__media img {
@@ -3997,30 +3774,11 @@ label.quantity__label.form__label {
   }
 
   /* Thumb activo con marco azul */
-  #shopify-section- {
-      {
-      section.id
-    }
-  }
-
   .product__media-wrapper .thumbnail.is-active {
     box-shadow: 0 0 0 2px #0d6ba6;
   }
 
-  /* Flechas fuera, centradas, sin fondo/borde/sombra */
-  #shopify-section- {
-      {
-      section.id
-    }
-  }
-
   .product__media-wrapper .thumbnail-slider .slider-button,
-  #shopify-section- {
-      {
-      section.id
-    }
-  }
-
   .product__media-wrapper .thumbnail-slider--mobile .slider-button {
     position: absolute;
     top: 50%;
@@ -4035,69 +3793,17 @@ label.quantity__label.form__label {
     color: #9b9b9b;
   }
 
-  #shopify-section- {
-      {
-      section.id
-    }
-  }
-
-  .product__media-wrapper .thumbnail-slider .slider-button--prev,
-  #shopify-section- {
-      {
-      section.id
-    }
-  }
-
   .product__media-wrapper .thumbnail-slider--mobile .slider-button--prev {
     left: -18px;
-  }
-
-  #shopify-section- {
-      {
-      section.id
-    }
-  }
-
-  .product__media-wrapper .thumbnail-slider .slider-button--next,
-  #shopify-section- {
-      {
-      section.id
-    }
   }
 
   .product__media-wrapper .thumbnail-slider--mobile .slider-button--next {
     right: -18px;
   }
 
-  #shopify-section- {
-      {
-      section.id
-    }
-  }
-
-  .product__media-wrapper .thumbnail-slider .slider-button svg,
-  #shopify-section- {
-      {
-      section.id
-    }
-  }
-
   .product__media-wrapper .thumbnail-slider--mobile .slider-button svg {
     width: 16px;
     height: 16px;
-  }
-
-  #shopify-section- {
-      {
-      section.id
-    }
-  }
-
-  .product__media-wrapper .thumbnail-slider .slider-button[disabled],
-  #shopify-section- {
-      {
-      section.id
-    }
   }
 
   .product__media-wrapper .thumbnail-slider--mobile .slider-button[disabled] {
@@ -4110,75 +3816,15 @@ label.quantity__label.form__label {
 /* ==== KILL SWITCH UI "OPEN GALLERY" ==== */
 
 /* Botón/overlay que Dawn mete sobre la imagen */
-#shopify-section- {
-    {
-    section.id
-  }
-}
-
 .product__modal-opener,
-#shopify-section- {
-    {
-    section.id
-  }
-}
-
 .product__modal-opener *,
-#shopify-section- {
-    {
-    section.id
-  }
-}
-
 .product__media-toggle,
-#shopify-section- {
-    {
-    section.id
-  }
-}
-
 .product__media-toggle *,
-#shopify-section- {
-    {
-    section.id
-  }
-}
-
 [data-media-modal-opener],
-#shopify-section- {
-    {
-    section.id
-  }
-}
-
 [data-media-modal-opener] *,
-#shopify-section- {
-    {
-    section.id
-  }
-}
-
 button[aria-label*="Open gallery"],
-#shopify-section- {
-    {
-    section.id
-  }
-}
-
 [aria-label*="Open gallery"],
-#shopify-section- {
-    {
-    section.id
-  }
-}
-
 button[aria-label*="open gallery"],
-#shopify-section- {
-    {
-    section.id
-  }
-}
-
 [aria-label*="open gallery"] {
   display: none !important;
   background: transparent !important;
@@ -4199,34 +3845,12 @@ body.template-product .product__media-modal * {
 /* ==== FIX: MAIN IMAGE FULL-WIDTH + CENTRADA EN MOBILE ==== */
 @media (max-width: 749px) {
 
-  /* El wrapper gris de la galería: full width, sin empuje lateral */
-  #shopify-section- {
-      {
-      section.id
-    }
-  }
-
   .product__media-wrapper {
     margin: 0 !important;
     padding: 16px 0 5px !important;
-    /* solo vertical */
     background: #f3f3f3;
     border-radius: 20px;
     box-sizing: border-box;
-  }
-
-  /* Quitamos el “offset” típico de Dawn (slider-mobile-gutter) */
-  #shopify-section- {
-      {
-      section.id
-    }
-  }
-
-  .slider-mobile-gutter,
-  #shopify-section- {
-      {
-      section.id
-    }
   }
 
   .product__media-list {
@@ -4235,44 +3859,17 @@ body.template-product .product__media-modal * {
     width: 100% !important;
   }
 
-  /* Slides sin padding raro ni desplazamientos */
-  #shopify-section- {
-      {
-      section.id
-    }
-  }
-
-  .product__media-list .slider,
-  #shopify-section- {
-      {
-      section.id
-    }
-  }
-
   .product__media-list .slider__slide {
     margin: 0 !important;
     padding: 0 !important;
     width: 100% !important;
   }
 
-  /* Contenedor blanco que estaba corriendo la imagen → fuera */
-  #shopify-section- {
-      {
-      section.id
-    }
-  }
-
   .product__media-item {
     padding: 0 !important;
     background: transparent !important;
     border-radius: 24px !important;
-  }
-
-  /* Imagen grande totalmente centrada dentro del wrapper gris */
-  #shopify-section- {
-      {
-      section.id
-    }
+    position: relative;
   }
 
   .product__media-item img {
@@ -4282,55 +3879,11 @@ body.template-product .product__media-modal * {
     height: auto;
     object-fit: contain;
   }
-}
 
-/* ==== MOBILE: GAP MAIN IMAGE ↔ THUMBS = 20px ==== */
-@media (max-width: 749px) {
-  #shopify-section- {
-      {
-      section.id
-    }
-  }
-
+  /* GAP MAIN IMAGE ↔ THUMBS = 20px */
   .product__media-wrapper .thumbnail-slider,
-  #shopify-section- {
-      {
-      section.id
-    }
-  }
-
   .product__media-wrapper .thumbnail-slider--mobile {
     margin-top: -13px !important;
-    /* espacio exacto entre imagen grande y thumbs */
-  }
-}
-
-
-
-
-
-
-
-
-
-/* ==== MOBILE: "crop to zoom" icon — círculo sutil siempre visible ==== */
-@media (max-width: 749px) {
-
-  /* El contenedor de la imagen principal sirve de referencia */
-  #shopify-section- {
-      {
-      section.id
-    }
-  }
-
-  .product__media-item {
-    position: relative;
-  }
-
-  #shopify-section- {
-      {
-      section.id
-    }
   }
 
   .product__media-item::after {
@@ -4340,7 +3893,6 @@ body.template-product .product__media-modal * {
     bottom: 14px;
     width: 34px;
     height: 34px;
-    /* Círculo con fondo oscuro suave y borde blanco — se ve en fondo claro y oscuro */
     border-radius: 999px;
     background-color: rgba(0, 0, 0, 0.55);
     border: 1.4px solid rgba(255, 255, 255, 0.9);
@@ -4393,37 +3945,13 @@ body.template-product .product__media-modal * {
 @media (min-width: 750px) {
 
   /* Referencia para el pseudo-elemento */
-  #shopify-section- {
-      {
-      section.id
-    }
-  }
-
   .product__media-item,
-  #shopify-section- {
-      {
-      section.id
-    }
-  }
-
   .product__media-wrapper .thumbnail {
     position: relative;
   }
 
   /* Estado base: icono preparado pero invisible */
-  #shopify-section- {
-      {
-      section.id
-    }
-  }
-
   .product__media-item::after,
-  #shopify-section- {
-      {
-      section.id
-    }
-  }
-
   .product__media-wrapper .thumbnail::after {
     content: '';
     position: absolute;
@@ -4431,50 +3959,28 @@ body.template-product .product__media-modal * {
     bottom: 14px;
     width: 34px;
     height: 34px;
-
     border-radius: 999px;
     background-color: rgba(0, 0, 0, 0.45);
     border: 1.4px solid rgba(255, 255, 255, 0.9);
     box-shadow: none;
-
-    /* mismo ícono que mobile */
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 4h5M6 4v5M18 20v-5M18 20h-5'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: center;
     background-size: 18px 18px;
-
     pointer-events: none;
-
     opacity: 0 !important;
-    /* oculto por default */
     transform: scale(0.9);
     animation: none !important;
-    /* mata la animación anterior */
     transition: opacity 0.22s ease, transform 0.22s ease;
   }
 
-  /* Visible solo on hover (muy sutil) */
-  #shopify-section- {
-      {
-      section.id
-    }
-  }
-
+  /* Visible solo on hover */
   .product__media-item:hover::after,
-  #shopify-section- {
-      {
-      section.id
-    }
-  }
-
   .product__media-wrapper .thumbnail:hover::after {
     opacity: 0.75 !important;
     transform: scale(1);
   }
 }
-
-
-
 
 /* ==========================================
    FIX 1 — IMAGEN DEL LIGHTBOX SIN RECORTE
@@ -4490,7 +3996,6 @@ body.template-product .product__media-modal * {
   justify-content: center;
   background: transparent !important;
   overflow: visible !important;
-  /* nada se corta */
   border-radius: 24px !important;
 }
 
@@ -4500,10 +4005,8 @@ body.template-product .product__media-modal * {
   max-width: 100% !important;
   max-height: 100% !important;
   object-fit: contain !important;
-  /* se ajusta, no se recorta */
   border-radius: 24px !important;
 }
-
 
 /* ==========================================
    FIX 2 — BOTÓN CERRAR ("X") LIMPIO
@@ -4525,13 +4028,11 @@ body.template-product .product__media-modal * {
   cursor: pointer;
 }
 
-/* ocultamos cualquier icono SVG original */
 #galleryLightbox .apple-lightbox__close svg,
 #galleryLightbox .apple-lightbox__close span {
   display: none !important;
 }
 
-/* nuestra "X" minimal */
 #galleryLightbox .apple-lightbox__close::before {
   content: '×';
   font-size: 18px;
@@ -4547,8 +4048,6 @@ body.template-product .product__media-modal * {
    DESKTOP LIGHTBOX TUNING
    ============================ */
 @media (min-width: 750px) {
-
-  /* Menos padding arriba → más altura útil para la imagen */
   #galleryLightbox .apple-lightbox__chrome {
     padding-top: 16px !important;
     padding-bottom: 24px !important;
@@ -4558,7 +4057,6 @@ body.template-product .product__media-modal * {
     margin-bottom: 10px !important;
   }
 
-  /* Imagen centrada, sin recortes */
   #galleryLightbox .apple-lightbox__stage {
     padding: 0 32px 24px !important;
     align-items: center !important;
@@ -4571,7 +4069,6 @@ body.template-product .product__media-modal * {
     padding: 0 !important;
     max-width: min(100vw - 96px, 1280px);
     max-height: calc(100vh - 170px);
-    /* más espacio vertical para que no se corte */
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -4589,7 +4086,6 @@ body.template-product .product__media-modal * {
     border-radius: 24px !important;
   }
 
-  /* --- Flechas de navegación ACTIVAS en desktop --- */
   #galleryLightbox .apple-lightbox__nav {
     display: flex !important;
     align-items: center;
