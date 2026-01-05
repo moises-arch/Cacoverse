@@ -372,7 +372,7 @@
         "ai_gen_block_9a245ff_H4ihCA"
       ],
       "custom_css": [
-        "{padding-top: 0px; padding-bottom: 70px;}"
+        "{padding-top: 0px; padding-bottom: 20px;}"
       ],
       "settings": {}
     },
@@ -391,7 +391,9 @@
       "block_order": [
         "junip_junip_product_review_gPCpTG"
       ],
-      "disabled": true,
+      "custom_css": [
+        "{padding-bottom: 50px;}"
+      ],
       "settings": {
         "include_margins": true
       }
