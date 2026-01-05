@@ -70,11 +70,10 @@
                       <span class="bundle-card__price {% if current_variant.compare_at_price > current_variant.price %}on-sale{% endif %}" data-item-price>
                         {{ current_variant.price | money }}
                       </span>
-                      {%- if current_variant.compare_at_price > current_variant.price -%}
-                        <span class="bundle-card__compare-price" data-item-compare-price>
-                          {{ current_variant.compare_at_price | money }}
-                        </span>
-                      {%- endif -%}
+                      <span class="bundle-card__compare-price" data-item-compare-price 
+                            style="{% unless current_variant.compare_at_price > current_variant.price %}display:none{% endunless %}">
+                        {{ current_variant.compare_at_price | money }}
+                      </span>
                     </div>
 
                     {%- if item.variants.size > 1 -%}
