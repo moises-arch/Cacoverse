@@ -5166,11 +5166,14 @@ body.template-product .product__media-modal * {
 
 /* --- Bundle Module (Compatible Accessories) --- */
 .bundle-module {
-  margin: 1.5rem 0 2rem;
+  margin: 2.5rem 0 3rem;
 }
 
 .product-bundle-wrapper {
-  margin-top: 2rem;
+  margin-top: 1.5rem;
+  margin-bottom: 2.5rem;
+  border-top: 1px solid #eee;
+  padding-top: 2.5rem;
 }
 
 .bundle-module__header {
