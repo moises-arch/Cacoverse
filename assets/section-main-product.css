@@ -536,18 +536,22 @@ a.product__text {
   background: #fff;
 }
 
+
+
+
 .product__info-wrapper .quantity__button {
   border-radius: 50% !important;
   border: none;
   background: transparent;
   color: #505c70;
-  width: 30px;
-  height: 30px;
+  width: 0px;
+  height: 45px;
   font-weight: 700;
   display: grid;
   place-items: center;
   transition: color 0.2s ease, background 0.2s ease;
 }
+
 
 .product__info-wrapper .quantity__button:hover {
   background: #f2f6fb;
