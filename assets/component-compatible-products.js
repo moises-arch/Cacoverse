@@ -74,18 +74,25 @@ if (!customElements.get('compatible-products-form')) {
 
             // Card Toggle Action
             const card = event.target.closest('.bundle-card');
-            const isControl = event.target.closest('select') || event.target.closest('input[type="checkbox"]');
+            const checkbox = card?.querySelector('input[type="checkbox"]');
+
+            // If click was on the checkbox itself or its label box, the browser will toggle it.
+            // We just need to catch the change and update UI.
+            if (event.target.type === 'checkbox') {
+                this.updateCardState(card, event.target.checked);
+                this.updateTotal();
+                return;
+            }
+
+            // If click was on the card but NOT on a control (select, checkbox label box)
+            const isControl = event.target.closest('select') || event.target.closest('.bundle-card__checkbox-label');
 
             if (card && !isControl) {
-                const checkbox = card.querySelector('input[type="checkbox"]');
                 if (checkbox) {
                     checkbox.checked = !checkbox.checked;
                     this.updateCardState(card, checkbox.checked);
                     this.updateTotal();
                 }
-            } else if (event.target.tagName === 'INPUT' && event.target.type === 'checkbox') {
-                this.updateCardState(card, event.target.checked);
-                this.updateTotal();
             }
         }
 
