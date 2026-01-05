@@ -2,17 +2,66 @@ if (!customElements.get('compatible-products-form')) {
     customElements.define('compatible-products-form', class CompatibleProductsForm extends HTMLElement {
         constructor() {
             super();
+            this._boundUpdateTotal = this.updateTotal.bind(this);
+            this._boundHandleSelectChange = this.handleSelectChange.bind(this);
+            this._boundHandleEvent = this.handleEvent.bind(this);
+        }
 
+        connectedCallback() {
             this.totalPriceElement = this.querySelector('[data-total-price]');
             this.statusLabel = this.querySelector('[data-count-label]');
             this.addButton = this.querySelector('.bundle-summary__button');
             this.addButtonText = this.querySelector('.bundle-summary__button-text');
             this.loader = this.querySelector('.bundle-summary__loader');
 
-            this.addEventListener('click', this.handleEvent.bind(this));
-            this.addEventListener('change', this.handleSelectChange.bind(this));
+            this.addEventListener('click', this._boundHandleEvent);
+            this.addEventListener('change', this._boundHandleSelectChange);
 
-            this.updateTotal();
+            // Initial calculation
+            setTimeout(() => this.updateTotal(), 0);
+        }
+
+        formatMoney(cents, format) {
+            if (typeof cents === 'string') cents = cents.replace('.', '');
+            let value = '';
+            const placeholderRegex = /\{\{\s*(\w+)\s*\}\}/;
+            const formatString = format || window.theme?.moneyFormat || "${{amount}}";
+
+            function formatWithDelimiters(number, precision, thousands, decimal) {
+                precision = isNaN(precision) ? 2 : precision;
+                thousands = thousands || ',';
+                decimal = decimal || '.';
+
+                if (isNaN(number) || number == null) return 0;
+
+                number = (number / 100.0).toFixed(precision);
+
+                const parts = number.split('.');
+                const dollarsAmount = parts[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1' + thousands);
+                const centsAmount = parts[1] ? decimal + parts[1] : '';
+
+                return dollarsAmount + centsAmount;
+            }
+
+            switch (formatString.match(placeholderRegex)[1]) {
+                case 'amount':
+                    value = formatWithDelimiters(cents, 2);
+                    break;
+                case 'amount_no_decimals':
+                    value = formatWithDelimiters(cents, 0);
+                    break;
+                case 'amount_with_comma_separator':
+                    value = formatWithDelimiters(cents, 2, '.', ',');
+                    break;
+                case 'amount_no_decimals_with_comma_separator':
+                    value = formatWithDelimiters(cents, 0, '.', ',');
+                    break;
+                case 'amount_no_decimals_with_space_separator':
+                    value = formatWithDelimiters(cents, 0, ' ', ',');
+                    break;
+            }
+
+            return formatString.replace(placeholderRegex, value);
         }
 
         handleEvent(event) {
@@ -41,6 +90,7 @@ if (!customElements.get('compatible-products-form')) {
         }
 
         updateCardState(card, isSelected) {
+            if (!card) return;
             if (isSelected) {
                 card.classList.add('is-selected');
             } else {
@@ -59,17 +109,14 @@ if (!customElements.get('compatible-products-form')) {
                 const newSku = selectedOption.dataset.sku;
 
                 if (card) {
-                    // Update dataset so updateTotal() picks up the right value
                     card.dataset.price = newPrice;
                     card.dataset.variantId = newVariantId;
 
-                    // Update prices UI
                     const priceElement = card.querySelector('[data-item-price]');
                     const compareElement = card.querySelector('[data-item-compare-price]');
-                    const moneyFormat = window.theme?.moneyFormat || "${{amount}}";
 
                     if (priceElement) {
-                        priceElement.textContent = Shopify.formatMoney(newPrice, moneyFormat);
+                        priceElement.textContent = this.formatMoney(newPrice);
                         const isSale = newComparePrice && parseInt(newComparePrice) > parseInt(newPrice);
                         priceElement.classList.toggle('on-sale', !!isSale);
                     }
@@ -78,19 +125,17 @@ if (!customElements.get('compatible-products-form')) {
                         const isSale = newComparePrice && parseInt(newComparePrice) > parseInt(newPrice);
                         if (isSale) {
                             compareElement.style.display = 'inline';
-                            compareElement.textContent = Shopify.formatMoney(newComparePrice, moneyFormat);
+                            compareElement.textContent = this.formatMoney(newComparePrice);
                         } else {
                             compareElement.style.display = 'none';
                         }
                     }
 
-                    // Update SKU UI
                     const skuElement = card.querySelector('[data-sku-display]');
                     if (skuElement) {
                         skuElement.textContent = newSku || '';
                     }
 
-                    // Sync hidden checkbox
                     const checkbox = card.querySelector('input[type="checkbox"]');
                     if (checkbox) checkbox.value = newVariantId;
                 }
@@ -112,11 +157,21 @@ if (!customElements.get('compatible-products-form')) {
                         count++;
                     }
                 }
+
+                // Sync visual state if not synced
+                if (card && !card.classList.contains('is-selected')) {
+                    card.classList.add('is-selected');
+                }
             });
 
-            // Update Total Display
+            // Handle unselected cards visual state
+            this.querySelectorAll('input[type="checkbox"]:not(:checked)').forEach(checkbox => {
+                const card = checkbox.closest('.bundle-card');
+                if (card) card.classList.remove('is-selected');
+            });
+
             if (this.totalPriceElement) {
-                this.totalPriceElement.textContent = Shopify.formatMoney(total, window.theme?.moneyFormat || "${{amount}}");
+                this.totalPriceElement.textContent = this.formatMoney(total);
             }
 
             // Update Label
