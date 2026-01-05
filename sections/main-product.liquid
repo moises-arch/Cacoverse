@@ -477,6 +477,7 @@
       >
         {%- assign product_form_id = 'product-form-' | append: section.id -%}
 
+        {%- assign has_opened_first_accordion = false -%}
         {%- for block in section.blocks -%}
           {%- case block.type -%}
             {%- when '@app' -%}
@@ -604,7 +605,7 @@
               {{ block.settings.custom_liquid }}
             {%- when 'collapsible_tab' -%}
               <div class="product__accordion accordion quick-add-hidden" {{ block.shopify_attributes }}>
-                <details id="Details-{{ block.id }}-{{ section.id }}">
+                <details id="Details-{{ block.id }}-{{ section.id }}" {% unless has_opened_first_accordion %}open{% assign has_opened_first_accordion = true %}{% endunless %}>
                   <summary>
                     <div class="summary__title">
                       {% render 'icon-accordion', icon: block.settings.icon %}
