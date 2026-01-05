@@ -64,23 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// Button Hover Effect Spring
-const buttons = document.querySelectorAll('.btn-b, .btn-w');
-buttons.forEach(button => {
-  button.addEventListener('mouseenter', () => {
-    gsap.to(button, {
-      duration: 0.8, // Animation duration in seconds
-      ease: "spring({mass:1, stiffness:100, damping:15})" // Spring-like easing
-    });
-  });
+// Button Hover Effect (Handled via CSS for better performance)
 
-  button.addEventListener('mouseleave', () => {
-    gsap.to(button, {
-      duration: 0.8, // Animation duration in seconds
-      ease: "spring({mass:1, stiffness:100, damping:15})" // Spring-like easing
-    });
-  });
-});
 
 
 // FAQS

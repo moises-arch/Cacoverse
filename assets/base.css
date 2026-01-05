@@ -1,10 +1,31 @@
  :root {
+
+   /* Optimized Button hover effects (Replaces GSAP) */
+   .btn-b,
+   .btn-w {
+     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+     display: inline-flex;
+     align-items: center;
+     justify-content: center;
+   }
+
+   .btn-b:hover,
+   .btn-w:hover {
+     transform: scale(1.04);
+   }
+
+   .btn-b:active,
+   .btn-w:active {
+     transform: scale(0.98);
+   }
+
    --primary-color: #4d5b68;
    --primary-hover-color: #4d5b68;
    --secondary-color: #FFFFFF;
    --secondar-hover-color: #4d5b68;
    --font-size: 16px;
-   font-family: 'Barlow', sans-serif;
+   font-family: 'Barlow',
+   sans-serif;
    --font-primary-color: #FFFFFF;
    --font-secondary-color: #4d5b68;
  }
