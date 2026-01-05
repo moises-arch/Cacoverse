@@ -478,7 +478,7 @@
 
     .wd40-collection-container { width: 100%; max-width: 1500px; margin: 0 auto; padding: 0 20px; box-sizing: border-box; background-color: #ffffff; padding-top: var(--section-padding-top); padding-bottom: var(--section-padding-bottom); font-family: Inter, sans-serif; position: relative; }
     
-    .wd40-collection-layout { display: flex; gap: 34px; align-items: flex-start; }
+    .wd40-collection-layout { display: flex; gap: 34px; align-items: flex-start; padding: 25px; margin: -25px; }
     
     /* Toolbar */
     .wd40-toolbar-container { width: 100%; margin-bottom: 30px; position: relative; z-index: 30; }
@@ -714,8 +714,8 @@
 
     /* Grid */
     .wd40-product-grid { flex: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-content: start; }
-    .wd40-card { border: 1px solid transparent; border-radius: 15px; background: #ffffff; overflow: hidden; display: flex; flex-direction: column; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(0,0,0,0.08); position: relative; min-width: 0; }
-    .wd40-card:hover { box-shadow: 0 0 25px rgba(0,0,0,0.12); transform: none; }
+    .wd40-card { border: 1px solid transparent; border-radius: 15px; background: #ffffff; display: flex; flex-direction: column; transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(0,0,0,0.08); position: relative; min-width: 0; }
+    .wd40-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.12); transform: translateY(-4px); }
 
     /* Card Elements */
     .wd40-card-media { position: relative; width: 100%; aspect-ratio: 1; overflow: hidden; }
