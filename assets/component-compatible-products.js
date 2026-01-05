@@ -32,15 +32,24 @@ if (!customElements.get('compatible-products-form')) {
 
         saveToStorage() {
             const selection = {};
+            let selectedCount = 0;
             this.querySelectorAll('.bundle-card').forEach((card, index) => {
                 const checkbox = card.querySelector('input[type="checkbox"]');
                 const select = card.querySelector('select');
+                const isChecked = checkbox ? checkbox.checked : false;
+                if (isChecked) selectedCount++;
+
                 selection[index] = {
-                    checked: checkbox ? checkbox.checked : false,
+                    checked: isChecked,
                     variantId: select ? select.value : card.dataset.variantId
                 };
             });
-            localStorage.setItem(this.getStorageKey(), JSON.stringify(selection));
+
+            if (selectedCount === 0) {
+                localStorage.removeItem(this.getStorageKey());
+            } else {
+                localStorage.setItem(this.getStorageKey(), JSON.stringify(selection));
+            }
         }
 
         restoreFromStorage() {
