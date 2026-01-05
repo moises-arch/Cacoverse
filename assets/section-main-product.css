@@ -2364,6 +2364,7 @@ label.quantity__label.form__label {
 
 .quantity__input[type="number"] {
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 /* Disabled state */
@@ -4509,11 +4510,6 @@ body.template-product .product__media-modal * {
 /* ============================
    INLINE ZOOM LENS CUSTOM
    ============================ */
-#shopify-section- {
-    {
-    section.id
-  }
-}
 
 .inline-zoom-lens {
   position: absolute;
@@ -4970,6 +4966,7 @@ body.template-product .product__media-modal * {
   color: #1a1a1a;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -5142,7 +5139,6 @@ body.template-product .product__media-modal * {
 .bundle-summary__button:active {
   transform: translateY(0);
 }
-}
 
 .bundle-summary__button:disabled {
   background: #ccc;
@@ -5282,6 +5278,7 @@ body.template-product .product__media-modal * {
   .bundle-card__product-title {
     font-size: 0.75rem !important;
     -webkit-line-clamp: 1 !important;
+    line-clamp: 1 !important;
   }
 
   .bundle-card__sku {

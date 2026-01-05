@@ -1,4 +1,55 @@
-<!-- Caco Custom Header - v5 sticky + new mobile drawer (light, app-like) -->
+<!--
+================================================================================
+  CACO CUSTOM HEADER - v5.1
+  Sticky header + Mobile drawer (light, app-like design)
+  
+  TABLE OF CONTENTS:
+  ==================
+  1. INITIAL FALLBACK SCRIPT (line ~15)
+  2. LIQUID VARIABLES & MENU LOGIC (line ~20)
+  3. HTML STRUCTURE (line ~45)
+     - Announcement Bar
+     - Header Top (Logo, Search, Cart)
+     - Header Bottom (Navigation)
+     - Mobile Drawer
+  4. CSS STYLES (line ~1374)
+     - CSS Variables
+     - Scroll Behavior
+     - Announcement Bar
+     - Search
+     - Navigation & Dropdowns
+     - Mobile Drawer
+     - Animations
+  5. JAVASCRIPT (line ~3312)
+     - 5.1 Sticky Header Logic (3317)
+     - 5.2 Mega Menu Sidebar (3474)
+     - 5.3 Overlay Manager (3536)
+     - 5.4 Cart Drawer Integration (3602)
+     - 5.5 Cart Count Auto-Update (3619)
+     - 5.6 Partner Dropdown (3792)
+     - 5.7 Help Center Dropdown (3821)
+     - 5.8 Industries Dropdown (3854)
+     - 5.9 Announcement Slider (3885)
+     - 5.10 Predictive Search (4002)
+     - 5.11 Mobile Drawer (4173)
+     - 5.12 Voice Search (4426)
+     - 5.13 Animated Search Placeholder (4511)
+  6. SCHEMA (line ~4505)
+  
+  LIQUID VARIABLES IN CSS/JS:
+  - announcement_font_size (CSS)
+  - search_max_width (CSS)
+  - mega_sidebar_width (CSS)
+  - mega_sidebar_bg (CSS)
+  - promo_max_width (CSS)
+  - promo_image_height (CSS)
+  - enable_predictive_search (JS)
+  - predictive_limit (JS)
+  - predictive_min_chars (JS)
+  - predictive_debounce (JS)
+  - predictive_overlay (JS)
+================================================================================
+-->
 
 <script>
   // Fallback inmediato para evitar salto de contenido antes del JS principal
@@ -39,6 +90,9 @@
 {%- endfor -%}
 
 <div class="caco-header-wrapper caco-is-booting" style="opacity:0;visibility:hidden;">
+  <!-- -------------------------------------------------------------------------
+       3.1 Announcement Bar
+       ------------------------------------------------------------------------- -->
   {%- if section.settings.show_announcement -%}
     {%- assign announcements = section.blocks | where: "type", "announcement" -%}
     <div
@@ -91,6 +145,9 @@
   <div class="caco-search-overlay" id="caco-search-overlay"></div>
 
   <!-- TOP HEADER -->
+  <!-- -------------------------------------------------------------------------
+       3.2 Header Top (Logo, Search, Tools)
+       ------------------------------------------------------------------------- -->
   <header class="caco-header-top">
     <div class="caco-container caco-grid-container">
       <div class="caco-area-left">
@@ -242,6 +299,9 @@
   </header>
 
   <!-- DESKTOP NAVIGATION -->
+  <!-- -------------------------------------------------------------------------
+       3.3 Header Bottom (Desktop Navigation)
+       ------------------------------------------------------------------------- -->
   <div class="caco-header-bottom small-hidden">
     <div class="caco-container">
       <nav class="caco-nav">
@@ -901,6 +961,9 @@
 
   <!-- MOBILE OVERLAY + DRAWER (Panels) -->
   <div class="caco-mobile-overlay md-hidden" id="caco-mobile-overlay"></div>
+  <!-- -------------------------------------------------------------------------
+       3.4 Mobile Drawer (Navigation & Mobile Search)
+       ------------------------------------------------------------------------- -->
   <div class="caco-mobile-drawer md-hidden" id="caco-mobile-drawer" aria-hidden="true">
     <div class="caco-mobile-drawer-inner">
       <!-- Search inside drawer -->  
@@ -1372,6 +1435,13 @@
 </div>
 
 <style>
+/* ============================================================================
+   4. CSS STYLES
+   ============================================================================ */
+
+/* ----------------------------------------------------------------------------
+   4.1 CSS Variables
+   ---------------------------------------------------------------------------- */
   :root{
     --header-bg:#ffffff;
     --header-text:#1f2933;
@@ -1404,7 +1474,10 @@
     height:100%;
   }
 
-  /* ==== Scroll behavior: hide/show announcement + mega menu ==== */
+/* ----------------------------------------------------------------------------
+   4.2 Scroll Behavior
+   Hide/show logic for announcement bar and mega menu on scroll
+   ---------------------------------------------------------------------------- */
   .caco-header-wrapper .caco-announcement-bar,
   .caco-header-wrapper .caco-header-bottom {
     will-change: transform, opacity;
@@ -1524,6 +1597,9 @@
     .caco-grid-container{grid-template-columns:auto 1fr auto;}
   }
 
+/* ----------------------------------------------------------------------------
+   4.3 Announcement Bar
+   ---------------------------------------------------------------------------- */
   .caco-announcement-bar{
     background-color:var(--announcement-bg);
     color:var(--announcement-text);
@@ -1573,6 +1649,9 @@
     }
   }
 
+/* ----------------------------------------------------------------------------
+   4.4 Search & Predictive Results
+   ---------------------------------------------------------------------------- */
   .caco-search-overlay{
     position:fixed;
     inset:0;
@@ -1599,6 +1678,9 @@
     .caco-header-wrapper.caco-overlay-active .caco-header-top{position:relative;z-index:170;}
   }
 
+/* ----------------------------------------------------------------------------
+   4.5 Header Top & Tools (Logo, Center Area, Cart/User Icons)
+   ---------------------------------------------------------------------------- */
   .caco-header-top{
     padding:16px 0;
     border-bottom:1px solid var(--border-color);
@@ -2073,6 +2155,9 @@
   }
   .caco-partner-link:hover{background:#f3f4f6;color:var(--primary-blue);}
 
+/* ----------------------------------------------------------------------------
+   4.6 Desktop Navigation & Dropdowns
+   ---------------------------------------------------------------------------- */
   .caco-header-bottom{border-bottom:1px solid var(--border-color);background:#fff;}
   .caco-nav{display:flex;align-items:center;gap:24px;}
   .caco-nav-list{display:flex;align-items:center;gap:40px;flex:1;}
@@ -2636,6 +2721,9 @@
     overflow: hidden;
   }
 
+/* ----------------------------------------------------------------------------
+   4.8 Global Animations
+   ---------------------------------------------------------------------------- */
   @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
   @keyframes slideUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
   @keyframes caco-ann-marquee{
@@ -2649,6 +2737,9 @@
     100%{transform:scale(1);}
   }
 
+/* ----------------------------------------------------------------------------
+   4.7 Mobile Drawer Styles
+   ---------------------------------------------------------------------------- */
   .caco-mobile-overlay{
     position:fixed;
     inset:0;
@@ -3247,22 +3338,30 @@
 
 </style>
 
+<!-- ============================================================================
+     5. JAVASCRIPT
+     ============================================================================ -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 
-// Sticky header (fixed) + scroll behaviour (announcement + mega menu)
+/* ----------------------------------------------------------------------------
+   5.1 Sticky Header Logic
+   Handles scroll-based hide/show of announcement bar and navigation
+   ---------------------------------------------------------------------------- */
 (function() {
   var headerWrapper = document.querySelector('.caco-header-wrapper');
   if (!headerWrapper) return;
 
   var lastScrollY = window.scrollY || 0;
-  var lastDirection = null;             // 'up' o 'down'
+  var lastDirection = null;             // 'up' or 'down'
   var directionChangeStartY = lastScrollY;
 
-  var HIDE_THRESHOLD = 8;              // sensibilidad al cambio de scroll
-  var MIN_SCROLL_TO_HIDE = 120;        // desde aquí hacia abajo empezamos a esconder
-  var SHOW_AFTER = 200;                // cuánto tienes que subir antes de que vuelva a aparecer
-  var ANNOUNCEMENT_HIDE_AFTER = 120; // px que debes scrollear antes de ocultar la barra
+  // ============ SCROLL THRESHOLDS (adjust these to tune behavior) ============
+  var HIDE_THRESHOLD = 8;               // Minimum scroll delta to trigger hide
+  var MIN_SCROLL_TO_HIDE = 120;         // Don't hide nav until scrolled past this
+  var SHOW_AFTER = 200;                 // Scroll up distance to re-show nav
+  var ANNOUNCEMENT_HIDE_AFTER = 120;    // Hide announcement bar after this scroll
+  // ===========================================================================
   var ticking = false;
 
   // Debounce and transition lock to prevent flicker
@@ -3396,7 +3495,10 @@ document.addEventListener('visibilitychange', function () {
 })();
 
 
-  // Mega menu sidebar behaviour
+/* ----------------------------------------------------------------------------
+   5.2 Mega Menu Sidebar Behavior
+   Hover/click to activate sidebar panels in mega menu
+   ---------------------------------------------------------------------------- */
   (function() {
     document.querySelectorAll('.caco-nav-item.mega-menu').forEach(function(megaItem) {
       var sidebarLinks = megaItem.querySelectorAll('.caco-mega-sidebar-link');
@@ -3436,7 +3538,10 @@ document.addEventListener('visibilitychange', function () {
     });
   })();
 
-  // Header overlay manager (desktop dim for open elements)
+/* ----------------------------------------------------------------------------
+   5.3 Header Overlay Manager
+   Desktop dimming overlay for open dropdowns and search
+   ---------------------------------------------------------------------------- */
   var cacoOverlayManager = (function() {
     var overlay = document.getElementById('caco-search-overlay');
     var headerWrapper = document.querySelector('.caco-header-wrapper');
@@ -3499,7 +3604,9 @@ document.addEventListener('visibilitychange', function () {
     });
   })();
 
-  // Cart drawer (Dawn)
+/* ----------------------------------------------------------------------------
+   5.4 Cart Drawer Integration
+   ---------------------------------------------------------------------------- */
   (function() {
     var cartButton = document.querySelector('[data-caco-cart-drawer]');
     if (!cartButton) return;
@@ -3516,7 +3623,9 @@ document.addEventListener('visibilitychange', function () {
     });
   })();
 
-  // Cart count auto-update
+/* ----------------------------------------------------------------------------
+   5.5 Cart Count Auto-Update
+   ---------------------------------------------------------------------------- */
   (function() {
     var cartBtn = document.querySelector('.caco-cart-btn');
     if (!cartBtn) return;
@@ -3689,7 +3798,9 @@ document.addEventListener('visibilitychange', function () {
     fetchCartAndUpdate(0);
   })();
 
-  // Partner dropdown
+/* ----------------------------------------------------------------------------
+   5.6 Partner Dropdown
+   ---------------------------------------------------------------------------- */
   (function() {
     var partnerMenu = document.querySelector('.caco-partner-menu');
     if (!partnerMenu) return;
@@ -3718,7 +3829,9 @@ document.addEventListener('visibilitychange', function () {
     });
   })();
 
-  // HELP CENTER DROPDOWN
+/* ----------------------------------------------------------------------------
+   5.7 Help Center Dropdown
+   ---------------------------------------------------------------------------- */
   (function() {
     var helpMenu = document.querySelector('.caco-help-menu');
     if (!helpMenu) return;
@@ -3751,7 +3864,9 @@ document.addEventListener('visibilitychange', function () {
   })();
 
 
-  // INDUSTRIES DROPDOWN
+/* ----------------------------------------------------------------------------
+   5.8 Industries Dropdown
+   ---------------------------------------------------------------------------- */
   (function() {
     var industriesMenu = document.querySelector('.caco-industries-menu');
     if (!industriesMenu) return;
@@ -3783,7 +3898,9 @@ document.addEventListener('visibilitychange', function () {
     });
   })();
 
-  // Announcement slider + mobile marquee infinito
+/* ----------------------------------------------------------------------------
+   5.9 Announcement Slider & Mobile Marquee
+   ---------------------------------------------------------------------------- */
   (function() {
     var bar = document.getElementById('caco-announcement-bar');
     if (!bar) return;
@@ -3933,17 +4050,29 @@ document.addEventListener('visibilitychange', function () {
     };
   })();
 
-  // Predictive search
+/* ----------------------------------------------------------------------------
+   5.10 Predictive Search
+   Live search results as you type
+   
+   LIQUID VARIABLES (from section settings):
+   - enable_predictive_search: Toggle feature on/off
+   - predictive_limit: Max number of results
+   - predictive_min_chars: Min characters before searching
+   - predictive_debounce: Delay in ms before API call
+   - predictive_overlay: Show dimming overlay
+   ---------------------------------------------------------------------------- */
   (function() {
     var overlay = document.getElementById('caco-search-overlay');
     var defaultImage = 'https://www.cacoamerica.com/cdn/shop/files/caco-usa.png';
     var searchBase = '{{ routes.search_url }}';
 
+    // ============ PREDICTIVE SEARCH CONFIG (uses Liquid section settings) ====
     var predictiveEnabled   = {{ section.settings.enable_predictive_search | default: true | json }};
     var predictiveLimit     = {{ section.settings.predictive_limit | default: 5 | json }};
     var predictiveMinChars  = {{ section.settings.predictive_min_chars | default: 2 | json }};
     var predictiveDebounce  = {{ section.settings.predictive_debounce | default: 250 | json }};
     var predictiveOverlayOn = {{ section.settings.predictive_overlay | default: true | json }};
+    // =========================================================================
 
     if (!predictiveEnabled) return;
 
@@ -4071,7 +4200,10 @@ document.addEventListener('visibilitychange', function () {
     setupPredictive('.caco-search-form--mobile',  '.caco-search-input--mobile');
   })();
 
-  // Mobile drawer (burger + swipe + panel navigation + highlight pills)
+/* ----------------------------------------------------------------------------
+   5.11 Mobile Drawer
+   Burger menu, swipe gestures, panel navigation, and pill highlighting
+   ---------------------------------------------------------------------------- */
   (function() {
     var drawer   = document.getElementById('caco-mobile-drawer');
     var overlay  = document.getElementById('caco-mobile-overlay');
@@ -4320,6 +4452,9 @@ document.addEventListener('visibilitychange', function () {
 
 </script>
 
+<!-- ============================================================================
+     5.12 Voice Search (Web Speech API)
+     ============================================================================ -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -4400,6 +4535,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
+<!-- ============================================================================
+     5.13 Animated Search Placeholder
+     Cycles through hint text in search input
+     ============================================================================ -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   var desktopInput = document.querySelector('.caco-search-input--desktop');
@@ -4502,6 +4641,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
+<!-- ============================================================================
+     6. SCHEMA
+     ============================================================================ -->
 {% schema %}
 {
   "name": "t:sections.header.name",
