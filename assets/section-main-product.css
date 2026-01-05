@@ -482,7 +482,7 @@ a.product__text {
 }
 
 .product-form__input input[type="radio"]+label:not([class*="color"]):not([class*="swatch"]):not([class*="thumbnail"]) {
-  border: 1.5px solid #dfe6ee !important;
+  border: 1.8px solid #dfe6ee !important;
   padding: 9px 14px;
   transition: transform 0.2s ease, border-color 0.2s ease;
   box-shadow: none !important;
@@ -501,7 +501,7 @@ a.product__text {
   border-color: #0d6ba6 !important;
   background: #f0f7fb !important;
   color: #0d6ba6 !important;
-  border-width: 2.2px !important;
+  border-width: 1.8px !important;
   font-weight: 700;
   box-shadow: 0 4px 12px rgba(13, 107, 166, 0.1) !important;
   transform: translateY(-1px);
@@ -4620,7 +4620,7 @@ body.template-product .product__media-modal * {
 .product-form__input--swatch {
   --swatch-input--size: 3.2rem;
   --swatch-input--border-radius: 20px;
-  --swatch-border-width: 1.6px;
+  --swatch-border-width: 1.8px;
   --swatch-outline-width: 0px;
   display: flex;
   flex-wrap: wrap;
@@ -4652,7 +4652,8 @@ body.template-product .product__media-modal * {
 
 
 .swatch-input__input:checked+.swatch-input__label {
-  --swatch-border-width: 2.2px;
+  /* Mantener el mismo ancho para evitar saltos de tamaño */
+  --swatch-border-width: 1.8px;
   border-color: #0d6ba6;
   background: #f0f7fb;
   outline: none;
