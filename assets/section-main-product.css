@@ -483,7 +483,6 @@ a.product__text {
 
 .product-form__input input[type="radio"]+label:not([class*="color"]):not([class*="swatch"]):not([class*="thumbnail"]) {
   border: 1.5px solid #dfe6ee !important;
-  min-height: 42px;
   padding: 9px 14px;
   transition: transform 0.2s ease, border-color 0.2s ease;
   box-shadow: none !important;
@@ -2120,6 +2119,13 @@ variant-selects .form__label strong {
   z-index: 0;
   margin: .2rem .2rem .3rem .2rem !important;
 
+}
+
+@media screen and (min-width: 768px) {
+  .product-form__input--pill.options-color input[type=radio]+label {
+    width: 100px;
+    height: 100px;
+  }
 }
 
 .product-form__input--pill input[type='radio']:disabled+label,
