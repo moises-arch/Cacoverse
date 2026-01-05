@@ -5389,18 +5389,25 @@ body.template-product .product__media-modal * {
 .bundle-card__badge-label {
   display: inline-flex;
   align-items: center;
-  padding: 0.2rem 0.8rem;
+  gap: 0.4rem;
+  padding: 0.2rem 0.6rem;
   background: #f0f7ff;
   color: #0d6ba6;
   border: 1px solid #c8e1ff;
   border-radius: 99px;
-  font-size: 0.8rem;
+  font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.02em;
   pointer-events: none;
   transition: all 0.2s;
   white-space: nowrap;
+}
+
+.bundle-card__badge-label svg {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
 }
 
 .bundle-card:hover .bundle-card__badge-label {

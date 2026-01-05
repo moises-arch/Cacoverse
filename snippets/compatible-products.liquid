@@ -26,18 +26,17 @@
           {%- if current_variant.available -%}
             {%- assign visible_counter = visible_counter | plus: 1 -%}
             
-            <div class="bundle-card {% if visible_counter > 4 %}is-hidden{% endif %}" 
+            <div class="bundle-card" 
                  data-product-id="{{ item.id }}" 
                  data-variant-id="{{ current_variant.id }}" 
-                 data-price="{{ current_variant.price }}"
-                 {% if visible_counter > 4 %}style="display: none;"{% endif %}>
+                 data-price="{{ current_variant.price }}">
               
               <div class="bundle-card__selection">
                 <input type="checkbox" 
                        id="bundle-item-{{ item.id }}-{{ forloop.index }}" 
                        name="compatible_product" 
                        value="{{ current_variant.id }}" 
-                       {% if visible_counter <= 4 %}checked{% endif %}
+                       checked
                        class="bundle-card__checkbox">
                 <label for="bundle-item-{{ item.id }}-{{ forloop.index }}" class="bundle-card__checkbox-label">
                   <span class="bundle-card__checkbox-box">
@@ -92,7 +91,13 @@
                             </option>
                           {%- endfor -%}
                         </select>
-                        <span class="bundle-card__badge-label">Configure</span>
+                        <span class="bundle-card__badge-label">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-settings">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                          </svg>
+                          Configure
+                        </span>
                       </div>
                     {%- endif -%}
                   </div>

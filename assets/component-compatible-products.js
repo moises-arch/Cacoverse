@@ -59,27 +59,24 @@ if (!customElements.get('compatible-products-form')) {
                 const newSku = selectedOption.dataset.sku;
 
                 if (card) {
-                    // 1. Update card data attributes for price calculation
+                    // Update dataset so updateTotal() picks up the right value
                     card.dataset.price = newPrice;
                     card.dataset.variantId = newVariantId;
 
-                    // 2. Update visible prices
+                    // Update prices UI
                     const priceElement = card.querySelector('[data-item-price]');
                     const compareElement = card.querySelector('[data-item-compare-price]');
                     const moneyFormat = window.theme?.moneyFormat || "${{amount}}";
 
                     if (priceElement) {
                         priceElement.textContent = Shopify.formatMoney(newPrice, moneyFormat);
-                        // Toggle sale class
-                        if (newComparePrice && parseInt(newComparePrice) > parseInt(newPrice)) {
-                            priceElement.classList.add('on-sale');
-                        } else {
-                            priceElement.classList.remove('on-sale');
-                        }
+                        const isSale = newComparePrice && parseInt(newComparePrice) > parseInt(newPrice);
+                        priceElement.classList.toggle('on-sale', !!isSale);
                     }
 
                     if (compareElement) {
-                        if (newComparePrice && parseInt(newComparePrice) > parseInt(newPrice)) {
+                        const isSale = newComparePrice && parseInt(newComparePrice) > parseInt(newPrice);
+                        if (isSale) {
                             compareElement.style.display = 'inline';
                             compareElement.textContent = Shopify.formatMoney(newComparePrice, moneyFormat);
                         } else {
@@ -87,13 +84,13 @@ if (!customElements.get('compatible-products-form')) {
                         }
                     }
 
-                    // 3. Update SKU
+                    // Update SKU UI
                     const skuElement = card.querySelector('[data-sku-display]');
                     if (skuElement) {
                         skuElement.textContent = newSku || '';
                     }
 
-                    // 4. Sync hidden checkbox value
+                    // Sync hidden checkbox
                     const checkbox = card.querySelector('input[type="checkbox"]');
                     if (checkbox) checkbox.value = newVariantId;
                 }
