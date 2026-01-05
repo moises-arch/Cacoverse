@@ -17,8 +17,57 @@ if (!customElements.get('compatible-products-form')) {
             this.addEventListener('click', this._boundHandleEvent);
             this.addEventListener('change', this._boundHandleSelectChange);
 
+            // Restore previous selection
+            this.restoreFromStorage();
+
             // Initial calculation
             setTimeout(() => this.updateTotal(), 0);
+        }
+
+        getStorageKey() {
+            const pagePath = window.location.pathname;
+            return `bundle_selection_${pagePath.replace(/\//g, '_')}`;
+        }
+
+        saveToStorage() {
+            const selection = {};
+            this.querySelectorAll('.bundle-card').forEach((card, index) => {
+                const checkbox = card.querySelector('input[type="checkbox"]');
+                const select = card.querySelector('select');
+                selection[index] = {
+                    checked: checkbox ? checkbox.checked : false,
+                    variantId: select ? select.value : card.dataset.variantId
+                };
+            });
+            localStorage.setItem(this.getStorageKey(), JSON.stringify(selection));
+        }
+
+        restoreFromStorage() {
+            try {
+                const saved = localStorage.getItem(this.getStorageKey());
+                if (!saved) return;
+                const selection = JSON.parse(saved);
+
+                this.querySelectorAll('.bundle-card').forEach((card, index) => {
+                    const data = selection[index];
+                    if (!data) return;
+
+                    const checkbox = card.querySelector('input[type="checkbox"]');
+                    const select = card.querySelector('select');
+
+                    if (checkbox) checkbox.checked = data.checked;
+
+                    if (select && data.variantId) {
+                        select.value = data.variantId;
+                        // Trigger the visual update for the select change
+                        this.handleSelectChange({ target: select });
+                    }
+
+                    this.updateCardState(card, data.checked);
+                });
+            } catch (e) {
+                console.warn('Failed to restore bundle selection:', e);
+            }
         }
 
         formatMoney(cents, format) {
@@ -81,6 +130,7 @@ if (!customElements.get('compatible-products-form')) {
             if (event.target.type === 'checkbox') {
                 this.updateCardState(card, event.target.checked);
                 this.updateTotal();
+                this.saveToStorage();
                 return;
             }
 
@@ -92,6 +142,7 @@ if (!customElements.get('compatible-products-form')) {
                     checkbox.checked = !checkbox.checked;
                     this.updateCardState(card, checkbox.checked);
                     this.updateTotal();
+                    this.saveToStorage();
                 }
             }
         }
@@ -148,6 +199,7 @@ if (!customElements.get('compatible-products-form')) {
                 }
             }
             this.updateTotal();
+            this.saveToStorage();
         }
 
         updateTotal() {

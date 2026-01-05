@@ -5209,12 +5209,14 @@ body.template-product .product__media-modal * {
   background: #fff;
   border: 1px solid #e1e1e1;
   border-radius: 12px;
-  padding: 0.6rem 0.8rem;
+  padding: 0.5rem 0.8rem;
   transition: all 0.3s ease;
   position: relative;
   cursor: pointer;
   user-select: none;
   height: 90px;
+  min-height: 90px;
+  max-height: 90px;
   overflow: hidden;
   filter: grayscale(100%);
   opacity: 0.6;
@@ -5365,10 +5367,11 @@ body.template-product .product__media-modal * {
 }
 
 .bundle-card__compare-price {
-  font-size: 0.75rem;
-  color: #a0a0a0;
+  font-size: 0.72rem;
+  color: #949494;
   text-decoration: line-through;
   font-weight: 400;
+  margin-left: 0.1rem;
 }
 
 .bundle-card__variant-container {
