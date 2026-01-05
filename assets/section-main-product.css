@@ -5216,10 +5216,10 @@ body.template-product .product__media-modal * {
   margin-bottom: 2rem;
 }
 
-@media screen and (min-width: 750px) {
+@media screen and (min-width: 990px) {
   .bundle-items-list {
     grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
+    gap: 0.8rem;
   }
 }
 
@@ -5308,8 +5308,8 @@ body.template-product .product__media-modal * {
 }
 
 .bundle-card__media {
-  width: 56px;
-  height: 56px;
+  width: 48px;
+  height: 48px;
   background: #f7f7f7;
   border-radius: 6px;
   display: flex;
@@ -5344,7 +5344,7 @@ body.template-product .product__media-modal * {
 
 .bundle-card__product-title {
   margin: 0;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   font-weight: 700;
   line-height: 1.2;
   color: #1a1a1a;
@@ -5417,7 +5417,7 @@ body.template-product .product__media-modal * {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.3rem 0.6rem;
+  padding: 0.4rem 0.6rem;
   background: #f4f6f8;
   color: #555;
   border: none;
