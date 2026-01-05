@@ -27,6 +27,9 @@ if (!customElements.get('product-form')) {
         this._lastVariantId = this.variantIdInput?.value || null;
 
         this._onVariantEvent = (e) => {
+          // Prevent infinite recursion if the event was dispatched by this same component
+          if (e.detail && e.detail._fromProductForm) return;
+
           const v = e.detail?.variant || e.detail?.selectedVariant || null;
           if (v) window.__lastSelectedVariant = v;
           this._afterVariantChanged(v);
@@ -227,7 +230,8 @@ if (!customElements.get('product-form')) {
           const detail = {
             productEl: this.productEl,
             variant: passedVariant || null,
-            selectedVariant: passedVariant || null
+            selectedVariant: passedVariant || null,
+            _fromProductForm: true // Flag to prevent infinite loops in scripts listening for this event
           };
           document.dispatchEvent(new CustomEvent('variant:changed', { detail }));
         } catch (_) { }
