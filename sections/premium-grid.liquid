@@ -478,7 +478,7 @@
 
     .wd40-collection-container { width: 100%; max-width: 1500px; margin: 0 auto; padding: 0 20px; box-sizing: border-box; background-color: #ffffff; padding-top: var(--section-padding-top); padding-bottom: var(--section-padding-bottom); font-family: Inter, sans-serif; position: relative; }
     
-    .wd40-collection-layout { display: flex; gap: 34px; align-items: flex-start; padding: 20px; }
+    .wd40-collection-layout { display: flex; gap: 34px; align-items: flex-start; }
     
     /* Toolbar */
     .wd40-toolbar-container { width: 100%; margin-bottom: 28px; position: relative; z-index: 30; }
@@ -712,14 +712,13 @@
     .price-apply-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: #f0f0f0; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; color: #333; transition: all 0.2s; }
     .price-apply-btn:hover { background: #111; color: #fff; border-color: #111; }
 
-    /* Grid con área de pintura optimizada para sombras */
+    /* Grid original sin recortes de sombras */
     .wd40-product-grid { 
       flex: 1; 
       display: grid; 
       grid-template-columns: repeat(3, minmax(0, 1fr)); 
       gap: 24px; 
       align-content: start; 
-      padding: 20px !important; 
     }
     .wd40-card { 
       border: 1px solid transparent; 
@@ -1063,7 +1062,7 @@
     </div>
   </div>
 
-  <div class="wd40-collection-layout defer-section">
+  <div class="wd40-collection-layout">
      <div id="wd40-mobile-overlay" class="wd40-drawer-overlay" onclick="wd40ToggleMobileDrawer(false)"></div>
      <div id="wd40-mobile-drawer" class="wd40-drawer">
         <div class="wd40-drawer-header">
