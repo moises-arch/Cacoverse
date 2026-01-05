@@ -5209,12 +5209,13 @@ body.template-product .product__media-modal * {
   background: #fff;
   border: 1px solid #e1e1e1;
   border-radius: 6px;
-  padding: 0.8rem;
+  padding: 0.6rem 0.8rem;
   transition: all 0.2s ease;
   position: relative;
   cursor: pointer;
   user-select: none;
-  min-height: 80px;
+  height: 120px;
+  overflow: hidden;
 }
 
 .bundle-card:hover {
@@ -5305,7 +5306,7 @@ body.template-product .product__media-modal * {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.4rem;
   justify-content: center;
 }
 
