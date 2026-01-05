@@ -162,6 +162,17 @@
 {% endstyle %}
 {{ 'hero-banner.css' | asset_url | stylesheet_tag }}
 
+<style>
+  .hero-banner-visuals { position: absolute; top:0; left:0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+  .hero-bg-img { width: 100%; height: 100%; object-fit: cover; object-position: left center; }
+  .hero-product-img { position: absolute; bottom: 0; right: 0; width: 48.5%; height: 100%; object-fit: contain; object-position: bottom right; z-index: 2; }
+  
+  @media(max-width: 1050px) {
+    .hero-product-img { display: none; }
+    .hero-bg-img { object-position: center; }
+  }
+</style>
+
 <div class="slider">
   <div
     class="swiper-container"
@@ -173,57 +184,32 @@
   >
     <div class="swiper-wrapper">
       {% for block in section.blocks %}
-        <style>
-           .hero-banner #swiper-slide-{{ forloop.index }}{
-             background-image: url( "{{ block.settings.bg_image | img_url : '2000x'  }}" );
-              background-repeat: no-repeat;
-              background-size: 124%;
-              background-position: left center;
-              position: relative;
-              z-index: 8;
-              display: flex;
-              align-items: center;
-            }
-
-              @media( max-width: 1050px){
-                 .hero-banner #swiper-slide-{{ forloop.index }}{
-                      display: flex;
-                      align-items: stretch;
-                    }
-              }
-
-
-          .hero-banner #swiper-slide-{{ forloop.index }}:after{
-            content: '';
-            background-image: url( "{{ block.settings.image | img_url : '750x'  }}" );
-            background-repeat: no-repeat;
-            background-size: contain;
-            background-position: bottom right;
-            width: 48.5%;
-            height: 100%;
-            position: absolute;
-            bottom: 0;
-            right: 0px;
-            z-index: 9;
-          }
-
-           @media( max-width: 1050px){
-
-             .hero-banner #swiper-slide-{{ forloop.index }}{
-                padding-bottom: 0 !important;
-                background-size: cover;
-              }
-
-             .hero-banner #swiper-slide-{{ forloop.index }}:after{
-               display:none;
-             }
-           }
-        </style>
         <div
           id="swiper-slide-{{ forloop.index }}"
           class="swiper-slide"
+          style="display: flex; align-items: center;"
         >
-          <div class="page-width container-fluid">
+          <div class="hero-banner-visuals">
+            {%- if block.settings.bg_image != blank -%}
+              {{ block.settings.bg_image | image_url: width: 2048 | image_tag: 
+                class: 'hero-bg-img', 
+                loading: forloop.first ? 'eager' : 'lazy', 
+                fetchpriority: forloop.first ? 'high' : 'auto',
+                preload: forloop.first,
+                alt: block.settings.heading | escape
+              }}
+            {%- endif -%}
+            {%- if block.settings.image != blank -%}
+               {{ block.settings.image | image_url: width: 1000 | image_tag: 
+                class: 'hero-product-img', 
+                loading: forloop.first ? 'eager' : 'lazy', 
+                fetchpriority: forloop.first ? 'high' : 'auto',
+                alt: 'Product artwork'
+              }}
+            {%- endif -%}
+          </div>
+
+          <div class="page-width container-fluid" style="position: relative; z-index: 10;">
             <div class="hero-banner-inner d-flex align-items-start justify-content-center flex-wrap flex-column gap-2">
               <h1 class="ph-60">{{ block.settings.heading }}</h1>
               <p class="pp-16">{{ block.settings.sub_heading }}</p>
@@ -244,15 +230,6 @@
                     <span>{{ block.settings.second_link_label -}}</span>
                   </a>
                 {% endif %}
-              </div>
-              <div class="d-none showing-r">
-                <img
-                  src="{{ block.settings.image | img_url : '650x'  }}"
-                  loading="lazy"
-                  width="650"
-                  height="auto"
-                  class="img-fluid"
-                >
               </div>
             </div>
           </div>

@@ -362,6 +362,7 @@
                 <img src="{{ media | image_url: width: 1440 }}" 
                      alt="{{ media.alt | escape }}" 
                      loading="eager"
+                     fetchpriority="high"
                      data-zoom-url="{{ media | image_url: width: 3000 }}"
                      class="gallery-image">
             {% elsif media.media_type == 'video' %}
