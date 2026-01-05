@@ -5208,13 +5208,13 @@ body.template-product .product__media-modal * {
   align-items: center;
   background: #fff;
   border: 1px solid #e1e1e1;
-  border-radius: 15px;
+  border-radius: 12px;
   padding: 0.6rem 0.8rem;
   transition: all 0.3s ease;
   position: relative;
   cursor: pointer;
   user-select: none;
-  height: 105px;
+  height: 90px;
   overflow: hidden;
   filter: grayscale(100%);
   opacity: 0.6;
@@ -5354,7 +5354,7 @@ body.template-product .product__media-modal * {
 }
 
 .bundle-card__price {
-  font-size: 1.05rem;
+  font-size: 0.9rem;
   font-weight: 700;
   color: #000;
   white-space: nowrap;
@@ -5365,8 +5365,8 @@ body.template-product .product__media-modal * {
 }
 
 .bundle-card__compare-price {
-  font-size: 0.85rem;
-  color: #999;
+  font-size: 0.75rem;
+  color: #a0a0a0;
   text-decoration: line-through;
   font-weight: 400;
 }
@@ -5393,31 +5393,35 @@ body.template-product .product__media-modal * {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  padding: 0.15rem 0.5rem;
-  background: #f4f4f4;
-  color: #666;
-  border: 1px solid #ddd;
-  border-radius: 99px;
-  font-size: 0.65rem;
-  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  background: transparent;
+  color: #888;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 0.6rem;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.05em;
   pointer-events: none;
   transition: all 0.2s;
   white-space: nowrap;
 }
 
 .bundle-card__badge-label svg {
-  width: 0.8rem;
-  height: 0.8rem;
+  width: 0.7rem;
+  height: 0.7rem;
   flex-shrink: 0;
-  opacity: 0.7;
+  opacity: 0.5;
 }
 
 .bundle-card:hover .bundle-card__badge-label {
-  background: #eee;
-  border-color: #ccc;
-  color: #333;
+  background: #f8f8f8;
+  border-color: #121212;
+  color: #121212;
+}
+
+.bundle-card:hover .bundle-card__badge-label svg {
+  opacity: 0.9;
 }
 
 /* Summary Bar */

@@ -36,7 +36,7 @@
                        id="bundle-item-{{ item.id }}-{{ forloop.index }}" 
                        name="compatible_product" 
                        value="{{ current_variant.id }}" 
-                       checked
+                       {% if visible_counter <= 3 %}checked{% endif %}
                        class="bundle-card__checkbox">
                 <label for="bundle-item-{{ item.id }}-{{ forloop.index }}" class="bundle-card__checkbox-label">
                   <span class="bundle-card__checkbox-box">
