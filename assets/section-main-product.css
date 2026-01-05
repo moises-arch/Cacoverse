@@ -5166,7 +5166,11 @@ body.template-product .product__media-modal * {
 
 /* --- Bundle Module (Compatible Accessories) --- */
 .bundle-module {
-  margin: 3.5rem 0 4rem;
+  margin: 1.5rem 0 2rem;
+}
+
+.product-bundle-wrapper {
+  margin-top: 2rem;
 }
 
 .bundle-module__header {
@@ -5207,15 +5211,15 @@ body.template-product .product__media-modal * {
 /* Items List */
 .bundle-items-list {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(2, 1fr);
   gap: 0.8rem;
   margin-bottom: 2rem;
 }
 
 @media screen and (min-width: 750px) {
   .bundle-items-list {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.1rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
   }
 }
 
