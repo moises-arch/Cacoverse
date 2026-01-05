@@ -65,6 +65,7 @@
                 <div class="bundle-card__details">
                   <div class="bundle-card__top">
                     <h4 class="bundle-card__product-title">{{ item.title }}</h4>
+                    <span class="bundle-card__sku" data-sku-display>{{ current_variant.sku }}</span>
                     <span class="bundle-card__price">{{ current_variant.price | money }}</span>
                   </div>
 
@@ -75,6 +76,7 @@
                           {%- for variant in item.variants -%}
                             <option value="{{ variant.id }}" 
                                     data-price="{{ variant.price }}"
+                                    data-sku="{{ variant.sku }}"
                                     {% if variant.id == current_variant.id %}selected{% endif %}
                                     {% unless variant.available %}disabled{% endunless %}>
                               {{ variant.title }}

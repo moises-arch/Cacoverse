@@ -55,6 +55,7 @@ if (!customElements.get('compatible-products-form')) {
                 const selectedOption = select.options[select.selectedIndex];
                 const newPrice = selectedOption.dataset.price;
                 const newVariantId = select.value;
+                const newSku = selectedOption.dataset.sku;
 
                 // Update card data attributes for price calculation
                 card.dataset.price = newPrice;
@@ -64,6 +65,12 @@ if (!customElements.get('compatible-products-form')) {
                 const priceElement = card.querySelector('.bundle-card__price');
                 if (priceElement) {
                     priceElement.textContent = Shopify.formatMoney(newPrice, window.theme?.moneyFormat || "${{amount}}");
+                }
+
+                // Update visible SKU
+                const skuElement = card.querySelector('[data-sku-display]');
+                if (skuElement) {
+                    skuElement.textContent = newSku || '';
                 }
 
                 // Sync variant ID to hidden checkbox value

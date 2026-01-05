@@ -5316,10 +5316,10 @@ body.template-product .product__media-modal * {
 
 .bundle-card__product-title {
   margin: 0;
-  font-size: 1.4rem;
-  font-weight: 600;
-  line-height: 1.3;
-  color: #121212;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.2;
+  color: #1a1a1a;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -5327,10 +5327,17 @@ body.template-product .product__media-modal * {
   -webkit-box-orient: vertical;
 }
 
+.bundle-card__sku {
+  font-size: 0.9rem;
+  color: #999;
+  font-weight: 400;
+  margin-top: -0.1rem;
+}
+
 .bundle-card__price {
-  font-size: 1.5rem;
+  font-size: 1.15rem;
   font-weight: 700;
-  color: #121212;
+  color: #000;
   white-space: nowrap;
 }
 
@@ -5349,11 +5356,11 @@ body.template-product .product__media-modal * {
   -webkit-appearance: none;
   appearance: none;
   background: transparent;
-  border: 1px solid #e1e1e1;
-  border-radius: 6px;
-  padding: 0.6rem 3rem 0.6rem 1rem;
-  font-size: 1.2rem;
-  color: #444;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  padding: 0.3rem 2.2rem 0.3rem 0.6rem;
+  font-size: 0.9rem;
+  color: #666;
   cursor: pointer;
   outline: none;
   transition: all 0.2s;
