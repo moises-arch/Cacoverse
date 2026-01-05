@@ -35,7 +35,7 @@
 {% endstyle %}
 
 {%- if section.blocks.size > 0 -%}
-  <footer class="footer color-{{ section.settings.color_scheme }} section-{{ section.id }}-padding">
+  <footer class="footer color-{{ section.settings.color_scheme }} section-{{ section.id }}-padding defer-section">
     <div class="footer__content page-width container-fluid">
       <!-- Back top Top -->
 
@@ -53,12 +53,13 @@
                 {% render block %}
               {%- when 'text' -%}
                 <div class="footer-block__details-content rte">
-                  <img
-                    src="{{ block.settings.image_logo | img_url : '264x' }}"
-                    width="264"
-                    height="24"
-                    alt="footer logo"
-                  >
+                  {{ block.settings.image_logo | image_url: width: 528 | image_tag: 
+                    class: 'footer-logo',
+                    width: 264,
+                    height: 24,
+                    loading: 'lazy',
+                    alt: 'footer logo'
+                  }}
                   {{ block.settings.subtext }}
                   {%- if block.settings.show_social -%}
                     {%- render 'social-icons', class: 'footer__list-social' -%}

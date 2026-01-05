@@ -14,13 +14,19 @@
 {% endstyle %}
 
 {{ 'industries-section-1.css' | asset_url | stylesheet_tag }}
-<div class="page-width container-fluid ">
+<div class="page-width container-fluid defer-section">
   <div class="row">
     <div class="col-12 text-center">
       <h2 class="sh-48">{{ section.settings.heading }}</h2>
       <div class="fl-icon-wrap">
         <span class="fl-icon">
-          <img class="img-fluid w-100" src="{{ section.settings.image | img_url : '75x' }}" loading="lazy" width="{{ section.settings.image_banner.width }}" height="{{ section.settings.image_banner.height }}" alt="{{ section.settings.image_banner.alt }}">
+          {{ section.settings.image | image_url: width: 150 | image_tag: 
+            class: 'img-fluid w-100',
+            width: 75,
+            height: 75,
+            loading: 'lazy',
+            alt: section.settings.image.alt | default: 'Join Community icon'
+          }}
           <a
             href="https://www.youtube.com/channel/UCr6NUsYyW6eH-OfDeP10g_g"
             target="_blank"
@@ -45,7 +51,7 @@
       </div>
     </div>
     <div class="col-12" style="max-width: 900px; margin: 0 auto;">
-      <video style="width:100%;">
+      <video style="width:100%;" preload="none" muted controls>
         <source src="{{ section.settings.link  }}" type="video/mp4">
         Your browser does not support the video tag.
       </video>

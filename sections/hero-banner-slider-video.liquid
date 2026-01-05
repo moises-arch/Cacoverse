@@ -95,7 +95,11 @@
         >
           <div id="product-video-{{ forloop.index }}" class="company-video-inner">
             <div class="video-background">
-              <video autoplay muted loop playsinline>
+              {%- if forloop.first -%}
+                <video autoplay muted loop playsinline preload="auto" class="hero-video-active">
+              {%- else -%}
+                <video muted loop playsinline preload="none" class="hero-video-lazy">
+              {%- endif -%}
                 <source src="{{ block.settings.video  }}" type="video/mp4">
                 Your browser does not support the video tag.
               </video>
