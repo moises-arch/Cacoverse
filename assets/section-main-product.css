@@ -5683,6 +5683,15 @@ body.template-product .product__media-modal * {
 
 /* Final Mobile Optimizations */
 @media screen and (max-width: 749px) {
+  .product-bundle-wrapper {
+    margin-top: 0.5rem !important;
+    padding-top: 0 !important;
+  }
+
+  .bundle-module {
+    margin-top: 0.5rem !important;
+  }
+
   .bundle-items-list {
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 0.6rem !important;
