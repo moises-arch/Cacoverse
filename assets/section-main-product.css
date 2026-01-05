@@ -5425,13 +5425,12 @@ body.template-product .product__media-modal * {
 .bundle-card__config-button {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
   background: #f4f6f8;
   border: 1px solid #e1e1e1;
-  padding: 0.3rem 0.6rem;
-  border-radius: 6px;
-  font-size: 0.7rem;
-  font-weight: 600;
+  border-radius: 50%;
   color: #555;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -5493,15 +5492,15 @@ body.template-product .product__media-modal * {
 
 /* Consolidated Action Box */
 .bundle-summary {
-  margin-top: 1.5rem;
-  padding: 1.25rem;
-  background: #fdfdfd;
+  margin-top: 1.25rem;
+  padding: 1rem;
+  background: #fff;
   border: 1px solid #eee;
   border-radius: 12px;
   display: flex !important;
   flex-direction: column;
-  gap: 1rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+  gap: 0.75rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
 }
 
 .bundle-summary__header {
@@ -5555,14 +5554,14 @@ body.template-product .product__media-modal * {
 .bundle-summary__show-more {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.6rem;
   background: #f4f6f8;
-  border: none;
-  padding: 0.4rem 0.8rem;
+  border: 1px solid #e1e1e1;
+  padding: 0.75rem 1.25rem;
   border-radius: 20px;
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: #555;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #000;
   cursor: pointer;
   transition: all 0.2s ease;
 }
