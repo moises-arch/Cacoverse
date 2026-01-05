@@ -746,8 +746,8 @@ a.product__text {
 
 @media (max-width: 749px) {
   .product-form__buttons {
-    flex-wrap: wrap;
-    gap: 12px;
+    flex-wrap: nowrap;
+    gap: 10px;
   }
 
   .product-form__buttons .product-form__quantity {
@@ -763,13 +763,13 @@ a.product__text {
   }
 
   .product-form__buttons .product-form__submit {
-    flex: 1 1 100%;
-    width: 100%;
+    flex: 1 1 auto;
+    width: auto;
     margin-top: 0;
     font-size: 1.3rem;
-    /* Increased size */
+    /* Keep increased size */
     font-weight: 800 !important;
-    /* Bolder */
+    /* Keep bolder */
     letter-spacing: 0.08em;
   }
 }
