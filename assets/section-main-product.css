@@ -2214,7 +2214,6 @@ variant-selects .form__label strong {
 .product-form__input--pill.options-color input[type=radio]:checked+label {
   background: #EBF0F5 !important;
   background-blend-mode: multiply, normal;
-  border: 2px solid #929da8 !important;
 }
 
 label.quantity__label.form__label {
