@@ -85,11 +85,14 @@ if (!customElements.get("product-info")) {
         const shouldFetchFullPage =
           this.dataset.updateUrl === "true" && shouldSwapProduct;
 
+        const variant = this.findVariantByValues(selectedOptionValues);
+
         this.renderProductInfo({
           requestUrl: this.buildRequestUrlWithParams(
             productUrl,
             selectedOptionValues,
-            shouldFetchFullPage
+            shouldFetchFullPage,
+            variant?.id
           ),
           targetId: target.id,
           callback: shouldSwapProduct
@@ -190,13 +193,16 @@ if (!customElements.get("product-info")) {
       buildRequestUrlWithParams(
         url,
         optionValues,
-        shouldFetchFullPage = false
+        shouldFetchFullPage = false,
+        variantId = null
       ) {
         const params = [];
 
         !shouldFetchFullPage && params.push(`section_id=${this.sectionId}`);
 
-        if (optionValues.length) {
+        if (variantId) {
+          params.push(`variant=${variantId}`);
+        } else if (optionValues.length) {
           params.push(`option_values=${optionValues.join(",")}`);
         }
 
@@ -731,6 +737,11 @@ if (!customElements.get("product-info")) {
           if (!value) return true;
           return normalize(variant[`option${index + 1}`]) === normalize(value);
         });
+      }
+
+      findVariantByValues(selectedValues) {
+        if (!selectedValues || !selectedValues.length) return null;
+        return this.allVariants.find(variant => this.isMatchingVariant(variant, selectedValues));
       }
 
       findFallbackVariant(selectedValues = []) {
