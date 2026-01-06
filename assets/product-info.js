@@ -213,9 +213,20 @@ if (!customElements.get("product-info")) {
 
       handleUpdateProductInfo(productUrl) {
         return (html) => {
+          const requestedValues = this.currentOptionValues;
           const variant = this.getSelectedVariant(html);
-          if (variant) window.__lastSelectedVariant = variant;
 
+          // If the server-side fallback gave us a variant that doesn't match our intended selection,
+          // we try to find a better match in our client-side variants (prioritizing the clicked option).
+          if (variant && !this.isMatchingVariant(variant, requestedValues)) {
+            const betterMatch = this.findFallbackVariant(requestedValues);
+            if (betterMatch && betterMatch.id !== variant.id) {
+              this.applyVariantSelections(betterMatch);
+              return;
+            }
+          }
+
+          if (variant) window.__lastSelectedVariant = variant;
 
           this.pickupAvailability?.update(variant);
           this.updateOptionValues(html);
@@ -223,15 +234,11 @@ if (!customElements.get("product-info")) {
           this.updateVariantInputs(variant?.id);
 
           if (!variant) {
-            const fallbackVariant = this.findFallbackVariant(
-              this.currentOptionValues
-            );
-
+            const fallbackVariant = this.findFallbackVariant(requestedValues);
             if (fallbackVariant) {
               this.applyVariantSelections(fallbackVariant);
               return;
             }
-
             this.setUnavailable();
             return;
           }
@@ -717,25 +724,52 @@ if (!customElements.get("product-info")) {
         return window.__productVariants?.[productId] || [];
       }
 
+      isMatchingVariant(variant, selectedValues) {
+        if (!variant || !selectedValues.length) return false;
+        const normalize = (value) => this.handleize(value || '');
+        return selectedValues.every((value, index) => {
+          if (!value) return true;
+          return normalize(variant[`option${index + 1}`]) === normalize(value);
+        });
+      }
+
       findFallbackVariant(selectedValues = []) {
         if (!this.allVariants.length) return null;
 
         const normalize = (value) => this.handleize(value || '');
         const normalizedSelected = selectedValues.map(normalize);
 
-        const matchingVariant = this.allVariants.find((variant) => {
+        // 1. Try to find a variant that matches everything AND is available
+        const exactAvailableMatch = this.allVariants.find((variant) => {
           if (!variant.available) return false;
-
           return normalizedSelected.every((value, index) => {
             if (!value) return true;
-            const variantValue = normalize(variant[`option${index + 1}`]);
-            return variantValue === value;
+            return normalize(variant[`option${index + 1}`]) === value;
           });
         });
 
-        if (matchingVariant) return matchingVariant;
+        if (exactAvailableMatch) return exactAvailableMatch;
 
-        return this.allVariants.find((variant) => variant.available) || null;
+        // 2. Try to find a variant that matches everything (even if sold out)
+        const exactMatch = this.allVariants.find((variant) => {
+          return normalizedSelected.every((value, index) => {
+            if (!value) return true;
+            return normalize(variant[`option${index + 1}`]) === value;
+          });
+        });
+
+        if (exactMatch) return exactMatch;
+
+        // 3. Try to find first available variant that matches the FIRST option (usually the Pack)
+        const firstOptionMatch = this.allVariants.find((variant) => {
+          if (!variant.available) return false;
+          return normalize(variant.option1) === normalizedSelected[0];
+        });
+
+        if (firstOptionMatch) return firstOptionMatch;
+
+        // 4. Ultimate fallback: first available variant
+        return this.allVariants.find((variant) => variant.available) || this.allVariants[0] || null;
       }
 
       applyVariantSelections(variant) {
