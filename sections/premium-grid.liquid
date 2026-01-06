@@ -478,7 +478,7 @@
 
     .wd40-collection-container { width: 100%; max-width: 1500px; margin: 0 auto; padding: 0 20px; box-sizing: border-box; background-color: #ffffff; padding-top: var(--section-padding-top); padding-bottom: var(--section-padding-bottom); font-family: Inter, sans-serif; position: relative; }
     
-    .wd40-collection-layout { display: flex; gap: 34px; align-items: flex-start; }
+    .wd40-collection-layout { display: flex; gap: 34px; align-items: flex-start; padding: 20px; margin: -20px; }
     
     /* Toolbar */
     .wd40-toolbar-container { width: 100%; margin-bottom: 28px; position: relative; z-index: 30; }
@@ -712,13 +712,14 @@
     .price-apply-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: #f0f0f0; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; color: #333; transition: all 0.2s; }
     .price-apply-btn:hover { background: #111; color: #fff; border-color: #111; }
 
-    /* Grid original sin recortes de sombras */
+    /* Grid con área de pintura optimizada para sombras */
     .wd40-product-grid { 
       flex: 1; 
       display: grid; 
       grid-template-columns: repeat(3, minmax(0, 1fr)); 
       gap: 24px; 
       align-content: start; 
+      padding: 20px !important; 
     }
     .wd40-card { 
       border: 1px solid transparent; 
@@ -1062,7 +1063,7 @@
     </div>
   </div>
 
-  <div class="wd40-collection-layout">
+  <div class="wd40-collection-layout defer-section">
      <div id="wd40-mobile-overlay" class="wd40-drawer-overlay" onclick="wd40ToggleMobileDrawer(false)"></div>
      <div id="wd40-mobile-drawer" class="wd40-drawer">
         <div class="wd40-drawer-header">
@@ -1337,7 +1338,7 @@
            {% if section.settings.show_promo and forloop.index == section.settings.promo_position %}
              <div class="wd40-card wd40-promo-card" 
                   style="{% if section.settings.promo_bg_type == 'image' and section.settings.promo_image != blank %}background-image: url({{ section.settings.promo_image | img_url: '800x' }}); background-size: cover; background-position: center;{% elsif section.settings.promo_bg_type == 'gradient' %}background: {{ section.settings.promo_gradient }};{% else %}background-color: {{ section.settings.promo_bg_color }};{% endif %} color: {{ section.settings.promo_text_color }};">
-                {% if section.settings.promo_bg_type == 'video' and section.settings.promo_video_url != blank %}<video class="wd40-video-bg js-lazy-video" muted loop playsinline preload="none" data-src="{{ section.settings.promo_video_url }}"></video>{% endif %}
+                {% if section.settings.promo_bg_type == 'video' and section.settings.promo_video_url != blank %}<video class="wd40-video-bg" autoplay muted loop playsinline src="{{ section.settings.promo_video_url }}"></video>{% endif %}
                 <div class="wd40-promo-overlay"></div>
                 <div class="wd40-promo-content">
                    <h3 class="wd40-promo-title" style="font-size: 24px;">{{ section.settings.promo_title }}</h3>
@@ -1504,10 +1505,60 @@
                               </div>
                            {% endif %}
                         {% endfor %}
-                        <div class="js-product-data" data-product-id="{{ product.id }}" style="display:none !important;">
-                           {{ product.variants | json }}
-                        </div>
+                        <script type="application/json" id="variants-data-{{ product.id }}">[
+                           {% for variant in product.variants %}
+                             {
+                               "id": {{ variant.id }}, "sku": "{{ variant.sku }}", "price": "{{ variant.price | money }}", "image": "{{ variant.featured_media | img_url: '500x' }}",
+                               "url": "{{ variant.url }}",
+                               "options": { {% for opt in product.options %}"{{ opt }}": "{{ variant.options[forloop.index0] | escape }}"{% unless forloop.last %},{% endunless %}{% endfor %} }
+                             }{% unless forloop.last %},{% endunless %}
+                           {% endfor %}
+                        ]</script>
 
+                        <template id="wd40-modal-template-{{ product.id }}">
+                           <div class="wd40-modal-form" id="wd40-modal-form-{{ product.id }}">
+                             <div class="wd40-modal-body">
+                                <button class="wd40-modal-close" onclick="wd40CloseModal()">×</button>
+                                <div class="flex flex-col gap-4 h-full">
+                                   <div class="flex gap-4 items-start">
+                                      <img src="{{ product.featured_media | img_url: '500x' }}" alt="" class="w-24 h-24 object-contain rounded bg-gray-50 js-modal-img" />
+                                      <div>
+                                         <h3 class="font-bold text-xl mb-1">{{ product.title }}</h3>
+                                         <div class="text-lg font-semibold text-gray-800 mb-1 js-modal-price">From {{ product.price_min | money }}</div>
+                                         <div class="flex items-center gap-1 mb-2">
+                                            <span class="text-xs text-gray-500">Reviews</span>
+                                         </div>
+                                      </div>
+                                   </div>
+                                   <div class="space-y-3 pt-2 border-t border-gray-100 js-modal-options flex-1"></div>
+                                   <div class="pt-4 mt-auto">
+                                      <button class="w-full py-3 text-white font-bold rounded hover:opacity-90 transition-opacity uppercase" style="background-color: #134baa; color: #ffffff;" onclick="wd40AddToCartInModal({{ product.id }})">Add to Cart</button>
+                                   </div>
+                                </div>
+                             </div>
+                           </div>
+                           <div class="wd40-modal-success" id="wd40-modal-success-{{ product.id }}" style="display:none;">
+                               <div class="wd40-success-banner">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                  Added to your cart!
+                               </div>
+                               <div class="wd40-success-body">
+                                  <button class="wd40-modal-close" onclick="wd40CloseModal()">×</button>
+                                  <div class="flex items-center gap-4 mb-6">
+                                     <img src="{{ product.featured_media | img_url: '500x' }}" alt="" class="w-20 h-20 object-cover roundedborder js-modal-success-img" />
+                                     <div>
+                                        <h4 class="font-bold text-lg">{{ product.title }}</h4>
+                                        <p class="text-gray-600 js-modal-success-price">From {{ product.price_min | money }}</p>
+                                        <p class="text-xs text-gray-500 mt-1 js-modal-success-options"></p>
+                                     </div>
+                                  </div>
+                                  <div class="flex gap-3 mt-auto">
+                                     <a href="/cart" class="flex-1 py-3 text-white font-bold rounded hover:opacity-90 transition-colors uppercase text-sm text-center flex items-center justify-center" style="background-color: #FF6600;">View Cart</a>
+                                     <a href="/checkout" class="flex-1 py-3 text-[#FF6600] bg-white border border-[#FF6600] font-bold rounded hover:bg-orange-50 transition-colors uppercase text-sm text-center flex items-center justify-center">Checkout</a>
+                                  </div>
+                               </div>
+                           </div>
+                        </template>
                       {% endif %}
                   {%- endcase -%}
                 {%- endfor -%}
@@ -1537,54 +1588,9 @@
 </div>
 </div>
 
-<!-- Modal Shared Layout -->
+<!-- Modal HTML -->
 <div id="wd40-modal-overlay" class="wd40-modal" style="display:none; opacity:0; transition: opacity 0.3s ease;">
-   <div class="wd40-modal-content" id="wd40-modal-content">
-      <div id="wd40-modal-main-view">
-         <div class="wd40-modal-body">
-            <button class="wd40-modal-close" onclick="wd40CloseModal()">×</button>
-            <div class="flex flex-col gap-4 h-full">
-               <div class="flex gap-4 items-start">
-                  <img src="#" alt="" class="w-24 h-24 object-contain rounded bg-gray-50 js-modal-img" />
-                  <div>
-                     <h3 class="font-bold text-xl mb-1 js-modal-title">Product Title</h3>
-                     <div class="text-lg font-semibold text-gray-800 mb-1 js-modal-price">From $0.00</div>
-                     <div class="flex items-center gap-1 mb-2">
-                        <span class="text-xs text-gray-500">Reviews</span>
-                     </div>
-                  </div>
-               </div>
-               <div class="space-y-3 pt-2 border-t border-gray-100 js-modal-options flex-1">
-                  <!-- JS will inject options here -->
-               </div>
-               <div class="pt-4 mt-auto">
-                  <button class="w-full py-3 text-white font-bold rounded hover:opacity-90 transition-opacity uppercase js-modal-add-btn" style="background-color: #134baa; color: #ffffff;">Add to Cart</button>
-               </div>
-            </div>
-         </div>
-      </div>
-      <div id="wd40-modal-success-view" style="display:none;">
-         <div class="wd40-success-banner">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-            Added to your cart!
-         </div>
-         <div class="wd40-success-body">
-            <button class="wd40-modal-close" onclick="wd40CloseModal()">×</button>
-            <div class="flex items-center gap-4 mb-6">
-               <img src="#" alt="" class="w-20 h-20 object-cover roundedborder js-modal-success-img" />
-               <div>
-                  <h4 class="font-bold text-lg js-modal-success-title">Product Title</h4>
-                  <p class="text-gray-600 js-modal-success-price">$0.00</p>
-                  <p class="text-xs text-gray-500 mt-1 js-modal-success-options"></p>
-               </div>
-            </div>
-            <div class="flex gap-3 mt-auto">
-               <a href="/cart" class="flex-1 py-3 text-white font-bold rounded hover:opacity-90 transition-colors uppercase text-sm text-center flex items-center justify-center" style="background-color: #FF6600;">View Cart</a>
-               <a href="/checkout" class="flex-1 py-3 text-[#FF6600] bg-white border border-[#FF6600] font-bold rounded hover:bg-orange-50 transition-colors uppercase text-sm text-center flex items-center justify-center">Checkout</a>
-            </div>
-         </div>
-      </div>
-   </div>
+   <div class="wd40-modal-content" id="wd40-modal-content"></div>
 </div>
 
 
@@ -1729,45 +1735,12 @@
     // Helper: Modal
     window.wd40OpenModal = function(productId) {
        const modal = document.getElementById('wd40-modal-overlay');
-       const mainView = document.getElementById('wd40-modal-main-view');
-       const successView = document.getElementById('wd40-modal-success-view');
+       const content = document.getElementById('wd40-modal-content');
+       const template = document.getElementById('wd40-modal-template-' + productId);
        
-       // Reset views
-       mainView.style.display = 'block';
-       successView.style.display = 'none';
-
-       // Find product card to extract data if needed, or better yet, find the hidden data
-       const card = document.querySelector(`.wd40-card [data-product-id="${productId}"]`).closest('.wd40-card');
-       if(!card) return;
-
-       const title = card.querySelector('.wd40-title a').textContent;
-       const price = card.querySelector('.js-product-price').textContent;
-       const img = card.querySelector('.wd40-card-image').src;
-       
-       // Update Modal Content
-       const modalContent = document.getElementById('wd40-modal-content');
-       modalContent.querySelector('.js-modal-title').textContent = title;
-       modalContent.querySelector('.js-modal-price').textContent = price;
-       modalContent.querySelector('.js-modal-img').src = img;
-       
-       // Success view updates
-       modalContent.querySelector('.js-modal-success-title').textContent = title;
-       modalContent.querySelector('.js-modal-success-price').textContent = price;
-       modalContent.querySelector('.js-modal-success-img').src = img;
-
-       // Clone options from the card to the modal
-       const optionsContainer = modalContent.querySelector('.js-modal-options');
-       optionsContainer.innerHTML = '';
-       
-       const swatches = card.querySelector('.wd40-swatches');
-       if(swatches) optionsContainer.appendChild(swatches.cloneNode(true));
-       
-       const variantChips = card.querySelector('.wd40-qty-variants-container');
-       if(variantChips) optionsContainer.appendChild(variantChips.cloneNode(true));
-
-       // Update Add To Cart Button
-       const addBtn = modalContent.querySelector('.js-modal-add-btn');
-       addBtn.onclick = () => window.wd40AddToCartInModal(productId);
+       if(template) {
+          content.innerHTML = template.innerHTML;
+       }
        
        modal.style.display = 'flex';
        requestAnimationFrame(() => { modal.style.opacity = '1'; });
@@ -1779,17 +1752,14 @@
        setTimeout(() => { modal.style.display = 'none'; }, 300);
     };
     
-    window.wd40AddToCartInModal = function(productId) {
-        const mainView = document.getElementById('wd40-modal-main-view');
-        const successView = document.getElementById('wd40-modal-success-view');
+    window.wd40AddToCartInModal = function(id) {
+        const formView = document.getElementById('wd40-modal-form-' + id);
+        const successView = document.getElementById('wd40-modal-success-' + id);
         
-        mainView.style.display = 'none';
-        successView.style.display = 'block';
-
-        // Update success info with current selection
-        const modalContent = document.getElementById('wd40-modal-content');
-        const price = modalContent.querySelector('.js-modal-price').textContent;
-        modalContent.querySelector('.js-modal-success-price').textContent = price;
+        if(formView && successView) {
+           formView.style.display = 'none';
+           successView.style.display = 'flex';
+        }
     };
     
     window.wd40RevealCode = function(btn, code) {
@@ -1846,13 +1816,13 @@
     document.addEventListener('change', function(e) {
        if(e.target.matches('.js-variant-radio')) {
           const productId = e.target.dataset.productId;
-          const container = e.target.closest('.wd40-card') || document.getElementById('wd40-modal-content');
+          const container = e.target.closest('.wd40-card') || document.getElementById('wd40-modal-form-' + productId);
           const cardEl = e.target.closest('.wd40-card');
-          const dataContainer = document.querySelector(`.js-product-data[data-product-id="${productId}"]`);
+          const dataScript = document.getElementById('variants-data-' + productId);
 
-          if(!container || !dataContainer) return;
+          if(!container || !dataScript) return;
 
-          const variants = JSON.parse(dataContainer.textContent);
+          const variants = JSON.parse(dataScript.textContent);
 
           const cardRoot = container.classList.contains('wd40-card')
             ? container
@@ -2001,25 +1971,6 @@
        setInterval(update, 1000);
        update();
     });
-
-    // Lazy load videos
-    const lazyVideos = document.querySelectorAll('.js-lazy-video');
-    if('IntersectionObserver' in window) {
-      const videoObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if(entry.isIntersecting) {
-            const video = entry.target;
-            video.src = video.dataset.src;
-            video.load();
-            video.play();
-            videoObserver.unobserve(video);
-          }
-        });
-      });
-      lazyVideos.forEach(v => videoObserver.observe(v));
-    } else {
-      lazyVideos.forEach(v => { v.src = v.dataset.src; v.load(); });
-    }
 
   })();
 </script>
