@@ -5154,6 +5154,26 @@ body.template-product .product__media-modal * {
   cursor: not-allowed;
 }
 
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.bundle-summary__button.is-loading {
+  animation: pulse 1.5s ease-in-out infinite;
+  pointer-events: none;
+  cursor: wait;
+}
+
 /* Spinner for button */
 .bundle-summary__loader .spinner {
   width: 20px;

@@ -133,10 +133,13 @@ if (!customElements.get('media-gallery')) {
       // Main image click for Lightbox (checks if not swiping)
       this.querySelector('.gallery-main').addEventListener('click', (e) => {
         const swiper = this.mainSwiper;
-        if (!swiper || (swiper.touches && Math.abs(swiper.touches.diff) > 5)) return;
+        const isSwiping = swiper && swiper.touches && Math.abs(swiper.touches.diff) > 10;
+
+        if (isSwiping) return;
 
         const img = e.target.closest('.swiper-slide img');
         if (img && img.dataset.zoomUrl) {
+          e.preventDefault();
           this.openLightbox(img.dataset.zoomUrl);
         }
       });

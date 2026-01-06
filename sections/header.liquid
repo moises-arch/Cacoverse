@@ -2493,7 +2493,7 @@
     visibility:hidden;
     transform:translateY(6px);
     transition:all .18s ease-out;
-    z-index:185;
+    z-index: 999;
   }
 
   .caco-help-menu.open .caco-help-dropdown,
@@ -3847,15 +3847,21 @@ document.addEventListener('visibilitychange', function () {
 
     toggle.addEventListener('click', function(e) {
       e.preventDefault();
+      e.stopPropagation();
       var isOpen = helpMenu.classList.contains('open');
+      
+      // Close industries if open
+      var industriesMenu = document.querySelector('.caco-industries-menu');
+      if (industriesMenu) industriesMenu.classList.remove('open');
+
       if (isOpen) {
         helpMenu.classList.remove('open');
         toggle.setAttribute('aria-expanded', 'false');
-        if (cacoOverlayManager) cacoOverlayManager.hide('nav');
+        if (typeof cacoOverlayManager !== 'undefined') cacoOverlayManager.hide('nav');
       } else {
         helpMenu.classList.add('open');
         toggle.setAttribute('aria-expanded', 'true');
-        if (cacoOverlayManager) cacoOverlayManager.show('nav');
+        if (typeof cacoOverlayManager !== 'undefined') cacoOverlayManager.show('nav');
       }
     });
 
@@ -3882,15 +3888,21 @@ document.addEventListener('visibilitychange', function () {
 
     toggle.addEventListener('click', function(e) {
       e.preventDefault();
+      e.stopPropagation();
       var isOpen = industriesMenu.classList.contains('open');
+
+      // Close help if open
+      var helpMenu = document.querySelector('.caco-help-menu');
+      if (helpMenu) helpMenu.classList.remove('open');
+
       if (isOpen) {
         industriesMenu.classList.remove('open');
         toggle.setAttribute('aria-expanded', 'false');
-        if (cacoOverlayManager) cacoOverlayManager.hide('nav');
+        if (typeof cacoOverlayManager !== 'undefined') cacoOverlayManager.hide('nav');
       } else {
         industriesMenu.classList.add('open');
         toggle.setAttribute('aria-expanded', 'true');
-        if (cacoOverlayManager) cacoOverlayManager.show('nav');
+        if (typeof cacoOverlayManager !== 'undefined') cacoOverlayManager.show('nav');
       }
     });
 

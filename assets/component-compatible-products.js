@@ -327,8 +327,8 @@ if (!customElements.get('compatible-products-form')) {
             if (selectedVariants.length === 0) return;
 
             // Loading state
+            this.addButton.classList.add('is-loading');
             this.addButton.setAttribute('disabled', 'true');
-            if (this.loader) this.loader.classList.remove('hidden');
             const originalBtnText = this.addButtonText.textContent;
             if (this.addButtonText) this.addButtonText.textContent = 'Adding...';
 
@@ -358,7 +358,7 @@ if (!customElements.get('compatible-products-form')) {
 
                     // Success Feedback
                     if (this.addButtonText) this.addButtonText.textContent = 'Added!';
-                    if (this.loader) this.loader.classList.add('hidden');
+                    this.addButton.classList.remove('is-loading');
 
                     setTimeout(() => {
                         this.addButton.removeAttribute('disabled');
@@ -377,7 +377,7 @@ if (!customElements.get('compatible-products-form')) {
                     if (this.addButtonText) this.addButtonText.textContent = originalBtnText;
                 }, 3000);
             } finally {
-                if (this.loader) this.loader.classList.add('hidden');
+                this.addButton.classList.remove('is-loading');
             }
         }
     });
