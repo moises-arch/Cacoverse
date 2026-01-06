@@ -4822,16 +4822,20 @@ body.template-product .product__media-modal * {
   display: none !important;
 }
 
-.bundle-card:hover,
 .bundle-card.is-selected {
   border-color: #0d6ba6;
   filter: grayscale(0);
   opacity: 1;
-}
-
-.bundle-card.is-selected {
   background-color: #f9fbff;
   box-shadow: 0 2px 8px rgba(13, 107, 166, 0.1);
+}
+
+@media (hover: hover) {
+  .bundle-card:hover:not(.is-selected) {
+    border-color: #0d6ba6;
+    filter: grayscale(0);
+    opacity: 0.9;
+  }
 }
 
 /* Selection Checkbox - Hidden */

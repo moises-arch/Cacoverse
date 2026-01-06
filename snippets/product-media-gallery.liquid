@@ -258,7 +258,38 @@
     border-radius: 40px;
     backdrop-filter: blur(15px);
     z-index: 101;
+    transition: all 0.3s ease;
   }
+
+  @media(max-width: 768px) {
+    .lightbox-controls {
+      bottom: auto;
+      top: 20px;
+      left: 20px;
+      transform: none;
+      padding: 8px 16px;
+      gap: 12px;
+    }
+    .lightbox-close {
+      top: 20px;
+      right: 20px;
+      width: 44px;
+      height: 44px;
+    }
+    /* Add a subtle dark gradient at top to make white buttons visible on light images */
+    .media-lightbox::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 120px;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent);
+      z-index: 100;
+      pointer-events: none;
+    }
+  }
+
   .zoom-btn {
     color: white;
     cursor: pointer;
