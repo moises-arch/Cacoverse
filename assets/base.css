@@ -894,7 +894,6 @@
    display: inline-flex;
    align-items: center;
    justify-content: center;
-   min-width: 80px;
    padding: 10px 0px;
    background-color: #f2f5f8 !important;
    color: #4d5b68 !important;
@@ -928,8 +927,6 @@
    overflow: visible !important;
    padding-right: 1.2rem;
  }
-
-
 
 
 
