@@ -5317,3 +5317,114 @@ body.template-product .product__media-modal * {
     font-size: 0.9rem !important;
   }
 }
+
+/* ============================================================================
+   NEXT-LEVEL PHOTO SWATCHES (Variant Images)
+   High-end Card-style selection for product variants
+   ============================================================================ */
+
+.product-form__input .color-swatching {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 82px;
+  height: 82px;
+  padding: 6px;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0 !important;
+  border-radius: 14px !important;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: visible;
+  /* Allow badge to hang off */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+  margin: 0 8px 8px 0 !important;
+}
+
+.product-form__input .color-swatching img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+  border-radius: 10px;
+}
+
+/* Hover: Lift & Glow */
+.product-form__input .color-swatching:hover {
+  border-color: #cbd5e1 !important;
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.07);
+  z-index: 5;
+}
+
+.product-form__input .color-swatching:hover img {
+  transform: scale(1.12);
+}
+
+/* Checked State: Brand Accent */
+.product-form__input input[type="radio"]:checked+.color-swatching {
+  border-color: #0d6ba6 !important;
+  background: #f0f7fb !important;
+  box-shadow: 0 0 0 1px #0d6ba6, 0 10px 25px rgba(13, 107, 166, 0.12);
+  transform: translateY(-2px) scale(1.03);
+  z-index: 10;
+}
+
+/* Discount Badge as a Floating Tag */
+.color-swatching .variant-price-discounted {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #e95a57;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 900;
+  padding: 2px 6px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(233, 90, 87, 0.3);
+  z-index: 15;
+  transform: rotate(5deg);
+  pointer-events: none;
+}
+
+/* Sold Out State for Photo Swatches */
+.product-form__input input[type="radio"].disabled+.color-swatching,
+.product-form__input input[type="radio"].sold-out+.color-swatching {
+  opacity: 0.55;
+  filter: grayscale(0.5);
+  cursor: not-allowed;
+}
+
+.product-form__input input[type="radio"].disabled+.color-swatching img,
+.product-form__input input[type="radio"].sold-out+.color-swatching img {
+  opacity: 0.6;
+}
+
+.product-form__input input[type="radio"].disabled+.color-swatching::after,
+.product-form__input input[type="radio"].sold-out+.color-swatching::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -5%;
+  width: 110%;
+  height: 1.5px;
+  background: #94a3b8;
+  transform: rotate(-45deg);
+  box-shadow: 0 0 2px rgba(255, 255, 255, 0.8);
+  opacity: 0.8;
+  z-index: 5;
+}
+
+/* Animation for clicking */
+.product-form__input input[type="radio"]:active+.color-swatching {
+  transform: scale(0.96);
+}
+
+@media (max-width: 749px) {
+  .product-form__input .color-swatching {
+    width: 68px;
+    height: 68px;
+    margin: 0 6px 6px 0 !important;
+  }
+}
