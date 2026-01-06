@@ -5135,6 +5135,34 @@ body.template-product .product__media-modal * {
   gap: 0.8rem;
   transition: all 0.2s ease;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.bundle-summary__button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent);
+  transition: none;
+  z-index: 5;
+  pointer-events: none;
+  display: none;
+}
+
+.bundle-summary__button.loading::after {
+  display: block !important;
+  animation: buttonShimmer 1.2s infinite linear;
+}
+
+.bundle-summary__button.loading .bundle-summary__button-text {
+  opacity: 0.8;
 }
 
 .bundle-summary__button:hover {
@@ -5152,42 +5180,9 @@ body.template-product .product__media-modal * {
   cursor: not-allowed;
 }
 
-/* Spinner for button */
-.bundle-summary__loader .spinner {
-  width: 20px;
-  height: 20px;
-  animation: rotate 2s linear infinite;
-}
-
-.bundle-summary__loader .path {
-  stroke: currentColor;
-  stroke-dasharray: 1, 150;
-  stroke-dashoffset: 0;
-  stroke-linecap: round;
-  animation: dash 1.5s ease-in-out infinite;
-}
-
-@keyframes rotate {
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes dash {
-  0% {
-    stroke-dasharray: 1, 150;
-    stroke-dashoffset: 0;
-  }
-
-  50% {
-    stroke-dasharray: 90, 150;
-    stroke-dashoffset: -35;
-  }
-
-  100% {
-    stroke-dasharray: 90, 150;
-    stroke-dashoffset: -124;
-  }
+/* Spinner for button removed in favor of shimmer */
+.bundle-summary__loader {
+  display: none !important;
 }
 
 /* Responsive */

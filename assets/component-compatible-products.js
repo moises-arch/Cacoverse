@@ -327,10 +327,9 @@ if (!customElements.get('compatible-products-form')) {
             if (selectedVariants.length === 0) return;
 
             // Loading state
-            this.addButton.classList.add('is-loading');
+            this.addButton.classList.add('loading');
             this.addButton.setAttribute('disabled', 'true');
             const originalBtnText = this.addButtonText.textContent;
-            if (this.addButtonText) this.addButtonText.textContent = 'Adding...';
 
             try {
                 const response = await fetch(window.Shopify.routes.root + 'cart/add.js', {
@@ -358,7 +357,7 @@ if (!customElements.get('compatible-products-form')) {
 
                     // Success Feedback
                     if (this.addButtonText) this.addButtonText.textContent = 'Added!';
-                    this.addButton.classList.remove('is-loading');
+                    this.addButton.classList.remove('loading');
 
                     setTimeout(() => {
                         this.addButton.removeAttribute('disabled');
@@ -377,7 +376,7 @@ if (!customElements.get('compatible-products-form')) {
                     if (this.addButtonText) this.addButtonText.textContent = originalBtnText;
                 }, 3000);
             } finally {
-                this.addButton.classList.remove('is-loading');
+                this.addButton.classList.remove('loading');
             }
         }
     });
