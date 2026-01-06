@@ -428,7 +428,7 @@
         "show_categories": true,
         "show_filters": true,
         "filter_blacklist": "Product Sub Category",
-        "card_content_order": "title,subtitle,custom_subtitle,category_sku,reviews,swatches, variants, price",
+        "card_content_order": "title,subtitle,custom_subtitle,category_sku,reviews, variants, price",
         "card_padding": 18,
         "show_hover": true,
         "show_sku": true,
