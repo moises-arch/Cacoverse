@@ -1153,7 +1153,7 @@
                   </li>
                 {%- else -%}
                   <li class="caco-mobile-item">
-                    <a href="{{ link.url }}" class="caco-mobile-link{% if is_sale_link %} caco-mobile-link--sale{% endif %}">
+                    <a href="{{ link.url }}" class="caco-mobile-link{% if is_sale_link %} caco-mobile-link--sale caco-mobile-link--pill{% endif %}">
                       <span class="caco-mobile-link-label{% if is_sale_link %} caco-mobile-link-label--sale{% endif %}">
                         {{ link.title }}
                         {%- for block in section.blocks -%}
@@ -1317,8 +1317,8 @@
                   {%- assign products_labels = 'Products,Productos' | split: ',' -%}
                   {%- if products_labels contains link.title -%}
                     <li class="caco-mobile-item">
-                      <a href="/collections/all" class="caco-mobile-link caco-mobile-link-sub">
-                        <span class="caco-mobile-link-label" style="text-decoration: none;">Todos los Productos</span>
+                      <a href="/collections/all" class="caco-mobile-link caco-mobile-link-sub caco-mobile-link--pill" style="text-decoration: none;">
+                        <span class="caco-mobile-link-label">Todos los Productos</span>
                       </a>
                     </li>
                   {%- endif -%}
@@ -1332,7 +1332,7 @@
                     {%- if childlink.links != blank -%}
                       <li class="caco-mobile-item">
                         <button
-                          class="caco-mobile-link caco-mobile-link--has-children{% if is_sale_child %} caco-mobile-link--sale{% endif %}"
+                          class="caco-mobile-link caco-mobile-link--has-children{% if is_sale_child %} caco-mobile-link--sale caco-mobile-link--pill{% endif %}"
                           type="button"
                           data-panel-target="panel-sub-{{ childlink.handle }}"
                         >
@@ -1356,7 +1356,7 @@
                       </li>
                     {%- else -%}
                       <li class="caco-mobile-item">
-                        <a href="{{ childlink.url }}" class="caco-mobile-link caco-mobile-link-sub{% if is_sale_child %} caco-mobile-link--sale{% endif %}">
+                        <a href="{{ childlink.url }}" class="caco-mobile-link caco-mobile-link-sub{% if is_sale_child %} caco-mobile-link--sale caco-mobile-link--pill{% endif %}">
                           <span class="caco-mobile-link-label{% if is_sale_child %} caco-mobile-link-label--sale{% endif %}">
                             {{ childlink.title }}
                             {%- for block in section.blocks -%}
@@ -2293,6 +2293,10 @@
     opacity:1;
   }
 
+  .caco-mobile-link--pill {
+    border-radius: 100px !important;
+  }
+
   .caco-mobile-link--sale{
     position:relative;
     overflow:hidden;
@@ -2302,7 +2306,6 @@
     box-shadow:
       0 0 0 1px rgba(225,29,72,0.26),
       0 12px 22px -14px rgba(225,29,72,0.55);
-    border-radius: 100px !important;
   }
   .caco-mobile-link--sale::before{
     content:"";
