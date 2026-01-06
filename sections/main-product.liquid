@@ -191,94 +191,48 @@
 
     let gallerySlides = [];
     let galleryImages = [];
+    // ========= state =========
     let currentIndex = 0;
     let lastFocus = null;
+    let clickTimer = null;
 
-    // ========= zoom / swipe state =========
-    let zoomLevel = 1;
-    let currentX = 0, currentY = 0;
-    let startX = 0, startY = 0;
-    let initialDist = 0;
-    let lastZoom = 1;
-    let touchStartX = 0;
-    let lastTap = 0;
-
-    const resetZoom = () => {
-      zoomLevel = 1;
-      lastZoom = 1;
-      currentX = 0; currentY = 0;
-      if (preview) {
-        preview.style.transition = 'transform 0.3s ease';
-        preview.style.transform = '';
-        preview.style.touchAction = 'auto';
-      }
+    const resetCounter = () => {
+      clickCount = 0;
+      if (clickTimer) clearTimeout(clickTimer);
     };
 
-    const updateLightboxImage = (instant = true) => {
-      if (!preview) return;
-      preview.style.transition = instant ? 'none' : 'transform 0.3s ease';
-      preview.style.transform = `translate(${currentX}px, ${currentY}px) scale(${zoomLevel})`;
-      preview.style.touchAction = zoomLevel > 1 ? 'none' : 'auto';
-    };
 
-    // ========= zoom / swipe events =========
+
+    // ========= simple swipe / click events =========
     if (preview) {
       preview.addEventListener('touchstart', (e) => {
-        const isMobile = window.innerWidth <= 768;
-        if (e.touches.length === 2) {
-          initialDist = Math.hypot(
-            e.touches[0].pageX - e.touches[1].pageX,
-            e.touches[0].pageY - e.touches[1].pageY
-          );
-        } else if (e.touches.length === 1) {
-          touchStartX = e.touches[0].pageX;
-          const now = Date.now();
-          if (now - lastTap < 300) {
-            if (zoomLevel > 1) resetZoom();
-            else {
-              zoomLevel = 2.5;
-              updateLightboxImage(false);
-            }
-            lastTap = 0;
-          } else {
-            lastTap = now;
-            if (zoomLevel > 1) {
-              startX = e.touches[0].pageX - currentX;
-              startY = e.touches[0].pageY - currentY;
-            }
-          }
-        }
-      }, { passive: false });
-
-      preview.addEventListener('touchmove', (e) => {
-        const isMobile = window.innerWidth <= 768;
-        if (e.touches.length === 2) {
-          e.preventDefault();
-          const dist = Math.hypot(
-            e.touches[0].pageX - e.touches[1].pageX,
-            e.touches[0].pageY - e.touches[1].pageY
-          );
-          zoomLevel = Math.max(1, Math.min(5, (dist / initialDist) * lastZoom));
-          updateLightboxImage(true);
-        } else if (e.touches.length === 1 && zoomLevel > 1) {
-          e.preventDefault();
-          currentX = e.touches[0].pageX - startX;
-          currentY = e.touches[0].pageY - startY;
-          updateLightboxImage(true);
-        }
-      }, { passive: false });
+        touchStartX = e.touches[0].pageX;
+      }, { passive: true });
 
       preview.addEventListener('touchend', (e) => {
-        if (e.touches.length < 2) {
-          lastZoom = zoomLevel;
-        }
-        if (zoomLevel === 1 && e.changedTouches.length === 1) {
+        if (e.changedTouches.length === 1) {
           let touchEndX = e.changedTouches[0].pageX;
           if (touchStartX - touchEndX > 60) goNext();
           else if (touchStartX - touchEndX < -60) goPrev();
         }
-      });
+      }, { passive: true });
     }
+
+    // Auto-close on 3 clicks (Fast)
+    lightbox.addEventListener('click', (e) => {
+      if (e.target.closest('.apple-lightbox__nav, .apple-lightbox__close, button')) return;
+      
+      clickCount++;
+      if (clickTimer) clearTimeout(clickTimer);
+
+      if (clickCount >= 3) {
+        hideLightbox();
+      } else {
+        clickTimer = setTimeout(() => {
+          clickCount = 0;
+        }, 500); // Window of 500ms to complete the task
+      }
+    });
 
     // ========= helpers =========
 
@@ -313,7 +267,7 @@
       const target = galleryImages[index];
       if (!target) return;
 
-      resetZoom();
+      resetCounter();
       preview.src = target.dataset.zoomUrl || target.dataset.full || target.currentSrc || target.src;
       preview.alt = target.alt || '{{ product.title | escape }}';
 
@@ -336,6 +290,9 @@
       currentIndex = index;
       lastFocus = document.activeElement;
 
+      resetCounter();
+      preview.alt = target.alt || '{{ product.title | escape }}';
+      
       updatePreview(currentIndex);
       lightbox.removeAttribute('hidden');
       lightbox.classList.add('is-visible');
@@ -345,7 +302,7 @@
     };
 
     const hideLightbox = () => {
-      resetZoom();
+      resetCounter();
       lightbox.setAttribute('hidden', 'hidden');
       lightbox.classList.remove('is-visible');
       body.classList.remove('apple-lock-scroll');
