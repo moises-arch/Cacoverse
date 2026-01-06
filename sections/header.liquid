@@ -1318,12 +1318,7 @@
                   {%- if products_labels contains link.title -%}
                     <li class="caco-mobile-item">
                       <a href="/collections/all" class="caco-mobile-link caco-mobile-link-sub">
-                        <span class="caco-mobile-link-label" style="font-weight: 600;">Todos los Productos</span>
-                        <span class="caco-mobile-icon caco-mobile-icon--forward">
-                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-                            <polyline points="9 6 15 12 9 18"></polyline>
-                          </svg>
-                        </span>
+                        <span class="caco-mobile-link-label" style="text-decoration: none;">Todos los Productos</span>
                       </a>
                     </li>
                   {%- endif -%}
@@ -2307,6 +2302,7 @@
     box-shadow:
       0 0 0 1px rgba(225,29,72,0.26),
       0 12px 22px -14px rgba(225,29,72,0.55);
+    border-radius: 100px !important;
   }
   .caco-mobile-link--sale::before{
     content:"";
