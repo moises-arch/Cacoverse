@@ -5350,10 +5350,9 @@ body.template-product .product__media-modal * {
   border-radius: 10px;
 }
 
-/* Hover: Lift & Glow */
+/* Hover: Shadow & Zoom (No Jump) */
 .product-form__input .color-swatching:hover {
   border-color: #cbd5e1 !important;
-  transform: translateY(-5px);
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.07);
   z-index: 5;
 }
@@ -5362,12 +5361,12 @@ body.template-product .product__media-modal * {
   transform: scale(1.12);
 }
 
-/* Checked State: Brand Accent */
+/* Checked State: Brand Accent (No Jump) */
 .product-form__input input[type="radio"]:checked+.color-swatching {
   border-color: #0d6ba6 !important;
   background: #f0f7fb !important;
   box-shadow: 0 0 0 1px #0d6ba6, 0 10px 25px rgba(13, 107, 166, 0.12);
-  transform: translateY(-2px) scale(1.03);
+  transform: scale(1.03);
   z-index: 10;
 }
 
