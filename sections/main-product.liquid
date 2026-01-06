@@ -194,12 +194,7 @@
     // ========= state =========
     let currentIndex = 0;
     let lastFocus = null;
-    let clickTimer = null;
-
-    const resetCounter = () => {
-      clickCount = 0;
-      if (clickTimer) clearTimeout(clickTimer);
-    };
+    let touchStartX = 0;
 
 
 
@@ -218,21 +213,7 @@
       }, { passive: true });
     }
 
-    // Auto-close on 3 clicks (Fast)
-    lightbox.addEventListener('click', (e) => {
-      if (e.target.closest('.apple-lightbox__nav, .apple-lightbox__close, button')) return;
-      
-      clickCount++;
-      if (clickTimer) clearTimeout(clickTimer);
 
-      if (clickCount >= 3) {
-        hideLightbox();
-      } else {
-        clickTimer = setTimeout(() => {
-          clickCount = 0;
-        }, 500); // Window of 500ms to complete the task
-      }
-    });
 
     // ========= helpers =========
 
@@ -267,7 +248,6 @@
       const target = galleryImages[index];
       if (!target) return;
 
-      resetCounter();
       preview.src = target.dataset.zoomUrl || target.dataset.full || target.currentSrc || target.src;
       preview.alt = target.alt || '{{ product.title | escape }}';
 
@@ -290,8 +270,8 @@
       currentIndex = index;
       lastFocus = document.activeElement;
 
-      resetCounter();
-      preview.alt = target.alt || '{{ product.title | escape }}';
+      const target = galleryImages[currentIndex];
+      preview.alt = target?.alt || '{{ product.title | escape }}';
       
       updatePreview(currentIndex);
       lightbox.removeAttribute('hidden');
@@ -302,7 +282,6 @@
     };
 
     const hideLightbox = () => {
-      resetCounter();
       lightbox.setAttribute('hidden', 'hidden');
       lightbox.classList.remove('is-visible');
       body.classList.remove('apple-lock-scroll');
