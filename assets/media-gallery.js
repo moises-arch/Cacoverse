@@ -140,7 +140,7 @@ if (!customElements.get('media-gallery')) {
         const img = e.target.closest('.swiper-slide img');
         if (img && img.dataset.zoomUrl) {
           e.preventDefault();
-          this.openLightbox(img.dataset.zoomUrl);
+          this.openLightbox(img.dataset.zoomUrl, img.src);
         }
       });
 
@@ -357,23 +357,35 @@ if (!customElements.get('media-gallery')) {
       window.onmouseup = () => this.isDragging = false;
     }
 
-    openLightbox(url) {
+    openLightbox(url, previewUrl = null) {
       const lb = document.getElementById('GalleryLightbox');
       if (!lb) return;
       const lbImg = lb.querySelector('.lightbox-image');
-      
-      if (lbImg.src !== url) {
-        lb.classList.add('loading');
-        lbImg.onload = () => lb.classList.remove('loading');
-        lbImg.src = url;
-      }
-      
+
+      this.currentZoomUrl = url;
       lb.classList.add('active');
       document.body.style.overflow = 'hidden';
       this.zoomLevel = 1;
       this.translateX = 0;
       this.translateY = 0;
       this.updateLightboxImage();
+
+      if (lbImg.src !== url) {
+        lb.classList.add('loading');
+        if (previewUrl) lbImg.src = previewUrl;
+
+        const highRes = new Image();
+        highRes.onload = () => {
+          // Only update if we are still on the same image and lightbox is active
+          if (lb.classList.contains('active') && this.currentZoomUrl === url) {
+            lbImg.src = url;
+            lb.classList.remove('loading');
+          }
+        };
+        highRes.src = url;
+      } else {
+        lb.classList.remove('loading');
+      }
     }
 
     changeZoom(delta) {
@@ -423,12 +435,24 @@ if (!customElements.get('media-gallery')) {
 
       const img = activeSlide.querySelector('img');
       if (img && img.dataset.zoomUrl) {
+        const url = img.dataset.zoomUrl;
+        const previewUrl = img.src;
         const lbImg = lb.querySelector('.lightbox-image');
-        if (lbImg.src !== img.dataset.zoomUrl) {
+
+        if (lbImg.src !== url) {
+          this.currentZoomUrl = url;
           lb.classList.add('loading');
-          lbImg.onload = () => lb.classList.remove('loading');
-          
-          lbImg.src = img.dataset.zoomUrl;
+          if (previewUrl) lbImg.src = previewUrl;
+
+          const highRes = new Image();
+          highRes.onload = () => {
+            if (lb.classList.contains('active') && this.currentZoomUrl === url) {
+              lbImg.src = url;
+              lb.classList.remove('loading');
+            }
+          };
+          highRes.src = url;
+
           this.zoomLevel = 1;
           this.translateX = 0;
           this.translateY = 0;
