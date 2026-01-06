@@ -5334,11 +5334,9 @@ body.template-product .product__media-modal * {
   border: 1.5px solid #e2e8f0 !important;
   border-radius: 14px !important;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   position: relative;
   overflow: visible;
   /* Allow badge to hang off */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
   margin: 0 8px 8px 0 !important;
 }
 
@@ -5350,10 +5348,9 @@ body.template-product .product__media-modal * {
   border-radius: 10px;
 }
 
-/* Hover: Simple Shadow (No Movement) */
+/* Hover: Clean Border Change (No shadows/movement) */
 .product-form__input .color-swatching:hover {
   border-color: #cbd5e1 !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   z-index: 5;
 }
 
@@ -5362,11 +5359,11 @@ body.template-product .product__media-modal * {
   transform: none !important;
 }
 
-/* Checked State: Static Brand Accent */
+/* Checked State: Solid Brand Ring (No Offset Shadow) */
 .product-form__input input[type="radio"]:checked+.color-swatching {
   border-color: #0d6ba6 !important;
   background: #f0f7fb !important;
-  box-shadow: 0 0 0 1px #0d6ba6, 0 8px 20px rgba(13, 107, 166, 0.1);
+  box-shadow: 0 0 0 1.5px #0d6ba6;
   z-index: 10;
 }
 
