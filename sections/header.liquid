@@ -89,7 +89,7 @@
   {%- endif -%}
 {%- endfor -%}
 
-<div class="caco-header-wrapper caco-is-booting" style="opacity:0;visibility:hidden;">
+<div class="caco-header-wrapper" style="opacity:1;visibility:visible;">
   <!-- -------------------------------------------------------------------------
        3.1 Announcement Bar
        ------------------------------------------------------------------------- -->
@@ -1570,14 +1570,6 @@
     box-shadow:0 4px 15px rgba(0,0,0,0.08);
   }
 
-  .caco-header-wrapper.caco-is-booting{}
-  .caco-header-wrapper.caco-is-booting .caco-nav-list,
-  .caco-header-wrapper.caco-is-booting .caco-mobile-panels,
-  .caco-header-wrapper.caco-is-booting .caco-partner-menu,
-  .caco-header-wrapper.caco-is-booting .caco-cart-btn{
-    opacity:.6;
-    pointer-events:none;
-  }
 
   /* 🔧 Loader hard-off: ocultar completamente en desktop y mobile */
   .caco-loading-icon,
@@ -3493,10 +3485,7 @@ document.addEventListener('visibilitychange', function () {
   computeHeaderHeight();
   handleScroll();
 
-  headerWrapper.classList.remove('caco-is-booting');
   headerWrapper.classList.add('caco-is-ready');
-  headerWrapper.style.opacity = '1';
-  headerWrapper.style.visibility = 'visible';
 
   window.addEventListener('scroll', function() {
     if (!ticking) {
