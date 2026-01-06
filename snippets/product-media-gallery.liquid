@@ -263,18 +263,17 @@
 
   @media(max-width: 768px) {
     .lightbox-controls {
-      bottom: auto;
-      top: 20px;
-      left: 20px;
-      transform: none;
-      padding: 8px 16px;
-      gap: 12px;
+      display: none !important;
     }
     .lightbox-close {
       top: 20px;
       right: 20px;
       width: 44px;
       height: 44px;
+      background: rgba(0, 0, 0, 0.4);
+      display: flex !important;
+      opacity: 1 !important;
+      visibility: visible !important;
     }
     /* Add a subtle dark gradient at top to make white buttons visible on light images */
     .media-lightbox::before {

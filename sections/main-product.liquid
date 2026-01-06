@@ -224,7 +224,9 @@
     // ========= zoom / swipe events =========
     if (preview) {
       preview.addEventListener('touchstart', (e) => {
+        const isMobile = window.innerWidth <= 768;
         if (e.touches.length === 2) {
+          if (isMobile) return; // No pinch zoom on mobile
           initialDist = Math.hypot(
             e.touches[0].pageX - e.touches[1].pageX,
             e.touches[0].pageY - e.touches[1].pageY
@@ -233,6 +235,7 @@
           touchStartX = e.touches[0].pageX;
           const now = Date.now();
           if (now - lastTap < 300) {
+            if (isMobile) return; // No double tap zoom on mobile
             if (zoomLevel > 1) resetZoom();
             else {
               zoomLevel = 2.5;
@@ -247,10 +250,11 @@
             }
           }
         }
-      }, { passive: false });
+      }, { passive: isMobile ? true : false });
 
       preview.addEventListener('touchmove', (e) => {
-        if (e.touches.length === 2) {
+        const isMobile = window.innerWidth <= 768;
+        if (e.touches.length === 2 && !isMobile) {
           e.preventDefault();
           const dist = Math.hypot(
             e.touches[0].pageX - e.touches[1].pageX,
@@ -264,7 +268,7 @@
           currentY = e.touches[0].pageY - startY;
           updateLightboxImage(true);
         }
-      }, { passive: false });
+      }, { passive: isMobile ? true : false });
 
       preview.addEventListener('touchend', (e) => {
         if (e.touches.length < 2) {

@@ -5179,7 +5179,15 @@ body.template-product .product__media-modal * {
   transform: translateY(0);
 }
 
-.bundle-summary__button:disabled {
+.bundle-summary__button.loading,
+.bundle-summary__button.loading:disabled {
+  background: #334155 !important;
+  color: #fff !important;
+  opacity: 1 !important;
+  cursor: wait;
+}
+
+.bundle-summary__button:disabled:not(.loading) {
   background: #ccc;
   cursor: not-allowed;
 }
