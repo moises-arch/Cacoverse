@@ -1317,13 +1317,8 @@
                   {%- assign products_labels = 'Products,Productos' | split: ',' -%}
                   {%- if products_labels contains link.title -%}
                     <li class="caco-mobile-item">
-                      <a href="/collections/all" class="caco-mobile-link caco-mobile-link-sub">
-                        <span class="caco-mobile-link-label">All Products</span>
-                        <span class="caco-mobile-icon caco-mobile-icon--forward">
-                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-                            <polyline points="9 6 15 12 9 18"></polyline>
-                          </svg>
-                        </span>
+                      <a href="/collections/all" class="caco-mobile-link caco-mobile-link-sub caco-mobile-link--pill" style="text-decoration: none;">
+                        <span class="caco-mobile-link-label">Todos los Productos</span>
                       </a>
                     </li>
                   {%- endif -%}
@@ -1655,16 +1650,18 @@
     .caco-announcement-slide{
       display:none!important;
     }
-    .caco-announcement-marquee-track{
-      display:flex;
-      width:200%;
-      animation:caco-ann-marquee 18s linear infinite;
-    }
-    .caco-announcement-marquee-item{
-      flex:0 0 100%;
-      white-space:nowrap;
-      padding:0 16px;
-    }
+  }
+
+  .caco-announcement-marquee-track{
+    display:flex;
+    flex-wrap:nowrap;
+    width:200%;
+    animation:caco-ann-marquee 18s linear infinite;
+  }
+  .caco-announcement-marquee-item{
+    flex:0 0 100%;
+    white-space:nowrap;
+    padding:0 16px;
   }
 
 /* ----------------------------------------------------------------------------
@@ -3939,112 +3936,104 @@ document.addEventListener('visibilitychange', function () {
     var bar = document.getElementById('caco-announcement-bar');
     if (!bar) return;
 
-    var slides = bar.querySelectorAll('.caco-announcement-slide');
-    if (!slides.length) return;
+    var slider = bar.querySelector('.caco-announcement-slider');
+    if (!slider) return;
 
-    var prevBtn   = bar.querySelector('.caco-ann-prev');
-    var nextBtn   = bar.querySelector('.caco-ann-next');
-    var currentEl = bar.querySelector('#caco-ann-current');
-    var totalEl   = bar.querySelector('#caco-ann-total');
-    var closeBtn  = bar.querySelector('.caco-announcement-close');
-
-    var isMobileAnn = window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
-
-    var total = slides.length;
+    var originalHTML = slider.innerHTML; // Save original slides to restore on resize
+    var timer;
     var current = 0;
-    if (totalEl) totalEl.textContent = String(total);
+    var currentMode = null; // 'mobile' or 'desktop'
 
-    if (isMobileAnn) {
-      var texts = [];
-      slides.forEach(function(s) {
-        var t = (s.textContent || '').replace(/\s+/g, ' ').trim();
-        if (t) texts.push(t);
-      });
-      if (!texts.length) {
-        texts.push(' ');
-      }
-      var merged = texts.join('   •   ');
+    function initAnnouncement() {
+      var isMobile = window.innerWidth <= 768;
+      var newMode = isMobile ? 'mobile' : 'desktop';
+      
+      // Only re-init if mode changed to avoid killing active animations on minor resize
+      if (newMode === currentMode) return;
+      currentMode = newMode;
+      
+      if (timer) clearInterval(timer);
+      slider.innerHTML = originalHTML; // Restore slides
+      
+      var slides = slider.querySelectorAll('.caco-announcement-slide');
+      var total = slides.length;
+      if (!total) return;
 
-      var slider = bar.querySelector('.caco-announcement-slider');
-      if (slider) {
+      var prevBtn   = bar.querySelector('.caco-ann-prev');
+      var nextBtn   = bar.querySelector('.caco-ann-next');
+      var currentEl = bar.querySelector('#caco-ann-current');
+      var totalEl   = bar.querySelector('#caco-ann-total');
+      var navGroup  = bar.querySelector('.caco-ann-nav-group');
+
+      if (totalEl) totalEl.textContent = String(total);
+
+      if (isMobile) {
+        if (navGroup) navGroup.style.display = 'none';
+        
+        var texts = [];
+        slides.forEach(function(s) {
+          var t = (s.textContent || '').replace(/\s+/g, ' ').trim();
+          if (t) texts.push(t);
+        });
+        var merged = (texts.length ? texts.join('   •   ') : ' ');
+        
         slider.innerHTML = '';
         var track = document.createElement('div');
         track.className = 'caco-announcement-marquee-track';
-
-        var item1 = document.createElement('div');
-        item1.className = 'caco-announcement-marquee-item';
-        item1.textContent = merged;
-
-        var item2 = document.createElement('div');
-        item2.className = 'caco-announcement-marquee-item';
-        item2.textContent = merged;
-
-        track.appendChild(item1);
-        track.appendChild(item2);
+        
+        for (var i = 0; i < 2; i++) {
+          var item = document.createElement('div');
+          item.className = 'caco-announcement-marquee-item';
+          item.textContent = merged;
+          track.appendChild(item);
+        }
         slider.appendChild(track);
-      }
+      } else {
+        if (navGroup) navGroup.style.display = 'flex';
+        
+        function showSlide(index) {
+          slides.forEach(function(s){ s.classList.remove('active'); });
+          current = (index + total) % total;
+          slides[current].classList.add('active');
+          if (currentEl) currentEl.textContent = String(current + 1);
+        }
 
-      var navGroup = bar.querySelector('.caco-ann-nav-group');
-      if (navGroup) {
-        navGroup.style.display = 'none';
-      }
+        var intervalSec = parseInt(bar.getAttribute('data-interval') || '8', 10);
+        if (isNaN(intervalSec) || intervalSec <= 0) intervalSec = 8;
 
-      if (closeBtn) {
-        closeBtn.addEventListener('click', function() {
-          bar.style.display = 'none';
-          if (window.cacoUpdateHeaderHeight) {
-            window.cacoUpdateHeaderHeight();
-          }
-        });
-      }
-      return;
-    }
+        function startAuto() {
+          if (timer) clearInterval(timer);
+          if (total <= 1) return;
+          timer = setInterval(function(){
+            showSlide(current + 1);
+          }, intervalSec * 1000);
+        }
 
-    var timer;
-
-    function showSlide(index) {
-      slides.forEach(function(s){ s.classList.remove('active'); });
-      current = (index + total) % total;
-      slides[current].classList.add('active');
-      if (currentEl) currentEl.textContent = String(current + 1);
-    }
-
-    var intervalSec = parseInt(bar.getAttribute('data-interval') || '8', 10);
-    if (isNaN(intervalSec) || intervalSec <= 0) intervalSec = 8;
-
-    function startAuto() {
-      if (timer) clearInterval(timer);
-      if (total <= 1) return;
-      timer = setInterval(function(){
-        showSlide(current + 1);
-      }, intervalSec * 1000);
-    }
-
-    if (prevBtn) {
-      prevBtn.addEventListener('click', function() {
-        showSlide(current - 1);
+        // Attach static controls (they are outside slider but we need functions in scope)
+        if (prevBtn && !prevBtn._hasCacoListener) {
+          prevBtn.addEventListener('click', function() { showSlide(current - 1); startAuto(); });
+          prevBtn._hasCacoListener = true;
+        }
+        if (nextBtn && !nextBtn._hasCacoListener) {
+          nextBtn.addEventListener('click', function() { showSlide(current + 1); startAuto(); });
+          nextBtn._hasCacoListener = true;
+        }
+        
+        showSlide(0);
         startAuto();
-      });
+      }
     }
 
-    if (nextBtn) {
-      nextBtn.addEventListener('click', function() {
-        showSlide(current + 1);
-        startAuto();
-      });
-    }
+    initAnnouncement();
+    window.addEventListener('resize', initAnnouncement);
 
+    var closeBtn = bar.querySelector('.caco-announcement-close');
     if (closeBtn) {
       closeBtn.addEventListener('click', function() {
         bar.style.display = 'none';
-        if (window.cacoUpdateHeaderHeight) {
-          window.cacoUpdateHeaderHeight();
-        }
+        if (window.cacoUpdateHeaderHeight) window.cacoUpdateHeaderHeight();
       });
     }
-
-    showSlide(0);
-    startAuto();
   })();
 
   // Header overlay manager (desktop dim for open elements)

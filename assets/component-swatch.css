@@ -1,62 +1,153 @@
-/* swatch lives in its own file for reusability of the swatch in swatch-input and dropdown */
+/* ============================================================================
+   PREMIUM COLOR SWATCHES - v3.0 (Next Level)
+   Glossy design with feedback animations and depth
+   ============================================================================ */
+
+@keyframes swatch-pop {
+  0% {
+    transform: translateY(-2px) scale(1);
+  }
+
+  50% {
+    transform: translateY(-4px) scale(1.15);
+  }
+
+  100% {
+    transform: translateY(-2px) scale(1.05);
+  }
+}
+
 .swatch {
-  --swatch--size: var(--swatch-input--size, 4.4rem);
-  --swatch--border-radius: var(--swatch-input--border-radius, 20px);
+  --swatch--size: 32px;
+  --swatch--border-radius: 10px;
 
   display: block;
   width: var(--swatch--size);
-  max-width: 100%;
+  height: var(--swatch--size);
   aspect-ratio: 1 / 1;
   background: var(--swatch--background);
   background-position: var(--swatch-focal-point, initial);
   background-size: cover;
   background-origin: border-box;
-  border: 0.1rem solid rgba(var(--color-foreground), 0.15);
   border-radius: var(--swatch--border-radius);
+  position: relative;
+  overflow: hidden;
+  /* Subtly darkened inner edge for depth */
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+}
+
+/* Glossy Effect layer */
+.swatch::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.05) 100%);
+  pointer-events: none;
+  z-index: 1;
 }
 
 .swatch--square {
-  --swatch--border-radius: var(--swatch-input--border-radius, 0.2rem);
+  --swatch--border-radius: 8px;
 }
 
 .swatch--unavailable {
-  border-style: dashed;
-  border-color: rgba(var(--color-foreground), 0.5);
+  opacity: 0.4;
+  filter: grayscale(0.8) contrast(0.8);
 }
 
-/* PDP swatch pill polish: rounded pills, thicker hover/active borders, readable text */
-.product-form__input--swatch .swatch-input__input + .swatch-input__label {
-  --swatch-input--border-radius: 20px;
-  --swatch-border-width: 1.6px;
-  color: var(--swatch-text-color, #111827);
-  padding: 0.28rem;
+/* Container / Label styles */
+.product-form__input--swatch .swatch-input__input+.swatch-input__label {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  padding: 0;
   background: #ffffff;
-  border: var(--swatch-border-width) solid rgba(17, 24, 39, 0.18);
-  border-radius: var(--swatch-input--border-radius);
-  box-shadow: none;
-  transition: border-color 0.16s ease, background-color 0.16s ease;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 15px;
+  /* Premium Squircle */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  margin-right: 6px;
+  position: relative;
 }
 
-.product-form__input--swatch .swatch-input__input + .swatch-input__label .swatch {
-  border: 0;
-  border-radius: calc(var(--swatch-input--border-radius) * 0.9);
+/* Hover: Lift and Glow */
+.product-form__input--swatch .swatch-input__input+.swatch-input__label:hover,
+.product-form__input--swatch .swatch-input__input:hover+.swatch-input__label {
+  border-color: #cbd5e1;
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  z-index: 2;
 }
 
-.product-form__input--swatch .swatch-input__input + .swatch-input__label:hover,
-.product-form__input--swatch .swatch-input__input:hover + .swatch-input__label {
-  --swatch-border-width: 2.2px;
-  border-color: #0d6ba6;
-
+/* Checked: Primary Focus Ring */
+.product-form__input--swatch .swatch-input__input:checked+.swatch-input__label {
+  border-color: #0051c3;
+  background: #ffffff;
+  box-shadow: 0 0 0 1.5px #0051c3, 0 10px 20px rgba(0, 81, 195, 0.18);
+  transform: translateY(-2px) scale(1.05);
+  animation: swatch-pop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 3;
+  outline: none;
 }
 
-.product-form__input--swatch .swatch-input__input:checked + .swatch-input__label {
-  --swatch-border-width: 2.2px;
-  border-color: #0d6ba6;
-
+/* Tooltip/Label Polish */
+.swatch-input__label[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%) translateY(5px);
+  padding: 7px 12px;
+  background: rgba(17, 24, 39, 0.95);
+  color: #fff;
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 600;
+  border-radius: 10px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 100;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(4px);
 }
 
-.product-form__input--swatch .swatch-input__input:focus-visible + .swatch-input__label {
-  outline: 2px solid #0d6ba6;
-  outline-offset: 2px;
+.swatch-input__label[data-tooltip]:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
 }
 
+/* Remove default tooltip if it exists (using before) */
+.swatch-input__label::before {
+  display: none !important;
+}
+
+/* Unavailable line improvement: cleaner diagonal strike */
+.product-form__input--swatch .swatch-input__input.visually-disabled+.swatch-input__label .swatch::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -10%;
+  width: 120%;
+  height: 2px;
+  background: #94a3b8;
+  transform: rotate(-45deg);
+  box-shadow: 0 0 2px rgba(255, 255, 255, 0.9);
+  z-index: 5;
+}
+
+/* Focus states */
+.product-form__input--swatch .swatch-input__input:focus-visible+.swatch-input__label {
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #0051c3;
+  outline: none;
+}
