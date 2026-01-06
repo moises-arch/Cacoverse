@@ -774,11 +774,10 @@ a.product__text {
     flex: 1 1 auto;
     width: auto;
     margin-top: 0;
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     /* Keep increased size */
     font-weight: 800 !important;
-    /* Keep bolder */
-    letter-spacing: 0.08em;
+
   }
 }
 
@@ -5152,26 +5151,6 @@ body.template-product .product__media-modal * {
 .bundle-summary__button:disabled {
   background: #ccc;
   cursor: not-allowed;
-}
-
-@keyframes pulse {
-  0% {
-    opacity: 1;
-  }
-
-  50% {
-    opacity: 0.5;
-  }
-
-  100% {
-    opacity: 1;
-  }
-}
-
-.bundle-summary__button.is-loading {
-  animation: pulse 1.5s ease-in-out infinite;
-  pointer-events: none;
-  cursor: wait;
 }
 
 /* Spinner for button */
