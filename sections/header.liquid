@@ -84,25 +84,34 @@
     overflow: hidden;
   }
 
-  /* Ocultar dropdowns y mega menus por defecto para evitar FOUC */
+  /* Ocultar elementos secundarios que causan FOUC sin afectar el flujo principal */
   .caco-dropdown,
-  .caco-simple-dropdown,
+  .caco-predictive-results,
   .caco-help-dropdown,
   .caco-industries-dropdown,
   .caco-partner-dropdown,
-  .caco-predictive-results,
   .caco-mobile-drawer {
-    display: none;
-  }
-
-  /* Aseguramos que la navegación no se vea "rota" mientras carga */
-  .caco-nav-list {
-    display: flex;
+    opacity: 0;
     visibility: hidden;
   }
+
+  /* Fix SVG Flicker */
+  .caco-header-wrapper svg {
+    display: inline-block;
+    vertical-align: middle;
+    width: 24px;   /* Tamaño base para iconos */
+    height: 24px;
+    flex-shrink: 0;
+  }
+  .caco-search-icon-svg { width: 22px; height: 22px; }
+  .caco-cart-icon svg { width: 24px; height: 24px; }
+  .caco-mobile-menu-toggle svg,
+  .caco-mobile-close svg { width: 24px; height: 24px; }
+
+  /* Aseguramos que la navegación sea visible solo cuando esté lista */
   .caco-is-ready .caco-nav-list,
   .has-caco-sticky .caco-nav-list {
-    visibility: visible;
+    visibility: visible !important;
   }
 
   @media (max-width: 768px) {
@@ -165,7 +174,7 @@
                 REDUNDANCIA PARA MOBILE: Mostramos el marquee por defecto en CSS para evitar 
                 el parpadeo de reconstrucción en JS.
               {%- endcomment -%}
-              <div class="caco-announcement-marquee-mobile md-only">
+              <div class="caco-announcement-marquee-mobile caco-mobile-only-ann">
                 <div class="caco-announcement-marquee-track">
                   {%- capture marquee_text -%}
                     {%- for block in announcements -%}{{ block.settings.text | strip_html | strip }}{% unless forloop.last %}   •   {% endunless %}{%- endfor -%}
@@ -177,7 +186,7 @@
 
               {%- for block in announcements -%}
                 <div
-                  class="caco-announcement-slide {% if forloop.first %}active{% endif %} desktop-only"
+                  class="caco-announcement-slide {% if forloop.first %}active{% endif %} caco-desktop-only-ann"
                   data-index="{{ forloop.index0 | plus: 0 }}"
                 >
                   {{ block.settings.text }}
@@ -1734,12 +1743,11 @@
     to { transform: translateX(-50%); }
   }
 
-  .desktop-only { display: block; }
-  .md-only { display: none; }
+  .caco-mobile-only-ann { display: none !important; }
 
   @media (max-width: 768px) {
-    .desktop-only { display: none !important; }
-    .md-only { display: block !important; }
+    .caco-desktop-only-ann { display: none !important; }
+    .caco-mobile-only-ann { display: block !important; }
   }
 
 /* ----------------------------------------------------------------------------
