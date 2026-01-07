@@ -51,15 +51,50 @@
 ================================================================================
 -->
 
+<style>
+  /* ⚡ CRITICAL HEADER STYLES (Pre-load) */
+  :root {
+    --caco-header-height: 178px;
+    --announcement-bg: #0051c3;
+    --header-bg: #ffffff;
+  }
+  
+  /* Evita el salto de contenido inyectando el padding antes de que cargue el CSS completo */
+  html.has-caco-sticky body,
+  body.has-caco-sticky {
+    padding-top: var(--caco-header-height) !important;
+  }
+
+  /* Asegura que el contenedor no parpadee ni se mueva al cargar */
+  .caco-header-wrapper {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 200;
+    background: var(--header-bg);
+    visibility: visible !important;
+    opacity: 1 !important;
+    contain: layout;
+  }
+
+  /* Pre-layout para la barra de anuncios */
+  .caco-announcement-bar {
+    height: 44px;
+    background: var(--announcement-bg);
+    overflow: hidden;
+  }
+
+  @media (max-width: 768px) {
+    :root { --caco-header-height: 130px; }
+  }
+</style>
+
 <script>
-  // Fallback inmediato para evitar salto de contenido antes del JS principal
+  // Fallback ultra-rápido para el padding del body
   (function() {
     try {
-      // Usamos documentElement por si el body aún no está listo
       document.documentElement.classList.add('has-caco-sticky');
-      // Altura estimada real: Barra anuncio (44) + Top (86) + Nav (48) ≈ 178px
-      // Un valor de 170px es un fallback mucho más cercano que 120px
-      document.documentElement.style.setProperty('--caco-header-height', '170px');
+      var h = window.innerWidth <= 768 ? '130px' : '178px';
+      document.documentElement.style.setProperty('--caco-header-height', h);
     } catch (e) {}
   })();
 </script>
@@ -89,7 +124,7 @@
   {%- endif -%}
 {%- endfor -%}
 
-<div class="caco-header-wrapper" style="opacity:1;visibility:visible;">
+<div class="caco-header-wrapper">
   <!-- -------------------------------------------------------------------------
        3.1 Announcement Bar
        ------------------------------------------------------------------------- -->
@@ -104,9 +139,23 @@
         <div class="caco-announcement-content">
           <div class="caco-announcement-slider">
             {%- if announcements.size > 0 -%}
+              {%- comment -%} 
+                REDUNDANCIA PARA MOBILE: Mostramos el marquee por defecto en CSS para evitar 
+                el parpadeo de reconstrucción en JS.
+              {%- endcomment -%}
+              <div class="caco-announcement-marquee-mobile md-only">
+                <div class="caco-announcement-marquee-track">
+                  {%- capture marquee_text -%}
+                    {%- for block in announcements -%}{{ block.settings.text | strip_html | strip }}{% unless forloop.last %}   •   {% endunless %}{%- endfor -%}
+                  {%- endcapture -%}
+                  <div class="caco-announcement-marquee-item">{{ marquee_text }}</div>
+                  <div class="caco-announcement-marquee-item">{{ marquee_text }}</div>
+                </div>
+              </div>
+
               {%- for block in announcements -%}
                 <div
-                  class="caco-announcement-slide {% if forloop.first %}active{% endif %}"
+                  class="caco-announcement-slide {% if forloop.first %}active{% endif %} desktop-only"
                   data-index="{{ forloop.index0 | plus: 0 }}"
                 >
                   {{ block.settings.text }}
@@ -1650,13 +1699,25 @@
   .caco-announcement-marquee-track{
     display:flex;
     flex-wrap:nowrap;
-    width:200%;
-    animation:caco-ann-marquee 18s linear infinite;
+    width:max-content;
+    animation:caco-ann-marquee 25s linear infinite;
   }
   .caco-announcement-marquee-item{
-    flex:0 0 100%;
     white-space:nowrap;
-    padding:0 16px;
+    padding:0 30px;
+    font-size: 13px;
+  }
+  @keyframes caco-ann-marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  .desktop-only { display: block; }
+  .md-only { display: none; }
+
+  @media (max-width: 768px) {
+    .desktop-only { display: none !important; }
+    .md-only { display: block !important; }
   }
 
 /* ----------------------------------------------------------------------------
@@ -3963,32 +4024,18 @@ document.addEventListener('visibilitychange', function () {
 
       if (isMobile) {
         if (navGroup) navGroup.style.display = 'none';
-        
-        var texts = [];
-        slides.forEach(function(s) {
-          var t = (s.textContent || '').replace(/\s+/g, ' ').trim();
-          if (t) texts.push(t);
-        });
-        var merged = (texts.length ? texts.join('   •   ') : ' ');
-        
-        slider.innerHTML = '';
-        var track = document.createElement('div');
-        track.className = 'caco-announcement-marquee-track';
-        
-        for (var i = 0; i < 2; i++) {
-          var item = document.createElement('div');
-          item.className = 'caco-announcement-marquee-item';
-          item.textContent = merged;
-          track.appendChild(item);
-        }
-        slider.appendChild(track);
+        // Mobile uses Liquid-rendered CSS marquee, no JS rebuild needed
       } else {
         if (navGroup) navGroup.style.display = 'flex';
         
+        var desktopSlides = slider.querySelectorAll('.caco-announcement-slide.desktop-only');
+        var dTotal = desktopSlides.length;
+        if (!dTotal) return;
+
         function showSlide(index) {
-          slides.forEach(function(s){ s.classList.remove('active'); });
-          current = (index + total) % total;
-          slides[current].classList.add('active');
+          desktopSlides.forEach(function(s){ s.classList.remove('active'); });
+          current = (index + dTotal) % dTotal;
+          desktopSlides[current].classList.add('active');
           if (currentEl) currentEl.textContent = String(current + 1);
         }
 
@@ -3997,13 +4044,12 @@ document.addEventListener('visibilitychange', function () {
 
         function startAuto() {
           if (timer) clearInterval(timer);
-          if (total <= 1) return;
+          if (dTotal <= 1) return;
           timer = setInterval(function(){
             showSlide(current + 1);
           }, intervalSec * 1000);
         }
 
-        // Attach static controls (they are outside slider but we need functions in scope)
         if (prevBtn && !prevBtn._hasCacoListener) {
           prevBtn.addEventListener('click', function() { showSlide(current - 1); startAuto(); });
           prevBtn._hasCacoListener = true;
