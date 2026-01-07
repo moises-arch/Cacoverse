@@ -72,13 +72,20 @@
     top: 0; left: 0; right: 0;
     z-index: 200;
     background: var(--header-bg);
-    visibility: visible !important;
-    opacity: 1 !important;
+    /* INICIO OCULTO: Se fuerza oculto por defecto hasta que JS confirme "is-ready" */
+    opacity: 0;
+    visibility: hidden;
     /* Chrome stability fixes */
     transform: translateZ(0);
     backface-visibility: hidden;
     perspective: 1000;
     will-change: transform;
+  }
+
+  /* Estado LISTO: Solo ahora se muestra */
+  .caco-header-wrapper.caco-is-ready {
+    opacity: 1 !important;
+    visibility: visible !important;
   }
 
   /* Pre-layout para la barra de anuncios */
@@ -234,7 +241,7 @@
   {%- endif -%}
 {%- endfor -%}
 
-<div class="caco-header-wrapper">
+<div class="caco-header-wrapper" style="opacity:0;visibility:hidden;">
   <!-- -------------------------------------------------------------------------
        3.1 Announcement Bar
        ------------------------------------------------------------------------- -->
