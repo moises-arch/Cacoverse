@@ -108,8 +108,26 @@
   .caco-mobile-menu-toggle svg,
   .caco-mobile-close svg { width: 24px; height: 24px; }
   .caco-nav-aux-icon svg { width: 22px; height: 22px; } /* Help/Industries icon size */
+  .caco-search-icon-svg { width: 18px; height: 18px; }
 
-  /* Aseguramos que la navegación sea visible solo cuando esté lista */
+  /* 🚫 CRITICAL: HIDE MOBILE ELEMENTS ON DESKTOP */
+  /* This prevents the flash of mobile icons/menus before media queries load */
+  .caco-mobile-toggle,
+  .caco-search-icon--mobile,
+  .caco-mobile-drawer-search,
+  .caco-mobile-only-ann,
+  .md-only {
+    display: none !important;
+  }
+
+  /* Show them only on mobile via media query */
+  @media (max-width: 1024px) {
+    .caco-mobile-toggle { display: inline-flex !important; }
+    .caco-search-icon--mobile { display: flex !important; }
+    .caco-mobile-drawer-search { display: block !important; }
+    .caco-mobile-only-ann { display: block !important; }
+    .md-only { display: block !important; }
+  }
   .caco-is-ready .caco-nav-list,
   .has-caco-sticky .caco-nav-list {
     visibility: visible !important;
@@ -2327,7 +2345,8 @@
 
   .caco-mega-container{display:flex;min-height:380px;}
   .caco-mega-sidebar{
-    width:{{ section.settings.mega_sidebar_width | default: 22 }}%;
+    width:{{ section.settings.mega_sidebar_width | default: 27 }}%;
+    min-width: 270px; /* Asegura espacio suficiente para "Microfiber Towels" */
     background:{{ section.settings.mega_sidebar_bg | default: '#f9fafb' }};
     border-right:none;
     padding:16px 0;
@@ -2438,7 +2457,7 @@
     background:linear-gradient(90deg, rgba(225,29,72,0.2), rgba(225,29,72,0.1));
   }
 
-  .caco-mega-content{width:53%;padding:24px 28px;}
+  .caco-mega-content{flex:1;padding:24px 28px;}
   .caco-mega-panel{display:none;animation:fadeIn .3s ease;}
   .caco-mega-panel.active{display:block;}
   .caco-mega-panel-title{
