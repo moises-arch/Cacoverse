@@ -55,11 +55,11 @@
   // Fallback inmediato para evitar salto de contenido antes del JS principal
   (function() {
     try {
-      if (document.body) {
-        document.body.classList.add('has-caco-sticky');
-      }
-      // Altura estimada para el primer paint, se ajusta luego con JS
-      document.documentElement.style.setProperty('--caco-header-height', '120px');
+      // Usamos documentElement por si el body aún no está listo
+      document.documentElement.classList.add('has-caco-sticky');
+      // Altura estimada real: Barra anuncio (44) + Top (86) + Nav (48) ≈ 178px
+      // Un valor de 170px es un fallback mucho más cercano que 120px
+      document.documentElement.style.setProperty('--caco-header-height', '170px');
     } catch (e) {}
   })();
 </script>
@@ -1465,8 +1465,8 @@
     --border-color:#e5e7eb;
     --drawer-active-bg:#0051c3;
     --drawer-active-soft:#e6f0ff;
-    /* Fallback no-calc para evitar flicker de salto */
-    --caco-header-height:120px;
+    /* Fallback optimizado para evitar flicker de salto de contenido */
+    --caco-header-height:170px;
   }
 /* Evitar el "rubber-band" solo en desktop */
 @media (min-width: 1025px) {
@@ -1477,8 +1477,10 @@
 }
 
 
-  body.has-caco-sticky{
-    padding-top:var(--caco-header-height);
+  /* Apuntar a html o body para máxima compatibilidad con el fallback script */
+  html.has-caco-sticky body,
+  body.has-caco-sticky {
+    padding-top: var(--caco-header-height);
   }
 
   html.caco-mobile-open,
@@ -1564,7 +1566,8 @@
     right:0;
     z-index:200;
     box-shadow:0 1px 3px rgba(0,0,0,0.04);
-    transition: opacity .18s ease;
+    /* Removido transition de opacity para evitar flickers en carga */
+    transition: transform .18s ease; 
   }
   .caco-header-wrapper.is-scrolled{
     box-shadow:0 4px 15px rgba(0,0,0,0.08);
@@ -3397,8 +3400,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     var h = headerWrapper.offsetHeight || 0;
-    document.documentElement.style.setProperty('--caco-header-height', h + 'px');
-    document.body.classList.add('has-caco-sticky');
+    if (h > 0) {
+      document.documentElement.style.setProperty('--caco-header-height', h + 'px');
+      document.documentElement.classList.add('has-caco-sticky');
+    }
   }
 
 
