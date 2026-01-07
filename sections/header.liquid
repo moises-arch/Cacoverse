@@ -107,6 +107,7 @@
   .caco-cart-icon svg { width: 24px; height: 24px; }
   .caco-mobile-menu-toggle svg,
   .caco-mobile-close svg { width: 24px; height: 24px; }
+  .caco-nav-aux-icon svg { width: 22px; height: 22px; } /* Help/Industries icon size */
 
   /* Aseguramos que la navegación sea visible solo cuando esté lista */
   .caco-is-ready .caco-nav-list,
@@ -2700,6 +2701,7 @@
     font-size:11px;font-weight:800;text-transform:uppercase;
     letter-spacing:.05em;
     margin-left:3px;vertical-align:middle;line-height:1;position:relative;top:-2px;
+    opacity: 1 !important; visibility: visible !important;
   }
   .caco-badge.small{
     font-size:10px;padding:2px 6px;margin-left:3px;border-radius:999px;top:-2px;
@@ -4060,7 +4062,8 @@ document.addEventListener('visibilitychange', function () {
       } else {
         if (navGroup) navGroup.style.display = 'flex';
         
-        var desktopSlides = slider.querySelectorAll('.caco-announcement-slide.desktop-only');
+        // CORREGIDO: Usamos el selector que coincide con el HTML
+        var desktopSlides = slider.querySelectorAll('.caco-announcement-slide.caco-desktop-only-ann');
         var dTotal = desktopSlides.length;
         if (!dTotal) return;
 
