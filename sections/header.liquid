@@ -74,7 +74,11 @@
     background: var(--header-bg);
     visibility: visible !important;
     opacity: 1 !important;
-    contain: layout;
+    /* Chrome stability fixes */
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000;
+    will-change: transform;
   }
 
   /* Pre-layout para la barra de anuncios */
@@ -128,22 +132,26 @@
     .caco-mobile-only-ann { display: block !important; }
     .md-only { display: block !important; }
   }
+
+  /* 🚫 FORZAR ESTADO INICIAL SIN TRANSICIONES (Evita flicker en Chrome) */
+  .caco-header-wrapper * {
+    transition: none !important;
+  }
+  .caco-header-wrapper.caco-is-ready * {
+    transition: all 0.2s ease-out, visibility 0s, opacity 0.2s; 
+  }
+  .caco-header-wrapper.caco-is-ready .caco-dropdown,
+  .caco-header-wrapper.caco-is-ready .caco-partner-dropdown,
+  .caco-header-wrapper.caco-is-ready .caco-help-dropdown,
+  .caco-header-wrapper.caco-is-ready .caco-industries-dropdown {
+    transition: opacity 0.2s ease-out, transform 0.2s ease-out, visibility 0.2s !important;
+  }
+
+  /* Aseguramos que la navegación sea visible solo cuando esté lista */
   .caco-is-ready .caco-nav-list,
   .has-caco-sticky .caco-nav-list {
     visibility: visible !important;
   }
-
-  /* Ocultar toggle móvil por defecto (Desktop First) para evitar flicker */
-  .caco-mobile-toggle {
-    display: none;
-  }
-
-  @media (max-width: 1024px) {
-    .caco-mobile-toggle {
-      display: inline-flex;
-    }
-  }
-
   @media (max-width: 768px) {
     :root { --caco-header-height: 130px; }
   }
@@ -2290,7 +2298,13 @@
 /* ----------------------------------------------------------------------------
    4.6 Desktop Navigation & Dropdowns
    ---------------------------------------------------------------------------- */
-  .caco-header-bottom{border-bottom:1px solid var(--border-color);background:#fff;}
+  .caco-header-bottom{
+    border-bottom:1px solid var(--border-color);
+    background:#fff;
+    box-shadow: 0 4px 10px -2px rgba(0,0,0,0.06); /* Sombra de división */
+    position: relative;
+    z-index: 110;
+  }
   .caco-nav{display:flex;align-items:center;gap:24px;}
   .caco-nav-list{display:flex;align-items:center;gap:40px;flex:1;}
   .caco-nav-item{position:relative;}
@@ -2303,10 +2317,10 @@
 
   .caco-dropdown{
     display: block;
-    position:absolute;top:calc(100% - 1px);left:0;
+    position:absolute;top:100%;left:0;
     background:#fff;
-    box-shadow:0 20px 40px -22px rgba(15,23,42,.18);
-    border:1px solid rgba(0,0,0,.05);
+    box-shadow:0 15px 35px -10px rgba(0,0,0,0.15);
+    border:1px solid rgba(0,0,0,0.05);
     border-top:none;
     opacity:0;visibility:hidden;
     transform:translateY(4px);
@@ -3615,7 +3629,10 @@ document.addEventListener('visibilitychange', function () {
   computeHeaderHeight();
   handleScroll();
 
-  headerWrapper.classList.add('caco-is-ready');
+  // Delay para evitar el "Layout shift" y flicker en Chrome al aplicar transiciones demasiado pronto
+  setTimeout(function() {
+    headerWrapper.classList.add('caco-is-ready');
+  }, 200);
 
   window.addEventListener('scroll', function() {
     if (!ticking) {
