@@ -88,16 +88,37 @@
     overflow: hidden;
   }
 
-  /* Ocultar elementos secundarios que causan FOUC sin afectar el flujo principal */
+  /* 🚫 DEFENSIVE HIDING:
+     Excluimos estos elementos del árbol de renderizado inicial por completo.
+     Esto evita que el navegador gaste recursos calculando su layout o 
+     descargando iconos secundarios antes de lo necesario. */
   .caco-dropdown,
   .caco-predictive-results,
   .caco-help-dropdown,
   .caco-industries-dropdown,
   .caco-partner-dropdown,
   .caco-mobile-drawer {
+    display: none !important;
+  }
+
+  /* Restauramos el renderizado una vez que el header está estable */
+  .caco-is-ready .caco-dropdown,
+  .caco-is-ready .caco-predictive-results,
+  .caco-is-ready .caco-help-dropdown,
+  .caco-is-ready .caco-industries-dropdown,
+  .caco-is-ready .caco-partner-dropdown,
+  .caco-is-ready .caco-mobile-drawer {
+    display: block !important; /* O flex si es necesario, pero block es seguro para contener */
     opacity: 0;
     visibility: hidden;
+    content-visibility: auto; /* Optimización moderna de Chrome para "background load" */
   }
+  
+  /* Caso especial para el mega-menu container */
+  .caco-is-ready .caco-nav-item.mega-menu > .caco-dropdown {
+    display: flex !important;
+  }
+
 
   /* Fix SVG Flicker */
   .caco-header-wrapper svg {
