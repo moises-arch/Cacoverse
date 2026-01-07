@@ -111,7 +111,7 @@
     display: block !important; /* O flex si es necesario, pero block es seguro para contener */
     opacity: 0;
     visibility: hidden;
-    content-visibility: auto; /* Optimización moderna de Chrome para "background load" */
+    /* content-visibility removed for safety on product pages */
   }
   
   /* Caso especial para el mega-menu container */
@@ -2686,9 +2686,9 @@
 
   .caco-help-menu.open .caco-help-dropdown,
   .caco-industries-menu.open .caco-industries-dropdown{
-    opacity:1;
-    visibility:visible;
-    transform:translateY(0);
+    opacity:1 !important;
+    visibility:visible !important;
+    transform:translateY(0) !important;
   }
 
 
