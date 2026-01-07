@@ -57,6 +57,7 @@
     --caco-header-height: 178px;
     --announcement-bg: #0051c3;
     --header-bg: #ffffff;
+    --primary-blue: #0051c3; /* Definimos esto aquí por si se usa en nav */
   }
   
   /* Evita el salto de contenido inyectando el padding antes de que cargue el CSS completo */
@@ -81,6 +82,27 @@
     height: 44px;
     background: var(--announcement-bg);
     overflow: hidden;
+  }
+
+  /* Ocultar dropdowns y mega menus por defecto para evitar FOUC */
+  .caco-dropdown,
+  .caco-simple-dropdown,
+  .caco-help-dropdown,
+  .caco-industries-dropdown,
+  .caco-partner-dropdown,
+  .caco-predictive-results,
+  .caco-mobile-drawer {
+    display: none;
+  }
+
+  /* Aseguramos que la navegación no se vea "rota" mientras carga */
+  .caco-nav-list {
+    display: flex;
+    visibility: hidden;
+  }
+  .caco-is-ready .caco-nav-list,
+  .has-caco-sticky .caco-nav-list {
+    visibility: visible;
   }
 
   @media (max-width: 768px) {
@@ -1964,7 +1986,7 @@
   }
 
   .caco-predictive-results{
-    display:none;
+    display:block;
     position:absolute;
     top:calc(100% + 6px);
     left:0;
@@ -2205,6 +2227,7 @@
 
   .caco-partner-menu{position:relative;}
   .caco-partner-dropdown{
+    display: block;
     position:absolute;right:0;top:calc(100% + 8px);
     min-width:200px;background:#fff;
     border-radius:12px;
@@ -2241,6 +2264,7 @@
   .caco-nav-link:hover,.caco-nav-link.active{color:var(--primary-blue);}
 
   .caco-dropdown{
+    display: block;
     position:absolute;top:calc(100% - 1px);left:0;
     background:#fff;
     box-shadow:0 20px 40px -22px rgba(15,23,42,.18);
@@ -2832,13 +2856,13 @@
   }
 
   .caco-mobile-drawer {
+    display:flex;
     position: fixed;
     top: var(--caco-header-height);
     right: 0;
     bottom: 0;
     left: 0;
     z-index:195;
-    display:flex;
     flex-direction:column;
     pointer-events:none;
     opacity:0;
@@ -2847,7 +2871,7 @@
     transition:
       transform .28s cubic-bezier(0.25, 0.8, 0.25, 1),
       opacity .18s ease,
-      visibility .18s.ease;
+      visibility .18s ease;
     background:transparent;
   }
 
