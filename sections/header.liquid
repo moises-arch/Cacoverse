@@ -159,7 +159,8 @@
     transition: none !important;
   }
   .caco-header-wrapper.caco-is-ready * {
-    transition: all 0.2s ease-out, visibility 0s, opacity 0.2s; 
+    /* EVITAR transition: all; en el estado inicial para Chrome */
+    transition: background 0.2s, color 0.16s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s; 
   }
   .caco-header-wrapper.caco-is-ready .caco-dropdown,
   .caco-header-wrapper.caco-is-ready .caco-partner-dropdown,
@@ -168,10 +169,29 @@
     transition: opacity 0.2s ease-out, transform 0.2s ease-out, visibility 0.2s !important;
   }
 
+  /* Skeleton de búsqueda para evitar Layout Shift */
+  .caco-search-input {
+    height: 50px;
+    border-radius: 16px;
+    border: 1px solid #d1d5db;
+    background: #fff;
+    width: 100%;
+  }
+
   /* Aseguramos que la navegación sea visible solo cuando esté lista */
   .caco-is-ready .caco-nav-list,
   .has-caco-sticky .caco-nav-list {
     visibility: visible !important;
+  }
+  
+  /* Gradiente de separación sutil */
+  .caco-header-bottom::after {
+    content: "";
+    position: absolute;
+    bottom: -8px; left: 0; right: 0;
+    height: 8px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.03), transparent);
+    pointer-events: none;
   }
   @media (max-width: 768px) {
     :root { --caco-header-height: 130px; }
@@ -3650,10 +3670,10 @@ document.addEventListener('visibilitychange', function () {
   computeHeaderHeight();
   handleScroll();
 
-  // Delay para evitar el "Layout shift" y flicker en Chrome al aplicar transiciones demasiado pronto
-  setTimeout(function() {
+  // Chrome FIX: Evitamos el Delay y usamos requestAnimationFrame para sincronizar con el refresco de pantalla
+  requestAnimationFrame(function() {
     headerWrapper.classList.add('caco-is-ready');
-  }, 200);
+  });
 
   window.addEventListener('scroll', function() {
     if (!ticking) {
