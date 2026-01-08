@@ -1093,7 +1093,49 @@
               </div>
 
               <div class="wd40-card-body">
-                <h3 class="wd40-title"><a href="{{ product.url }}" class="js-product-link">{{ product.title }}</a></h3>{%- assign primary_variant = product.selected_or_first_available_variant -%}{%- liquid assign display_category = '' if collection and collection.title != blank assign display_category = collection.title elsif product.collections and product.collections.size > 0 assign display_category = product.collections.first.title elsif product.type != blank assign display_category = product.type endif -%}{% if section.settings.show_sku %}<div class="wd40-meta-row">{% if display_category != blank %}<span class="wd40-meta-category">{{ display_category }}</span>{% endif %}<span class="wd40-meta-separator">/</span>{% if primary_variant.sku != blank %}<span class="wd40-meta-sku-label">SKU:</span><span class="wd40-meta-sku-value js-product-sku">{{ primary_variant.sku }}</span>{% endif %}</div>{% endif %}{% if section.settings.show_subtitle and product.metafields.custom.sub_title %}<div class="wd40-subtitle">{{ product.metafields.custom.sub_title }}</div>{% endif %}{% if section.settings.show_custom_subtitle and product.metafields.custom.sub_title %}<div class="wd40-metafield-subtitle">{{ product.metafields.custom.sub_title }}</div>{% endif %}<div class="wd40-price-row"><div class="wd40-price js-product-price">From {{ product.price_min | money }}</div>{% if section.settings.show_reviews %}<div class="wd40-reviews">{% render 'junip-product-summary', product: product %}</div>{% endif %}</div>
+                <h3 class="wd40-title"><a href="{{ product.url }}" class="js-product-link">{{ product.title }}</a></h3>
+                
+                {%- liquid
+                  assign primary_variant = product.selected_or_first_available_variant
+                  assign display_category = ''
+                  if collection and collection.title != blank
+                    assign display_category = collection.title
+                  elsif product.collections and product.collections.size > 0
+                    assign display_category = product.collections.first.title
+                  elsif product.type != blank
+                    assign display_category = product.type
+                  endif
+                -%}
+
+                {% if section.settings.show_sku %}
+                  <div class="wd40-meta-row">
+                    {% if display_category != blank %}
+                      <span class="wd40-meta-category">{{ display_category }}</span>
+                    {% endif %}
+                    <span class="wd40-meta-separator">/</span>
+                    {% if primary_variant.sku != blank %}
+                      <span class="wd40-meta-sku-label">SKU:</span>
+                      <span class="wd40-meta-sku-value js-product-sku">{{ primary_variant.sku }}</span>
+                    {% endif %}
+                  </div>
+                {% endif %}
+
+                {% if section.settings.show_subtitle and product.metafields.custom.sub_title %}
+                  <div class="wd40-subtitle">{{ product.metafields.custom.sub_title }}</div>
+                {% endif %}
+
+                {% if section.settings.show_custom_subtitle and product.metafields.custom.sub_title %}
+                  <div class="wd40-metafield-subtitle">{{ product.metafields.custom.sub_title }}</div>
+                {% endif %}
+
+                <div class="wd40-price-row">
+                  <div class="wd40-price js-product-price">From {{ product.price_min | money }}</div>
+                  {% if section.settings.show_reviews %}
+                    <div class="wd40-reviews">
+                      {% render 'junip-product-summary', product: product %}
+                    </div>
+                  {% endif %}
+                </div>
         {% if section.settings.show_swatches %}
           {%- assign has_color = false -%}
           {%- for option in product.options_with_values -%}

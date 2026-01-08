@@ -950,7 +950,16 @@
     BASIC PRODUCT VARS
   {%- endcomment -%}
   {%- assign primary_variant   = item.selected_or_first_available_variant -%}
-  {%- assign display_category  = item.type | default: 'Product' -%}
+  {%- liquid
+    assign display_category = ''
+    if item.collections and item.collections.size > 0
+      assign display_category = item.collections.first.title
+    elsif item.type != blank
+      assign display_category = item.type
+    else
+      assign display_category = 'Product'
+    endif
+  -%}
   {%- assign custom_sub_title  = item.metafields.custom.sub_title -%}
 
   {%- comment -%}
