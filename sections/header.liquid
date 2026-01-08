@@ -72,18 +72,21 @@
     top: 0; left: 0; right: 0;
     z-index: 200;
     background: var(--header-bg);
-    /* Chrome stability fixes */
+    /* INICIO OCULTO: Se fuerza oculto por defecto hasta que JS confirme "is-ready" */
+    opacity: 0;
+    visibility: hidden;
     /* Chrome stability fixes */
     transform: translateZ(0);
     backface-visibility: hidden;
     perspective: 1000;
     will-change: transform;
-    /* ⚡ CRITICAL VISIBILITY: Always visible, relies on layout rules below to prevent jumps */
-    opacity: 1 !important; 
+  }
+
+  /* Estado LISTO: Solo ahora se muestra */
+  .caco-header-wrapper.caco-is-ready {
+    opacity: 1 !important;
     visibility: visible !important;
   }
-  
-  /* 👻 GHOST LOADING MODE REMOVED */
 
   /* Pre-layout para la barra de anuncios */
   .caco-announcement-bar {
@@ -187,38 +190,6 @@
   .has-caco-sticky .caco-nav-list {
     visibility: visible !important;
   }
-
-  /* ⚡ CRITICAL LAYOUT STRUCTURE 
-     Prevent items from stacking (FOUC) before main CSS reads.
-  */
-  .caco-grid-container {
-    display: grid;
-    align-items: center;
-    gap: 24px;
-    grid-template-columns: auto 1fr auto;
-  }
-  .caco-area-center { display: flex; justify-content: center; }
-  .caco-area-right { display: flex; justify-content: flex-end; width: auto; }
-  
-  /* CRITICAL: Navigation List Layout */
-  .caco-nav-list {
-    display: flex;
-    align-items: center;
-    gap: 40px;
-    list-style: none; /* Quitamos los bullets del pantallazo */
-    padding: 0;
-    margin: 0;
-  }
-  .caco-nav-item {
-    display: block; /* Asegura que no se comporten como list-item default */
-  }
-
-  @media (max-width: 1024px) {
-    /* En mobile, el centro (search desktop) desaparece inmediatamente */
-    .caco-grid-container { grid-template-columns: auto 1fr auto; }
-    .caco-area-center { display: none !important; }
-    .caco-nav-list { display: none !important; } /* Ocultar nav desktop en mobile */
-  }
   
   /* Gradiente de separación sutil */
   .caco-header-bottom::after {
@@ -232,16 +203,6 @@
   @media (max-width: 768px) {
     :root { --caco-header-height: 130px; }
   }
-  /* 🚨 SAFEGUARD: Ensure all header children are visible immediately */
-  .caco-header-wrapper *:not(.caco-dropdown):not(.caco-mobile-drawer):not(.caco-search-overlay) {
-    visibility: visible;
-    opacity: 1;
-    color: inherit;
-  }
-  
-  /* Restore basic inherited styles */
-  .caco-header-wrapper a { text-decoration: none; color: inherit; }
-  .caco-header-wrapper svg { fill: none; }
 </style>
 
 <script>
@@ -280,7 +241,7 @@
   {%- endif -%}
 {%- endfor -%}
 
-<div class="caco-header-wrapper">
+<div class="caco-header-wrapper" style="opacity:0;visibility:hidden;">
   <!-- -------------------------------------------------------------------------
        3.1 Announcement Bar
        ------------------------------------------------------------------------- -->
@@ -291,7 +252,7 @@
       id="caco-announcement-bar"
       data-interval="{{ section.settings.announcement_interval | default: 8 }}"
     >
-      <div class="caco-container" style="display:flex;align-items:center;justify-content:center;height:100%;">
+      <div class="caco-container" style="position:relative;display:flex;align-items:center;justify-content:center;height:100%;">
         <div class="caco-announcement-content">
           <div class="caco-announcement-slider">
             {%- if announcements.size > 0 -%}
@@ -2574,11 +2535,9 @@
 
   .caco-mega-grid{
     display:grid;
-    /* Cambio: usamos minmax para asegurar que no se compriman */
-    grid-template-columns: repeat(2, minmax(200px, 1fr));
-    gap: 32px; /* Más espacio entre columnas */
+    grid-template-columns:repeat(2,1fr);
+    gap:14px;
     margin-bottom:14px;
-    align-items: start;
   }
   .caco-mega-grid li a{
     font-size:14px;color:#555;
