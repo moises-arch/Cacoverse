@@ -1,7 +1,7 @@
 {% comment %}
-  Product Video Hub Component - Source: Metafields
+  Product Video Hub Component - Source: Metafields (Dot Notation)
   Displays a single entry point "Video Tile" that opens a dedicated video lightbox with playlist.
-  Supports Metaobjects or specific video metafields.
+  Supports Metaobjects or specific video metafields using dot notation for fields.
 {% endcomment %}
 
 {%- liquid
@@ -19,8 +19,8 @@
   {{ 'product-video-hub.css' | asset_url | stylesheet_tag }}
 
   {%- liquid
-    # Sort by sort_order if available, otherwise respect list order
-    assign sorted_videos = video_data | sort: 'sort_order'
+    # Sort by sort.order if available, otherwise respect list order
+    assign sorted_videos = video_data | sort: 'sort.order'
     
     assign featured_video = nil
     for vid in sorted_videos
@@ -44,22 +44,22 @@
           assign thumb = nil
           
           # 1. Direct thumbnail field (Image/File)
-          if featured_video.thumbnail_url or featured_video.thumbnail
-            assign thumb = featured_video.thumbnail_url | default: featured_video.thumbnail | image_url: width: 400
+          if vid['thumbnail.url'] != blank or vid.thumbnail != blank
+            assign thumb = vid['thumbnail.url'] | default: vid.thumbnail | image_url: width: 400
           
-          # 2. Derive from Video File reference
-          elsif featured_video.video_file.preview_image
-            assign thumb = featured_video.video_file.preview_image | image_url: width: 400
+          # 2. Derive from Video File reference (dot notation)
+          elsif featured_video['video.file'].preview_image
+            assign thumb = featured_video['video.file'].preview_image | image_url: width: 400
           
           # 3. Derive from YouTube URL
-          elsif featured_video.video_url contains 'youtube.com' or featured_video.video_url contains 'youtu.be'
-            assign yt_id = featured_video.video_url | split: 'v=' | last | split: '&' | first | split: '/' | last
+          elsif featured_video['video.url'] contains 'youtube.com' or featured_video['video.url'] contains 'youtu.be'
+            assign yt_id = featured_video['video.url'] | split: 'v=' | last | split: '&' | first | split: '/' | last
             assign thumb = 'https://img.youtube.com/vi/' | append: yt_id | append: '/hqdefault.jpg'
           endif
         -%}
 
         {%- if thumb != nil -%}
-          <img src="{{ thumb }}" alt="{{ featured_video.short_title | default: featured_video.title | escape }}" loading="lazy" class="video-hub-tile__img">
+          <img src="{{ thumb }}" alt="{{ featured_video['short.title'] | default: featured_video.title | escape }}" loading="lazy" class="video-hub-tile__img">
         {%- else -%}
           <div class="video-hub-tile__placeholder">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 10l5 5-5 5v-4H4v-2h11v-4z"/></svg>
@@ -116,21 +116,21 @@
             {%- for vid in sorted_videos -%}
               {%- liquid
                 assign v_id = forloop.index0
-                assign v_title = vid.short_title | default: vid.title | escape
+                assign v_title = vid['short.title'] | default: vid.title | escape
                 
                 # Determine URL and Type
                 assign v_url = nil
                 assign v_type = 'native'
                 
-                if vid.video_file
-                  # File Object (Video picker)
-                  assign v_url = vid.video_file.sources | where: 'format', 'mp4' | first | attr: 'url'
+                if vid['video.file']
+                  # File Object (Video picker) - Using dot notation
+                  assign v_url = vid['video.file'].sources | where: 'format', 'mp4' | first | attr: 'url'
                   if v_url == nil
-                    assign v_url = vid.video_file.sources[0].url
+                    assign v_url = vid['video.file'].sources[0].url
                   endif
-                elsif vid.video_url != blank
+                elsif vid['video.url'] != blank
                   # Text URL
-                  assign v_url = vid.video_url
+                  assign v_url = vid['video.url']
                   if v_url contains 'youtube.com' or v_url contains 'youtu.be'
                     assign v_type = 'youtube'
                   elsif v_url contains 'vimeo.com'
@@ -140,10 +140,10 @@
 
                 # Determine Thumbnail
                 assign v_thumb = nil
-                if vid.thumbnail_url or vid.thumbnail
-                  assign v_thumb = vid.thumbnail_url | default: vid.thumbnail | image_url: width: 200
-                elsif vid.video_file.preview_image
-                  assign v_thumb = vid.video_file.preview_image | image_url: width: 200
+                if vid['thumbnail.url'] != blank or vid.thumbnail != blank
+                  assign v_thumb = vid['thumbnail.url'] | default: vid.thumbnail | image_url: width: 200
+                elsif vid['video.file'].preview_image
+                  assign v_thumb = vid['video.file'].preview_image | image_url: width: 200
                 elsif v_url contains 'youtube.com' or v_url contains 'youtu.be'
                   assign yt_thumb_id = v_url | split: 'v=' | last | split: '&' | first | split: '/' | last
                   assign v_thumb = 'https://img.youtube.com/vi/' | append: yt_thumb_id | append: '/hqdefault.jpg'
