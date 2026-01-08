@@ -56,7 +56,7 @@
               </div>
 
               <div class="bundle-card__main">
-                  <a href="{{ item.url }}?variant={{ current_variant.id }}" class="bundle-card__link js-product-link">
+                  <a href="{{ item.url }}?variant={{ current_variant.id }}" class="bundle-card__media bundle-card__link js-product-link">
                     {%- if item.featured_image != blank -%}
                       <img src="{{ item.featured_image | image_url: width: 160 }}" 
                            alt="{{ item.featured_image.alt | escape }}" 
