@@ -859,43 +859,69 @@
     </div>
   </div>
 
-  <div class="video-lightbox" id="VideoLightbox-{{ section.id }}">
-    <button class="video-lightbox-close">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="pointer-events: none;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-    </button>
-    
-    <div class="video-lightbox-body">
-      <div class="video-player-area">
-        <div class="video-player-container" id="VideoPlayerContainer-{{ section.id }}">
-           <!-- Formatted Video Player Injected Here -->
-        </div>
-      </div>
-      <div class="video-playlist">
-        <div class="playlist-header">Video Gallery</div>
-        {%- assign v_index = 0 -%}
-        
-        {%- for file in video_files -%}
-          <div class="playlist-item {% if v_index == 0 %}active{% endif %}" data-index="{{ v_index }}">
-            <img src="{{ file.preview_image | image_url: width: 150 }}" class="playlist-thumb">
-            <div class="playlist-info">
-              <div class="playlist-title">Product Video {{ v_index | plus: 1 }}</div>
-              <div class="playlist-type">Upload</div>
-            </div>
-          </div>
-          {%- assign v_index = v_index | plus: 1 -%}
-        {%- endfor -%}
+  <!-- Video Hub Assets -->
+  {{ 'product-video-hub.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'product-video-hub.js' | asset_url }}" defer="defer"></script>
 
-        {%- for url in video_urls -%}
-          <div class="playlist-item {% if v_index == 0 %}active{% endif %}" data-index="{{ v_index }}" id="ExternalThumb-{{ section.id }}-{{ v_index }}">
-            <img src="https://via.placeholder.com/150x90/000000/FFFFFF?text=Video" class="playlist-thumb">
-            <div class="playlist-info">
-              <div class="playlist-title">External Video</div>
-              <div class="playlist-type">Link</div>
+  <div class="video-lightbox" id="VideoLightbox-{{ section.id }}" hidden>
+    <div class="video-lightbox__backdrop"></div>
+    <div class="video-lightbox__container">
+        <button class="video-lightbox__close" aria-label="Close">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+        
+        <div class="video-lightbox__content">
+            <div class="video-lightbox__player-side">
+                <div class="video-lightbox__player-wrapper">
+                    <div class="video-lightbox__player" id="VideoPlayerContainer-{{ section.id }}">
+                        <!-- Player Injected Here -->
+                    </div>
+                </div>
             </div>
-          </div>
-          {%- assign v_index = v_index | plus: 1 -%}
-        {%- endfor -%}
-      </div>
+            
+            <div class="video-lightbox__playlist-side">
+                <h3 class="video-lightbox__playlist-header">Video Gallery</h3>
+                <div class="video-lightbox__playlist-items">
+                    {%- assign v_index = 0 -%}
+                    
+                    {%- for file in video_files -%}
+                    <button class="video-playlist-item {% if v_index == 0 %}is-active{% endif %}" 
+                            data-index="{{ v_index }}"
+                            aria-selected="{% if v_index == 0 %}true{% else %}false{% endif %}">
+                        <div class="video-playlist-item__thumb">
+                            <img src="{{ file.preview_image | image_url: width: 200 }}" alt="Video thumbnail">
+                            <div class="video-playlist-item__play-overlay">
+                                <svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
+                            </div>
+                        </div>
+                        <div class="video-playlist-item__info">
+                            <span class="video-playlist-item__title">Product Video {{ v_index | plus: 1 }}</span>
+                            <span class="video-playlist-item__duration">Uploaded Video</span>
+                        </div>
+                    </button>
+                    {%- assign v_index = v_index | plus: 1 -%}
+                    {%- endfor -%}
+
+                    {%- for url in video_urls -%}
+                    <button class="video-playlist-item {% if v_index == 0 %}is-active{% endif %}" 
+                            data-index="{{ v_index }}"
+                             aria-selected="{% if v_index == 0 %}true{% else %}false{% endif %}">
+                        <div class="video-playlist-item__thumb">
+                            <img src="https://via.placeholder.com/200x112/000000/FFFFFF?text=External" alt="Video thumbnail">
+                             <div class="video-playlist-item__play-overlay">
+                                <svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
+                            </div>
+                        </div>
+                        <div class="video-playlist-item__info">
+                            <span class="video-playlist-item__title">External Video</span>
+                            <span class="video-playlist-item__duration">Linked Video</span>
+                        </div>
+                    </button>
+                    {%- assign v_index = v_index | plus: 1 -%}
+                    {%- endfor -%}
+                </div>
+            </div>
+        </div>
     </div>
   </div>
 
@@ -917,48 +943,8 @@
     {%- endfor -%}
   ]
   </script>
-  <!-- Sync Trigger: {{ "now" | date: "%Y-%m-%d %H:%M:%S" }} -->
-
 </media-gallery>
 
 <script src="{{ 'media-gallery.js' | asset_url }}" defer="defer"></script>
-
-<style>
-  /* Fixed Close Button Style */
-  .video-lightbox .video-lightbox-close {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    z-index: 10001; /* Higher than lightbox z-index */
-    background: rgba(0, 0, 0, 0.6);
-    border: 2px solid rgba(255, 255, 255, 0.4);
-    color: white;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-    backdrop-filter: blur(4px);
-  }
-  .video-lightbox .video-lightbox-close:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: scale(1.1);
-    border-color: white;
-  }
-
-  /* Improve Playlist Style */
-  .video-playlist {
-    background: rgba(20, 20, 20, 0.95);
-    backdrop-filter: blur(20px);
-    border-left: 1px solid rgba(255, 255, 255, 0.1);
-  }
-  .playlist-item.active {
-    background: rgba(255, 255, 255, 0.15);
-    border-left: 3px solid #fff; /* White accent */
-  }
-</style>
 
 {% endif %}
