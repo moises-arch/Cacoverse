@@ -206,12 +206,16 @@
   .ai-you-may-like-module-{{ ai_gen_id }} .wd40-badge {
     background: var(--badge-color);
     color: #ffffff;
-    padding: 3px 9px;
+    padding: 0 12px;
     font-size: 11px;
     font-weight: 700;
     border-radius: 3px;
     text-transform: uppercase;
     letter-spacing: 0.02em;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .ai-you-may-like-module-{{ ai_gen_id }} .wd40-badge.new-badge { background: var(--new-badge-color); }
@@ -219,14 +223,16 @@
     background: linear-gradient(135deg, #f7f7f7 0%, #d6d8dc 40%, #c0c2c7 100%);
     color: #2c2f36;
     border-radius: 999px;
-    padding: 6px 12px;
+    padding: 0 12px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.12), 0 1px 0 rgba(255,255,255,0.35) inset;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
     letter-spacing: 0.02em;
     position: relative;
     overflow: hidden;
+    height: 28px;
   }
   .ai-you-may-like-module-{{ ai_gen_id }} .wd40-badge-bestseller::after {
     content: '';
@@ -246,13 +252,15 @@
   .ai-you-may-like-module-{{ ai_gen_id }} .wd40-badge-custom {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
-    padding: 6px 12px;
+    padding: 0 12px;
     font-size: 11px;
     font-weight: 700;
     border-radius: 999px;
     text-transform: uppercase;
     letter-spacing: 0.02em;
+    height: 28px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.12), 0 1px 0 rgba(255,255,255,0.2) inset;
   }
   .ai-you-may-like-module-{{ ai_gen_id }} .wd40-badge-custom--red { background: linear-gradient(135deg, #E4002B 0%, #B90022 100%); color: #ffffff; }
@@ -280,10 +288,12 @@
     border-radius: 999px;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
-    padding: 6px 12px;
+    padding: 0 12px;
     position: relative;
     overflow: hidden;
+    height: 28px;
   }
   .ai-you-may-like-module-{{ ai_gen_id }} .wd40-sale-badge::after {
     content: '';

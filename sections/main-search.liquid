@@ -309,7 +309,19 @@
     .wd40-card:not(.active-variant):hover .wd40-card-image-hover { opacity: 1; }
     .wd40-card:not(.active-variant):hover .wd40-card-image { opacity: 0; }
     .wd40-badges { position: absolute; top: 10px; left: 10px; display: flex; flex-direction: row; flex-wrap: wrap; gap: 8px; z-index: 5; }
-    .wd40-badge { background: #E4002B; color: #ffffff; padding: 3px 9px; font-size: 11px; font-weight: 700; border-radius: 3px; text-transform: uppercase; }
+    .wd40-badge { 
+      background: #E4002B; 
+      color: #ffffff; 
+      padding: 0 12px; 
+      font-size: 11px; 
+      font-weight: 700; 
+      border-radius: 3px; 
+      text-transform: uppercase;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
     .wd40-badge.new-badge { background-color: #0A4A9C; }
     .wd40-badge-bestseller {
       background: linear-gradient(135deg, #f7f7f7 0%, #d6d8dc 40%, #c0c2c7 100%);
@@ -319,10 +331,12 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.12), 0 1px 0 rgba(255,255,255,0.35) inset;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 6px;
       letter-spacing: 0.02em;
       position: relative;
       overflow: hidden;
+      height: 28px;
     }
     .wd40-badge-bestseller::after {
       content: '';
@@ -346,10 +360,12 @@
       border-radius: 999px;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 6px;
-      padding: 6px 12px;
+      padding: 0 12px;
       position: relative;
       overflow: hidden;
+      height: 28px;
     }
     .wd40-sale-badge::after {
       content: '';
@@ -373,13 +389,15 @@
     .wd40-badge-custom {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 6px;
-      padding: 6px 12px;
+      padding: 0 12px;
       font-size: 11px;
       font-weight: 700;
       border-radius: 999px;
       text-transform: uppercase;
       letter-spacing: 0.02em;
+      height: 28px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.12), 0 1px 0 rgba(255,255,255,0.2) inset;
     }
     .wd40-badge-custom--red { background: linear-gradient(135deg, #E4002B 0%, #B90022 100%); color: #ffffff; }

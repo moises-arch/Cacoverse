@@ -5,7 +5,7 @@
   color: rgb(var(--color-foreground));
 }
 
-.price > * {
+.price>* {
   display: inline-block;
   vertical-align: middle;
 }
@@ -68,7 +68,7 @@
 .price--on-sale .price__badge-sale,
 .volume-pricing--sale-badge .price__badge-sale {
   display: inline-block;
-    color:#000000;
+  color: #000000;
 
 }
 
@@ -119,9 +119,10 @@
 .price__badge-sale,
 .badge--sale,
 .price .badge {
-  background-color: #fa521e !important; /* orange background */
+  background-color: #fa521e !important;
+  /* orange background */
   font-weight: 700;
-  padding: 5px 12px!important;
+  padding: 0 12px !important;
   border-radius: 999px !important;
   letter-spacing: 0.15px;
   text-transform: uppercase;
@@ -133,6 +134,7 @@
   line-height: 1.05;
   border: none !important;
   white-space: nowrap;
+  height: 28px;
 }
 
 .product-card__price-row {
@@ -154,12 +156,13 @@
   position: relative;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.35rem;
-  padding: 0.45rem 0.9rem;
+  padding: 0 0.9rem;
   background: linear-gradient(180deg, rgba(var(--color-foreground), 0.06), rgba(var(--color-foreground), 0.04));
   border: 1px solid rgba(var(--color-foreground), 0.12);
   border-radius: 999px;
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   font-weight: 600;
   color: rgba(var(--color-foreground), 0.9);
   line-height: 1.1;
@@ -169,6 +172,7 @@
   max-width: 16.5rem;
   overflow: hidden;
   text-overflow: ellipsis;
+  height: 28px;
 }
 
 .product-card__discount-badge::after {
