@@ -536,6 +536,38 @@
     .wd40-badges { position: absolute; top: 10px; left: 10px; display: flex; flex-direction: column; gap: 4px; z-index: 5; }
     .wd40-badge { background: #E4002B; color: #ffffff; padding: 3px 9px; font-size: 11px; font-weight: 700; border-radius: 3px; text-transform: uppercase; }
     .wd40-badge.new-badge { background-color: #0A4A9C; }
+    /* Custom Badge from Metafield */
+    .wd40-badge-custom {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    }
+    .wd40-badge-custom--red { background: #E4002B; color: #ffffff; }
+    .wd40-badge-custom--orange { background: #FF6600; color: #ffffff; }
+    .wd40-badge-custom--green { background: #22C55E; color: #ffffff; }
+    .wd40-badge-custom--yellow { background: #FACC15; color: #111111; }
+    .wd40-badge-custom--blue { background: #0A4A9C; color: #ffffff; }
+    .wd40-badge-custom--dark-blue { background: #1E3A5F; color: #ffffff; }
+    .wd40-badge-custom--black { background: #111111; color: #ffffff; }
+    .wd40-badge-custom--gray { background: #6B7280; color: #ffffff; }
+    .wd40-badge-custom--purple { background: #7C3AED; color: #ffffff; }
+    .wd40-badge-custom--pink { background: #EC4899; color: #ffffff; }
+    .wd40-badge-custom-icon {
+      width: 12px;
+      height: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .wd40-badge-text { position: relative; z-index: 1; letter-spacing: 0.01em; }
     .wd40-card-body { padding: 18px; display: flex; flex-direction: column; flex: 1; text-align: left; align-items: flex-start; }
     .wd40-title { font-size: 18px; font-weight: 800; margin: 0 0 4px; line-height: 1.1; color: #0056B3; }
     .wd40-title a { color: inherit; text-decoration: none; }
@@ -949,6 +981,26 @@
                 {% if section.settings.show_discount_badge and product.compare_at_price > product.price %}
                   {% assign discount = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round %}
                   <span class="wd40-badge">Save up to {{ discount }}%</span>
+                {% endif %}
+                {% comment %} Custom Badge from Metafield {% endcomment %}
+                {% if product.metafields.custom.badge != blank %}
+                  {% assign badge_data = product.metafields.custom.badge | split: '|' %}
+                  {% assign badge_text = badge_data[0] | strip %}
+                  {% assign badge_color = badge_data[1] | strip | downcase | default: 'blue' %}
+                  {% assign valid_colors = 'red,orange,green,yellow,blue,dark-blue,black,gray,purple,pink' | split: ',' %}
+                  {% unless valid_colors contains badge_color %}
+                    {% assign badge_color = 'blue' %}
+                  {% endunless %}
+                  <span class="wd40-badge wd40-badge-custom wd40-badge-custom--{{ badge_color }}">
+                    <span class="wd40-badge-custom-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="16" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                      </svg>
+                    </span>
+                    <span class="wd40-badge-text">{{ badge_text }}</span>
+                  </span>
                 {% endif %}
               </div>
 
