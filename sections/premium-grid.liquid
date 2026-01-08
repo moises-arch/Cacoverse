@@ -756,6 +756,18 @@
       align-items: center;
       gap: 6px;
       letter-spacing: 0.02em;
+      position: relative;
+      overflow: hidden;
+    }
+    .wd40-badge-bestseller::after {
+      content: '';
+      position: absolute;
+      inset: -60% -40%;
+      background: linear-gradient(120deg, rgba(255,255,255,0) 20%, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 80%);
+      transform: rotate(8deg);
+      animation: wd40BadgeShine 3s ease-in-out infinite;
+      pointer-events: none;
+      opacity: 0.5;
     }
     .wd40-badge-bestseller::before {
       content: "✦";

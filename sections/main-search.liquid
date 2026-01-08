@@ -321,6 +321,18 @@
       align-items: center;
       gap: 6px;
       letter-spacing: 0.02em;
+      position: relative;
+      overflow: hidden;
+    }
+    .wd40-badge-bestseller::after {
+      content: '';
+      position: absolute;
+      inset: -60% -40%;
+      background: linear-gradient(120deg, rgba(255,255,255,0) 20%, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 80%);
+      transform: rotate(8deg);
+      animation: wd40BadgeShine 3s ease-in-out infinite;
+      pointer-events: none;
+      opacity: 0.5;
     }
     .wd40-badge-bestseller::before {
       content: "✦";
@@ -846,29 +858,27 @@
              {% case item.object_type %}
                {% when 'product' %}
                  <div class="wd40-card">
-                   {%- if item.tags contains 'bestseller' or item.tags contains 'best-seller' -%}<div class="wd40-badges"><span class="wd40-badge wd40-badge-bestseller">BEST SELLER</span></div>{%- endif -%}
-                   {%- if item.tags contains 'new' -%}<div class="wd40-badges"><span class="wd40-badge new-badge">NEW ARRIVAL</span></div>{%- endif -%}
-                   {%- if item.compare_at_price > item.price -%}
-                     {%- assign discount = item.compare_at_price | minus: item.price | times: 100.0 | divided_by: item.compare_at_price | round -%}
-                     <div class="wd40-badges">
-                       <span class="wd40-badge wd40-sale-badge" role="text">
-                         <span class="wd40-badge-icon" aria-hidden="true">✦</span>
-                         <span class="wd40-badge-text">Save up to {{ discount }}%</span>
-                         <span class="visually-hidden">Limited-time offer</span>
-                       </span>
-                     </div>
-                   {%- endif -%}
-                    {% comment %} Custom Badge from Metafield {% endcomment %}
-                    {%- if item.metafields.custom.badges != blank -%}
-                      {%- assign badge_raw = item.metafields.custom.badges | replace: '["', '' | replace: '"]', '' | replace: '"', '' -%}
-                      {%- assign badge_data = badge_raw | split: '|' -%}
-                      {%- assign badge_text = badge_data[0] | strip -%}
-                      {%- assign badge_color = badge_data[1] | strip | downcase | default: 'blue' -%}
-                      {%- assign valid_colors = 'red,orange,green,yellow,blue,dark-blue,black,gray,purple,pink' | split: ',' -%}
-                      {%- unless valid_colors contains badge_color -%}
-                        {%- assign badge_color = 'blue' -%}
-                      {%- endunless -%}
-                      <div class="wd40-badges">
+                    <div class="wd40-badges">
+                      {%- if item.tags contains 'bestseller' or item.tags contains 'best-seller' -%}<span class="wd40-badge wd40-badge-bestseller">BEST SELLER</span>{%- endif -%}
+                      {%- if item.tags contains 'new' -%}<span class="wd40-badge new-badge">NEW ARRIVAL</span>{%- endif -%}
+                      {%- if item.compare_at_price > item.price -%}
+                        {%- assign discount = item.compare_at_price | minus: item.price | times: 100.0 | divided_by: item.compare_at_price | round -%}
+                        <span class="wd40-badge wd40-sale-badge" role="text">
+                          <span class="wd40-badge-icon" aria-hidden="true">✦</span>
+                          <span class="wd40-badge-text">Save up to {{ discount }}%</span>
+                          <span class="visually-hidden">Limited-time offer</span>
+                        </span>
+                      {%- endif -%}
+                      {% comment %} Custom Badge from Metafield {% endcomment %}
+                      {%- if item.metafields.custom.badges != blank -%}
+                        {%- assign badge_raw = item.metafields.custom.badges | replace: '["', '' | replace: '"]', '' | replace: '"', '' -%}
+                        {%- assign badge_data = badge_raw | split: '|' -%}
+                        {%- assign badge_text = badge_data[0] | strip -%}
+                        {%- assign badge_color = badge_data[1] | strip | downcase | default: 'blue' -%}
+                        {%- assign valid_colors = 'red,orange,green,yellow,blue,dark-blue,black,gray,purple,pink' | split: ',' -%}
+                        {%- unless valid_colors contains badge_color -%}
+                          {%- assign badge_color = 'blue' -%}
+                        {%- endunless -%}
                         <span class="wd40-badge wd40-badge-custom wd40-badge-custom--{{ badge_color }}">
                           <span class="wd40-badge-custom-icon" aria-hidden="true">
                             <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -879,8 +889,8 @@
                           </span>
                           <span class="wd40-badge-text">{{ badge_text }}</span>
                         </span>
-                      </div>
-                    {%- endif -%}
+                      {%- endif -%}
+                    </div>
 
 <div class="wd40-card-media">
   <a href="{{ item.url }}" class="js-product-link">
