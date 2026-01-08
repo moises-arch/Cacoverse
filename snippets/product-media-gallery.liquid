@@ -907,7 +907,7 @@
         "type": "native",
         "video_url": "{{ file.url }}",
         "thumbnail_url": "{{ file.preview_image | image_url: width: 600 }}"
-      }{% if forloop.last == false or video_urls.size > 0 %},{% endif %}
+      }{% if forloop.last == false or video_urls != blank %},{% endif %}
     {%- endfor -%}
     {%- for url in video_urls -%}
       {
@@ -918,6 +918,7 @@
     {%- endfor -%}
   ]
   </script>
+  <!-- Sync Trigger: {{ "now" | date: "%Y-%m-%d %H:%M:%S" }} -->
 
 </media-gallery>
 
