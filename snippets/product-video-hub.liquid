@@ -24,7 +24,7 @@
     
     assign featured_video = nil
     for vid in sorted_videos
-      if vid.featured == true or vid.featured.value == true
+      if vid['custom.featured'] == true or vid['custom.featured'].value == true
         assign featured_video = vid
         break
       endif
