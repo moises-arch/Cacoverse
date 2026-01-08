@@ -44,23 +44,29 @@
         {%- liquid
           assign thumb = nil
           
+          # Unwrap for tile logic
+          assign featured_file_ref = featured_video.video_file.value
+          assign featured_url = featured_video.videos_url | remove: '["' | remove: '"]'
+
           # 1. Direct thumbnail field (Image/File)
-          if featured_video.thumbnail_url or featured_video.thumbnail
+          if featured_video.thumbnail_url != blank or featured_video.thumbnail != blank
             assign thumb = featured_video.thumbnail_url | default: featured_video.thumbnail | image_url: width: 400
           
-          # 2. Derive from Video File reference
-          elsif featured_video.video_file.preview_image
-            assign thumb = featured_video.video_file.preview_image | image_url: width: 400
+          # 2. Derive from Video File reference (using unwrapped object)
+          elsif featured_file_ref.preview_image
+            assign thumb = featured_file_ref.preview_image | image_url: width: 400
           
           # 3. Derive from YouTube URL
-          elsif featured_video.videos_url contains 'youtube.com' or featured_video.videos_url contains 'youtu.be'
-            assign yt_id = featured_video.videos_url | split: 'v=' | last | split: '&' | first | split: '/' | last
+          elsif featured_url contains 'youtube.com' or featured_url contains 'youtu.be'
+            assign yt_id = featured_url | split: 'v=' | last | split: '&' | first | split: '/' | last
             assign thumb = 'https://img.youtube.com/vi/' | append: yt_id | append: '/hqdefault.jpg'
           endif
+
+          assign tile_title = featured_video.short_title | default: featured_video.title | escape | remove: '["' | remove: '"]'
         -%}
 
         {%- if thumb != nil -%}
-          <img src="{{ thumb }}" alt="{{ featured_video.short_title | default: featured_video.title | escape }}" loading="lazy" class="video-hub-tile__img">
+          <img src="{{ thumb }}" alt="{{ tile_title }}" loading="lazy" class="video-hub-tile__img">
         {%- else -%}
           <div class="video-hub-tile__placeholder">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 10l5 5-5 5v-4H4v-2h11v-4z"/></svg>
@@ -123,15 +129,18 @@
                 assign v_url = nil
                 assign v_type = 'native'
                 
-                if vid.video_file
+                # Unwrap the Metaobject reference
+                assign video_file_ref = vid.video_file.value
+
+                if video_file_ref
                   # File Object (Video picker)
-                  assign v_url = vid.video_file.sources | where: 'format', 'mp4' | first | attr: 'url'
+                  assign v_url = video_file_ref.sources | where: 'format', 'mp4' | first | attr: 'url'
                   if v_url == nil
-                    assign v_url = vid.video_file.sources[0].url
+                    assign v_url = video_file_ref.sources[0].url
                   endif
                 elsif vid.videos_url != blank
                   # Text URL
-                  assign v_url = vid.videos_url
+                  assign v_url = vid.videos_url | remove: '["' | remove: '"]'
                   if v_url contains 'youtube.com' or v_url contains 'youtu.be'
                     assign v_type = 'youtube'
                   elsif v_url contains 'vimeo.com'
@@ -139,12 +148,15 @@
                   endif
                 endif
 
+                # Clean Title if it comes as an array string
+                assign v_title = vid.short_title | default: vid.title | escape | remove: '["' | remove: '"]'
+
                 # Determine Thumbnail
                 assign v_thumb = nil
-                if vid.thumbnail_url or vid.thumbnail
+                if vid.thumbnail_url != blank or vid.thumbnail != blank
                   assign v_thumb = vid.thumbnail_url | default: vid.thumbnail | image_url: width: 200
-                elsif vid.video_file.preview_image
-                  assign v_thumb = vid.video_file.preview_image | image_url: width: 200
+                elsif video_file_ref.preview_image
+                  assign v_thumb = video_file_ref.preview_image | image_url: width: 200
                 elsif v_url contains 'youtube.com' or v_url contains 'youtu.be'
                   assign yt_thumb_id = v_url | split: 'v=' | last | split: '&' | first | split: '/' | last
                   assign v_thumb = 'https://img.youtube.com/vi/' | append: yt_thumb_id | append: '/hqdefault.jpg'
