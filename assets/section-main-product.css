@@ -4946,7 +4946,7 @@ body.template-product .product__media-modal * {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 0.6rem;
+  margin-right: 1.2rem;
   flex-shrink: 0;
   overflow: hidden;
 }
