@@ -286,6 +286,61 @@
   @media (max-width: 768px) {
     :root { --caco-header-height: 130px; }
   }
+
+  /* ⚡ CRITICAL: Button resets to prevent native styling flash */
+  .caco-header-wrapper button {
+    border: none;
+    background: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+
+  /* ⚡ CRITICAL: Help Center / Industries pill buttons pre-styles */
+  .caco-nav-aux-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 14px;
+    border-radius: 9999px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+    background: transparent;
+    box-shadow: none;
+    border: none;
+    text-decoration: none;
+  }
+
+  /* CRITICAL: Hide aux icons on desktop initially */
+  .caco-nav-aux-icon {
+    display: none;
+  }
+
+  .caco-nav-aux-text {
+    white-space: nowrap;
+  }
+
+  /* CRITICAL: Help/Industries menu containers */
+  .caco-help-menu,
+  .caco-industries-menu {
+    position: relative;
+  }
+
+  .caco-help-chevron {
+    margin-left: 2px;
+  }
+
+  /* CRITICAL: Ensure header-bottom is visible and properly laid out */
+  .caco-header-bottom {
+    background: var(--header-bg);
+    position: relative;
+  }
 </style>
 
 <script>
