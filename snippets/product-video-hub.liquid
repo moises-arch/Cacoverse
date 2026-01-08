@@ -19,8 +19,8 @@
   {{ 'product-video-hub.css' | asset_url | stylesheet_tag }}
 
   {%- liquid
-    # Sort by sort.order if available, otherwise respect list order
-    assign sorted_videos = video_data | sort: 'sort.order'
+    # Sort by sort.orders if available, otherwise respect list order
+    assign sorted_videos = video_data | sort: 'sort.orders'
     
     assign featured_video = nil
     for vid in sorted_videos
@@ -52,8 +52,8 @@
             assign thumb = featured_video['video.file'].preview_image | image_url: width: 400
           
           # 3. Derive from YouTube URL
-          elsif featured_video['video.url'] contains 'youtube.com' or featured_video['video.url'] contains 'youtu.be'
-            assign yt_id = featured_video['video.url'] | split: 'v=' | last | split: '&' | first | split: '/' | last
+          elsif featured_video['videos.url'] contains 'youtube.com' or featured_video['videos.url'] contains 'youtu.be'
+            assign yt_id = featured_video['videos.url'] | split: 'v=' | last | split: '&' | first | split: '/' | last
             assign thumb = 'https://img.youtube.com/vi/' | append: yt_id | append: '/hqdefault.jpg'
           endif
         -%}
@@ -128,9 +128,9 @@
                   if v_url == nil
                     assign v_url = vid['video.file'].sources[0].url
                   endif
-                elsif vid['video.url'] != blank
+                elsif vid['videos.url'] != blank
                   # Text URL
-                  assign v_url = vid['video.url']
+                  assign v_url = vid['videos.url']
                   if v_url contains 'youtube.com' or v_url contains 'youtu.be'
                     assign v_type = 'youtube'
                   elsif v_url contains 'vimeo.com'
