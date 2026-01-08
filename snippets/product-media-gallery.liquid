@@ -901,18 +901,26 @@
             <div class="video-lightbox__playlist-side">
                 <h3 class="video-lightbox__playlist-header">Video Gallery</h3>
                 <div class="video-lightbox__playlist-items">
-                    {%- for vid in sorted_videos -%}
                       {%- liquid
                         assign v_id = forloop.index0
-                        assign v_title = vid.short_title | default: vid.title | escape | remove: '["' | remove: '"]'
+                        
+                        # Title Logic: Handle List type or Single Line Text
+                        assign v_title = vid.short_title.value | first
+                        if v_title == blank
+                          assign v_title = vid.short_title.value
+                        endif
+                        if v_title == blank
+                           assign v_title = vid.title.value | first | default: vid.title.value | default: 'Product Video'
+                        endif
+
                         assign v_thumb = nil
                         assign file_ref = vid.video_file.value
-                        assign v_url_text = vid.videos_url | remove: '["' | remove: '"]'
+                        assign v_url_text = vid.videos_url.value | first | default: vid.videos_url.value
                         
-                        if vid.thumbnail_url != blank
-                          assign v_thumb = vid.thumbnail_url
-                        elsif vid.thumbnail != blank
-                           assign v_thumb = vid.thumbnail | image_url: width: 200
+                        if vid.thumbnail_url.value
+                           assign v_thumb = vid.thumbnail_url.value
+                        elsif vid.thumbnail.value
+                           assign v_thumb = vid.thumbnail.value | image_url: width: 200
                         elsif file_ref.preview_image
                            assign v_thumb = file_ref.preview_image | image_url: width: 200
                         elsif v_url_text contains 'youtube' or v_url_text contains 'youtu.be'
@@ -928,15 +936,15 @@
                               data-index="{{ v_id }}"
                               aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">
                           <div class="video-playlist-item__thumb">
-                              <img src="{{ v_thumb }}" alt="{{ v_title }}">
+                              <img src="{{ v_thumb }}" alt="{{ v_title | escape }}">
                               <div class="video-playlist-item__play-overlay">
                                   <svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
                               </div>
                           </div>
                           <div class="video-playlist-item__info">
-                              <span class="video-playlist-item__title">{{ v_title }}</span>
-                              {%- if vid.duration -%}
-                                <span class="video-playlist-item__duration">{{ vid.duration }}</span>
+                              <span class="video-playlist-item__title">{{ v_title | escape }}</span>
+                              {%- if vid.duration.value -%}
+                                <span class="video-playlist-item__duration">{{ vid.duration.value }}</span>
                               {%- endif -%}
                           </div>
                       </button>
@@ -960,8 +968,8 @@
            if v_url == nil
              assign v_url = f_ref.sources[0].url
            endif
-         elsif vid.videos_url != blank
-           assign v_url = vid.videos_url | remove: '["' | remove: '"]'
+         elsif vid.videos_url.value
+           assign v_url = vid.videos_url.value | first | default: vid.videos_url.value
            if v_url contains 'youtube' or v_url contains 'vimeo' or v_url contains 'youtu.be'
              assign v_type = 'external'
            endif

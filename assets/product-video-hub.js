@@ -35,23 +35,33 @@ class ProductVideoHub {
 
     init() {
         if (this.closeBtn) {
+            // Remove old listener if any (safety)
+            this.closeBtn.replaceWith(this.closeBtn.cloneNode(true));
+            this.closeBtn = this.modal.querySelector('.video-lightbox__close');
+
             this.closeBtn.addEventListener('click', (e) => {
+                e.preventDefault();
                 e.stopPropagation();
                 this.close();
             });
         }
 
         if (this.backdrop) {
-            this.backdrop.addEventListener('click', () => this.close());
+            this.backdrop.addEventListener('click', (e) => {
+                this.close();
+            });
         }
 
         this.playlistItems.forEach(item => {
-            item.addEventListener('click', () => {
+            item.addEventListener('click', (e) => { // Added Event argument
+                e.preventDefault(); // Prevent default button behavior
                 this.switchVideo(item);
             });
         });
 
         // Handle Keyboard ESC
+        if (this.keyHandler) document.removeEventListener('keydown', this.keyHandler);
+
         this.keyHandler = (e) => {
             if (e.key === 'Escape' && this.isOpen) {
                 this.close();
