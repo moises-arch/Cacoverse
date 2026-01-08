@@ -484,6 +484,18 @@ if (!customElements.get('media-gallery')) {
       this.videoData = dataEl ? JSON.parse(dataEl.textContent) : [];
       this.currentVideoIndex = 0;
       this.videoPlayerContainer = document.getElementById(`VideoPlayerContainer-${this.sectionId}`);
+
+      // Auto-populate thumbnails for external videos
+      this.videoData.forEach((video, index) => {
+        if (video.type === 'external' && !video.thumbnail_url) {
+          const ytMatch = video.video_url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+          if (ytMatch) {
+            video.thumbnail_url = `https://img.youtube.com/vi/${ytMatch[1]}/hqdefault.jpg`;
+            const thumbImg = this.videoLightbox.querySelector(`#ExternalThumb-${this.sectionId}-${index} img`);
+            if (thumbImg) thumbImg.src = video.thumbnail_url;
+          }
+        }
+      });
     }
 
     bindVideoEvents() {
@@ -581,12 +593,12 @@ if (!customElements.get('media-gallery')) {
       const vimeoMatch = url.match(/(?:vimeo\.com\/|player\.vimeo\.com\/video\/)([0-9]+)/);
 
       if (youtubeMatch) {
-        html = `<iframe src="https://www.youtube.com/embed/${youtubeMatch[1]}?autoplay=0&rel=0" class="video-lightbox-player" allowfullscreen allow="autoplay; encrypted-media"></iframe>`;
+        html = `<iframe src="https://www.youtube.com/embed/${youtubeMatch[1]}?autoplay=1&rel=0" class="video-lightbox-player" allowfullscreen allow="autoplay; encrypted-media"></iframe>`;
       } else if (vimeoMatch) {
-        html = `<iframe src="https://player.vimeo.com/video/${vimeoMatch[1]}?autoplay=0" class="video-lightbox-player" allowfullscreen allow="autoplay; fullscreen"></iframe>`;
+        html = `<iframe src="https://player.vimeo.com/video/${vimeoMatch[1]}?autoplay=1" class="video-lightbox-player" allowfullscreen allow="autoplay; fullscreen"></iframe>`;
       } else {
-        // Assume direct video link (MP4/HLS)
-        html = `<video src="${url}" class="video-lightbox-player" controls playsinline></video>`;
+        // Native Shopify Video or direct MP4
+        html = `<video src="${url}" class="video-lightbox-player" controls playsinline autoplay></video>`;
       }
 
       this.videoPlayerContainer.innerHTML = html;
