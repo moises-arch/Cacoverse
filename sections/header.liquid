@@ -198,12 +198,26 @@
     grid-template-columns: auto 1fr auto;
   }
   .caco-area-center { display: flex; justify-content: center; }
-  .caco-area-right { display: flex; justify-content: flex-end; }
+  .caco-area-right { display: flex; justify-content: flex-end; width: auto; }
+  
+  /* CRITICAL: Navigation List Layout */
+  .caco-nav-list {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    list-style: none; /* Quitamos los bullets del pantallazo */
+    padding: 0;
+    margin: 0;
+  }
+  .caco-nav-item {
+    display: block; /* Asegura que no se comporten como list-item default */
+  }
 
   @media (max-width: 1024px) {
     /* En mobile, el centro (search desktop) desaparece inmediatamente */
     .caco-grid-container { grid-template-columns: auto 1fr auto; }
     .caco-area-center { display: none !important; }
+    .caco-nav-list { display: none !important; } /* Ocultar nav desktop en mobile */
   }
   
   /* Gradiente de separación sutil */
@@ -218,6 +232,16 @@
   @media (max-width: 768px) {
     :root { --caco-header-height: 130px; }
   }
+  /* 🚨 SAFEGUARD: Ensure all header children are visible immediately */
+  .caco-header-wrapper *:not(.caco-dropdown):not(.caco-mobile-drawer):not(.caco-search-overlay) {
+    visibility: visible;
+    opacity: 1;
+    color: inherit;
+  }
+  
+  /* Restore basic inherited styles */
+  .caco-header-wrapper a { text-decoration: none; color: inherit; }
+  .caco-header-wrapper svg { fill: none; }
 </style>
 
 <script>
