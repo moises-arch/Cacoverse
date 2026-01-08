@@ -226,6 +226,14 @@
     list-style: none;
     padding: 0; margin: 0;
   }
+  /* CRITICAL: Navigation List Layout (Horizontal Menu) */
+  .caco-nav-list {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    list-style: none;
+    padding: 0; margin: 0;
+  }
   .caco-nav-item { display: block; }
   .caco-nav-item > a {
     display: block;
@@ -234,11 +242,36 @@
     color: inherit;
   }
 
+  /* CRITICAL: Right Side Layout (Help, Industries, Icons)
+     Prevent vertical stacking or line breaks on load.
+  */
+  .caco-nav-right-links {
+    display: flex;
+    align-items: center;
+    gap: 0; 
+    margin-left: -20px;
+    white-space: nowrap; /* Forces content to stay on one line */
+  }
+  .caco-help-menu,
+  .caco-industries-menu {
+    display: inline-flex; /* Keep these side-by-side */
+    align-items: center;
+  }
+  .caco-nav-aux-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    text-decoration: none;
+    color: inherit;
+  }
+
   @media (max-width: 1024px) {
     /* En mobile, el centro (search desktop) desaparece inmediatamente */
     .caco-grid-container { grid-template-columns: auto 1fr auto; }
     .caco-area-center { display: none !important; }
-    .caco-nav-list { display: none !important; } /* Ocultar menú desktop en mobile al instante */
+    .caco-nav-list { display: none !important; } /* Ocultar menú desktop en mobile */
+    .caco-nav-right-links { display: none !important; } /* Ocultar botones extra en mobile si aplica */
   }
   
   /* Gradiente de separación sutil */
