@@ -123,12 +123,14 @@
         }
 
         getYouTubeId(url) {
+            if (url.length === 11 && !url.includes('/') && !url.includes('.')) return url;
             const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
             const match = url.match(regExp);
             return (match && match[2].length === 11) ? match[2] : null;
         }
 
         getVimeoId(url) {
+            if (/^\d+$/.test(url)) return url;
             const regExp = /vimeo\.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^\/]*)\/videos\/|album\/(?:\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)/;
             const match = url.match(regExp);
             return match ? match[1] : null;

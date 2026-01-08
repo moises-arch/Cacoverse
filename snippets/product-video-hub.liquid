@@ -1,43 +1,35 @@
 {% comment %}
-  Product Video Hub Component
+  Product Video Hub Component - Source: Native Product Media
   Displays a single entry point "Video Tile" that opens a dedicated video lightbox with playlist.
-  Doesn't touch the existing media gallery.
+  This version pulls videos directly from the product's media gallery.
 {% endcomment %}
 
 {%- liquid
-  assign video_data = nil
+  assign media_videos = product.media | where: 'media_type', 'video'
+  assign external_videos = product.media | where: 'media_type', 'external_video'
   
-  # Try to get videos from Metaobject list (Modern way)
-  if product.metafields.custom.video_hub.value
-    assign video_data = product.metafields.custom.video_hub.value
-  # Fallback to JSON metafield
-  elsif product.metafields.custom.video_json.value
-    assign video_data = product.metafields.custom.video_json.value
-  endif
+  # Combine and sort by position (Shopify default)
+  # We'll just loop through all media and pick the videos to maintain exact order
+  assign video_count = 0
+  for media in product.media
+    if media.media_type == 'video' or media.media_type == 'external_video'
+      assign video_count = video_count | plus: 1
+    endif
+  endfor
 -%}
 
-{%- if video_data.size > 0 or video_data != nil -%}
+{%- if video_count > 0 -%}
   {{ 'product-video-hub.css' | asset_url | stylesheet_tag }}
 
   {%- liquid
-    # Sort and find featured
-    # If it's a Metaobject list, we can use sort
-    # If it's JSON, we might need to handle it differently
-    assign sorted_videos = video_data | sort: 'sort_order'
+    # Find the featured video (first video in media list to respect Shopify order)
     assign featured_video = nil
-    
-    for vid in sorted_videos
-      if vid.featured == true or vid.featured.value == true
-        assign featured_video = vid
+    for media in product.media
+      if media.media_type == 'video' or media.media_type == 'external_video'
+        assign featured_video = media
         break
       endif
     endfor
-    
-    if featured_video == nil
-      assign featured_video = sorted_videos[0]
-    endif
-    
-    assign total_videos = sorted_videos.size
   -%}
 
   <div class="product-video-hub-container" id="productVideoHubTile">
@@ -45,16 +37,13 @@
       <div class="video-hub-tile__wrapper">
         {%- liquid
           assign thumb = nil
-          if featured_video.thumbnail_url or featured_video.thumbnail
-            assign thumb = featured_video.thumbnail_url | default: featured_video.thumbnail | image_url: width: 400
-          elsif featured_video.video_url contains 'youtube.com' or featured_video.video_url contains 'youtu.be'
-            assign yt_id = featured_video.video_url | split: 'v=' | last | split: '&' | first | split: '/' | last
-            assign thumb = 'https://img.youtube.com/vi/' | append: yt_id | append: '/hqdefault.jpg'
+          if featured_video.preview_image
+            assign thumb = featured_video.preview_image | image_url: width: 400
           endif
         -%}
 
         {%- if thumb != nil -%}
-          <img src="{{ thumb }}" alt="{{ featured_video.short_title | default: featured_video.title | escape }}" loading="lazy" class="video-hub-tile__img">
+          <img src="{{ thumb }}" alt="{{ featured_video.alt | default: product.title | escape }}" loading="lazy" class="video-hub-tile__img">
         {%- else -%}
           <div class="video-hub-tile__placeholder">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 10l5 5-5 5v-4H4v-2h11v-4z"/></svg>
@@ -66,14 +55,14 @@
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v13.72l11-6.86 -11-6.86z"/></svg>
           </div>
           
-          {%- if total_videos > 1 -%}
+          {%- if video_count > 1 -%}
             <div class="video-hub-tile__badge">
-              <span>{{ total_videos }}</span>
+              <span>{{ video_count }}</span>
             </div>
           {%- endif -%}
           
           <div class="video-hub-tile__label">
-            <span>VIDEO{% if total_videos > 1 %}S{% endif %}</span>
+            <span>VIDEO{% if video_count > 1 %}S{% endif %}</span>
           </div>
         </div>
       </div>
@@ -94,7 +83,6 @@
         <div class="video-lightbox__player-side">
           <div class="video-lightbox__player-wrapper">
             <div id="videoMainPlayer" class="video-lightbox__player">
-              <!-- Player will be injected here via JS -->
               <div class="video-lightbox__loading-indicator">
                 <div class="video-player-loader"></div>
               </div>
@@ -107,55 +95,53 @@
 
         <!-- Playlist Area -->
         <div class="video-lightbox__playlist-side">
-          <h3 class="video-lightbox__playlist-header">{{ 'Videos' | escape }} ({{ total_videos }})</h3>
+          <h3 class="video-lightbox__playlist-header">{{ 'Videos' | escape }} ({{ video_count }})</h3>
           <div class="video-lightbox__playlist-items" role="listbox">
-            {%- for vid in sorted_videos -%}
-              {%- liquid
-                assign v_id = forloop.index0
-                assign v_url = vid.video_url | default: vid.url
-                assign v_title = vid.short_title | default: vid.title | escape
-                assign v_thumb = vid.thumbnail_url | default: vid.thumbnail | image_url: width: 200
-                
-                # Detect video type
-                assign v_type = 'native'
-                if v_url contains 'youtube.com' or v_url contains 'youtu.be'
-                  assign v_type = 'youtube'
-                elsif v_url contains 'vimeo.com'
-                  assign v_type = 'vimeo'
-                endif
-              -%}
-              <button type="button" 
-                class="video-playlist-item {% if forloop.first %}is-active{% endif %}" 
-                role="option"
-                aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
-                data-video-index="{{ v_id }}"
-                data-video-url="{{ v_url }}"
-                data-video-type="{{ v_type }}"
-                data-video-title="{{ v_title }}">
+            {%- assign v_index = 0 -%}
+            {%- for media in product.media -%}
+              {%- if media.media_type == 'video' or media.media_type == 'external_video' -%}
                 {%- liquid
-                  assign v_thumb = nil
-                  if vid.thumbnail_url or vid.thumbnail
-                    assign v_thumb = vid.thumbnail_url | default: vid.thumbnail | image_url: width: 200
-                  elsif v_url contains 'youtube.com' or v_url contains 'youtu.be'
-                    assign yt_thumb_id = v_url | split: 'v=' | last | split: '&' | first | split: '/' | last
-                    assign v_thumb = 'https://img.youtube.com/vi/' | append: yt_thumb_id | append: '/hqdefault.jpg'
+                  assign v_title = media.alt | default: product.title | escape
+                  if v_title contains '|'
+                    assign v_title = v_title | split: '|' | last | strip
+                  endif
+                  
+                  assign v_thumb = media.preview_image | image_url: width: 200
+                  
+                  # Handle URL and Type
+                  if media.media_type == 'video'
+                    assign v_url = media.sources | where: 'format', 'mp4' | first | attr: 'url'
+                    if v_url == nil
+                        assign v_url = media.sources[0].url
+                    endif
+                    assign v_type = 'native'
+                  else
+                    assign v_url = media.external_id
+                    assign v_type = media.host # youtube or vimeo
                   endif
                 -%}
-                <div class="video-playlist-item__thumb">
-                  {%- if v_thumb != nil -%}
-                    <img src="{{ v_thumb }}" alt="{{ v_title }}" loading="lazy">
-                  {%- endif -%}
-                  <div class="video-playlist-item__play-overlay">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v13.72l11-6.86 -11-6.86z"/></svg>
+                <button type="button" 
+                  class="video-playlist-item {% if v_index == 0 %}is-active{% endif %}" 
+                  role="option"
+                  aria-selected="{% if v_index == 0 %}true{% else %}false{% endif %}"
+                  data-video-index="{{ v_index }}"
+                  data-video-url="{{ v_url }}"
+                  data-video-type="{{ v_type }}"
+                  data-video-title="{{ v_title }}">
+                  <div class="video-playlist-item__thumb">
+                    {%- if v_thumb != nil -%}
+                      <img src="{{ v_thumb }}" alt="{{ v_title }}" loading="lazy">
+                    {%- endif -%}
+                    <div class="video-playlist-item__play-overlay">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v13.72l11-6.86 -11-6.86z"/></svg>
+                    </div>
                   </div>
-                </div>
-                <div class="video-playlist-item__info">
-                  <span class="video-playlist-item__title">{{ v_title }}</span>
-                  {%- if vid.duration -%}
-                    <span class="video-playlist-item__duration">{{ vid.duration }}</span>
-                  {%- endif -%}
-                </div>
-              </button>
+                  <div class="video-playlist-item__info">
+                    <span class="video-playlist-item__title">{{ v_title }}</span>
+                  </div>
+                </button>
+                {%- assign v_index = v_index | plus: 1 -%}
+              {%- endif -%}
             {%- endfor -%}
           </div>
         </div>
