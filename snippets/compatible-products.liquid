@@ -33,17 +33,18 @@
           {%- if current_variant.available -%}
             {%- assign visible_counter = visible_counter | plus: 1 -%}
             
-            <div class="bundle-card {% if visible_counter > 3 %}is-hidden{% endif %}" 
+            <div class="bundle-card" 
                  data-product-id="{{ item.id }}" 
                  data-variant-id="{{ current_variant.id }}" 
-                 data-price="{{ current_variant.price }}">
+                 data-price="{{ current_variant.price }}"
+                 data-base-url="{{ item.url }}">
               
               <div class="bundle-card__selection">
                 <input type="checkbox" 
                        id="bundle-item-{{ item.id }}-{{ forloop.index }}" 
                        name="compatible_product" 
                        value="{{ current_variant.id }}" 
-                       {% if visible_counter <= 3 %}checked{% endif %}
+                       checked
                        class="bundle-card__checkbox">
                 <label for="bundle-item-{{ item.id }}-{{ forloop.index }}" class="bundle-card__checkbox-label">
                   <span class="bundle-card__checkbox-box">
@@ -55,21 +56,25 @@
               </div>
 
               <div class="bundle-card__main">
-                <div class="bundle-card__media">
-                  {%- if item.featured_image != blank -%}
-                    <img src="{{ item.featured_image | image_url: width: 160 }}" 
-                         alt="{{ item.featured_image.alt | escape }}" 
-                         loading="lazy" 
-                         width="50" 
-                         height="50"
-                         class="bundle-card__image">
-{%- else -%}
-  {{ 'product-1' | placeholder_svg_tag: 'bundle-card__image placeholder' }}
-{%- endif -%}
-                </div>
+                  <a href="{{ item.url }}?variant={{ current_variant.id }}" class="bundle-card__link js-product-link">
+                    {%- if item.featured_image != blank -%}
+                      <img src="{{ item.featured_image | image_url: width: 160 }}" 
+                           alt="{{ item.featured_image.alt | escape }}" 
+                           loading="lazy" 
+                           width="50" 
+                           height="50"
+                           class="bundle-card__image">
+                    {%- else -%}
+                      {{ 'product-1' | placeholder_svg_tag: 'bundle-card__image placeholder' }}
+                    {%- endif -%}
+                  </a>
 
                 <div class="bundle-card__details">
-                  <h4 class="bundle-card__product-title">{{ item.title }}</h4>
+                  <h4 class="bundle-card__product-title">
+                    <a href="{{ item.url }}?variant={{ current_variant.id }}" class="bundle-card__link-title js-product-link">
+                      {{ item.title }}
+                    </a>
+                  </h4>
                   <span class="bundle-card__sku" data-sku-display>{{ current_variant.sku }}</span>
 
                   <div class="bundle-card__price-row">
@@ -113,18 +118,7 @@
           {%- endif -%}
         {%- endfor -%}
 
-        {%- if visible_counter > 3 -%}
-          <div class="bundle-card bundle-card--show-more" data-show-more-card>
-            <button type="button" class="bundle-card__show-more-button" data-show-more>
-              <span class="bundle-card__show-more-content">
-                <span class="bundle-card__show-more-label">Show More Add-Ons</span>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </span>
-            </button>
-          </div>
-        {%- endif -%}
+
       </div>
 
       <div class="bundle-summary">

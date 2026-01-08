@@ -241,6 +241,17 @@ if (!customElements.get('compatible-products-form')) {
 
                     const checkbox = card.querySelector('input[type="checkbox"]');
                     if (checkbox) checkbox.value = newVariantId;
+
+                    // Update Links
+                    const baseUrl = card.dataset.baseUrl;
+                    if (baseUrl) {
+                        const productLinks = card.querySelectorAll('.js-product-link');
+                        productLinks.forEach(link => {
+                            const url = new URL(baseUrl, window.location.origin);
+                            url.searchParams.set('variant', newVariantId);
+                            link.href = url.pathname + url.search;
+                        });
+                    }
                 }
             }
             this.updateTotal();
@@ -268,18 +279,11 @@ if (!customElements.get('compatible-products-form')) {
                 }
             });
 
+
             // Handle unselected cards visual state
             this.querySelectorAll('input[type="checkbox"]:not(:checked)').forEach(checkbox => {
                 const card = checkbox.closest('.bundle-card');
                 if (card) card.classList.remove('is-selected');
-            });
-
-            // Sync Visibility: items that are checked MUST NOT be hidden
-            this.querySelectorAll('.bundle-card.is-hidden').forEach(card => {
-                const checkbox = card.querySelector('input[type="checkbox"]');
-                if (checkbox && checkbox.checked) {
-                    card.classList.remove('is-hidden');
-                }
             });
 
             if (this.totalPriceElement) {

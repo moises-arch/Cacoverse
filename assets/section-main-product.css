@@ -4988,6 +4988,19 @@ body.template-product .product__media-modal * {
   overflow: hidden;
 }
 
+.bundle-card__link,
+.bundle-card__link-title {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.bundle-card__link:hover,
+.bundle-card__link-title:hover {
+  text-decoration: underline;
+  color: #242833;
+}
+
 .bundle-card__sku {
   font-size: 0.82rem;
   color: #a0a0a0;
