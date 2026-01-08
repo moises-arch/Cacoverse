@@ -83,28 +83,8 @@
     visibility: visible !important;
   }
   
-  /* 👻 GHOST LOADING MODE:
-     El layout y los fondos (blanco/azul) se pintan inmediatamente (bueno para CLS),
-     pero el CONTENIDO (texto, iconos) es transparente hasta que el JS lo estabiliza.
-  */
-  .caco-header-wrapper:not(.caco-is-ready) {
-    color: transparent !important;
-  }
-  .caco-header-wrapper:not(.caco-is-ready) a,
-  .caco-header-wrapper:not(.caco-is-ready) span,
-  .caco-header-wrapper:not(.caco-is-ready) input::placeholder {
-    color: transparent !important;
-  }
-  /* Iconos invisibles pero ocupando espacio */
-  .caco-header-wrapper:not(.caco-is-ready) svg,
-  .caco-header-wrapper:not(.caco-is-ready) svg * {
-    stroke: transparent !important;
-    fill: transparent !important;
-  }
-  /* Logo imagen invisible */
-  .caco-header-wrapper:not(.caco-is-ready) img {
-    opacity: 0 !important;
-  }
+  /* 👻 GHOST MODE REMOVED: Transparency creates the 'ghost' feeling. 
+     Instead, we fix the layout below so it renders correctly immediately. */
 
   /* Pre-layout para la barra de anuncios */
   .caco-announcement-bar {
@@ -220,11 +200,31 @@
   }
   .caco-area-center { display: flex; justify-content: center; }
   .caco-area-right { display: flex; justify-content: flex-end; }
+  
+  /* ⚡ CRITICAL FIX: ESTO ELIMINA EL "GHOST" VERTICAL
+     Definimos la estructura horizontal del menú AQUÍ, en el CSS crítico,
+     para que el navegador lo pinte bien desde el primer milisegundo.
+  */
+  .caco-nav-list {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    list-style: none;
+    padding: 0; margin: 0;
+  }
+  .caco-nav-item { display: block; }
+  .caco-nav-item > a {
+    display: block;
+    padding: 14px 0;
+    text-decoration: none;
+    color: inherit;
+  }
 
   @media (max-width: 1024px) {
     /* En mobile, el centro (search desktop) desaparece inmediatamente */
     .caco-grid-container { grid-template-columns: auto 1fr auto; }
     .caco-area-center { display: none !important; }
+    .caco-nav-list { display: none !important; } /* Ocultar menú desktop en mobile al instante */
   }
   
   /* Gradiente de separación sutil */
