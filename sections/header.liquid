@@ -92,6 +92,20 @@
     background: var(--announcement-bg);
     overflow: hidden;
   }
+  /* CRITICAL: Ensure active slide is visible immediately without animation ghosting */
+  .caco-announcement-slider {
+    display: flex; justify-content: center; width: 100%; text-align: center;
+  }
+  .caco-announcement-slide { display: none; }
+  .caco-announcement-slide.active { 
+    display: block; 
+    animation: none; /* Disable initial fade-in to prevent ghosting */
+  }
+  /* Hide desktop slides on mobile immediately */
+  @media (max-width: 1024px) {
+    .caco-desktop-only-ann { display: none !important; }
+    .caco-mobile-only-ann { display: block !important; }
+  }
 
   /* 🚫 DEFENSIVE HIDING:
      Excluimos estos elementos del árbol de renderizado inicial por completo.
@@ -1825,7 +1839,10 @@
   .caco-announcement-slider{display:flex;justify-content:center;width:100%;text-align:center;}
   .caco-announcement-slide{display:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;animation:fadeIn .5s ease-in-out;}
   .caco-announcement-slide.active{display:block;}
-  .caco-announcement-bar--slide .caco-announcement-slide.active{animation:slideUp .4s ease-out;}
+  .caco-announcement-bar--slide .caco-announcement-slide.active.animating {
+    animation: slideUp .4s ease-out;
+  }
+  /* Solo animamos cuando explícitamente se pide (JS añadirá clase animating) */
   .caco-ann-controls{display:flex;align-items:center;gap:16px;position:absolute;right:24px;height:100%;}
   .caco-ann-nav-group{display:flex;align-items:center;gap:8px;}
   .caco-ann-nav{color:currentColor;opacity:.8;display:flex;align-items:center;transition:opacity .2s;}
@@ -4199,9 +4216,17 @@ document.addEventListener('visibilitychange', function () {
         if (!dTotal) return;
 
         function showSlide(index) {
-          desktopSlides.forEach(function(s){ s.classList.remove('active'); });
+          desktopSlides.forEach(function(s){ 
+            s.classList.remove('active'); 
+            s.classList.remove('animating'); // Limpiamos clase de animación
+          });
           current = (index + dTotal) % dTotal;
-          desktopSlides[current].classList.add('active');
+          var newSlide = desktopSlides[current];
+          newSlide.classList.add('active');
+          // Forzamos reflow para reiniciar la animación si fuera necesario
+          void newSlide.offsetWidth; 
+          newSlide.classList.add('animating'); // Activamos la animación CSS
+          
           if (currentEl) currentEl.textContent = String(current + 1);
         }
 
