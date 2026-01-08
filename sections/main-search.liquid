@@ -860,7 +860,8 @@
                    {%- endif -%}
                     {% comment %} Custom Badge from Metafield {% endcomment %}
                     {%- if item.metafields.custom.badges != blank -%}
-                      {%- assign badge_data = item.metafields.custom.badges | split: '|' -%}
+                      {%- assign badge_raw = item.metafields.custom.badges | replace: '["', '' | replace: '"]', '' | replace: '"', '' -%}
+                      {%- assign badge_data = badge_raw | split: '|' -%}
                       {%- assign badge_text = badge_data[0] | strip -%}
                       {%- assign badge_color = badge_data[1] | strip | downcase | default: 'blue' -%}
                       {%- assign valid_colors = 'red,orange,green,yellow,blue,dark-blue,black,gray,purple,pink' | split: ',' -%}
