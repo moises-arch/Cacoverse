@@ -92,20 +92,6 @@
     background: var(--announcement-bg);
     overflow: hidden;
   }
-  /* CRITICAL: Ensure active slide is visible immediately without animation ghosting */
-  .caco-announcement-slider {
-    display: flex; justify-content: center; width: 100%; text-align: center;
-  }
-  .caco-announcement-slide { display: none; }
-  .caco-announcement-slide.active { 
-    display: block; 
-    animation: none; /* Disable initial fade-in to prevent ghosting */
-  }
-  /* Hide desktop slides on mobile immediately */
-  @media (max-width: 1024px) {
-    .caco-desktop-only-ann { display: none !important; }
-    .caco-mobile-only-ann { display: block !important; }
-  }
 
   /* 🚫 DEFENSIVE HIDING:
      Excluimos estos elementos del árbol de renderizado inicial por completo.
@@ -226,14 +212,6 @@
     list-style: none;
     padding: 0; margin: 0;
   }
-  /* CRITICAL: Navigation List Layout (Horizontal Menu) */
-  .caco-nav-list {
-    display: flex;
-    align-items: center;
-    gap: 40px;
-    list-style: none;
-    padding: 0; margin: 0;
-  }
   .caco-nav-item { display: block; }
   .caco-nav-item > a {
     display: block;
@@ -242,36 +220,11 @@
     color: inherit;
   }
 
-  /* CRITICAL: Right Side Layout (Help, Industries, Icons)
-     Prevent vertical stacking or line breaks on load.
-  */
-  .caco-nav-right-links {
-    display: flex;
-    align-items: center;
-    gap: 0; 
-    margin-left: -20px;
-    white-space: nowrap; /* Forces content to stay on one line */
-  }
-  .caco-help-menu,
-  .caco-industries-menu {
-    display: inline-flex; /* Keep these side-by-side */
-    align-items: center;
-  }
-  .caco-nav-aux-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    white-space: nowrap;
-    text-decoration: none;
-    color: inherit;
-  }
-
   @media (max-width: 1024px) {
     /* En mobile, el centro (search desktop) desaparece inmediatamente */
     .caco-grid-container { grid-template-columns: auto 1fr auto; }
     .caco-area-center { display: none !important; }
-    .caco-nav-list { display: none !important; } /* Ocultar menú desktop en mobile */
-    .caco-nav-right-links { display: none !important; } /* Ocultar botones extra en mobile si aplica */
+    .caco-nav-list { display: none !important; } /* Ocultar menú desktop en mobile al instante */
   }
   
   /* Gradiente de separación sutil */
@@ -285,61 +238,6 @@
   }
   @media (max-width: 768px) {
     :root { --caco-header-height: 130px; }
-  }
-
-  /* ⚡ CRITICAL: Button resets to prevent native styling flash */
-  .caco-header-wrapper button {
-    border: none;
-    background: none;
-    padding: 0;
-    margin: 0;
-    font: inherit;
-    cursor: pointer;
-    outline: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-  }
-
-  /* ⚡ CRITICAL: Help Center / Industries pill buttons pre-styles */
-  .caco-nav-aux-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 4px 14px;
-    border-radius: 9999px;
-    font-size: 14px;
-    font-weight: 600;
-    color: #111827;
-    background: transparent;
-    box-shadow: none;
-    border: none;
-    text-decoration: none;
-  }
-
-  /* CRITICAL: Hide aux icons on desktop initially */
-  .caco-nav-aux-icon {
-    display: none;
-  }
-
-  .caco-nav-aux-text {
-    white-space: nowrap;
-  }
-
-  /* CRITICAL: Help/Industries menu containers */
-  .caco-help-menu,
-  .caco-industries-menu {
-    position: relative;
-  }
-
-  .caco-help-chevron {
-    margin-left: 2px;
-  }
-
-  /* CRITICAL: Ensure header-bottom is visible and properly laid out */
-  .caco-header-bottom {
-    background: var(--header-bg);
-    position: relative;
   }
 </style>
 
@@ -1927,10 +1825,7 @@
   .caco-announcement-slider{display:flex;justify-content:center;width:100%;text-align:center;}
   .caco-announcement-slide{display:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;animation:fadeIn .5s ease-in-out;}
   .caco-announcement-slide.active{display:block;}
-  .caco-announcement-bar--slide .caco-announcement-slide.active.animating {
-    animation: slideUp .4s ease-out;
-  }
-  /* Solo animamos cuando explícitamente se pide (JS añadirá clase animating) */
+  .caco-announcement-bar--slide .caco-announcement-slide.active{animation:slideUp .4s ease-out;}
   .caco-ann-controls{display:flex;align-items:center;gap:16px;position:absolute;right:24px;height:100%;}
   .caco-ann-nav-group{display:flex;align-items:center;gap:8px;}
   .caco-ann-nav{color:currentColor;opacity:.8;display:flex;align-items:center;transition:opacity .2s;}
@@ -4304,17 +4199,9 @@ document.addEventListener('visibilitychange', function () {
         if (!dTotal) return;
 
         function showSlide(index) {
-          desktopSlides.forEach(function(s){ 
-            s.classList.remove('active'); 
-            s.classList.remove('animating'); // Limpiamos clase de animación
-          });
+          desktopSlides.forEach(function(s){ s.classList.remove('active'); });
           current = (index + dTotal) % dTotal;
-          var newSlide = desktopSlides[current];
-          newSlide.classList.add('active');
-          // Forzamos reflow para reiniciar la animación si fuera necesario
-          void newSlide.offsetWidth; 
-          newSlide.classList.add('animating'); // Activamos la animación CSS
-          
+          desktopSlides[current].classList.add('active');
           if (currentEl) currentEl.textContent = String(current + 1);
         }
 
