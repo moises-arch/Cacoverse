@@ -275,6 +275,7 @@ if (!customElements.get('media-gallery')) {
         const hidden = slides.filter(s => s.style.display === 'none');
 
         const featured = [];
+        const videoHub = [];
         const specific = [];
         const generic = [];
 
@@ -282,9 +283,12 @@ if (!customElements.get('media-gallery')) {
           const tags = (slide.dataset.color || '').toLowerCase().split(',').map(t => t.trim());
           const isAll = tags.some(tag => tag === 'all' || tag === 'all-show');
           const isFeaturedId = featuredMediaId && String(slide.dataset.mediaId) === String(featuredMediaId);
+          const isVideoHub = slide.dataset.mediaId === 'video-hub';
 
           if (isFeaturedId) {
             featured.push(slide);
+          } else if (isVideoHub) {
+            videoHub.push(slide);
           } else if (isAll) {
             generic.push(slide);
           } else {
@@ -292,7 +296,7 @@ if (!customElements.get('media-gallery')) {
           }
         });
 
-        const sortedVisible = [...featured, ...specific, ...generic];
+        const sortedVisible = [...featured, ...videoHub, ...specific, ...generic];
         const fragment = document.createDocumentFragment();
         sortedVisible.forEach(s => fragment.appendChild(s));
         hidden.forEach(s => fragment.appendChild(s));
