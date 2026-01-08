@@ -414,7 +414,7 @@
     <div class="swiper main-swiper-{{ section.id }}">
       <div class="swiper-wrapper">
         {%- comment -%} ALWAYS PLACE FEATURED MEDIA FIRST {%- endcomment -%}
-        {%- if featured_media -%}
+        {%- if featured_media and featured_media.media_type == 'image' -%}
           {%- assign media = featured_media -%}
           {%- assign raw_alt = media.alt | default: 'all' -%}
           {%- assign normalized_alt = raw_alt | replace: '|', ',' -%}
@@ -445,15 +445,14 @@
                      fetchpriority="high"
                      data-zoom-url="{{ media | image_url: width: 2048 }}"
                      class="gallery-image">
-            {% elsif media.media_type == 'video' %}
-                {{ media | video_tag: controls: true, class: 'gallery-video' }}
             {% endif %}
 
           </div>
         {%- endif -%}
 
         {%- for media in product.media -%}
-          {%- if featured_media == nil or media.id != featured_media.id -%}
+          {%- if media.media_type == 'image' -%}
+            {%- if featured_media == nil or media.id != featured_media.id -%}
             {%- assign raw_alt = media.alt | default: 'all' -%}
             {%- assign normalized_alt = raw_alt | replace: '|', ',' -%}
             {%- assign alt_parts = normalized_alt | split: ',' -%}
@@ -482,11 +481,10 @@
                        loading="lazy"
                        data-zoom-url="{{ media | image_url: width: 2048 }}"
                        class="gallery-image">
-              {% elsif media.media_type == 'video' %}
-                  {{ media | video_tag: controls: true, class: 'gallery-video' }}
               {% endif %}
 
             </div>
+            {%- endif -%}
           {%- endif -%}
         {%- endfor -%}
       </div>
@@ -511,7 +509,7 @@
 
       <div class="swiper thumbs-swiper-{{ section.id }}">
         <div class="swiper-wrapper">
-          {%- if featured_media -%}
+          {%- if featured_media and featured_media.media_type == 'image' -%}
             {%- assign media = featured_media -%}
             {%- assign raw_alt = media.alt | default: 'all' -%}
             {%- assign normalized_alt = raw_alt | replace: '|', ',' -%}
@@ -537,7 +535,8 @@
           {%- endif -%}
           
           {%- for media in product.media -%}
-            {%- if featured_media == nil or media.id != featured_media.id -%}
+            {%- if media.media_type == 'image' -%}
+              {%- if featured_media == nil or media.id != featured_media.id -%}
               {%- assign raw_alt = media.alt | default: 'all' -%}
               {%- assign normalized_alt = raw_alt | replace: '|', ',' -%}
               {%- assign alt_parts = normalized_alt | split: ',' -%}
@@ -559,6 +558,7 @@
                   data-color="{{ m_colors | strip }}">
                 <img src="{{ media | image_url: width: 400 }}" alt="{{ media.alt | escape }}" loading="lazy">
              </div>
+              {%- endif -%}
             {%- endif -%}
           {%- endfor -%}
         </div>
