@@ -21,7 +21,9 @@ if (!customElements.get('media-gallery')) {
       await this.waitForSwiper();
       this.initSwiper();
       this.initLightbox();
+      this.initVideoGallery(); // Initialize Video Gallery
       this.bindEvents();
+      this.bindVideoEvents(); // Bind Video Events
 
       // Force initial filter
       setTimeout(() => this.filterByCurrentSelections(), 300);
@@ -137,6 +139,14 @@ if (!customElements.get('media-gallery')) {
 
         if (isSwiping) return;
 
+        // Check for video trigger
+        const videoTrigger = e.target.closest('[data-video-trigger="true"]');
+        if (videoTrigger) {
+          e.preventDefault();
+          this.openVideoLightbox(0);
+          return;
+        }
+
         const img = e.target.closest('.swiper-slide img');
         if (img && img.dataset.zoomUrl) {
           e.preventDefault();
@@ -149,7 +159,11 @@ if (!customElements.get('media-gallery')) {
         const thumb = e.target.closest('.gallery-thumbs .swiper-slide');
         if (thumb) {
           e.stopPropagation();
-          this.slideToMedia(thumb.dataset.mediaId);
+          if (thumb.dataset.videoTrigger) {
+            this.openVideoLightbox(0);
+          } else {
+            this.slideToMedia(thumb.dataset.mediaId);
+          }
         }
       });
     }
@@ -459,6 +473,123 @@ if (!customElements.get('media-gallery')) {
           this.updateLightboxImage();
         }
       }
+    }
+
+    // --- VIDEO GALLERY METHODS ---
+    initVideoGallery() {
+      this.videoLightbox = document.getElementById(`VideoLightbox-${this.sectionId}`);
+      if (!this.videoLightbox) return;
+
+      const dataEl = document.getElementById(`VideoData-${this.sectionId}`);
+      this.videoData = dataEl ? JSON.parse(dataEl.textContent) : [];
+      this.currentVideoIndex = 0;
+      this.videoPlayerContainer = document.getElementById(`VideoPlayerContainer-${this.sectionId}`);
+    }
+
+    bindVideoEvents() {
+      if (!this.videoLightbox) return;
+
+      // Close Button
+      this.videoLightbox.querySelector('.video-lightbox-close').addEventListener('click', () => {
+        this.closeVideoLightbox();
+      });
+
+      // Playlist Clicks
+      this.videoLightbox.querySelectorAll('.playlist-item').forEach(item => {
+        item.addEventListener('click', () => {
+          const index = parseInt(item.dataset.index);
+          this.switchVideo(index);
+        });
+      });
+
+      // Close on ESC and Focus Trap
+      this.videoLightboxKeyHandler = (e) => {
+        if (!this.videoLightbox.classList.contains('active')) return;
+
+        if (e.key === 'Escape') {
+          this.closeVideoLightbox();
+        }
+
+        if (e.key === 'Tab') {
+          const focusableEls = this.videoLightbox.querySelectorAll('button, [href], .playlist-item, [tabindex]:not([tabindex="-1"])');
+          const firstFocusableEl = focusableEls[0];
+          const lastFocusableEl = focusableEls[focusableEls.length - 1];
+
+          if (e.shiftKey) {
+            if (document.activeElement === firstFocusableEl) {
+              lastFocusableEl.focus();
+              e.preventDefault();
+            }
+          } else {
+            if (document.activeElement === lastFocusableEl) {
+              firstFocusableEl.focus();
+              e.preventDefault();
+            }
+          }
+        }
+      };
+      document.addEventListener('keydown', this.videoLightboxKeyHandler);
+    }
+
+    openVideoLightbox(index = 0) {
+      if (!this.videoLightbox) return;
+      this.videoLightbox.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      this.switchVideo(index);
+
+      // Focus the close button or first item
+      setTimeout(() => {
+        const closeBtn = this.videoLightbox.querySelector('.video-lightbox-close');
+        if (closeBtn) closeBtn.focus();
+      }, 100);
+    }
+
+    closeVideoLightbox() {
+      if (!this.videoLightbox) return;
+      this.videoLightbox.classList.remove('active');
+      document.body.style.overflow = '';
+      if (this.videoPlayerContainer) {
+        this.videoPlayerContainer.innerHTML = ''; // Stop video playback
+      }
+    }
+
+    switchVideo(index) {
+      if (!this.videoData || !this.videoData[index]) return;
+
+      this.currentVideoIndex = index;
+      const video = this.videoData[index];
+
+      // Update Playlist UI
+      const items = this.videoLightbox.querySelectorAll('.playlist-item');
+      items.forEach(item => item.classList.toggle('active', parseInt(item.dataset.index) === index));
+
+      // Scroll to active item if needed
+      const activeItem = this.videoLightbox.querySelector('.playlist-item.active');
+      if (activeItem) {
+        activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+
+      // Render Player
+      this.renderVideo(video.video_url);
+    }
+
+    renderVideo(url) {
+      if (!this.videoPlayerContainer) return;
+
+      let html = '';
+      const youtubeMatch = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+      const vimeoMatch = url.match(/(?:vimeo\.com\/|player\.vimeo\.com\/video\/)([0-9]+)/);
+
+      if (youtubeMatch) {
+        html = `<iframe src="https://www.youtube.com/embed/${youtubeMatch[1]}?autoplay=0&rel=0" class="video-lightbox-player" allowfullscreen allow="autoplay; encrypted-media"></iframe>`;
+      } else if (vimeoMatch) {
+        html = `<iframe src="https://player.vimeo.com/video/${vimeoMatch[1]}?autoplay=0" class="video-lightbox-player" allowfullscreen allow="autoplay; fullscreen"></iframe>`;
+      } else {
+        // Assume direct video link (MP4/HLS)
+        html = `<video src="${url}" class="video-lightbox-player" controls playsinline></video>`;
+      }
+
+      this.videoPlayerContainer.innerHTML = html;
     }
   });
 }
