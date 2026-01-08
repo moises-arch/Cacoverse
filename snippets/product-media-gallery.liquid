@@ -901,6 +901,7 @@
             <div class="video-lightbox__playlist-side">
                 <h3 class="video-lightbox__playlist-header">Video Gallery</h3>
                 <div class="video-lightbox__playlist-items">
+                  {%- for vid in sorted_videos -%}
                       {%- liquid
                         assign v_id = forloop.index0
                         
@@ -964,7 +965,7 @@
          assign f_ref = vid.video_file.value
          
          if f_ref
-           assign v_url = f_ref.sources | where: 'format', 'mp4' | first | attr: 'url'
+           assign v_url = f_ref.sources | where: 'format', 'mp4' | map: 'url' | first
            if v_url == nil
              assign v_url = f_ref.sources[0].url
            endif
