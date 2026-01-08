@@ -5,7 +5,14 @@
 {% endcomment %}
 
 {%- assign media_count = product.media.size -%}
-{%- if media_count > 0 -%}
+{%- assign video_files = product.metafields.video_hub_data.video_file.value -%}
+{%- assign video_urls = product.metafields.video_hub_data.videos_url.value -%}
+{%- assign has_videos = false -%}
+{%- if video_files != blank or video_urls != blank -%}
+  {%- assign has_videos = true -%}
+{%- endif -%}
+
+{%- if media_count > 0 or has_videos -%}
 
 <style>
   media-gallery {
@@ -400,6 +407,226 @@
       opacity: 1;
     }
   }
+  /* Video Hub Styles */
+  .video-slide-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 20px;
+    background: #000;
+  }
+  .video-slide-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+  }
+  .video-slide-container:hover img {
+    opacity: 0.5;
+  }
+  .video-play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 2;
+  }
+  .video-play-button svg {
+    width: 24px;
+    height: 24px;
+    fill: #fff;
+    margin-left: 4px; /* Optical centering */
+  }
+  .swiper-slide:hover .video-play-button {
+    transform: translate(-50%, -50%) scale(1.15);
+    background: rgba(255, 255, 255, 0.35);
+  }
+
+  /* Video Lightbox */
+  .video-lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 10000;
+    display: flex;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    flex-direction: column;
+  }
+  .video-lightbox.active {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .video-lightbox-header {
+    padding: 20px;
+    display: flex;
+    justify-content: flex-end;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+  }
+  .video-lightbox-close {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+    transition: all 0.2s;
+  }
+  .video-lightbox-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+  }
+  
+  .video-lightbox-body {
+    flex: 1;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  /* Player Area */
+  .video-player-area {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+    padding: 20px;
+    position: relative;
+  }
+  .video-player-container {
+    width: 100%;
+    max-width: 1000px;
+    aspect-ratio: 16 / 9;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    background: #000;
+  }
+  .video-lightbox-player {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  /* Playlist Sidebar */
+  .video-playlist {
+    width: 320px;
+    background: #111;
+    border-left: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+    overflow-y: auto;
+  }
+  .playlist-header {
+    padding: 0 20px 15px;
+    color: #fff;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 10px;
+  }
+  .playlist-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border-left: 3px solid transparent;
+  }
+  .playlist-item:hover {
+    background: rgba(255,255,255,0.05);
+  }
+  .playlist-item.active {
+    background: rgba(255,255,255,0.1);
+    border-left-color: #3b82f6;
+  }
+  .playlist-thumb {
+    width: 80px;
+    height: 45px;
+    border-radius: 6px;
+    object-fit: cover;
+    background: #000;
+  }
+  .playlist-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .playlist-title {
+    color: #fff;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .playlist-type {
+    color: #888;
+    font-size: 11px;
+    text-transform: capitalize;
+  }
+
+  /* Mobile Responsive */
+  @media(max-width: 900px) {
+    .video-lightbox-body {
+      flex-direction: column;
+    }
+    .video-player-area {
+      flex: 0 0 auto;
+      padding: 60px 0 20px; /* Space for close button */
+    }
+    .video-playlist {
+      width: 100%;
+      flex: 1;
+      border-left: none;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .video-player-container {
+      width: 100%;
+      border-radius: 0;
+    }
+    .video-lightbox-header {
+      position: absolute;
+      padding: 10px;
+    }
+    .video-lightbox-close {
+      background: rgba(0,0,0,0.5);
+    }
+  }
 </style>
 
 <media-gallery 
@@ -487,6 +714,28 @@
             {%- endif -%}
           {%- endif -%}
         {%- endfor -%}
+
+        {%- if has_videos -%}
+          {%- comment -%} Determine Cover Image for Video Hub {%- endcomment -%}
+          {%- assign video_cover_image = product.featured_media | image_url: width: 800 -%}
+          
+          {%- comment -%} Try to find a better cover from the first video file {%- endcomment -%}
+          {%- if video_files != blank and video_files[0].preview_image -%}
+            {%- assign video_cover_image = video_files[0].preview_image | image_url: width: 800 -%}
+          {%- endif -%}
+
+          <div class="swiper-slide video-hub-slide" 
+               data-media-id="video-hub" 
+               data-color="all"
+               data-video-trigger="true">
+            <div class="video-slide-container">
+               <img src="{{ video_cover_image }}" class="video-hub-cover" loading="lazy" alt="Video Gallery">
+               <div class="video-play-button">
+                 <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+               </div>
+            </div>
+          </div>
+        {%- endif -%}
       </div>
       
       <!-- Navigation -->
@@ -561,6 +810,20 @@
               {%- endif -%}
             {%- endif -%}
           {%- endfor -%}
+
+          {%- if has_videos -%}
+           <div class="swiper-slide video-hub-thumb" 
+                data-media-id="video-hub"
+                data-color="all"
+                data-video-trigger="true">
+             <div class="video-slide-container" style="border-radius: 12px;">
+                <img src="{{ video_cover_image }}" style="border-radius: 12px;" loading="lazy">
+                <div class="video-play-button" style="width: 30px; height: 30px; border-width: 1px;">
+                   <svg viewBox="0 0 24 24" style="width: 14px; height: 14px;"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+             </div>
+           </div>
+          {%- endif -%}
         </div>
       </div>
 
@@ -595,6 +858,66 @@
       </button>
     </div>
   </div>
+
+  <div class="video-lightbox" id="VideoLightbox-{{ section.id }}">
+    <div class="video-lightbox-header">
+      <button class="video-lightbox-close">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+    <div class="video-lightbox-body">
+      <div class="video-player-area">
+        <div class="video-player-container" id="VideoPlayerContainer-{{ section.id }}">
+           <!-- Formatted Video Player Injected Here -->
+        </div>
+      </div>
+      <div class="video-playlist">
+        <div class="playlist-header">Video Gallery</div>
+        {%- assign v_index = 0 -%}
+        
+        {%- for file in video_files -%}
+          <div class="playlist-item {% if v_index == 0 %}active{% endif %}" data-index="{{ v_index }}">
+            <img src="{{ file.preview_image | image_url: width: 150 }}" class="playlist-thumb">
+            <div class="playlist-info">
+              <div class="playlist-title">Product Video {{ v_index | plus: 1 }}</div>
+              <div class="playlist-type">Upload</div>
+            </div>
+          </div>
+          {%- assign v_index = v_index | plus: 1 -%}
+        {%- endfor -%}
+
+        {%- for url in video_urls -%}
+          <div class="playlist-item {% if v_index == 0 %}active{% endif %}" data-index="{{ v_index }}" id="ExternalThumb-{{ section.id }}-{{ v_index }}">
+            <img src="https://via.placeholder.com/150x90/000000/FFFFFF?text=Video" class="playlist-thumb">
+            <div class="playlist-info">
+              <div class="playlist-title">External Video</div>
+              <div class="playlist-type">Link</div>
+            </div>
+          </div>
+          {%- assign v_index = v_index | plus: 1 -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+
+  <script type="application/json" id="VideoData-{{ section.id }}">
+  [
+    {%- for file in video_files -%}
+      {
+        "type": "native",
+        "video_url": "{{ file.url }}",
+        "thumbnail_url": "{{ file.preview_image | image_url: width: 600 }}"
+      }{% if forloop.last == false or video_urls.size > 0 %},{% endif %}
+    {%- endfor -%}
+    {%- for url in video_urls -%}
+      {
+        "type": "external",
+        "video_url": "{{ url }}",
+        "thumbnail_url": "" 
+      }{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ]
+  </script>
 
 </media-gallery>
 
