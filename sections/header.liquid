@@ -73,6 +73,7 @@
     z-index: 200;
     background: var(--header-bg);
     /* Chrome stability fixes */
+    /* Chrome stability fixes */
     transform: translateZ(0);
     backface-visibility: hidden;
     perspective: 1000;
@@ -80,6 +81,29 @@
     /* ⚡ CRITICAL VISIBILITY: Always visible, relies on layout rules below to prevent jumps */
     opacity: 1 !important; 
     visibility: visible !important;
+  }
+  
+  /* 👻 GHOST LOADING MODE:
+     El layout y los fondos (blanco/azul) se pintan inmediatamente (bueno para CLS),
+     pero el CONTENIDO (texto, iconos) es transparente hasta que el JS lo estabiliza.
+  */
+  .caco-header-wrapper:not(.caco-is-ready) {
+    color: transparent !important;
+  }
+  .caco-header-wrapper:not(.caco-is-ready) a,
+  .caco-header-wrapper:not(.caco-is-ready) span,
+  .caco-header-wrapper:not(.caco-is-ready) input::placeholder {
+    color: transparent !important;
+  }
+  /* Iconos invisibles pero ocupando espacio */
+  .caco-header-wrapper:not(.caco-is-ready) svg,
+  .caco-header-wrapper:not(.caco-is-ready) svg * {
+    stroke: transparent !important;
+    fill: transparent !important;
+  }
+  /* Logo imagen invisible */
+  .caco-header-wrapper:not(.caco-is-ready) img {
+    opacity: 0 !important;
   }
 
   /* Pre-layout para la barra de anuncios */
