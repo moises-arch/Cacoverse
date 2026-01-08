@@ -190,11 +190,18 @@
           style="display: flex; align-items: center;"
         >
           <div class="hero-banner-visuals">
+            {%- assign loading_strategy = 'lazy' -%}
+            {%- assign fetch_priority = 'auto' -%}
+            {%- if forloop.first -%}
+              {%- assign loading_strategy = 'eager' -%}
+              {%- assign fetch_priority = 'high' -%}
+            {%- endif -%}
+
             {%- if block.settings.bg_image != blank -%}
               {{ block.settings.bg_image | image_url: width: 2048 | image_tag: 
                 class: 'hero-bg-img', 
-                loading: forloop.first ? 'eager' : 'lazy', 
-                fetchpriority: forloop.first ? 'high' : 'auto',
+                loading: loading_strategy, 
+                fetchpriority: fetch_priority,
                 preload: forloop.first,
                 alt: block.settings.heading | escape
               }}
@@ -202,8 +209,8 @@
             {%- if block.settings.image != blank -%}
                {{ block.settings.image | image_url: width: 1000 | image_tag: 
                 class: 'hero-product-img', 
-                loading: forloop.first ? 'eager' : 'lazy', 
-                fetchpriority: forloop.first ? 'high' : 'auto',
+                loading: loading_strategy, 
+                fetchpriority: fetch_priority,
                 alt: 'Product artwork'
               }}
             {%- endif -%}
