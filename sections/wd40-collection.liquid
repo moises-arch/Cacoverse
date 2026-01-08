@@ -564,6 +564,29 @@
       font-size: 12px;
       color: #969aa3;
     }
+    .wd40-sale-badge { 
+      background: linear-gradient(120deg, #ff7a92, #d7182b 70%);
+      color: #fff;
+      box-shadow: 0 2px 6px rgba(215, 24, 43, 0.12), 0 1px 0 rgba(255, 255, 255, 0.18) inset;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      position: relative;
+      overflow: hidden;
+    }
+    .wd40-sale-badge::after {
+      content: '';
+      position: absolute;
+      inset: -60% -40%;
+      background: linear-gradient(120deg, rgba(255,255,255,0) 20%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 80%);
+      transform: rotate(8deg);
+      animation: wd40BadgeShine 3.6s ease-in-out infinite;
+      pointer-events: none;
+    }
+    .wd40-badge-icon { width: 12px; height: 12px; display: inline-flex; align-items: center; justify-content: center; }
+    .wd40-badge-text { position: relative; z-index: 1; letter-spacing: 0.01em; }
     @keyframes wd40BadgeShine {
       0% { transform: translateX(-40%) rotate(8deg); opacity: 0; }
       40% { opacity: 1; }
@@ -1014,7 +1037,11 @@
                 {% if section.settings.show_new_badge and product.tags contains 'new' %}<span class="wd40-badge new-badge">{{ section.settings.new_badge_text }}</span>{% endif %}
                 {% if section.settings.show_discount_badge and product.compare_at_price > product.price %}
                   {% assign discount = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round %}
-                  <span class="wd40-badge">Save up to {{ discount }}%</span>
+                  <span class="wd40-badge wd40-sale-badge" role="text">
+                    <span class="wd40-badge-icon" aria-hidden="true">✦</span>
+                    <span class="wd40-badge-text">Save up to {{ discount }}%</span>
+                    <span class="visually-hidden">Limited-time offer</span>
+                  </span>
                 {% endif %}
                 {% comment %} Custom Badge from Metafield {% endcomment %}
                 {% if product.metafields.custom.badges != blank %}

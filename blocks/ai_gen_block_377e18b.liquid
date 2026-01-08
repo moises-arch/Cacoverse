@@ -185,8 +185,9 @@
   top: 10px;
   left: 10px;
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px;
   z-index: 5;
 }
 
@@ -218,11 +219,53 @@
   align-items: center;
   gap: 6px;
   letter-spacing: 0.02em;
+  position: relative;
+  overflow: hidden;
+}
+.ai-bestseller-module-{{ ai_gen_id }} .wd40-badge-bestseller::after {
+  content: '';
+  position: absolute;
+  inset: -60% -40%;
+  background: linear-gradient(120deg, rgba(255,255,255,0) 20%, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 80%);
+  transform: rotate(8deg);
+  animation: wd40BadgeShine 3s ease-in-out infinite;
+  pointer-events: none;
+  opacity: 0.5;
 }
 .ai-bestseller-module-{{ ai_gen_id }} .wd40-badge-bestseller::before {
   content: "✦";
   font-size: 12px;
   color: #969aa3;
+}
+.ai-bestseller-module-{{ ai_gen_id }} .wd40-badge-custom {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12), 0 1px 0 rgba(255,255,255,0.2) inset;
+}
+.ai-bestseller-module-{{ ai_gen_id }} .wd40-badge-custom--red { background: linear-gradient(135deg, #E4002B 0%, #B90022 100%); color: #ffffff; }
+.ai-bestseller-module-{{ ai_gen_id }} .wd40-badge-custom--orange { background: linear-gradient(135deg, #FF6600 0%, #E65C00 100%); color: #ffffff; }
+.ai-bestseller-module-{{ ai_gen_id }} .wd40-badge-custom--green { background: linear-gradient(135deg, #22C55E 0%, #16A34A 100%); color: #ffffff; }
+.ai-bestseller-module-{{ ai_gen_id }} .wd40-badge-custom--yellow { background: linear-gradient(135deg, #FACC15 0%, #EAB308 100%); color: #111111; }
+.ai-bestseller-module-{{ ai_gen_id }} .wd40-badge-custom--blue { background: linear-gradient(135deg, #0A4A9C 0%, #083E82 100%); color: #ffffff; }
+.ai-bestseller-module-{{ ai_gen_id }} .wd40-badge-custom--dark-blue { background: linear-gradient(135deg, #1E3A5F 0%, #162C4A 100%); color: #ffffff; }
+.ai-bestseller-module-{{ ai_gen_id }} .wd40-badge-custom--black { background: linear-gradient(135deg, #333333 0%, #111111 100%); color: #ffffff; }
+.ai-bestseller-module-{{ ai_gen_id }} .wd40-badge-custom--gray { background: linear-gradient(135deg, #6B7280 0%, #4B5563 100%); color: #ffffff; }
+.ai-bestseller-module-{{ ai_gen_id }} .wd40-badge-custom--purple { background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%); color: #ffffff; }
+.ai-bestseller-module-{{ ai_gen_id }} .wd40-badge-custom--pink { background: linear-gradient(135deg, #EC4899 0%, #DB2777 100%); color: #ffffff; }
+.ai-bestseller-module-{{ ai_gen_id }} .wd40-badge-custom-icon {
+  width: 12px;
+  height: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 .ai-bestseller-module-{{ ai_gen_id }} .wd40-sale-badge { 
   background: linear-gradient(120deg, #ff7a92, #d7182b 70%);
@@ -646,6 +689,9 @@
           >
 
           {% capture badge_markup %}
+            {% if product.tags contains 'bestseller' or product.tags contains 'best-seller' %}
+              <span class="wd40-badge wd40-badge-bestseller">BEST SELLER</span>
+            {% endif %}
             {% if product.tags contains 'new' %}
               <span class="wd40-badge new-badge">NEW ARRIVAL</span>
             {% endif %}
@@ -655,6 +701,25 @@
                 <span class="wd40-badge-icon" aria-hidden="true">✦</span>
                 <span class="wd40-badge-text">Save up to {{ discount }}%</span>
                 <span class="visually-hidden">Limited-time offer</span>
+              </span>
+            {% endif %}
+            {% comment %} Custom Badge from Metafield {% endcomment %}
+            {% if product.metafields.custom.badges != blank %}
+              {% assign badge_raw = product.metafields.custom.badges | replace: '["', '' | replace: '"]', '' | replace: '"', '' %}
+              {% assign badge_data = badge_raw | split: '|' %}
+              {% assign b_text = badge_data[0] | strip %}
+              {% assign b_color = badge_data[1] | strip | downcase | default: 'blue' %}
+              {% assign valid_c = 'red,orange,green,yellow,blue,dark-blue,black,gray,purple,pink' | split: ',' %}
+              {% unless valid_c contains b_color %}
+                {% assign b_color = 'blue' %}
+              {% endunless %}
+              <span class="wd40-badge wd40-badge-custom wd40-badge-custom--{{ b_color }}">
+                <span class="wd40-badge-custom-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+                  </svg>
+                </span>
+                <span class="wd40-badge-text">{{ b_text }}</span>
               </span>
             {% endif %}
           {% endcapture %}
