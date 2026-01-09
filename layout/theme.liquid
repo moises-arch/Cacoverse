@@ -427,20 +427,16 @@
       <script src="{{ 'cart-drawer.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
 
-    <!-- Jquery -->
+    <!-- Jquery, Bootstrap, Swiper y scripts del sitio movidos al final para evitar bloqueo -->
     <script src="{{ 'jquery-3.7.1.min.js' | asset_url }}" defer="defer"></script>
-    <!-- Bootstrap -->
     <script src="{{ 'bootstrap.bundle.min.js' | asset_url }}" defer="defer"></script>
-    <!-- Swiper slider -->
     <script src="{{ 'swiper-bundle.min.js' | asset_url }}" defer="defer"></script>
-
-    <!-- Site All Script -->
     <script src="{{ 'scripts.js' | asset_url }}" defer="defer"></script>
 
     {% render 'junip-store-key' %}
 
     <div id="ios-white-bg"></div>
-
   </body>
+
 
 </html>
