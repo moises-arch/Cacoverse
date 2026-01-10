@@ -4846,7 +4846,11 @@ body.template-product .product__media-modal * {
 
 /* Selection Checkbox - Hidden */
 .bundle-card__selection {
-  display: none;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 5;
+  display: block;
 }
 
 .bundle-card__checkbox {
@@ -4861,13 +4865,15 @@ body.template-product .product__media-modal * {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
+  width: 22px;
+  height: 22px;
   border: 1.5px solid #dcdcdc;
-  border-radius: 3px;
+  border-radius: 50%;
   background: #fff;
   transition: all 0.2s;
   color: #fff;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .bundle-card__checkbox:checked+.bundle-card__checkbox-label .bundle-card__checkbox-box {
@@ -4877,8 +4883,8 @@ body.template-product .product__media-modal * {
 
 .bundle-card__checkbox-box .icon-checkmark {
   visibility: hidden;
-  width: 1.2rem;
-  height: 1.2rem;
+  width: 1.4rem;
+  height: 1.4rem;
 }
 
 .bundle-card__checkbox:checked+.bundle-card__checkbox-label .bundle-card__checkbox-box .icon-checkmark {
