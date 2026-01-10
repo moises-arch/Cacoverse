@@ -188,10 +188,22 @@ function focusVisiblePolyfill() {
 
 function pauseAllMedia() {
   document.querySelectorAll('.js-youtube').forEach((video) => {
-    video.contentWindow.postMessage('{"event":"command","func":"' + 'pauseVideo' + '","args":""}', '*');
+    try {
+      if (video.contentWindow) {
+        video.contentWindow.postMessage('{"event":"command","func":"' + 'pauseVideo' + '","args":""}', '*');
+      }
+    } catch (e) {
+      // Silence postMessage origin errors
+    }
   });
   document.querySelectorAll('.js-vimeo').forEach((video) => {
-    video.contentWindow.postMessage('{"method":"pause"}', '*');
+    try {
+      if (video.contentWindow) {
+        video.contentWindow.postMessage('{"method":"pause"}', '*');
+      }
+    } catch (e) {
+      // Silence postMessage origin errors
+    }
   });
   document.querySelectorAll('video').forEach((video) => video.pause());
   document.querySelectorAll('product-model').forEach((model) => {

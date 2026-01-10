@@ -2,85 +2,80 @@
 <html class="js" lang="{{ request.locale.iso_code }}">
   <head>
     <meta charset="utf-8">
+    <script>
+      (function(){
+        /* 
+         * Cacoverse Environment Shield - V2.0
+         * Silencia errores ruidosos de terceros (MetaMask, Shop Pay, postMessage) 
+         * que no afectan la funcionalidad.
+         */
+        const noisy = [
+          'metamask', 'ethereum', 'inpage.js', 'inject_main.js', 'web3', 'wallet',
+          'shop.app', 'csp', 'frame-ancestors', 'postmessage', 'origin', 
+          'globo.formbuilder', 'form builder'
+        ];
+
+        // 1. Interceptor de Consola mejorado (Captura Error objects)
+        const methods = ['log', 'info', 'warn', 'error', 'group', 'groupCollapsed'];
+        methods.forEach(m => {
+          const orig = console[m];
+          console[m] = function(...args) {
+            const msg = args.map(a => {
+              if (typeof a === 'string') return a;
+              if (a instanceof Error) return a.message + a.stack;
+              try { return JSON.stringify(a); } catch(e) { return String(a); }
+            }).join(' ').toLowerCase();
+            if (noisy.some(s => msg.includes(s))) return;
+            orig.apply(console, args);
+          };
+        });
+
+        // 2. Parche postMessage Global (Nivel Window y Window Proxy)
+        const patchPM = (target) => {
+          if (!target || !target.prototype || !target.prototype.postMessage) return;
+          const origPM = target.prototype.postMessage;
+          try {
+            target.prototype.postMessage = function(msg, targetOrigin, transfer) {
+              try {
+                return origPM.call(this, msg, targetOrigin, transfer);
+              } catch (e) {
+                const em = e.message.toLowerCase();
+                if (em.includes('origin') || em.includes('postmessage')) return;
+                console.warn('[Caco PM Trap]', e);
+              }
+            };
+          } catch(e) {}
+        };
+        patchPM(Window);
+
+        // 3. Silenciador de Eventos Globales (Captura temprana)
+        const muteEvent = (e) => {
+          const msg = (e.message || (e.reason && e.reason.message) || '').toLowerCase();
+          const url = (e.filename || '').toLowerCase();
+          if (noisy.some(s => msg.includes(s) || url.includes(s))) {
+            e.stopImmediatePropagation();
+            if (e.preventDefault) e.preventDefault();
+            return true;
+          }
+        };
+        window.addEventListener('error', muteEvent, true);
+        window.addEventListener('unhandledrejection', muteEvent, true);
+
+        // 4. Neutralizador de MetaMask (Previene inyecciones ruidosas si es posible)
+        if (!window.ethereum) {
+          // Si el usuario no tiene ethereum, definimos una versión mínima silenciada 
+          // para que los scripts no intenten conectarse agresivamente.
+          Object.defineProperty(window, 'ethereum', {
+            get: function() { return undefined; }, 
+            configurable: true
+          });
+        }
+      })();
+    </script>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="theme-color" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <link rel="canonical" href="{{ canonical_url }}">
-
-    <script>
-      (function(){
-        /**
-         * Cacoverse Console & Environment Protection
-         * Este script intercepta y silencia errores ruidosos de terceros (MetaMask, Shop Pay, postMessage)
-         * que no afectan la funcionalidad pero saturan la consola.
-         */
-        const noisyStrings = [
-          'form builder', 'globo.formbuilder', 'shop.app', 'csp', 
-          'frame-ancestors', 'postmessage', 'metamask', 'ethereum', 
-          'inpage.js', 'inject_main.js', 'wallet', 'web3',
-          'failed to execute \'postmessage\'', 'target origin provided', 'recipient window\'s origin'
-        ];
-
-        // 1. Interceptar Console: Silenciar errores por contenido
-        const methods = ['log', 'info', 'warn', 'error', 'group', 'groupCollapsed'];
-        methods.forEach(method => {
-          const original = console[method];
-          console[method] = function() {
-            const args = Array.from(arguments);
-            const msg = args.map(a => {
-              try {
-                if (typeof a === 'string') return a;
-                if (a instanceof Error) return a.message + (a.stack || '');
-                return JSON.stringify(a);
-              } catch(e) { return ''; }
-            }).join(' ').toLowerCase();
-            
-            if (noisyStrings.some(s => msg.includes(s))) return;
-            original.apply(console, arguments);
-          };
-        });
-
-        // 2. Patch postMessage: Previene excepciones ruidosas de origen 'null' o mismatch
-        const originalPostMessage = Window.prototype.postMessage;
-        try {
-          Object.defineProperty(Window.prototype, 'postMessage', {
-            value: function(message, targetOrigin, transfer) {
-              try {
-                return originalPostMessage.call(this, message, targetOrigin, transfer);
-              } catch (e) {
-                if (e.name === 'DOMException' || e.name === 'DataCloneError') {
-                  const errMsg = e.message.toLowerCase();
-                  if (errMsg.includes('origin') || errMsg.includes('postmessage')) return;
-                }
-                console.error(e);
-              }
-            },
-            configurable: true,
-            writable: true
-          });
-        } catch(e) {}
-
-        // 3. Silenciar errores de promesas no capturadas (común en extensiones como MetaMask)
-        window.addEventListener('unhandledrejection', function(event) {
-          const reason = event.reason;
-          const msg = (reason && (reason.message || (typeof reason === 'string' ? reason : '')) || '').toLowerCase();
-          if (noisyStrings.some(s => msg.includes(s))) {
-            event.stopImmediatePropagation();
-            event.preventDefault();
-          }
-        }, true);
-
-        // 4. Capturar errores globales (scripts de terceros o extensiones del navegador)
-        window.addEventListener('error', function(event) {
-          const msg = (event.message || '').toLowerCase();
-          const url = (event.filename || '').toLowerCase();
-          if (noisyStrings.some(s => msg.includes(s) || url.includes(s))) {
-            event.stopImmediatePropagation();
-            event.preventDefault();
-          }
-        }, true);
-      })();
-    </script>
 
     {%- if settings.favicon != blank -%}
       <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
