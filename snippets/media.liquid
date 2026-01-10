@@ -17,18 +17,19 @@
   >
     <div class="swiper-wrapper pmedia" aria-live="polite">
       {% for media in product.media %}
+        {%- assign is_first = forloop.first -%}
         <div class="swiper-slide" role="group" aria-label="{{ forloop.index }} de {{ product.media.size }}">
           {%- assign media_color_tokens = media.alt | downcase | split: ',' -%}
-          <img
-            src="{{ media | img_url : '636x' }}"
-            alt="{{ media.alt | strip }}"
-            width="636"
-            height="636"
-            loading="lazy"
-            data-color="{{ media_color_tokens | first | strip | handleize }}"
-            data-color-list="{{ media.alt | downcase | strip | escape }}"
-            class="img-fluid"
-          >
+          {{ media | image_url: width: 1440 | image_tag: 
+            class: 'img-fluid',
+            widths: '375, 550, 750, 1100, 1440',
+            sizes: '(min-width: 1024px) 50vw, 100vw',
+            loading: is_first ? 'eager' : 'lazy',
+            fetchpriority: is_first ? 'high' : 'auto',
+            alt: media.alt | strip,
+            data-color: (media_color_tokens | first | strip | handleize),
+            data-color-list: (media.alt | downcase | strip | escape)
+          }}
         </div>
       {% endfor %}
     </div>
