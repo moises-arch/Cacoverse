@@ -30,7 +30,10 @@
   assign featured_variant = first_available_discount_variant | default: first_discount_variant | default: product.selected_or_first_available_variant
   assign featured_image = featured_variant.featured_image | default: product.featured_image
   assign featured_url = featured_variant.url | default: product.url
-  assign has_discounted_variants = discounted_variants.size > 0
+  assign has_discounted_variants = false
+  if discounted_variants.size > 0
+    assign has_discounted_variants = true
+  endif
   assign badge_limit = 3
 -%}
 
