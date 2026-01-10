@@ -1,6 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
+  if (!window.jQuery || !window.Swiper) {
+    return;
+  }
+
   const swiperInstances = [];
   const $swiperSelector = $('.swiper-container');
+
+  if (!$swiperSelector.length) {
+    return;
+  }
 
   $swiperSelector.each(function (index) {
     const $this = $(this);
@@ -69,25 +77,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // FAQS
-$('.faq-question').on('click', function () {
-  const $question = $(this);
-  const $item = $question.parent();
-  const $answer = $question.next('.faq-answer');
-  const willOpen = !$item.hasClass('active');
+if (window.jQuery) {
+  $('.faq-question').on('click', function () {
+    const $question = $(this);
+    const $item = $question.parent();
+    const $answer = $question.next('.faq-answer');
+    const willOpen = !$item.hasClass('active');
 
-  $('.faq-item').not($item).removeClass('active').find('.faq-question').attr('aria-expanded', 'false');
-  $('.faq-item').not($item).find('.faq-answer').attr('aria-hidden', 'true').slideUp();
+    $('.faq-item').not($item).removeClass('active').find('.faq-question').attr('aria-expanded', 'false');
+    $('.faq-item').not($item).find('.faq-answer').attr('aria-hidden', 'true').slideUp();
 
-  if (willOpen) {
-    $item.addClass('active');
-    $question.attr('aria-expanded', 'true');
-    $answer.attr('aria-hidden', 'false').slideDown();
-  } else {
-    $item.removeClass('active');
-    $question.attr('aria-expanded', 'false');
-    $answer.attr('aria-hidden', 'true').slideUp();
-  }
-});
+    if (willOpen) {
+      $item.addClass('active');
+      $question.attr('aria-expanded', 'true');
+      $answer.attr('aria-hidden', 'false').slideDown();
+    } else {
+      $item.removeClass('active');
+      $question.attr('aria-expanded', 'false');
+      $answer.attr('aria-hidden', 'true').slideUp();
+    }
+  });
+}
 
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -109,142 +119,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 });
-
-
-// document.addEventListener('DOMContentLoaded', () => {
-//   // Delegate button click event to the document body
-//   document.body.addEventListener('click', (e) => {
-
-//     // Temporarily store the current scroll position
-//     //const scrollTop = window.scrollY || document.documentElement.scrollTop;
-//     //const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
-
-//     const target = e.target;
-
-//     // Dynamically fetch the filterDiv and checkboxes to account for AJAX changes
-//     const filterDiv = document.querySelector('.product-type-filter-ul');
-
-//     if (!filterDiv) return; // Exit if filterDiv doesn't exist
-
-//     const checkboxes = filterDiv.querySelectorAll('input[type="checkbox"]');
-
-//     // Handle "All" button
-//     if (target.classList.contains('all-btn')) {
-//       checkboxes.forEach((checkbox) => {
-//         if (checkbox.checked) {
-//           console.log(checkbox); // Log the checkbox
-//           console.log(checkbox.checked); // Log its state
-//           checkbox.click(); // Uncheck using a simulated user click
-//           //window.scrollTo(scrollLeft, scrollTop);
-//         }
-//       });
-
-//       // Add the active class to the "All" button and remove it from other buttons
-//       const buttons = document.querySelectorAll('.filter-btn');
-//       buttons.forEach((btn) => {
-//         btn.classList.remove('active'); // Remove active class from all buttons
-//       });
-//       target.classList.add('active'); // Add active class to the "All" button
-
-//     }
-
-//     // Handle individual checkbox buttons
-//     else if (target.classList.contains('filter-btn')) {
-//       const checkboxId = target.dataset.checkboxId;
-//       const checkbox = document.getElementById(checkboxId);
-
-//       if (checkbox) {
-//         // Uncheck all other checkboxes
-//         checkboxes.forEach((cb) => {
-//           if (cb !== checkbox && cb.checked) {
-//             cb.click(); // Uncheck using a simulated user click
-//           }
-//         });
-
-//         // Check the corresponding checkbox
-//         if (!checkbox.checked) {
-//           checkbox.click(); // Check using a simulated user click
-//           //window.scrollTo(scrollLeft, scrollTop);
-//         }
-//       }
-
-//        // Add the active class to the clicked button and remove it from others
-//       const buttons = document.querySelectorAll('.filter-btn');
-//       buttons.forEach((btn) => {
-//         btn.classList.remove('active'); // Remove active class from all buttons
-//       });
-//       target.classList.add('active'); // Add active class to the clicked button
-
-//     }
-//   });
-
-//   // Function to create buttons dynamically
-//   const createButtonsForCheckboxes = () => {
-//     const filterDiv = document.querySelector('.product-type-filter-ul');
-//     if (!filterDiv) return; // Exit if filterDiv doesn't exist
-
-//     const checkboxes = filterDiv.querySelectorAll('input[type="checkbox"]');
-
-//     if (checkboxes.length > 0) {
-//       let buttonsDiv = document.querySelector('.product-types-filter-buttons');
-//       if (!buttonsDiv) {
-//         buttonsDiv = document.createElement('div');
-//         buttonsDiv.classList.add('product-types-filter-buttons');
-//         filterDiv.parentNode.appendChild(buttonsDiv);
-//       }
-//       buttonsDiv.innerHTML = ''; // Clear existing buttons
-
-//       // Add "All" button
-//       const allButton = document.createElement('button');
-//       if (typeof collectionTitle !== 'undefined') {
-//         console.log(collectionTitle);
-//         allButton.textContent = 'All ' + collectionTitle ;
-//       }else{
-//         allButton.textContent = 'All';
-//       }
-
-//       allButton.type = 'button';
-//       allButton.classList.add('filter-btn', 'all-btn', 'active');
-//       buttonsDiv.appendChild(allButton);
-
-//       // Create buttons for each checkbox
-//       checkboxes.forEach((checkbox) => {
-//         const button = document.createElement('button');
-//         button.textContent = checkbox.value || 'Unnamed';
-//         button.type = 'button';
-//         button.classList.add('filter-btn');
-//         button.dataset.checkboxId = checkbox.id;
-//         buttonsDiv.appendChild(button);
-
-//         // Add 'active' class if the checkbox is already checked
-//         if (checkbox.checked) {
-//           button.classList.add('active');
-//           allButton.classList.remove('active');
-//         }
-
-//       });
-//     } else {
-//       // Remove the buttons div if checkboxes are insufficient
-//       const existingButtonsDiv = document.querySelector('.product-types-filter-buttons');
-//       if (existingButtonsDiv) {
-//         existingButtonsDiv.remove();
-//       }
-//     }
-//   };
-
-//   // Observe changes to filterDiv for AJAX updates
-//   const observer = new MutationObserver(() => {
-//     createButtonsForCheckboxes();
-//   });
-
-//   const filterDiv = document.querySelector('.product-type-filter-ul');
-//   if (filterDiv) {
-//     observer.observe(filterDiv, { childList: true, subtree: true });
-//   }
-
-//   // Initial call to create buttons
-//   createButtonsForCheckboxes();
-// });
 
 
 document.body.addEventListener('click', function (event) {
@@ -338,22 +212,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // Detect when the page is scrolled past the header
 // Detect when the page is scrolled past the header
+let isStickyScrollTicking = false;
 window.addEventListener('scroll', function () {
-  const navbarCollapse = document.querySelector('.navbar-collapse');
-  const header = document.querySelector('.page-width');
-
-  // Check if elements exist before accessing properties
-  if (header && navbarCollapse) {
-    // Check if the header has reached the sticky state
-    if (window.scrollY > header.offsetHeight) {
-      // If the header is sticky, change the `top` value for navbar-collapse
-      navbarCollapse.classList.add('sticky-header');
-    } else {
-      // If the header is not sticky, reset the `top` value for navbar-collapse
-      navbarCollapse.classList.remove('sticky-header');
-    }
+  if (isStickyScrollTicking) {
+    return;
   }
-});
+
+  isStickyScrollTicking = true;
+  requestAnimationFrame(() => {
+    const navbarCollapse = document.querySelector('.navbar-collapse');
+    const header = document.querySelector('.page-width');
+
+    // Check if elements exist before accessing properties
+    if (header && navbarCollapse) {
+      // Check if the header has reached the sticky state
+      if (window.scrollY > header.offsetHeight) {
+        // If the header is sticky, change the `top` value for navbar-collapse
+        navbarCollapse.classList.add('sticky-header');
+      } else {
+        // If the header is not sticky, reset the `top` value for navbar-collapse
+        navbarCollapse.classList.remove('sticky-header');
+      }
+    }
+
+    isStickyScrollTicking = false;
+  });
+}, { passive: true });
 
 
 // Select all anchor tags within the #navbarNav element
@@ -462,4 +346,3 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
-

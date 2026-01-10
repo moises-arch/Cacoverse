@@ -3,50 +3,51 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="theme-color" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <link rel="canonical" href="{{ canonical_url }}">
 
     <script>
-      (function() {
-        const forbiddenKeywords = [
-          "Globo Form Builder",
-          "Powerful Contact Form Builder",
-          "Top 1 Form App",
-          "global merchants",
-          "Learn more:"
-        ];
+      if (window.Shopify && Shopify.designMode) {
+        (function() {
+          const forbiddenKeywords = [
+            "Globo Form Builder",
+            "Powerful Contact Form Builder",
+            "Top 1 Form App",
+            "global merchants",
+            "Learn more:"
+          ];
 
-        const originalConsole = {
-          log: console.log,
-          info: console.info,
-          warn: console.warn,
-          debug: console.debug,
-          error: console.error
-        };
-
-        const createFilteredMethod = (methodName) => {
-          return function(...args) {
-            const shouldFilter = args.some(arg => {
-              if (typeof arg === 'string') {
-                return forbiddenKeywords.some(keyword => arg.includes(keyword));
-              }
-              return false;
-            });
-
-            if (!shouldFilter) {
-              originalConsole[methodName].apply(console, args);
-            }
+          const originalConsole = {
+            log: console.log,
+            info: console.info,
+            warn: console.warn,
+            debug: console.debug,
+            error: console.error
           };
-        };
 
-        console.log = createFilteredMethod('log');
-        console.info = createFilteredMethod('info');
-        console.warn = createFilteredMethod('warn');
-        console.debug = createFilteredMethod('debug');
-        console.error = createFilteredMethod('error');
-      })();
+          const createFilteredMethod = (methodName) => {
+            return function(...args) {
+              const shouldFilter = args.some(arg => {
+                if (typeof arg === 'string') {
+                  return forbiddenKeywords.some(keyword => arg.includes(keyword));
+                }
+                return false;
+              });
+
+              if (!shouldFilter) {
+                originalConsole[methodName].apply(console, args);
+              }
+            };
+          };
+
+          console.log = createFilteredMethod('log');
+          console.info = createFilteredMethod('info');
+          console.warn = createFilteredMethod('warn');
+          console.debug = createFilteredMethod('debug');
+          console.error = createFilteredMethod('error');
+        })();
+      }
     </script>
 
     {%- if settings.favicon != blank -%}
@@ -309,12 +310,27 @@
       }
     </script>
 
-    {{ 'bootstrap.min.css' | asset_url | stylesheet_tag }}
-    {{ 'swiper.min.css' | asset_url | stylesheet_tag }}
-    {{ 'imagehover.min.css' | asset_url | stylesheet_tag }}
+    {%- liquid
+      assign has_swiper = content_for_layout contains 'swiper-container' or content_for_layout contains 'swiper-wrapper' or content_for_layout contains 'class="swiper'
+      assign has_imagehover = content_for_layout contains 'imghvr-'
+      assign has_bootstrap = content_for_layout contains 'data-bs-' or content_for_layout contains 'navbar' or content_for_layout contains 'dropdown' or content_for_layout contains 'accordion' or content_for_layout contains 'modal'
+      assign has_jquery = has_swiper or content_for_layout contains 'faq-question' or content_for_layout contains 'nav-tabs'
+    -%}
+
+    {%- if has_bootstrap -%}
+      {{ 'bootstrap.min.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
+    {%- if has_swiper -%}
+      {{ 'swiper.min.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
+    {%- if has_imagehover -%}
+      {{ 'imagehover.min.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
     {{ 'base.css' | asset_url | stylesheet_tag }}
     {{ 'page-breadcrumb.css' | asset_url | stylesheet_tag }}
-    {{ 'main-product.css' | asset_url | stylesheet_tag }}
+    {%- if template.name == 'product' -%}
+      {{ 'main-product.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
 
     <!-- PERF BOOSTER: difiere terceros y utilidades para long tasks -->
     <style>
@@ -428,11 +444,17 @@
     {%- endif -%}
 
     <!-- Jquery -->
-    <script src="{{ 'jquery-3.7.1.min.js' | asset_url }}" defer="defer"></script>
+    {%- if has_jquery -%}
+      <script src="{{ 'jquery-3.7.1.min.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
     <!-- Bootstrap -->
-    <script src="{{ 'bootstrap.bundle.min.js' | asset_url }}" defer="defer"></script>
+    {%- if has_bootstrap -%}
+      <script src="{{ 'bootstrap.bundle.min.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
     <!-- Swiper slider -->
-    <script src="{{ 'swiper-bundle.min.js' | asset_url }}" defer="defer"></script>
+    {%- if has_swiper -%}
+      <script src="{{ 'swiper-bundle.min.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
 
     <!-- Site All Script -->
     <script src="{{ 'scripts.js' | asset_url }}" defer="defer"></script>
