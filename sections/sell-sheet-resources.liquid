@@ -73,8 +73,7 @@
           {% render 'pagination', paginate: paginate, anchor: '' %}
         {%- endif -%}
       {% endpaginate %} {% endcomment %}
-    <div data-requires-jquery hidden></div>
-    <table id="resourcesTable" class="display">
+    <table id="resourcesTable" class="display" data-requires-jquery>
       <thead>
         <tr>
           <th>Collection</th>
@@ -90,7 +89,7 @@
   
 
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.5/css/dataTables.dataTables.min.css">
-    <script src="https://cdn.datatables.net/2.0.5/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.5/js/dataTables.min.js" defer></script>
 
     <script>
       const STOREFRONT_API_URL = '/api/2025-01/graphql.json'; // auto-resolves to your shop

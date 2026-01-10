@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+const initSwipers = () => {
   if (!window.jQuery || !window.Swiper) {
     return;
   }
@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   $swiperSelector.each(function (index) {
     const $this = $(this);
-    const uniqueClass = 'swiper-slider-' + index;
+    const uniqueClass = `swiper-slider-${index}`;
     $this.addClass(uniqueClass);
 
     const dragSize = $this.data('drag-size') || 50;
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextEl = $this.find('.swiper-button-next')[0];
     const prevEl = $this.find('.swiper-button-prev')[0];
 
-    const swiper = new Swiper('.' + uniqueClass, {
+    const swiper = new Swiper(`.${uniqueClass}`, {
       direction: 'horizontal',
       loop: loop,
       freeMode: freeMode,
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
         autoplay: {
           delay: 5000,
           disableOnInteraction: false,
-        }
+        },
       }),
       breakpoints: {
         1280: { slidesPerView: slidesDesktop },
@@ -48,18 +48,18 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       navigation: {
         nextEl: nextEl,
-        prevEl: prevEl
+        prevEl: prevEl,
       },
       scrollbar: {
         el: scrollbarEl,
         draggable: true,
-        dragSize: dragSize
+        dragSize: dragSize,
       },
       pagination: {
         el: paginationEl,
         clickable: true,
         dynamicBullets: true,
-      }
+      },
     });
 
     swiperInstances.push(swiper);
@@ -70,14 +70,17 @@ document.addEventListener('DOMContentLoaded', () => {
       swiperInstances[index].update();
     });
   });
-});
+};
 
 // Button Hover Effect (Handled via CSS for better performance)
 
 
 
-// FAQS
-if (window.jQuery) {
+const initFaqs = () => {
+  if (!window.jQuery) {
+    return;
+  }
+
   $('.faq-question').on('click', function () {
     const $question = $(this);
     const $item = $question.parent();
@@ -97,29 +100,61 @@ if (window.jQuery) {
       $answer.attr('aria-hidden', 'true').slideUp();
     }
   });
-}
+};
 
-
-document.addEventListener("DOMContentLoaded", function () {
-  // Handle series buttons
-  const seriesButtons = document.querySelectorAll(".series-button");
-  seriesButtons.forEach((button) => {
-    button.addEventListener("click", function () {
-      seriesButtons.forEach((btn) => btn.classList.remove("active"));
-      this.classList.add("active");
+const initActiveButtonGroup = (selector) => {
+  const buttons = document.querySelectorAll(selector);
+  if (!buttons.length) {
+    return;
+  }
+  buttons.forEach((button) => {
+    button.addEventListener('click', function () {
+      buttons.forEach((btn) => btn.classList.remove('active'));
+      this.classList.add('active');
     });
   });
+};
 
-  // Handle size buttons
-  const sizeButtons = document.querySelectorAll(".size-button");
-  sizeButtons.forEach((button) => {
-    button.addEventListener("click", function () {
-      sizeButtons.forEach((btn) => btn.classList.remove("active"));
-      this.classList.add("active");
+const initDropdownHover = () => {
+  if (!window.matchMedia('(min-width: 993px)').matches) {
+    return;
+  }
+
+  const dropdowns = document.querySelectorAll('.nav-item.dropdown');
+
+  dropdowns.forEach((dropdown) => {
+    let timer;
+    const menu = dropdown.querySelector('.dropdown-menu');
+    if (!menu) {
+      return;
+    }
+
+    dropdown.addEventListener('mouseenter', () => {
+      clearTimeout(timer);
+      dropdown.classList.add('show');
+      menu.classList.add('show');
+    });
+
+    dropdown.addEventListener('mouseleave', () => {
+      timer = setTimeout(() => {
+        dropdown.classList.remove('show');
+        menu.classList.remove('show');
+      }, 150);
     });
   });
+};
+
+document.addEventListener('DOMContentLoaded', function () {
+  initSwipers();
+  initFaqs();
+  initActiveButtonGroup('.series-button');
+  initActiveButtonGroup('.size-button');
+  initDropdownHover();
 });
 
+
+const parsePriceRange = (priceRange) =>
+  priceRange.split('-').map((value) => value.trim().replace('$', ''));
 
 document.body.addEventListener('click', function (event) {
   // Check if the clicked element is a checkbox within the custom-price-filter-ul
@@ -129,11 +164,14 @@ document.body.addEventListener('click', function (event) {
     // Get references to the GTE and LTE inputs
     const gteInput = document.getElementById('Filter-Price-GTE');
     const lteInput = document.getElementById('Filter-Price-LTE');
+    if (!gteInput || !lteInput) {
+      return;
+    }
 
     if (input.checked) {
       // If the checkbox is checked, update the values
       const priceRange = input.dataset.priceRange;
-      const [gte, lte] = priceRange.split('-').map(value => value.trim().replace('$', ''));
+      const [gte, lte] = parsePriceRange(priceRange);
       gteInput.value = gte || '';
       lteInput.value = lte || '';
     } else {
@@ -144,7 +182,7 @@ document.body.addEventListener('click', function (event) {
         // Get the price range of the first checked checkbox
         const firstChecked = checkedCheckboxes[0];
         const priceRange = firstChecked.dataset.priceRange;
-        const [gte, lte] = priceRange.split('-').map(value => value.trim().replace('$', ''));
+        const [gte, lte] = parsePriceRange(priceRange);
         gteInput.value = gte || '';
         lteInput.value = lte || '';
       } else {
@@ -185,32 +223,7 @@ document.body.addEventListener('click', function (event) {
 //   });
 // });
 
-document.addEventListener("DOMContentLoaded", function () {
-  if (window.matchMedia("(min-width: 993px)").matches) {
-    const dropdowns = document.querySelectorAll(".nav-item.dropdown");
 
-    dropdowns.forEach(dropdown => {
-      let timer;
-      const menu = dropdown.querySelector(".dropdown-menu");
-
-      dropdown.addEventListener("mouseenter", () => {
-        clearTimeout(timer);
-        dropdown.classList.add("show");
-        menu.classList.add("show");
-      });
-
-      dropdown.addEventListener("mouseleave", () => {
-        timer = setTimeout(() => {
-          dropdown.classList.remove("show");
-          menu.classList.remove("show");
-        }, 150);
-      });
-    });
-  }
-});
-
-
-// Detect when the page is scrolled past the header
 // Detect when the page is scrolled past the header
 let isStickyScrollTicking = false;
 window.addEventListener('scroll', function () {
