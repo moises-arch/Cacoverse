@@ -1739,6 +1739,10 @@
     box-shadow:0 4px 15px rgba(0,0,0,0.08);
   }
 
+  .caco-header-bottom .caco-container {
+    position: relative;
+  }
+
 
   /* 🔧 Loader hard-off: ocultar completamente en desktop y mobile */
   .caco-loading-icon,
@@ -2381,10 +2385,20 @@
     opacity:1;visibility:visible;transform:translateY(0);
   }
 
+  .caco-nav-item.mega-menu{
+    position: static;
+  }
+
   .caco-nav-item.mega-menu>.caco-dropdown{
-    width:940px;max-width:90vw;
-    border-radius:0 0 12px 12px;
+    width:1180px;max-width:96vw;
+    border-radius:0 0 16px 16px;
     border:none;
+    left: 50% !important;
+    transform: translateX(-50%) translateY(4px);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  }
+  .caco-nav-item.mega-menu:hover>.caco-dropdown{
+    transform: translateX(-50%) translateY(0);
   }
 
   .caco-mega-sidebar-link--no-panel{
@@ -2407,7 +2421,7 @@
 
   .caco-mega-container{display:flex;min-height:380px;}
   .caco-mega-sidebar{
-    width:{{ section.settings.mega_sidebar_width | default: 27 }}%;
+    width:24%;
     min-width: 270px; /* Asegura espacio suficiente para "Microfiber Towels" */
     background:{{ section.settings.mega_sidebar_bg | default: '#f9fafb' }};
     border-right:none;
@@ -2519,12 +2533,12 @@
     background:linear-gradient(90deg, rgba(225,29,72,0.2), rgba(225,29,72,0.1));
   }
 
-  .caco-mega-content{flex:1;padding:24px 28px;}
+  .caco-mega-content{flex:1;padding:24px 40px;}
   .caco-mega-panel{display:none;animation:fadeIn .3s ease;}
   .caco-mega-panel.active{display:block;}
   .caco-mega-panel-title{
-    font-size:22px;font-weight:700;color:#111;
-    margin-bottom:24px;padding-bottom:12px;
+    font-size:24px;font-weight:700;color:#111;
+    margin-bottom:28px;padding-bottom:14px;
     border-bottom:1px solid var(--border-color);
     display:flex;align-items:center;justify-content:space-between;gap:12px;
   }
@@ -2535,14 +2549,16 @@
 
   .caco-mega-grid{
     display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:14px;
-    margin-bottom:14px;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px 32px;
+    margin-bottom:32px;
+    width: 100%;
   }
   .caco-mega-grid li a{
     font-size:14px;color:#555;
     display:flex;align-items:center;gap:8px;
     font-weight:500;
+    padding: 6px 0;
   }
   .caco-mega-grid li a:hover{color:var(--primary-blue);text-decoration:underline;}
 
