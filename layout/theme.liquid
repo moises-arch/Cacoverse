@@ -9,20 +9,30 @@
 
     <script>
       (function(){
-        // Lista de cadenas que detectamos para silenciar logs ruidosos de apps y extensiones
+        /**
+         * Cacoverse Console & Environment Protection
+         * Este script intercepta y silencia errores ruidosos de terceros (MetaMask, Shop Pay, postMessage)
+         * que no afectan la funcionalidad pero saturan la consola.
+         */
         const noisyStrings = [
           'form builder', 'globo.formbuilder', 'shop.app', 'csp', 
           'frame-ancestors', 'postmessage', 'metamask', 'ethereum', 
-          'inpage.js', 'inject_main.js', 'wallet', 'web3'
+          'inpage.js', 'inject_main.js', 'wallet', 'web3',
+          'failed to execute \'postmessage\'', 'target origin provided', 'recipient window\'s origin'
         ];
 
+        // 1. Interceptar Console: Silenciar errores por contenido
         const methods = ['log', 'info', 'warn', 'error', 'group', 'groupCollapsed'];
         methods.forEach(method => {
           const original = console[method];
           console[method] = function() {
             const args = Array.from(arguments);
             const msg = args.map(a => {
-              try { return typeof a === 'string' ? a : JSON.stringify(a); } catch(e) { return ''; }
+              try {
+                if (typeof a === 'string') return a;
+                if (a instanceof Error) return a.message + (a.stack || '');
+                return JSON.stringify(a);
+              } catch(e) { return ''; }
             }).join(' ').toLowerCase();
             
             if (noisyStrings.some(s => msg.includes(s))) return;
@@ -30,22 +40,45 @@
           };
         });
 
-        // Silenciar errores de promesas no capturadas (común en MetaMask/Web3)
+        // 2. Patch postMessage: Previene excepciones ruidosas de origen 'null' o mismatch
+        const originalPostMessage = Window.prototype.postMessage;
+        try {
+          Object.defineProperty(Window.prototype, 'postMessage', {
+            value: function(message, targetOrigin, transfer) {
+              try {
+                return originalPostMessage.call(this, message, targetOrigin, transfer);
+              } catch (e) {
+                if (e.name === 'DOMException' || e.name === 'DataCloneError') {
+                  const errMsg = e.message.toLowerCase();
+                  if (errMsg.includes('origin') || errMsg.includes('postmessage')) return;
+                }
+                console.error(e);
+              }
+            },
+            configurable: true,
+            writable: true
+          });
+        } catch(e) {}
+
+        // 3. Silenciar errores de promesas no capturadas (común en extensiones como MetaMask)
         window.addEventListener('unhandledrejection', function(event) {
-          const msg = (event.reason && event.reason.message || '').toLowerCase();
+          const reason = event.reason;
+          const msg = (reason && (reason.message || (typeof reason === 'string' ? reason : '')) || '').toLowerCase();
           if (noisyStrings.some(s => msg.includes(s))) {
+            event.stopImmediatePropagation();
             event.preventDefault();
           }
-        });
+        }, true);
 
-        // Capturar errores globales para silenciar los que vienen de dominios o scripts específicos
-        window.onerror = function(msg, url, line, col, error) {
-          const errorMessage = (msg || '').toLowerCase();
-          if (noisyStrings.some(s => errorMessage.includes(s)) || (url && noisyStrings.some(s => url.toLowerCase().includes(s)))) {
-            return true; // Previene el log en consola
+        // 4. Capturar errores globales (scripts de terceros o extensiones del navegador)
+        window.addEventListener('error', function(event) {
+          const msg = (event.message || '').toLowerCase();
+          const url = (event.filename || '').toLowerCase();
+          if (noisyStrings.some(s => msg.includes(s) || url.includes(s))) {
+            event.stopImmediatePropagation();
+            event.preventDefault();
           }
-          return false;
-        };
+        }, true);
       })();
     </script>
 
