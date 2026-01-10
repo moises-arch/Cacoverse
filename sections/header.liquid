@@ -108,8 +108,21 @@
   .caco-area-center { display: flex; justify-content: center; }
   .caco-area-right { display: flex; justify-content: flex-end; }
 
-  .caco-logo { display: flex; align-items: center; min-width: 100px; }
-  .caco-logo-img { display: block; height: auto; object-fit: contain; max-height: 40px; max-width: 200px; transition: none !important; }
+  .caco-logo { 
+    display: flex; 
+    align-items: center; 
+    min-width: {{ section.settings.logo_width }}px;
+    height: 52px;
+  }
+  .caco-logo-img { 
+    display: block; 
+    height: auto; 
+    object-fit: contain; 
+    max-height: 52px; 
+    max-width: {{ section.settings.logo_width | plus: 20 }}px; 
+    width: {{ section.settings.logo_width }}px;
+    transition: none !important; 
+  }
 
   /* Enforce search bar skeleton */
   .caco-search-bar-container {
@@ -187,7 +200,7 @@
     margin: 0 !important;
     padding: 0 !important;
     gap: 24px;
-    visibility: hidden; /* Oculto hasta que el layout esté listo */
+    visibility: visible !important; /* Visible desde el inicio para evitar parpadeos */
   }
 
   .caco-is-ready .caco-nav-list,
