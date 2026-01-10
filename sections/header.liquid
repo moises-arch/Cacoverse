@@ -2390,15 +2390,21 @@
   }
 
   .caco-nav-item.mega-menu>.caco-dropdown{
-    width:1180px;max-width:96vw;
-    border-radius:0 0 16px 16px;
-    border:none;
-    left: 50% !important;
-    transform: translateX(-50%) translateY(4px);
+    width: 100vw;
+    left: 0 !important;
+    right: 0 !important;
+    max-width: 100vw;
+    border-radius: 0;
+    border: none;
+    transform: translateY(4px);
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    margin-left: calc(-1 * (100vw - 100%) / 2); /* Breakout from container if necessary */
   }
+  
+  /* Alternative fix if previous breakout is tricky: use fixed width if container is known, 
+     but 100vw + left:0 is the user's "Full Width" request. */
   .caco-nav-item.mega-menu:hover>.caco-dropdown{
-    transform: translateX(-50%) translateY(0);
+    transform: translateY(0);
   }
 
   .caco-mega-sidebar-link--no-panel{
@@ -2419,14 +2425,20 @@
     color:var(--primary-blue);
   }
 
-  .caco-mega-container{display:flex;min-height:380px;}
+  .caco-mega-container{
+    display:flex;
+    min-height:420px;
+    max-width: 1560px;
+    margin: 0 auto;
+    width: 100%;
+  }
   .caco-mega-sidebar{
-    width:24%;
-    min-width: 270px; /* Asegura espacio suficiente para "Microfiber Towels" */
+    width: 22%;
+    min-width: 280px;
     background:{{ section.settings.mega_sidebar_bg | default: '#f9fafb' }};
-    border-right:none;
-    padding:16px 0;
-    border-bottom-left-radius:12px;
+    border-right: 1px solid var(--border-color);
+    padding:24px 0;
+    border-bottom-left-radius:0;
   }
   .caco-mega-sidebar ul{margin:0;padding:0;}
   .caco-mega-sidebar-link{
@@ -2533,7 +2545,7 @@
     background:linear-gradient(90deg, rgba(225,29,72,0.2), rgba(225,29,72,0.1));
   }
 
-  .caco-mega-content{flex:1;padding:24px 40px;}
+  .caco-mega-content{flex:1;padding:32px 50px;}
   .caco-mega-panel{display:none;animation:fadeIn .3s ease;}
   .caco-mega-panel.active{display:block;}
   .caco-mega-panel-title{
@@ -2549,8 +2561,8 @@
 
   .caco-mega-grid{
     display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:20px 32px;
+    grid-template-columns:repeat(3,1fr);
+    gap:24px 40px;
     margin-bottom:32px;
     width: 100%;
   }
