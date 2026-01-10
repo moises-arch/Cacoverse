@@ -57,56 +57,90 @@
     --caco-header-height: 178px;
     --announcement-bg: #0051c3;
     --header-bg: #ffffff;
-    --primary-blue: #0051c3; /* Definimos esto aquí por si se usa en nav */
+    --primary-blue: #0051c3;
+    --header-text: #1f2933;
+    --border-color: #e5e7eb;
   }
   
-  /* Evita el salto de contenido inyectando el padding antes de que cargue el CSS completo */
   html.has-caco-sticky body,
   body.has-caco-sticky {
     padding-top: var(--caco-header-height) !important;
   }
 
-  /* OPTIMIZACIÓN: El header es visible desde el inicio para evitar penalizaciones en LCP */
   .caco-header-wrapper {
     position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 200;
     background: var(--header-bg);
-    /* Se elimina opacity: 0 para que el LCP sea instantáneo */
     opacity: 1;
     visibility: visible;
-    /* Chrome stability fixes */
     transform: translateZ(0);
     backface-visibility: hidden;
     perspective: 1000;
     will-change: transform;
-    border-bottom: 1px solid rgba(0,0,0,0.05); /* Separación inicial sutil */
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
   }
 
-  /* Pre-layout para la barra de anuncios */
+  .caco-container {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .caco-header-top {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--header-bg);
+    width: 100%;
+    position: relative;
+    z-index: 160;
+  }
+
+  .caco-grid-container {
+    display: grid;
+    align-items: center;
+    gap: 24px;
+    grid-template-columns: auto 1fr auto;
+  }
+
+  .caco-area-left { display: flex; align-items: center; gap: 10px; position: relative; }
+  .caco-area-center { display: flex; justify-content: center; }
+  .caco-area-right { display: flex; justify-content: flex-end; }
+
+  .caco-logo { display: flex; align-items: center; min-width: 150px; } /* Min-width prevents layout jump */
+  .caco-logo-img { display: block; height: auto; object-fit: contain; max-height: 64px; width: 100%; transition: none !important; }
+
+  /* Enforce search bar skeleton */
+  .caco-search-bar-container {
+    width: 100%;
+    max-width: 900px;
+    position: relative;
+  }
+  .caco-search-input {
+    width: 100%;
+    height: 50px;
+    background: #fff;
+    border: 1px solid #d1d5db;
+    border-radius: 16px !important;
+    padding: 14px 52px;
+  }
+
   .caco-announcement-bar {
     height: 44px;
     background: var(--announcement-bg);
     overflow: hidden;
   }
 
-  /* 🚫 DEFENSIVE HIDING:
-     Excluimos estos elementos del árbol de renderizado inicial por completo.
-     Esto evita que el navegador gaste recursos calculando su layout o 
-     descargando iconos secundarios antes de lo necesario. */
-  /* 🚫 DEFENSIVE HIDING:
-     Solo ocultamos lo estrictamente necesario para evitar Layout Shift masivo,
-     pero permitiendo que el navegador sepa que existen. */
   .caco-dropdown,
   .caco-predictive-results,
   .caco-help-dropdown,
   .caco-industries-dropdown,
   .caco-partner-dropdown,
   .caco-mobile-drawer {
-    display: none; /* Se mantiene none pero sin !important para que JS lo maneje */
+    display: none;
   }
 
-  /* Restauramos el renderizado una vez que el header está estable */
   .caco-is-ready .caco-dropdown,
   .caco-is-ready .caco-predictive-results,
   .caco-is-ready .caco-help-dropdown,
@@ -117,72 +151,45 @@
     opacity: 0;
     visibility: hidden;
   }
-  
-  /* Caso especial para el mega-menu container */
-  .caco-is-ready .caco-nav-item.mega-menu > .caco-dropdown {
-    display: flex !important;
-  }
 
-
-  /* Fix SVG Flicker */
+  /* SVG & Icons Base */
   .caco-header-wrapper svg {
     display: inline-block;
     vertical-align: middle;
-    width: 24px;   /* Tamaño base para iconos */
-    height: 24px;
+    width: 24px; height: 24px;
     flex-shrink: 0;
   }
-  .caco-search-icon-svg { width: 22px; height: 22px; }
-  .caco-cart-icon svg { width: 24px; height: 24px; }
-  .caco-mobile-menu-toggle svg,
-  .caco-mobile-close svg { width: 24px; height: 24px; }
-  .caco-nav-aux-icon svg { width: 22px; height: 22px; } /* Help/Industries icon size */
-  .caco-search-icon-svg { width: 18px; height: 18px; }
 
   /* 🚫 CRITICAL: HIDE MOBILE ELEMENTS ON DESKTOP */
-  /* This prevents the flash of mobile icons/menus before media queries load */
   .caco-mobile-toggle,
   .caco-search-icon--mobile,
-  .caco-mobile-drawer-search,
-  .caco-mobile-only-ann,
   .md-only {
     display: none !important;
   }
 
-  /* Show them only on mobile via media query */
   @media (max-width: 1024px) {
+    :root { --caco-header-height: 130px; }
+    .caco-grid-container { grid-template-columns: auto 1fr auto; }
+    .caco-area-center { display: none; }
+    .caco-logo { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); min-width: auto; }
+    .caco-logo-img { max-height: 34px; width: auto; }
     .caco-mobile-toggle { display: inline-flex !important; }
     .caco-search-icon--mobile { display: flex !important; }
-    .caco-mobile-drawer-search { display: block !important; }
-    .caco-mobile-only-ann { display: block !important; }
     .md-only { display: block !important; }
   }
 
-  /* 🚫 FORZAR ESTADO INICIAL SIN TRANSICIONES (Evita flicker en Chrome) */
-  .caco-header-wrapper * {
-    transition: none !important;
-  }
-  .caco-header-wrapper.caco-is-ready * {
-    /* EVITAR transition: all; en el estado inicial para Chrome */
-    transition: background 0.2s, color 0.16s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s; 
-  }
-  .caco-header-wrapper.caco-is-ready .caco-dropdown,
-  .caco-header-wrapper.caco-is-ready .caco-partner-dropdown,
-  .caco-header-wrapper.caco-is-ready .caco-help-dropdown,
-  .caco-header-wrapper.caco-is-ready .caco-industries-dropdown {
-    transition: opacity 0.2s ease-out, transform 0.2s ease-out, visibility 0.2s !important;
+  .caco-header-wrapper * { transition: none !important; }
+  
+  /* Reset esencial para evitar el "ghost load" de listas sin estilo */
+  .caco-nav-list {
+    display: flex !important;
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 24px;
+    visibility: hidden; /* Oculto hasta que el layout esté listo */
   }
 
-  /* Skeleton de búsqueda para evitar Layout Shift */
-  .caco-search-input {
-    height: 50px;
-    border-radius: 16px;
-    border: 1px solid #d1d5db;
-    background: #fff;
-    width: 100%;
-  }
-
-  /* Aseguramos que la navegación sea visible solo cuando esté lista */
   .caco-is-ready .caco-nav-list,
   .has-caco-sticky .caco-nav-list {
     visibility: visible !important;
@@ -1905,53 +1912,7 @@
 /* ----------------------------------------------------------------------------
    4.5 Header Top & Tools (Logo, Center Area, Cart/User Icons)
    ---------------------------------------------------------------------------- */
-  .caco-header-top{
-    padding:16px 0;
-    border-bottom:1px solid var(--border-color);
-    background-color:var(--header-bg);
-    width:100%;
-    position:relative;
-    z-index:160;
-  }
-  .caco-grid-container{
-    display:grid;
-    align-items:center;
-    gap:24px;
-    grid-template-columns:auto 1fr auto;
-  }
-  .caco-area-left{display:flex;align-items:center;gap:10px;position:relative;}
-  .caco-area-center{display:flex;justify-content:center;}
-  .caco-area-right{display:flex;justify-content:flex-end;}
-
-  .caco-logo{display:flex;align-items:center;}
-  .caco-logo-text{font-size:26px;font-weight:800;color:var(--header-text);letter-spacing:-.5px;}
-  .caco-logo-img{display:block;height:auto;object-fit:contain;max-height:64px;max-width:100%;}
-
-  @media (max-width:1024px){
-    .caco-grid-container{
-      grid-template-columns:auto 1fr auto;
-    }
-
-    .caco-area-center{
-      display:none;
-    }
-
-    .caco-area-left{
-      position:static;
-    }
-
-    .caco-logo{
-      position:absolute;
-      left:50%;
-      top:50%;
-      transform:translate(-50%, -50%);
-    }
-
-    .caco-logo-img{
-      max-height:34px;
-      width:auto;
-    }
-  }
+  /* Redundant styles removed to prevent conflicts and FOUC */
 
   .caco-mobile-toggle{
     display:inline-flex;
