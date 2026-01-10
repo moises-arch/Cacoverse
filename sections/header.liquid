@@ -170,7 +170,8 @@
   }
   .caco-header-bottom .caco-container {
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
+    align-items: center;
   }
 
   .caco-announcement-bar {
@@ -187,7 +188,7 @@
     width: 100%;
   }
   .caco-announcement-slide { display: none; }
-  .caco-announcement-slide:first-child { display: block; }
+  .caco-announcement-slide.active { display: block !important; }
 
   .caco-dropdown,
   .caco-predictive-results,
@@ -196,6 +197,13 @@
   .caco-partner-dropdown,
   .caco-mobile-drawer {
     display: none;
+  }
+
+  .caco-nav {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100%;
   }
 
   .caco-is-ready .caco-dropdown,
