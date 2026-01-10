@@ -138,6 +138,20 @@
     border-radius: 16px !important;
     padding: 14px 52px;
     font-size: 15px;
+    transition: background 0.2s ease;
+  }
+
+  /* 🧪 DEFERRED SEARCH BAR (Anti-Ghosting) */
+  .caco-search-bar-container {
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    pointer-events: none;
+  }
+  .caco-is-ready .caco-search-bar-container {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
   }
 
   /* 🔗 NAVIGATION CRITICAL (Ensure immediate visibility) */
@@ -204,7 +218,8 @@
   .caco-help-dropdown,
   .caco-industries-dropdown,
   .caco-partner-dropdown,
-  .caco-mobile-drawer {
+  .caco-mobile-drawer,
+  .caco-search-bar-container--deferred {
     display: none;
   }
 
@@ -337,10 +352,16 @@
   (function() {
     try {
       var w = document.querySelector('.caco-header-wrapper');
-      if(w) w.classList.add('caco-is-ready');
       document.documentElement.classList.add('has-caco-sticky');
       var h = window.innerWidth <= 1024 ? '130px' : '178px';
       document.documentElement.style.setProperty('--caco-header-height', h);
+      
+      // Revelado progresivo para evitar "ghosting"
+      if(w) {
+        setTimeout(function() {
+          w.classList.add('caco-is-ready');
+        }, 100);
+      }
     } catch (e) {}
   })();
 </script>
