@@ -137,6 +137,40 @@
     border: 1px solid #d1d5db;
     border-radius: 16px !important;
     padding: 14px 52px;
+    font-size: 15px;
+  }
+
+  /* 🔗 NAVIGATION CRITICAL (Ensure immediate visibility) */
+  .caco-header-bottom {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    background: #fff;
+    border-top: 1px solid var(--border-color);
+    position: relative;
+    z-index: 100;
+  }
+  .caco-nav-list {
+    display: flex !important;
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 12px 0 !important;
+    gap: 30px;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  .caco-nav-item { list-style: none !important; margin: 0; position: relative; }
+  .caco-nav-link { 
+    font-weight: 700; 
+    color: #1f2933; 
+    text-decoration: none; 
+    font-size: 14px; 
+    display: block;
+    padding: 8px 0;
+  }
+  .caco-header-bottom .caco-container {
+    display: flex;
+    justify-content: flex-start;
   }
 
   .caco-announcement-bar {
@@ -239,23 +273,7 @@
     .md-only { display: block !important; }
   }
 
-  /* Navegación visible desde el inicio pero con estructura controlada */
-  .caco-nav-list {
-    display: flex !important;
-    list-style: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    gap: 30px;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
-  /* Asegurar que los items no tengan bullets */
-  .caco-nav-item { list-style: none !important; margin: 0; }
-  .caco-nav-link { font-weight: 700; color: #1f2933; text-decoration: none; font-size: 14px; }
-
-  .caco-is-ready .caco-nav-list {
-    visibility: visible !important;
-  }
+  /* Redundant ready styles removed */
   
   /* Gradiente de separación sutil */
   .caco-header-bottom::after {
@@ -276,7 +294,9 @@
   (function() {
     try {
       document.documentElement.classList.add('has-caco-sticky');
-      var h = window.innerWidth <= 768 ? '130px' : '178px';
+      var w = document.querySelector('.caco-header-wrapper');
+      if(w) w.classList.add('caco-is-ready');
+      var h = window.innerWidth <= 1024 ? '130px' : '178px';
       document.documentElement.style.setProperty('--caco-header-height', h);
     } catch (e) {}
   })();
@@ -1768,9 +1788,8 @@
 
   .caco-header-wrapper.caco-is-ready .caco-announcement-bar,
   .caco-header-wrapper.caco-is-ready .caco-header-bottom {
+    /* Eliminamos transiciones de opacidad para que sea instantáneo */
     transition:
-      transform .25s ease,
-      opacity .25s ease,
       max-height .25s ease,
       padding .25s ease,
       border-width .25s ease;
