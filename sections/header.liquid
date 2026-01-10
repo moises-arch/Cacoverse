@@ -99,7 +99,7 @@
 
   .caco-grid-container {
     display: grid;
-    grid-template-columns: 1fr auto 1fr; /* Centrado absoluto: Col 1 y 3 iguales */
+    grid-template-columns: 1fr 700px 1fr; /* Col central fija a 700px, laterales iguales para centrado */
     align-items: center;
     gap: 24px;
     width: 100%;
@@ -126,8 +126,8 @@
 
   /* Enforce search bar skeleton */
   .caco-search-bar-container {
-    width: 60vw; /* Toma una porción proporcional del viewport */
-    max-width: 900px; /* Pero no excede un tamaño razonable para la vista */
+    width: 700px; /* Ancho exacto solicitado por el usuario */
+    max-width: 1000px; 
     position: relative;
   }
   .caco-search-input {
