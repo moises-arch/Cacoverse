@@ -570,7 +570,7 @@
             data-default-compare="{{ primary_variant.compare_at_price | money }}"
             data-default-compare-raw="{{ primary_variant.compare_at_price }}"
             data-default-sku="{{ primary_variant.sku }}"
-            data-default-image="{{ main_image | image_url: width: 600 }}"
+            data-default-image="{{ main_image | image_url: width: 350 }}"
             data-default-image-alt="{{ main_image.alt | default: product.title | escape }}"
           >
 
@@ -579,18 +579,18 @@
             <a href="{{ primary_variant.url | default: product.url }}" class="wd40-card-link" aria-label="{{ product.title }}" class="js-product-link">
               {% if main_image %}
                 <img
-                  src="{{ main_image | image_url: width: 600 }}"
+                  src="{{ main_image | image_url: width: 350 }}"
                   alt="{{ main_image.alt | escape }}"
                   class="wd40-card-image"
                   loading="lazy"
                   width="{{ main_image.width }}"
                   height="{{ main_image.height }}"
-                  data-default-src="{{ main_image | image_url: width: 600 }}"
+                  data-default-src="{{ main_image | image_url: width: 350 }}"
                   data-default-alt="{{ main_image.alt | escape }}"
                 >
                 {% if product.images.size > 1 %}
                   <img
-                    src="{{ product.images[1] | image_url: width: 600 }}"
+                    src="{{ product.images[1] | image_url: width: 350 }}"
                     alt="{{ product.images[1].alt | default: product.title | escape }}"
                     class="wd40-card-image-hover"
                     loading="lazy"
@@ -693,7 +693,7 @@
                         data-variant-compare-raw="{{ variant_for_color.compare_at_price }}"
                         data-variant-sku="{{ variant_for_color.sku }}"
                         {% if variant_for_color.image %}
-                          data-variant-image="{{ variant_for_color.image | image_url: width: 600 }}"
+                          data-variant-image="{{ variant_for_color.image | image_url: width: 350 }}"
                           data-variant-image-alt="{{ variant_for_color.image.alt | default: product.title | escape }}"
                         {% endif %}
                       {% endif %}
@@ -752,7 +752,7 @@
                         data-variant-compare-raw="{{ variant_for_color.compare_at_price }}"
                         data-variant-sku="{{ variant_for_color.sku }}"
                         {% if variant_for_color.image %}
-                          data-variant-image="{{ variant_for_color.image | image_url: width: 600 }}"
+                          data-variant-image="{{ variant_for_color.image | image_url: width: 350 }}"
                           data-variant-image-alt="{{ variant_for_color.image.alt | default: product.title | escape }}"
                         {% endif %}
                       {% endif %}

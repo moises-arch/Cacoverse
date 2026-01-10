@@ -85,7 +85,7 @@
            {% for product in block.settings.collection_id.products %}
             productColorImageMap["{{ product.id }}"] = {
               {% for variant in product.variants %}
-                "{{ variant.option1 | downcase }}": "{{ variant.featured_image | img_url: '342x' }}"{% unless forloop.last %},{% endunless %}
+                "{{ variant.option1 | downcase }}": "{{ variant.featured_image | img_url: '350x' }}"{% unless forloop.last %},{% endunless %}
               {% endfor %}
             };
              {% endfor %}
