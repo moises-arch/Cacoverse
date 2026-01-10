@@ -22,6 +22,21 @@
     
     assign first_vid = sorted_videos[0]
     assign first_file = first_vid.video_file.value | default: first_vid.video_file
+    assign first_file_url = nil
+    if first_file
+      if first_file.sources and first_file.sources.size > 0
+        assign first_source = first_file.sources | where: 'format', 'mp4' | first
+        if first_source
+          assign first_file_url = first_source.url
+        else
+          assign first_file_url = first_file.sources[0].url
+        endif
+      elsif first_file.url
+        assign first_file_url = first_file.url
+      else
+        assign first_file_url = first_file | file_url
+      endif
+    endif
     assign first_url = first_vid.videos_url.value | first | default: first_vid.videos_url.value | default: first_vid.videos_url
     assign first_url = first_url | remove: '["' | remove: '"]'
     
@@ -34,7 +49,7 @@
       assign video_cover_image = first_thumb | image_url: width: 800
     elsif first_file.preview_image
        assign video_cover_image = first_file.preview_image | image_url: width: 800
-    elsif first_file.url
+    elsif first_file_url != blank
        assign video_cover_image = product.featured_media | image_url: width: 800
     elsif first_url contains 'youtube' or first_url contains 'youtu.be'
        assign yt_id = first_url | split: 'v=' | last | split: '&' | first | split: '/' | last
@@ -703,6 +718,21 @@
 
                         assign v_thumb = nil
                         assign file_ref = vid.video_file.value | default: vid.video_file
+                        assign file_ref_url = nil
+                        if file_ref
+                          if file_ref.sources and file_ref.sources.size > 0
+                            assign file_source = file_ref.sources | where: 'format', 'mp4' | first
+                            if file_source
+                              assign file_ref_url = file_source.url
+                            else
+                              assign file_ref_url = file_ref.sources[0].url
+                            endif
+                          elsif file_ref.url
+                            assign file_ref_url = file_ref.url
+                          else
+                            assign file_ref_url = file_ref | file_url
+                          endif
+                        endif
                         assign v_url_text = vid.videos_url.value | first | default: vid.videos_url.value | default: vid.videos_url
                         assign v_url_text = v_url_text | remove: '["' | remove: '"]'
                         
@@ -715,7 +745,7 @@
                            assign v_thumb = v_thumb_image | image_url: width: 200
                         elsif file_ref.preview_image
                            assign v_thumb = file_ref.preview_image | image_url: width: 200
-                        elsif file_ref.url
+                        elsif file_ref_url != blank
                            assign v_thumb = product.featured_media | image_url: width: 200
                         elsif v_url_text contains 'youtube' or v_url_text contains 'youtu.be'
                            assign yt = v_url_text | split: 'v=' | last | split: '&' | first | split: '/' | last
@@ -766,6 +796,8 @@
              assign v_url = v_sources[0].url
            elsif f_ref.url
              assign v_url = f_ref.url
+           else
+             assign v_url = f_ref | file_url
            endif
          elsif vid.videos_url.value or vid.videos_url
            assign v_url = vid.videos_url.value | first | default: vid.videos_url.value | default: vid.videos_url
