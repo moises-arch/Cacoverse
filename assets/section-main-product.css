@@ -4865,26 +4865,28 @@ body.template-product .product__media-modal * {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   border: 1.5px solid #dcdcdc;
   border-radius: 50%;
   background: #fff;
-  transition: all 0.2s;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   color: #fff;
   cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
 }
 
 .bundle-card__checkbox:checked+.bundle-card__checkbox-label .bundle-card__checkbox-box {
   background: #0d6ba6;
   border-color: #0d6ba6;
+  box-shadow: 0 2px 8px rgba(13, 107, 166, 0.3);
 }
 
 .bundle-card__checkbox-box .icon-checkmark {
   visibility: hidden;
-  width: 1.4rem;
-  height: 1.4rem;
+  width: 8px;
+  height: 8px;
+  stroke-width: 2.2px;
 }
 
 .bundle-card__checkbox:checked+.bundle-card__checkbox-label .bundle-card__checkbox-box .icon-checkmark {
