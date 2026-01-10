@@ -1,6 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
+  if (!window.jQuery || !window.Swiper) {
+    return;
+  }
+
   const swiperInstances = [];
   const $swiperSelector = $('.swiper-container');
+
+  if (!$swiperSelector.length) {
+    return;
+  }
 
   $swiperSelector.each(function (index) {
     const $this = $(this);
@@ -69,25 +77,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // FAQS
-$('.faq-question').on('click', function () {
-  const $question = $(this);
-  const $item = $question.parent();
-  const $answer = $question.next('.faq-answer');
-  const willOpen = !$item.hasClass('active');
+if (window.jQuery) {
+  $('.faq-question').on('click', function () {
+    const $question = $(this);
+    const $item = $question.parent();
+    const $answer = $question.next('.faq-answer');
+    const willOpen = !$item.hasClass('active');
 
-  $('.faq-item').not($item).removeClass('active').find('.faq-question').attr('aria-expanded', 'false');
-  $('.faq-item').not($item).find('.faq-answer').attr('aria-hidden', 'true').slideUp();
+    $('.faq-item').not($item).removeClass('active').find('.faq-question').attr('aria-expanded', 'false');
+    $('.faq-item').not($item).find('.faq-answer').attr('aria-hidden', 'true').slideUp();
 
-  if (willOpen) {
-    $item.addClass('active');
-    $question.attr('aria-expanded', 'true');
-    $answer.attr('aria-hidden', 'false').slideDown();
-  } else {
-    $item.removeClass('active');
-    $question.attr('aria-expanded', 'false');
-    $answer.attr('aria-hidden', 'true').slideUp();
-  }
-});
+    if (willOpen) {
+      $item.addClass('active');
+      $question.attr('aria-expanded', 'true');
+      $answer.attr('aria-hidden', 'false').slideDown();
+    } else {
+      $item.removeClass('active');
+      $question.attr('aria-expanded', 'false');
+      $answer.attr('aria-hidden', 'true').slideUp();
+    }
+  });
+}
 
 
 document.addEventListener("DOMContentLoaded", function () {

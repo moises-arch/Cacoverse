@@ -308,9 +308,18 @@
       }
     </script>
 
+    {%- liquid
+      assign has_swiper = content_for_layout contains 'swiper-container' or content_for_layout contains 'swiper-wrapper' or content_for_layout contains 'class="swiper'
+      assign has_imagehover = content_for_layout contains 'imghvr-'
+    -%}
+
     {{ 'bootstrap.min.css' | asset_url | stylesheet_tag }}
-    {{ 'swiper.min.css' | asset_url | stylesheet_tag }}
-    {{ 'imagehover.min.css' | asset_url | stylesheet_tag }}
+    {%- if has_swiper -%}
+      {{ 'swiper.min.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
+    {%- if has_imagehover -%}
+      {{ 'imagehover.min.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
     {{ 'base.css' | asset_url | stylesheet_tag }}
     {{ 'page-breadcrumb.css' | asset_url | stylesheet_tag }}
     {%- if template.name == 'product' -%}
@@ -433,7 +442,9 @@
     <!-- Bootstrap -->
     <script src="{{ 'bootstrap.bundle.min.js' | asset_url }}" defer="defer"></script>
     <!-- Swiper slider -->
-    <script src="{{ 'swiper-bundle.min.js' | asset_url }}" defer="defer"></script>
+    {%- if has_swiper -%}
+      <script src="{{ 'swiper-bundle.min.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
 
     <!-- Site All Script -->
     <script src="{{ 'scripts.js' | asset_url }}" defer="defer"></script>
