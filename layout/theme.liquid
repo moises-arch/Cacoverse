@@ -311,9 +311,13 @@
     {%- liquid
       assign has_swiper = content_for_layout contains 'swiper-container' or content_for_layout contains 'swiper-wrapper' or content_for_layout contains 'class="swiper'
       assign has_imagehover = content_for_layout contains 'imghvr-'
+      assign has_bootstrap = content_for_layout contains 'data-bs-' or content_for_layout contains 'navbar' or content_for_layout contains 'dropdown' or content_for_layout contains 'accordion' or content_for_layout contains 'modal'
+      assign has_jquery = has_swiper or content_for_layout contains 'faq-question' or content_for_layout contains 'nav-tabs'
     -%}
 
-    {{ 'bootstrap.min.css' | asset_url | stylesheet_tag }}
+    {%- if has_bootstrap -%}
+      {{ 'bootstrap.min.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
     {%- if has_swiper -%}
       {{ 'swiper.min.css' | asset_url | stylesheet_tag }}
     {%- endif -%}
@@ -438,9 +442,13 @@
     {%- endif -%}
 
     <!-- Jquery -->
-    <script src="{{ 'jquery-3.7.1.min.js' | asset_url }}" defer="defer"></script>
+    {%- if has_jquery -%}
+      <script src="{{ 'jquery-3.7.1.min.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
     <!-- Bootstrap -->
-    <script src="{{ 'bootstrap.bundle.min.js' | asset_url }}" defer="defer"></script>
+    {%- if has_bootstrap -%}
+      <script src="{{ 'bootstrap.bundle.min.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
     <!-- Swiper slider -->
     {%- if has_swiper -%}
       <script src="{{ 'swiper-bundle.min.js' | asset_url }}" defer="defer"></script>
