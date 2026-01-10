@@ -24,7 +24,8 @@
     assign first_file = first_vid.video_file.value | default: first_vid.video_file
     assign first_file_url = nil
     if first_file
-      assign first_file_url = first_file.url | default: first_file | file_url
+      assign first_file_url = first_file | file_url
+      assign first_file_url = first_file.url | default: first_file_url
       if first_file.sources and first_file.sources.size > 0
         assign first_source = first_file.sources | where: 'format', 'mp4' | first
         if first_source
@@ -717,7 +718,8 @@
                         assign file_ref = vid.video_file.value | default: vid.video_file
                         assign file_ref_url = nil
                         if file_ref
-                          assign file_ref_url = file_ref.url | default: file_ref | file_url
+                          assign file_ref_url = file_ref | file_url
+                          assign file_ref_url = file_ref.url | default: file_ref_url
                           if file_ref.sources and file_ref.sources.size > 0
                             assign file_source = file_ref.sources | where: 'format', 'mp4' | first
                             if file_source
@@ -782,7 +784,8 @@
          assign f_ref = vid.video_file.value | default: vid.video_file
          
          if f_ref
-           assign v_url = f_ref.url | default: f_ref | file_url
+           assign v_url = f_ref | file_url
+           assign v_url = f_ref.url | default: v_url
            assign v_sources = f_ref.sources
            assign v_source_obj = v_sources | where: 'format', 'mp4' | first
            if v_source_obj
