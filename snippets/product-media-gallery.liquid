@@ -598,7 +598,7 @@
                  data-media-id="{{ media.id }}"
                  data-variants="{{ variant_ids | strip | remove_last: ',' }}"
                  data-color="{{ m_colors | strip }}">
-              <img src="{{ media | image_url: width: 400 }}" alt="{{ media.alt | escape }}" loading="lazy">
+              <img src="{{ media | image_url: width: 200 }}" alt="{{ media.alt | escape }}" loading="lazy">
             </div>
           {%- endif -%}
           
@@ -624,7 +624,7 @@
                   data-media-id="{{ media.id }}"
                   data-variants="{{ variant_ids | strip | remove_last: ',' }}"
                   data-color="{{ m_colors | strip }}">
-                <img src="{{ media | image_url: width: 400 }}" alt="{{ media.alt | escape }}" loading="lazy">
+                <img src="{{ media | image_url: width: 200 }}" alt="{{ media.alt | escape }}" loading="lazy">
              </div>
               {%- endif -%}
             {%- endif -%}
