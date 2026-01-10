@@ -73,7 +73,8 @@
           {% render 'pagination', paginate: paginate, anchor: '' %}
         {%- endif -%}
       {% endpaginate %} {% endcomment %}
-         <table id="resourcesTable" class="display">
+    <div data-requires-jquery hidden></div>
+    <table id="resourcesTable" class="display">
       <thead>
         <tr>
           <th>Collection</th>
@@ -88,7 +89,6 @@
 
   
 
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.5/css/dataTables.dataTables.min.css">
     <script src="https://cdn.datatables.net/2.0.5/js/dataTables.min.js"></script>
 
@@ -135,19 +135,33 @@
           body: JSON.stringify({ query, variables: { cursor } }),
         });
 
+        if (!res.ok) {
+          throw new Error(`Storefront API error: ${res.status}`);
+        }
+
         const json = await res.json();
-        const edges = json.data.products.edges;
+        const edges = json?.data?.products?.edges || [];
         const products = edges.map((e) => e.node);
         allProducts.push(...products);
 
-        if (json.data.products.pageInfo.hasNextPage) {
+        if (json?.data?.products?.pageInfo?.hasNextPage) {
           return fetchProducts(json.data.products.pageInfo.endCursor, allProducts);
         }
         return allProducts;
       }
 
       document.addEventListener('DOMContentLoaded', async () => {
-        const products = await fetchProducts();
+        if (typeof DataTable === 'undefined') {
+          return;
+        }
+
+        let products = [];
+        try {
+          products = await fetchProducts();
+        } catch (error) {
+          console.error('Failed to load resources.', error);
+          return;
+        }
         const rows = [];
 
         products.forEach((product) => {
