@@ -9,17 +9,43 @@
 
     <script>
       (function(){
+        // Lista de cadenas que detectamos para silenciar logs ruidosos de apps y extensiones
+        const noisyStrings = [
+          'form builder', 'globo.formbuilder', 'shop.app', 'csp', 
+          'frame-ancestors', 'postmessage', 'metamask', 'ethereum', 
+          'inpage.js', 'inject_main.js', 'wallet', 'web3'
+        ];
+
         const methods = ['log', 'info', 'warn', 'error', 'group', 'groupCollapsed'];
         methods.forEach(method => {
           const original = console[method];
           console[method] = function() {
             const args = Array.from(arguments);
-            const msg = args.map(a => typeof a === 'string' ? a : '').join(' ').toLowerCase();
-            // Filtramos Form Builder y errores de CSP/Framing de shop.app que son ruidosos
-            if (msg.includes('form builder') || msg.includes('globo.formbuilder') || msg.includes('shop.app') || msg.includes('csp') || msg.includes('frame-ancestors')) return;
+            const msg = args.map(a => {
+              try { return typeof a === 'string' ? a : JSON.stringify(a); } catch(e) { return ''; }
+            }).join(' ').toLowerCase();
+            
+            if (noisyStrings.some(s => msg.includes(s))) return;
             original.apply(console, arguments);
           };
         });
+
+        // Silenciar errores de promesas no capturadas (común en MetaMask/Web3)
+        window.addEventListener('unhandledrejection', function(event) {
+          const msg = (event.reason && event.reason.message || '').toLowerCase();
+          if (noisyStrings.some(s => msg.includes(s))) {
+            event.preventDefault();
+          }
+        });
+
+        // Capturar errores globales para silenciar los que vienen de dominios o scripts específicos
+        window.onerror = function(msg, url, line, col, error) {
+          const errorMessage = (msg || '').toLowerCase();
+          if (noisyStrings.some(s => errorMessage.includes(s)) || (url && noisyStrings.some(s => url.toLowerCase().includes(s)))) {
+            return true; // Previene el log en consola
+          }
+          return false;
+        };
       })();
     </script>
 
