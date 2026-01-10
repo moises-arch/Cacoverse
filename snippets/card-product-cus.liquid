@@ -107,7 +107,11 @@
                               assign selected_value = featured_variant.option3
                           endcase
                         %}
-                        {%- if selected_value != blank and selected_value | downcase == value | downcase -%}
+                        {% liquid
+                          assign check_selected = selected_value | downcase
+                          assign check_value = value | downcase
+                        %}
+                        {%- if selected_value != blank and check_selected == check_value -%}
                           checked
                         {%- endif -%}
                       >
@@ -172,7 +176,11 @@
                               assign selected_value = featured_variant.option3
                           endcase
                         %}
-                        {%- if selected_value != blank and selected_value | downcase == value | downcase -%}
+                        {% liquid
+                          assign check_selected = selected_value | downcase
+                          assign check_value = value | downcase
+                        %}
+                        {%- if selected_value != blank and check_selected == check_value -%}
                           checked
                         {%- endif -%}
                       >
