@@ -1176,11 +1176,11 @@
                             <div class="scd-item__image-wrapper">
                               <img
                                 class="cart-item__image scd-item__image"
-                                src="{{ item.image | image_url: width: 300 }}"
+                                src="{{ item.image | image_url: width: 180, format: 'webp' }}"
                                 alt="{{ item.image.alt | escape }}"
                                 loading="lazy"
-                                width="150"
-                                height="150"
+                                width="180"
+                                height="180"
                               >
                             </div>
                           {% endif %}

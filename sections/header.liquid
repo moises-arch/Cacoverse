@@ -66,9 +66,9 @@
     :root { --caco-header-height: 110px; }
   }
 
-  /* Applied via JS to avoid double padding if script fails */
-  .has-caco-sticky body {
-    padding-top: var(--caco-header-height) !important;
+  /* Pre-apply space on body to avoid jumps */
+  html, body {
+    padding-top: var(--caco-header-height);
   }
 
   .caco-header-wrapper {
@@ -227,12 +227,12 @@
     width: 100%;
   }
 
-  .caco-is-ready .caco-dropdown,
-  .caco-is-ready .caco-predictive-results,
-  .caco-is-ready .caco-help-dropdown,
-  .caco-is-ready .caco-industries-dropdown,
-  .caco-is-ready .caco-partner-dropdown,
-  .caco-is-ready .caco-mobile-drawer {
+  .caco-dropdown,
+  .caco-predictive-results,
+  .caco-help-dropdown,
+  .caco-industries-dropdown,
+  .caco-partner-dropdown,
+  .caco-mobile-drawer {
     display: block; 
     opacity: 0;
     visibility: hidden;
@@ -348,11 +348,8 @@
   // Fallback ultra-rápido: ejecutado inmediatamente
   (function() {
     try {
-      var w = document.querySelector('.caco-header-wrapper');
       var h = window.innerWidth <= 1024 ? 110 : 160;
       document.documentElement.style.setProperty('--caco-header-height', h + 'px');
-      document.body.classList.add('has-caco-sticky');
-      if(w) w.classList.add('caco-is-ready');
     } catch (e) {}
   })();
 </script>

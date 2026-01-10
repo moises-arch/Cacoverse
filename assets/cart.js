@@ -468,9 +468,20 @@ async function loadCartDrawerRecommendations() {
 
     const card = document.createElement('article');
     card.className = 'scd-rec';
+
+    // Help resize shopify images
+    let thumbUrl = imageUrl;
+    if (thumbUrl && thumbUrl.includes('cdn.shopify.com')) {
+      if (thumbUrl.includes('?')) {
+        thumbUrl += '&width=180&format=webp';
+      } else {
+        thumbUrl += '?width=180&format=webp';
+      }
+    }
+
     card.innerHTML = `
       <a href="${product.url}" class="scd-rec__image-wrap" aria-hidden="true" tabindex="-1">
-        <img class="scd-rec__image" src="${imageUrl}" alt="${imageAlt}">
+        <img class="scd-rec__image" src="${thumbUrl}" alt="${imageAlt}" loading="lazy" width="180" height="180">
       </a>
       <div class="scd-rec__body">
         <p class="scd-rec__name">${product.title}</p>
