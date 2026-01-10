@@ -735,6 +735,15 @@
                         assign v_thumb_url = vid.thumbnail_url.value | default: vid.thumbnail_url
                         assign v_thumb_image = vid.thumbnail.value | default: vid.thumbnail
 
+                        assign v_player_url = file_ref_url
+                        assign v_player_type = 'native'
+                        if v_player_url == blank and v_url_text != blank
+                           assign v_player_url = v_url_text
+                           if v_url_text contains 'youtube' or v_url_text contains 'vimeo' or v_url_text contains 'youtu.be'
+                             assign v_player_type = 'external'
+                           endif
+                        endif
+
                         if v_thumb_url
                            assign v_thumb = v_thumb_url
                         elsif v_thumb_image
@@ -754,6 +763,8 @@
                       -%}
                       <button class="video-playlist-item {% if forloop.first %}is-active{% endif %}" 
                               data-index="{{ v_id }}"
+                              data-video-url="{{ v_player_url | escape }}"
+                              data-video-type="{{ v_player_type }}"
                               aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">
                           <div class="video-playlist-item__thumb">
                               <img src="{{ v_thumb }}" alt="{{ v_title | escape }}">

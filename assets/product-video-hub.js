@@ -30,6 +30,10 @@ class ProductVideoHub {
             }
         }
 
+        if (!this.videoData.length && this.playlistItems.length > 0) {
+            this.videoData = this.buildVideoDataFromPlaylist();
+        }
+
         this.init();
     }
 
@@ -119,7 +123,10 @@ class ProductVideoHub {
         item.setAttribute('aria-selected', 'true');
 
         // Find video data
-        const video = this.videoData[index];
+        const video = this.videoData[index] || {
+            video_url: item.dataset.videoUrl,
+            type: item.dataset.videoType || 'native'
+        };
         if (video) {
             this.renderPlayer(video.video_url, video.type, autoplay);
         }
@@ -129,6 +136,7 @@ class ProductVideoHub {
 
     renderPlayer(url, type, autoplay) {
         if (!this.playerContainer) return;
+        if (!url) return;
 
         let html = '';
         const autoParam = autoplay ? 'autoplay=1' : 'autoplay=0';
@@ -159,6 +167,13 @@ class ProductVideoHub {
         }
 
         this.playerContainer.innerHTML = html;
+    }
+
+    buildVideoDataFromPlaylist() {
+        return Array.from(this.playlistItems).map((item) => ({
+            video_url: item.dataset.videoUrl,
+            type: item.dataset.videoType || 'native'
+        }));
     }
 
     destroy() {
