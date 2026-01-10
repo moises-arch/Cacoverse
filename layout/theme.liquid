@@ -9,13 +9,14 @@
 
     <script>
       (function(){
-        const methods = ['log', 'info', 'warn', 'group', 'groupCollapsed'];
+        const methods = ['log', 'info', 'warn', 'error', 'group', 'groupCollapsed'];
         methods.forEach(method => {
           const original = console[method];
           console[method] = function() {
             const args = Array.from(arguments);
             const msg = args.map(a => typeof a === 'string' ? a : '').join(' ').toLowerCase();
-            if (msg.includes('form builder') || msg.includes('globo.formbuilder')) return;
+            // Filtramos Form Builder y errores de CSP/Framing de shop.app que son ruidosos
+            if (msg.includes('form builder') || msg.includes('globo.formbuilder') || msg.includes('shop.app') || msg.includes('csp') || msg.includes('frame-ancestors')) return;
             original.apply(console, arguments);
           };
         });
