@@ -195,13 +195,18 @@
     background: var(--announcement-bg);
     overflow: hidden;
     position: relative;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    pointer-events: none;
+  }
+  .caco-is-ready .caco-announcement-bar {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
   }
   .caco-announcement-bar .caco-container {
-    opacity: 0;
-    transition: opacity 0.4s ease;
-  }
-  .caco-is-ready .caco-announcement-bar .caco-container {
-    opacity: 1;
+    height: 100%;
   }
   .caco-announcement-slider {
     display: flex;
