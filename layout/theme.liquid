@@ -147,8 +147,8 @@
         <link
           rel="preload"
           as="image"
-          href="{{ fm | image_url: width: 1440 }}"
-          imagesrcset="{% assign list = '1200,1440,1600,1800,2048' | split: ',' %}{% for w in list %}{{ fm | image_url: width: w }} {{ w }}w{% unless forloop.last %}, {% endunless %}{% endfor %}"
+          href="{{ fm | image_url: width: 1440, format: 'webp' }}"
+          imagesrcset="{% assign list = '1200,1440,1600,1800,2048' | split: ',' %}{% for w in list %}{{ fm | image_url: width: w, format: 'webp' }} {{ w }}w{% unless forloop.last %}, {% endunless %}{% endfor %}"
           imagesizes="{{ '(min-width: ' | append: settings.page_width | append: 'px) ' | append: settings.page_width | times: media_width | round | minus: 64 | append: 'px, (min-width: 990px) calc(' | append: media_width | times: 100 | append: 'vw - 4rem), 100vw' }}"
           fetchpriority="high"
         >
