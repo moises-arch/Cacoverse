@@ -2,7 +2,7 @@
   #shopify-section-{{ section.id }}{
     padding-top: {{ section.settings.padding_top_desktop }};
     padding-bottom: {{ section.settings.padding_bottom_desktop }};
-    background-image: url( "{{ section.settings.bg_image | img_url : '2000x'  }}" );
+    background-image: url( "{{ section.settings.bg_image | image_url: width: 1800, format: 'webp' }}" );
     background-repeat: no-repeat;
     background-size: 124%;
     background-position: left center;
@@ -12,7 +12,7 @@
 
    #shopify-section-{{ section.id }}:after{
      content: '';
-    background-image: url( "{{ section.settings.image | img_url : '750x'  }}" );
+    background-image: url( "{{ section.settings.image | image_url: width: 800, format: 'webp' }}" );
    background-repeat: no-repeat;
     background-size: contain;
     background-position: bottom right;
@@ -26,7 +26,7 @@
 
    .template-ppe-categories #shopify-section-{{ section.id }}:after{
        content: '';
-      background-image: url( "{{ section.settings.image | img_url : '750x'  }}" );
+      background-image: url( "{{ section.settings.image | image_url: width: 800, format: 'webp' }}" );
      background-repeat: no-repeat;
       background-size: contain;
       background-position: bottom right;
@@ -82,8 +82,9 @@
     </div>
     <div class="d-none showing-r">
       <img
-        src="{{ section.settings.image | img_url : '650x'  }}"
-        loading="lazy"
+        src="{{ section.settings.image | image_url: width: 650, format: 'webp' }}"
+        loading="eager"
+        fetchpriority="high"
         width="650"
         height="auto"
         class="img-fluid"

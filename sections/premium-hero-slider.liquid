@@ -1340,18 +1340,18 @@
         {% else %}
            <!-- Desktop Image -->
            {% if block.settings.image != blank %}
-             {{ block.settings.image | image_url: width: 2000 | image_tag: class: 'phs-bg-image phs-bg-desktop', loading: 'eager' }}
+             {{ block.settings.image | image_url: width: 1800, format: 'webp' | image_tag: class: 'phs-bg-image phs-bg-desktop', loading: 'eager', fetchpriority: 'high' }}
            {% elsif block.settings.bg_image_url != blank %}
-             <img src="{{ block.settings.bg_image_url }}" class="phs-bg-image phs-bg-desktop" alt="Background" />
+             <img src="{{ block.settings.bg_image_url }}" class="phs-bg-image phs-bg-desktop" alt="Background" fetchpriority="high" />
            {% else %}
              <div class="phs-bg-image phs-bg-desktop" style="background-color: #333;"></div>
            {% endif %}
 
            <!-- Mobile Image -->
            {% if block.settings.mobile_image != blank %}
-             {{ block.settings.mobile_image | image_url: width: 800 | image_tag: class: 'phs-bg-image phs-bg-mobile', loading: 'eager' }}
+             {{ block.settings.mobile_image | image_url: width: 800, format: 'webp' | image_tag: class: 'phs-bg-image phs-bg-mobile', loading: 'eager', fetchpriority: 'high' }}
            {% elsif block.settings.mobile_image_url != blank %}
-             <img src="{{ block.settings.mobile_image_url }}" class="phs-bg-image phs-bg-mobile" alt="Mobile Background" />
+             <img src="{{ block.settings.mobile_image_url }}" class="phs-bg-image phs-bg-mobile" alt="Mobile Background" fetchpriority="high" />
            {% endif %}
         {% endif %}
         

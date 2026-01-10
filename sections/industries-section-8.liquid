@@ -2,7 +2,7 @@
   #shopify-section-{{ section.id }}{
    padding-top: {{ section.settings.padding_top_desktop }};
     padding-bottom: {{ section.settings.padding_bottom_desktop }};
-    background-image: url( "{{ section.settings.bg_image | img_url : '2000x'  }}" );
+    background-image: url( "{{ section.settings.bg_image | image_url: width: 1800, format: 'webp' }}" );
     background-repeat: no-repeat;
     background-position: left center;
     position: relative;
