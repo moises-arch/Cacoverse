@@ -192,11 +192,46 @@
 
   @media (max-width: 1024px) {
     :root { --caco-header-height: 130px; }
-    .caco-grid-container { grid-template-columns: auto 1fr auto; }
-    .caco-area-center { display: none; }
-    .caco-logo { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); min-width: auto; }
-    .caco-logo-img { max-height: 34px; width: auto; }
-    .caco-mobile-toggle { display: inline-flex !important; }
+    .caco-grid-container { 
+      display: flex !important; 
+      justify-content: space-between !important; 
+      align-items: center !important; 
+      position: relative;
+      padding: 0 16px !important;
+    }
+    .caco-area-center { display: none !important; }
+    .caco-area-left { 
+      display: flex !important; 
+      align-items: center !important; 
+      flex: 1; 
+      justify-content: flex-start;
+    }
+    .caco-area-right { 
+      display: flex !important; 
+      align-items: center !important; 
+      flex: 1; 
+      justify-content: flex-end;
+      gap: 15px;
+    }
+    .caco-logo { 
+      position: absolute !important; 
+      left: 50% !important; 
+      top: 50% !important; 
+      transform: translate(-50%, -50%) !important; 
+      margin: 0 !important;
+      min-width: 0 !important;
+      height: auto !important;
+      width: auto !important;
+      z-index: 10;
+    }
+    .caco-logo-img { 
+      max-height: 42px !important; 
+      width: auto !important; 
+    }
+    .caco-mobile-toggle { 
+      display: inline-flex !important; 
+      margin-left: -8px; /* Push hamburger to the very edge */
+    }
     .caco-search-icon--mobile { display: flex !important; }
     .md-only { display: block !important; }
   }
