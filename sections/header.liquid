@@ -2463,8 +2463,8 @@
     width: 100%;
   }
   .caco-mega-sidebar{
-    width: 22%;
-    min-width: 280px;
+    width: 25%;
+    min-width: 300px;
     background:{{ section.settings.mega_sidebar_bg | default: '#f9fafb' }};
     border-right: 1px solid var(--border-color);
     padding:24px 0;
@@ -2473,10 +2473,18 @@
   .caco-mega-sidebar ul{margin:0;padding:0;}
   .caco-mega-sidebar-link{
     display:flex;justify-content:space-between;align-items:center;
-    padding:12px 20px;cursor:pointer;
+    padding:14px 24px;cursor:pointer;
     font-weight:600;color:#4b5563;font-size:15px;
     border-left:3px solid transparent;
     transition:all .2s;
+  }
+  .caco-mega-sidebar-link .caco-chevron{
+    opacity: 0.4;
+    transition: opacity 0.2s;
+  }
+  .caco-mega-sidebar-link:hover .caco-chevron,
+  .caco-mega-sidebar-link.active .caco-chevron{
+    opacity: 1;
   }
   .caco-mega-sidebar-link__label{display:flex;align-items:center;gap:8px;}
   .caco-mega-sidebar-link--sale{
