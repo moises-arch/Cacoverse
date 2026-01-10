@@ -598,7 +598,7 @@
                  data-media-id="{{ media.id }}"
                  data-variants="{{ variant_ids | strip | remove_last: ',' }}"
                  data-color="{{ m_colors | strip }}">
-              <img src="{{ media | image_url: width: 200 }}" alt="{{ media.alt | escape }}" loading="lazy">
+              <img src="{{ media | image_url: width: 150 }}" alt="{{ media.alt | escape }}" loading="lazy">
             </div>
           {%- endif -%}
           
@@ -624,7 +624,7 @@
                   data-media-id="{{ media.id }}"
                   data-variants="{{ variant_ids | strip | remove_last: ',' }}"
                   data-color="{{ m_colors | strip }}">
-                <img src="{{ media | image_url: width: 200 }}" alt="{{ media.alt | escape }}" loading="lazy">
+                <img src="{{ media | image_url: width: 150 }}" alt="{{ media.alt | escape }}" loading="lazy">
              </div>
               {%- endif -%}
             {%- endif -%}
@@ -747,11 +747,11 @@
                         if v_thumb_url
                            assign v_thumb = v_thumb_url
                         elsif v_thumb_image
-                           assign v_thumb = v_thumb_image | image_url: width: 200
+                           assign v_thumb = v_thumb_image | image_url: width: 150
                         elsif file_ref.preview_image
-                           assign v_thumb = file_ref.preview_image | image_url: width: 200
+                           assign v_thumb = file_ref.preview_image | image_url: width: 150
                         elsif file_ref_url != blank
-                           assign v_thumb = product.featured_media | image_url: width: 200
+                           assign v_thumb = product.featured_media | image_url: width: 150
                         elsif v_url_text contains 'youtube' or v_url_text contains 'youtu.be'
                            assign yt = v_url_text | split: 'v=' | last | split: '&' | first | split: '/' | last
                            assign v_thumb = 'https://img.youtube.com/vi/' | append: yt | append: '/hqdefault.jpg'
