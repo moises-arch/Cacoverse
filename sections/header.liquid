@@ -628,6 +628,23 @@
                               </ul>
                             {%- endif -%}
 
+                            {%- if childlink.handle == 'head-protection' -%}
+                              <!-- Custom Helmet Printing Banner -->
+                              <a href="/pages/custom-hard-hats-with-lo-go-printing" class="caco-mega-custom-banner">
+                                <div class="caco-mega-custom-banner-content">
+                                  <div class="caco-mega-custom-text">
+                                    <span class="caco-mega-custom-tag">Premium Service</span>
+                                    <h4>Custom Logo Printing in Helmets</h4>
+                                    <p>Elevate your brand on every jobsite. High-quality printing & 2 weeks delivery.</p>
+                                  </div>
+                                  <div class="caco-mega-custom-action">
+                                    <span>Start Customizing</span>
+                                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
+                                  </div>
+                                </div>
+                              </a>
+                            {%- endif -%}
+
                             <!-- Inline promos area (center) -->
                             {%- assign current_panel_handle = childlink.handle -%}
                             <div class="caco-mega-inline-promos">
@@ -1580,6 +1597,20 @@
                           </a>
                         </li>
                       {%- endfor -%}
+
+                      {%- if childlink.handle == 'head-protection' -%}
+                        <li class="caco-mobile-item">
+                          <a href="/pages/custom-hard-hats-with-lo-go-printing" class="caco-mobile-link caco-mobile-link--highlight">
+                            <span class="caco-mobile-link-label">
+                              <span class="caco-highlight-icon">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                              </span>
+                              Custom Logo Printing
+                            </span>
+                            <span class="caco-badge" style="background: #0051c3; color: #fff; margin-left: auto;">NEW</span>
+                          </a>
+                        </li>
+                      {%- endif -%}
                     </ul>
                   </div>
                 {%- endif -%}
@@ -2559,6 +2590,111 @@
     gap:16px 24px;
     margin-bottom:24px;
     width: 100%;
+  }
+
+  /* Custom Logo Printing Banner */
+  .caco-mega-custom-banner{
+    display: block;
+    margin-top: 10px;
+    padding: 20px 24px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #0051c3 0%, #003d99 100%);
+    color: #fff;
+    text-decoration: none !important;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease;
+    box-shadow: 0 10px 25px rgba(0, 81, 195, 0.18);
+  }
+  .caco-mega-custom-banner:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(0, 81, 195, 0.28);
+  }
+  .caco-mega-custom-banner::after{
+    content: "";
+    position: absolute;
+    top: -50%; right: -5%;
+    width: 260px; height: 260px;
+    background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .caco-mega-custom-banner-content{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+  }
+  .caco-mega-custom-tag{
+    display: inline-block;
+    padding: 3px 9px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 8px;
+  }
+  .caco-mega-custom-text h4{
+    font-size: 19px;
+    font-weight: 700;
+    margin: 0 0 4px 0;
+    color: #fff;
+    letter-spacing: -0.3px;
+  }
+  .caco-mega-custom-text p{
+    font-size: 13.5px;
+    margin: 0;
+    opacity: 0.95;
+    font-weight: 400;
+  }
+  .caco-mega-custom-action{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 18px;
+    background: #fff;
+    color: #0051c3;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 13.5px;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  .caco-mega-custom-banner:hover .caco-mega-custom-action{
+    background: #f8f9fa;
+    transform: scale(1.03);
+  }
+
+  /* Mobile Highlight Option */
+  .caco-mobile-link--highlight{
+    background: #f0f7ff !important;
+    border: 1px solid #cce3ff !important;
+    margin: 12px 20px !important;
+    padding: 14px 16px !important;
+    border-radius: 14px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+  .caco-mobile-link--highlight .caco-mobile-link-label{
+    color: #0051c3 !important;
+    font-weight: 700 !important;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .caco-highlight-icon{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: #0051c3;
+    color: #fff;
+    border-radius: 10px;
+    margin-right: 10px;
   }
   .caco-mega-grid li a{
     font-size:14px;color:#555;
