@@ -54,7 +54,7 @@
 <style>
   /* ⚡ CRITICAL HEADER STYLES (Pre-load) */
   :root {
-    --caco-header-height: 160px; /* Reduced from 202px to avoid gap */
+    --caco-header-height: 202px;
     --announcement-bg: #0051c3;
     --header-bg: #ffffff;
     --primary-blue: #0051c3;
@@ -63,12 +63,12 @@
   }
   
   @media (max-width: 1024px) {
-    :root { --caco-header-height: 110px; }
+    :root { --caco-header-height: 118px; }
   }
 
   /* Pre-apply space on body to avoid jumps */
-  html, body {
-    padding-top: var(--caco-header-height);
+  body {
+    padding-top: var(--caco-header-height) !important;
   }
 
   .caco-header-wrapper {
@@ -348,7 +348,7 @@
   // Fallback ultra-rápido: ejecutado inmediatamente
   (function() {
     try {
-      var h = window.innerWidth <= 1024 ? 110 : 160;
+      var h = window.innerWidth <= 1024 ? 118 : 202;
       document.documentElement.style.setProperty('--caco-header-height', h + 'px');
     } catch (e) {}
   })();
@@ -1789,12 +1789,6 @@
   }
 }
 
-
-  /* Apuntar a html o body para máxima compatibilidad con el fallback script */
-  html.has-caco-sticky body,
-  body.has-caco-sticky {
-    padding-top: var(--caco-header-height);
-  }
 
   html.caco-mobile-open,
   html.caco-mobile-open body{
