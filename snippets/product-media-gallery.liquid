@@ -34,6 +34,8 @@
       assign video_cover_image = first_thumb | image_url: width: 800
     elsif first_file.preview_image
        assign video_cover_image = first_file.preview_image | image_url: width: 800
+    elsif first_file.url
+       assign video_cover_image = product.featured_media | image_url: width: 800
     elsif first_url contains 'youtube' or first_url contains 'youtu.be'
        assign yt_id = first_url | split: 'v=' | last | split: '&' | first | split: '/' | last
        assign video_cover_image = 'https://img.youtube.com/vi/' | append: yt_id | append: '/hqdefault.jpg'
@@ -713,6 +715,8 @@
                            assign v_thumb = v_thumb_image | image_url: width: 200
                         elsif file_ref.preview_image
                            assign v_thumb = file_ref.preview_image | image_url: width: 200
+                        elsif file_ref.url
+                           assign v_thumb = product.featured_media | image_url: width: 200
                         elsif v_url_text contains 'youtube' or v_url_text contains 'youtu.be'
                            assign yt = v_url_text | split: 'v=' | last | split: '&' | first | split: '/' | last
                            assign v_thumb = 'https://img.youtube.com/vi/' | append: yt | append: '/hqdefault.jpg'
@@ -758,8 +762,10 @@
            assign v_source_obj = v_sources | where: 'format', 'mp4' | first
            if v_source_obj
              assign v_url = v_source_obj.url
-           else
+           elsif v_sources and v_sources.size > 0
              assign v_url = v_sources[0].url
+           elsif f_ref.url
+             assign v_url = f_ref.url
            endif
          elsif vid.videos_url.value or vid.videos_url
            assign v_url = vid.videos_url.value | first | default: vid.videos_url.value | default: vid.videos_url
