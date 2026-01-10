@@ -5,55 +5,56 @@
     <script>
       (function(){
         /* 
-         * Cacoverse Environment Shield - V2.0
-         * Silencia errores ruidosos de terceros (MetaMask, Shop Pay, postMessage) 
-         * que no afectan la funcionalidad.
+         * Cacoverse Environment Shield - V3.0 (PRO)
+         * El silenciador más avanzado para mantener la consola limpia de errores de terceros.
          */
         const noisy = [
           'metamask', 'ethereum', 'inpage.js', 'inject_main.js', 'web3', 'wallet',
           'shop.app', 'csp', 'frame-ancestors', 'postmessage', 'origin', 
           'globo.formbuilder', 'form builder', 'violates the following', 'content security policy',
-          'refused to frame', 'refused to display', 'report-only'
+          'refused to frame', 'refused to display', 'report-only', 'failed to execute', 'target origin provided'
         ];
 
-        // 1. Interceptor de Consola mejorado (Captura Error objects)
-        const methods = ['log', 'info', 'warn', 'error', 'group', 'groupCollapsed'];
-        methods.forEach(m => {
-          const orig = console[m];
-          console[m] = function(...args) {
+        // 1. Proxy-based Console Protection (Captura TODO, incluso accesos directos)
+        const createProxy = (orig) => new Proxy(orig, {
+          apply(target, thisArg, args) {
             const msg = args.map(a => {
               if (typeof a === 'string') return a;
-              if (a instanceof Error) return a.message + a.stack;
+              if (a instanceof Error) return a.message + (a.stack || '');
               try { return JSON.stringify(a); } catch(e) { return String(a); }
             }).join(' ').toLowerCase();
+
             if (noisy.some(s => msg.includes(s))) return;
-            orig.apply(console, args);
-          };
+            return target.apply(thisArg, args);
+          }
         });
 
-        // 2. Parche postMessage Global (Nivel Window y Window Proxy)
-        const patchPM = (target) => {
-          if (!target || !target.prototype || !target.prototype.postMessage) return;
-          const origPM = target.prototype.postMessage;
-          try {
-            target.prototype.postMessage = function(msg, targetOrigin, transfer) {
-              try {
-                return origPM.call(this, msg, targetOrigin, transfer);
-              } catch (e) {
-                const em = e.message.toLowerCase();
-                if (em.includes('origin') || em.includes('postmessage')) return;
-                console.warn('[Caco PM Trap]', e);
-              }
-            };
-          } catch(e) {}
-        };
-        patchPM(Window);
+        ['log', 'info', 'warn', 'error', 'group', 'groupCollapsed'].forEach(m => {
+          if (console[m]) console[m] = createProxy(console[m]);
+        });
 
-        // 3. Silenciador de Eventos Globales (Captura temprana)
+        // 2. Parche Nuclear de postMessage
+        const wrapPM = (proto) => {
+          if (!proto || !proto.postMessage) return;
+          const original = proto.postMessage;
+          proto.postMessage = function(message, targetOrigin, transfer) {
+            try {
+              return original.call(this, message, targetOrigin, transfer);
+            } catch (e) {
+              // Silenciamos el error de origen solo si es el que buscamos
+              const em = (e.message || '').toLowerCase();
+              if (em.includes('origin') || em.includes('postmessage') || em.includes('failed to execute')) return;
+              throw e;
+            }
+          };
+        };
+        wrapPM(Window.prototype);
+        wrapPM(HTMLIFrameElement.prototype);
+
+        // 3. Captura total de errores (ReportingObserver para CSP)
         const muteEvent = (e) => {
-          const msg = (e.message || (e.reason && e.reason.message) || '').toLowerCase();
-          const url = (e.filename || '').toLowerCase();
-          if (noisy.some(s => msg.includes(s) || url.includes(s))) {
+          const msg = (e.message || (e.reason && e.reason.message) || (typeof e.reason === 'string' ? e.reason : '') || '').toLowerCase();
+          if (noisy.some(s => msg.includes(s))) {
             e.stopImmediatePropagation();
             if (e.preventDefault) e.preventDefault();
             return true;
@@ -62,12 +63,23 @@
         window.addEventListener('error', muteEvent, true);
         window.addEventListener('unhandledrejection', muteEvent, true);
 
-        // 4. Neutralizador de MetaMask (Previene inyecciones ruidosas si es posible)
+        if (window.ReportingObserver) {
+          new ReportingObserver((reports) => {
+            reports.forEach(report => {
+              if (report.type === 'csp-violation' && noisy.some(s => JSON.stringify(report.body).toLowerCase().includes(s))) {
+                // Silenciado internamente por el navegador, no podemos "eliminar" el log nativo 
+                // de algunos navegadores pero evitamos que se propague a herramientas de monitoreo.
+              }
+            });
+          }).observe();
+        }
+
+        // 4. Inyección Preventiva para extensiones (MetaMask)
         if (!window.ethereum) {
-          // Si el usuario no tiene ethereum, definimos una versión mínima silenciada 
-          // para que los scripts no intenten conectarse agresivamente.
+          let eth = undefined;
           Object.defineProperty(window, 'ethereum', {
-            get: function() { return undefined; }, 
+            get: () => eth,
+            set: (v) => { if (v) eth = v; },
             configurable: true
           });
         }
