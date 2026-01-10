@@ -180,6 +180,13 @@
     overflow: hidden;
     position: relative;
   }
+  .caco-announcement-bar .caco-container {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  .caco-is-ready .caco-announcement-bar .caco-container {
+    opacity: 1;
+  }
   .caco-announcement-slider {
     display: flex;
     justify-content: center;
@@ -297,19 +304,6 @@
   }
 </style>
 
-<script>
-  // Fallback ultra-rápido para el padding del body
-  (function() {
-    try {
-      document.documentElement.classList.add('has-caco-sticky');
-      var w = document.querySelector('.caco-header-wrapper');
-      if(w) w.classList.add('caco-is-ready');
-      var h = window.innerWidth <= 1024 ? '130px' : '178px';
-      document.documentElement.style.setProperty('--caco-header-height', h);
-    } catch (e) {}
-  })();
-</script>
-
 {%- assign caco_search_categories = '' | split: ',' -%}
 {%- assign caco_search_handles = '' | split: ',' -%}
 {%- assign caco_mega_triggers = section.blocks | where: 'type', 'mega_trigger' -%}
@@ -336,6 +330,18 @@
 {%- endfor -%}
 
 <div class="caco-header-wrapper">
+<script>
+  // Fallback ultra-rápido: ejecutado inmediatamente después de que el wrapper entra al DOM
+  (function() {
+    try {
+      var w = document.querySelector('.caco-header-wrapper');
+      if(w) w.classList.add('caco-is-ready');
+      document.documentElement.classList.add('has-caco-sticky');
+      var h = window.innerWidth <= 1024 ? '130px' : '178px';
+      document.documentElement.style.setProperty('--caco-header-height', h);
+    } catch (e) {}
+  })();
+</script>
   <!-- -------------------------------------------------------------------------
        3.1 Announcement Bar
        ------------------------------------------------------------------------- -->
