@@ -98,16 +98,16 @@
   }
 
   .caco-grid-container {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr; /* Centrado absoluto: Col 1 y 3 iguales */
     align-items: center;
-    justify-content: space-between;
-    gap: 30px;
+    gap: 24px;
     width: 100%;
   }
 
-  .caco-area-left { flex: 0 0 auto; min-width: 220px; }
-  .caco-area-center { flex: 1; display: flex; justify-content: center; }
-  .caco-area-right { flex: 0 0 auto; min-width: 220px; display: flex; justify-content: flex-end; }
+  .caco-area-left { display: flex; align-items: center; justify-self: start; }
+  .caco-area-center { display: flex; justify-content: center; width: 100%; min-width: 300px; }
+  .caco-area-right { display: flex; justify-content: flex-end; align-items: center; justify-self: end; }
 
   .caco-logo { 
     display: flex; 
@@ -126,8 +126,8 @@
 
   /* Enforce search bar skeleton */
   .caco-search-bar-container {
-    width: 100%;
-    max-width: 1000px; /* Wider search bar */
+    width: 60vw; /* Toma una porción proporcional del viewport */
+    max-width: 900px; /* Pero no excede un tamaño razonable para la vista */
     position: relative;
   }
   .caco-search-input {
