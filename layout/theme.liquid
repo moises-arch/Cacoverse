@@ -7,49 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <link rel="canonical" href="{{ canonical_url }}">
 
-    <script>
-      if (window.Shopify && Shopify.designMode) {
-        (function() {
-          const forbiddenKeywords = [
-            "Globo Form Builder",
-            "Powerful Contact Form Builder",
-            "Top 1 Form App",
-            "global merchants",
-            "Learn more:"
-          ];
-
-          const originalConsole = {
-            log: console.log,
-            info: console.info,
-            warn: console.warn,
-            debug: console.debug,
-            error: console.error
-          };
-
-          const createFilteredMethod = (methodName) => {
-            return function(...args) {
-              const shouldFilter = args.some(arg => {
-                if (typeof arg === 'string') {
-                  return forbiddenKeywords.some(keyword => arg.includes(keyword));
-                }
-                return false;
-              });
-
-              if (!shouldFilter) {
-                originalConsole[methodName].apply(console, args);
-              }
-            };
-          };
-
-          console.log = createFilteredMethod('log');
-          console.info = createFilteredMethod('info');
-          console.warn = createFilteredMethod('warn');
-          console.debug = createFilteredMethod('debug');
-          console.error = createFilteredMethod('error');
-        })();
-      }
-    </script>
-
     {%- if settings.favicon != blank -%}
       <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
     {%- endif -%}
@@ -73,9 +30,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
     <link rel="preconnect" href="https://www.clarity.ms" crossorigin>
+    <link rel="dns-prefetch" href="https://productreviews.shopifycdn.com">
+    <link rel="dns-prefetch" href="https://shop.app">
 
     <!-- Google Fonts (mantiene swap para evitar FOIT) -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet"></noscript>
 
     <!-- Core scripts del tema (defer) -->
     <script src="{{ 'constants.js' | asset_url }}" defer="defer"></script>

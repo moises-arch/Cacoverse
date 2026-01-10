@@ -66,26 +66,21 @@
     padding-top: var(--caco-header-height) !important;
   }
 
-  /* Asegura que el contenedor no parpadee ni se mueva al cargar */
+  /* OPTIMIZACIÓN: El header es visible desde el inicio para evitar penalizaciones en LCP */
   .caco-header-wrapper {
     position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 200;
     background: var(--header-bg);
-    /* INICIO OCULTO: Se fuerza oculto por defecto hasta que JS confirme "is-ready" */
-    opacity: 0;
-    visibility: hidden;
+    /* Se elimina opacity: 0 para que el LCP sea instantáneo */
+    opacity: 1;
+    visibility: visible;
     /* Chrome stability fixes */
     transform: translateZ(0);
     backface-visibility: hidden;
     perspective: 1000;
     will-change: transform;
-  }
-
-  /* Estado LISTO: Solo ahora se muestra */
-  .caco-header-wrapper.caco-is-ready {
-    opacity: 1 !important;
-    visibility: visible !important;
+    border-bottom: 1px solid rgba(0,0,0,0.05); /* Separación inicial sutil */
   }
 
   /* Pre-layout para la barra de anuncios */
@@ -99,13 +94,16 @@
      Excluimos estos elementos del árbol de renderizado inicial por completo.
      Esto evita que el navegador gaste recursos calculando su layout o 
      descargando iconos secundarios antes de lo necesario. */
+  /* 🚫 DEFENSIVE HIDING:
+     Solo ocultamos lo estrictamente necesario para evitar Layout Shift masivo,
+     pero permitiendo que el navegador sepa que existen. */
   .caco-dropdown,
   .caco-predictive-results,
   .caco-help-dropdown,
   .caco-industries-dropdown,
   .caco-partner-dropdown,
   .caco-mobile-drawer {
-    display: none !important;
+    display: none; /* Se mantiene none pero sin !important para que JS lo maneje */
   }
 
   /* Restauramos el renderizado una vez que el header está estable */
@@ -115,10 +113,9 @@
   .caco-is-ready .caco-industries-dropdown,
   .caco-is-ready .caco-partner-dropdown,
   .caco-is-ready .caco-mobile-drawer {
-    display: block !important; /* O flex si es necesario, pero block es seguro para contener */
+    display: block; 
     opacity: 0;
     visibility: hidden;
-    /* content-visibility removed for safety on product pages */
   }
   
   /* Caso especial para el mega-menu container */
@@ -241,7 +238,7 @@
   {%- endif -%}
 {%- endfor -%}
 
-<div class="caco-header-wrapper" style="opacity:0;visibility:hidden;">
+<div class="caco-header-wrapper">
   <!-- -------------------------------------------------------------------------
        3.1 Announcement Bar
        ------------------------------------------------------------------------- -->
