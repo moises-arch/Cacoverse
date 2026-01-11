@@ -924,42 +924,15 @@
 {% endschema %}
 
 {% style %}
-  /* Google Fonts Import Logic */
+  /* Google Fonts Import Logic - Disabled for performance (GTmetrix) */
+  /*
   {% for block in section.blocks %}
     {% if block.settings.heading_font contains 'Montserrat' or block.settings.body_font contains 'Montserrat' %}
       @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&display=swap');
     {% endif %}
-    {% if block.settings.heading_font contains 'Poppins' or block.settings.body_font contains 'Poppins' %}
-      @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap');
-    {% endif %}
-    {% if block.settings.heading_font contains 'Inter' or block.settings.body_font contains 'Inter' %}
-      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-    {% endif %}
-    {% if block.settings.heading_font contains 'Roboto' or block.settings.body_font contains 'Roboto' %}
-      @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
-    {% endif %}
-    {% if block.settings.heading_font contains 'Lato' or block.settings.body_font contains 'Lato' %}
-      @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap');
-    {% endif %}
-    {% if block.settings.heading_font contains 'Open Sans' or block.settings.body_font contains 'Open Sans' %}
-      @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap');
-    {% endif %}
-    {% if block.settings.heading_font contains 'Oswald' or block.settings.body_font contains 'Oswald' %}
-      @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap');
-    {% endif %}
-    {% if block.settings.heading_font contains 'Assistant' or block.settings.body_font contains 'Assistant' %}
-      @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&display=swap');
-    {% endif %}
-    {% if block.settings.heading_font contains 'Rubik' or block.settings.body_font contains 'Rubik' %}
-      @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;600;700&display=swap');
-    {% endif %}
-    {% if block.settings.heading_font contains 'Work Sans' or block.settings.body_font contains 'Work Sans' %}
-      @import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;600;700&display=swap');
-    {% endif %}
-    {% if block.settings.heading_font contains 'Karla' or block.settings.body_font contains 'Karla' %}
-      @import url('https://fonts.googleapis.com/css2?family=Karla:wght@300;400;600;700&display=swap');
-    {% endif %}
+    ...
   {% endfor %}
+  */
 
   .phs-slider-container {
     position: relative;
@@ -1332,7 +1305,7 @@
       
       <div class="phs-media-layer {% if block.settings.mobile_image == blank and block.settings.mobile_image_url == blank %}phs-no-mobile-img{% endif %}">
         {% if block.settings.bg_type == 'video' and block.settings.bg_video_url != blank %}
-           <video class="phs-bg-video" autoplay muted loop playsinline poster="{{ block.settings.bg_image_url }}">
+           <video class="phs-bg-video" autoplay muted loop playsinline preload="metadata" poster="{{ block.settings.bg_image_url }}">
              <source src="{{ block.settings.bg_video_url }}" type="video/mp4">
            </video>
         {% elsif block.settings.bg_type == 'gradient' %}
@@ -1594,23 +1567,22 @@
           </div>
 
           {% if block.settings.fg_image != blank or block.settings.fg_image_url != blank %}
-            <div class="phs-foreground-image">
+             <div class="phs-foreground-image">
                {% if block.settings.fg_image != blank %}
-                  {{ block.settings.fg_image | image_url: width: 800 | image_tag }}
-               {% else %}
-                  <img src="{{ block.settings.fg_image_url }}" alt="Foreground" />
+                  {{ block.settings.fg_image | image_url: width: 800, format: 'webp' | image_tag: loading: 'lazy' }}
+               {% elsif block.settings.fg_image_url != blank %}
+                  <img src="{{ block.settings.fg_image_url }}" alt="Foreground" loading="lazy" />
                {% endif %}
-            </div>
+             </div>
           {% endif %}
-          
-          <!-- Foreground Image 2 (Absolute) -->
+
           {% if block.settings.fg_image_2 != blank or block.settings.fg_image_2_url != blank %}
-             <div class="phs-fg-2-container">
+             <div class="phs-foreground-image phs-foreground-image-2">
                 {% if block.settings.fg_image_2 != blank %}
-                  {{ block.settings.fg_image_2 | image_url: width: 600 | image_tag }}
-               {% else %}
-                  <img src="{{ block.settings.fg_image_2_url }}" alt="Foreground 2" />
-               {% endif %}
+                  {{ block.settings.fg_image_2 | image_url: width: 600, format: 'webp' | image_tag: loading: 'lazy' }}
+                {% elsif block.settings.fg_image_2_url != blank %}
+                  <img src="{{ block.settings.fg_image_2_url }}" alt="Foreground 2" loading="lazy" />
+                {% endif %}
              </div>
           {% endif %}
         </div>
