@@ -5035,6 +5035,60 @@ document.addEventListener('visibilitychange', function () {
 });
 </script>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var drawer = document.getElementById('caco-mobile-drawer');
+  var overlay = document.getElementById('caco-mobile-overlay');
+  var burger = document.getElementById('caco-mobile-trigger');
+
+  if (!drawer || !overlay || !burger) return;
+  if (drawer.dataset.cacoEvents) return;
+
+  function openDrawer() {
+    drawer.classList.remove('caco-cloak');
+    drawer.classList.add('open');
+    drawer.style.transform = '';
+    overlay.classList.add('open');
+    drawer.setAttribute('aria-hidden', 'false');
+    document.documentElement.classList.add('caco-mobile-open');
+    burger.classList.add('is-open');
+  }
+
+  function closeDrawer() {
+    drawer.classList.remove('open');
+    drawer.style.transform = '';
+    overlay.classList.remove('open');
+    drawer.setAttribute('aria-hidden', 'true');
+    document.documentElement.classList.remove('caco-mobile-open');
+    burger.classList.remove('is-open');
+  }
+
+  if (!window.cacoToggleMobileDrawer) {
+    window.cacoToggleMobileDrawer = function(force) {
+      var isOpen = drawer.classList.contains('open');
+      if (force === true || (force === undefined && !isOpen)) {
+        openDrawer();
+      } else {
+        closeDrawer();
+      }
+    };
+  }
+
+  burger.addEventListener('click', function(e) {
+    e.preventDefault();
+    window.cacoToggleMobileDrawer();
+  });
+
+  overlay.addEventListener('click', closeDrawer);
+
+  document.addEventListener('keyup', function(e) {
+    if (e.key === 'Escape' && drawer.classList.contains('open')) {
+      closeDrawer();
+    }
+  });
+});
+</script>
+
 <!-- ============================================================================
      5.12 Voice Search (Web Speech API)
      ============================================================================ -->
