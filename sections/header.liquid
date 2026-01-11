@@ -459,16 +459,16 @@
     <div class="caco-container caco-grid-container">
       <div class="caco-area-left">
         <!-- Burger (mobile only) -->
-        <button class="caco-mobile-toggle md-hidden" id="caco-mobile-trigger" aria-label="Toggle menu">
+        <button class="caco-mobile-toggle" id="caco-mobile-trigger" aria-label="Toggle menu">
           <span class="caco-burger-icon caco-burger-icon--menu">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
-              <line x1="3" y1="6"  x2="21" y2="6"></line>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
               <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
               <line x1="3" y1="18" x2="21" y2="18"></line>
             </svg>
           </span>
           <span class="caco-burger-icon caco-burger-icon--close">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="18" y1="6" x2="6" y2="18"></line>
               <line x1="6" y1="6" x2="18" y2="18"></line>
             </svg>
@@ -558,6 +558,14 @@
 
       <div class="caco-area-right">
         <div class="caco-tools">
+          <!-- Mobile search icon (md-only actually means mobile only here) -->
+          <button type="button" class="caco-icon-btn md-only" id="caco-mobile-search-toggle" aria-label="Search">
+            <svg class="caco-search-icon-svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="6"></circle>
+              <line x1="15" y1="15" x2="20" y2="20" stroke-linecap="round"></line>
+            </svg>
+          </button>
+
           {%- assign partner_links = section.blocks | where: 'type', 'partner_link' -%}
           {%- if partner_links.size > 0 -%}
             <div class="caco-partner-menu small-hidden">
@@ -1251,7 +1259,7 @@
   </div>
 
   <!-- MOBILE OVERLAY + DRAWER (Panels) -->
-  <div class="caco-mobile-overlay md-hidden" id="caco-mobile-overlay"></div>
+  <div class="caco-mobile-overlay" id="caco-mobile-overlay"></div>
   <!-- -------------------------------------------------------------------------
        3.4 Mobile Drawer (Navigation & Mobile Search)
        ------------------------------------------------------------------------- -->
@@ -1262,7 +1270,8 @@
         <form action="{{ routes.search_url }}" method="get" role="search" class="caco-search-form caco-search-form--mobile">
           <div class="caco-search-icon caco-search-icon--mobile">
             <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+              <circle cx="11" cy="11" r="6" stroke-width="2"></circle>
+              <line x1="15" y1="15" x2="20" y2="20" stroke-width="2" stroke-linecap="round"></line>
             </svg>
           </div>
 
@@ -1309,6 +1318,7 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
             <polyline points="15 18 9 12 15 6"></polyline>
           </svg>
+          <span class="caco-mobile-back-text">Back</span>
         </button>
         <span class="caco-mobile-drawer-title" data-panel-title>Menu</span>
 
