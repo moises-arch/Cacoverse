@@ -193,12 +193,16 @@
     background: var(--announcement-bg);
     overflow: hidden;
     position: relative;
-    opacity: 1;
-    transform: none;
-    pointer-events: auto;
   }
   .caco-announcement-bar .caco-container {
     height: 100%;
+  }
+  .caco-announcement-content {
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+  .caco-announcement-ready .caco-announcement-content {
+    opacity: 1;
   }
   .caco-announcement-slider {
     display: flex;
@@ -4491,6 +4495,12 @@ document.addEventListener('visibilitychange', function () {
 
     initAnnouncement();
     window.addEventListener('resize', initAnnouncement);
+
+    // 🧪 Reveal deferred announcement bar
+    setTimeout(function() {
+      var wrapper = document.querySelector('.caco-header-wrapper');
+      if (wrapper) wrapper.classList.add('caco-announcement-ready');
+    }, 300);
 
     var closeBtn = bar.querySelector('.caco-announcement-close');
     if (closeBtn) {
