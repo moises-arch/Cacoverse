@@ -4511,42 +4511,7 @@ document.addEventListener('visibilitychange', function () {
     }
   })();
 
-  // Header overlay manager (desktop dim for open elements)
-  var cacoOverlayManager = (function() {
-    var overlay = document.getElementById('caco-search-overlay');
-    var headerWrapper = document.querySelector('.caco-header-wrapper');
-    var sources = new Set();
 
-    function isDesktop() {
-      return window.innerWidth >= 1025;
-    }
-
-    function sync() {
-      if (!overlay) return;
-      var active = sources.size > 0 && isDesktop();
-
-      overlay.classList.toggle('active', active);
-
-      if (headerWrapper) {
-        headerWrapper.classList.toggle('caco-overlay-active', active);
-      }
-    }
-
-    window.addEventListener('resize', sync);
-
-    return {
-      show: function(source) {
-        if (!overlay) return;
-        if (source) sources.add(source);
-        sync();
-      },
-      hide: function(source) {
-        if (!overlay) return;
-        if (source) sources.delete(source);
-        sync();
-      }
-    };
-  })();
 
 /* ----------------------------------------------------------------------------
    5.10 Predictive Search
@@ -4564,15 +4529,15 @@ document.addEventListener('visibilitychange', function () {
     var defaultImage = 'https://www.cacoamerica.com/cdn/shop/files/caco-usa.png';
     var searchBase = '{{ routes.search_url }}';
 
-    // ============ PREDICTIVE SEARCH CONFIG (uses Liquid section settings) ====
     var predictiveEnabled   = {{ section.settings.enable_predictive_search | default: true | json }};
     var predictiveLimit     = {{ section.settings.predictive_limit | default: 5 | json }};
     var predictiveMinChars  = {{ section.settings.predictive_min_chars | default: 2 | json }};
     var predictiveDebounce  = {{ section.settings.predictive_debounce | default: 250 | json }};
     var predictiveOverlayOn = {{ section.settings.predictive_overlay | default: true | json }};
-    // =========================================================================
 
     if (!predictiveEnabled) return;
+
+    var predictiveUrl = '{{ routes.predictive_search_url | default: "/search/suggest" }}';
 
     function setupPredictive(formSelector, inputSelector) {
       var form  = document.querySelector(formSelector);
@@ -4593,7 +4558,9 @@ document.addEventListener('visibilitychange', function () {
       }
 
       function openOverlay() {
-        if (cacoOverlayManager && predictiveOverlayOn) cacoOverlayManager.show('search');
+        try {
+          if (cacoOverlayManager && predictiveOverlayOn) cacoOverlayManager.show('search');
+        } catch(e) { console.warn('Overlay error', e); }
       }
 
       input.addEventListener('focus', function() {
@@ -4613,50 +4580,41 @@ document.addEventListener('visibilitychange', function () {
 
         typingTimer = setTimeout(function() {
 
-          var fields = [
-            'title',
-            'product_type',
-            'variants.title',
-            'variants.sku',
-            'variants.barcode',
-            'tag'
-          ].join(',');
 
-          var isNumeric = /^\d+$/.test(q);
-          if (isNumeric) {
-            fields = [
-              'title',
-              'variants.sku',
-              'variants.barcode',
-              'tag'
-            ].join(',');
-          }
-
-          var url =
-            '/search/suggest.json' +
+          var url = predictiveUrl + '.json' +
             '?q=' + encodeURIComponent(q) +
             '&resources[type]=product' +
-            '&resources[options][fields]=' + encodeURIComponent(fields) +
             '&resources[options][unavailable_products]=last' +
             '&resources[limit]=' + encodeURIComponent(predictiveLimit);
 
           fetch(url)
             .then(function(res){ return res.json(); })
             .then(function(data) {
-              var products =
-                (data.resources && data.resources.results && data.resources.results.products) || [];
-              if (!products.length) {
+              if (input.value.trim() !== q) return;
+              
+              var products = [];
+              if (data.resources && data.resources.results && data.resources.results.products) {
+                products = data.resources.results.products;
+              } else if (data.products) {
+                products = data.products;
+              } else if (data.results) {
+                products = data.results;
+              }
+              
+              if (!products || !products.length) {
                 closePredictive();
                 return;
               }
 
               var html = '<ul class="caco-predictive-list">';
               products.forEach(function(p) {
-                var imgSrc = p.image || defaultImage;
+                var image = p.image || p.featured_image || p.image_url;
+                var imgSrc = (image && typeof image === 'object') ? image.src : (image || defaultImage);
+                
                 html += ''
                   + '<li class="caco-predictive-item">'
                   +   '<a class="caco-predictive-link" href="' + p.url + '">'
-                  +     '<img src="' + imgSrc + '" alt="">'
+                  +     '<img src="' + imgSrc + '" alt="' + (p.title || '') + '">'
                   +     '<div class="caco-predictive-info">'
                   +       '<span class="caco-predictive-title">' + p.title + '</span>'
                   +       (p.price ? '<span class="caco-predictive-price">' + p.price + '</span>' : '')
@@ -4674,6 +4632,8 @@ document.addEventListener('visibilitychange', function () {
 
               resultsContainer.innerHTML = html;
               resultsContainer.style.display = 'block';
+              resultsContainer.style.visibility = 'visible';
+              resultsContainer.style.opacity = '1';
               resultsContainer.classList.add('is-visible');
               openOverlay();
             })
@@ -4694,12 +4654,9 @@ document.addEventListener('visibilitychange', function () {
       });
     }
 
-    var runSetup = function() {
-      setupPredictive('.caco-search-form--desktop', '#CacoSearchInputDesktop');
-      setupPredictive('.caco-search-form--mobile',  '#CacoSearchInputMobile');
-    };
-    if (window.cacoOnIdle) window.cacoOnIdle(runSetup);
-    else runSetup();
+    // Initialize immediately to ensure responsiveness
+    setupPredictive('.caco-search-form--desktop', '#CacoSearchInputDesktop');
+    setupPredictive('.caco-search-form--mobile',  '#CacoSearchInputMobile');
   })();
 
 /* ----------------------------------------------------------------------------
