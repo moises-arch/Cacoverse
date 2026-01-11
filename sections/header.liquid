@@ -4032,6 +4032,13 @@ document.addEventListener('visibilitychange', function () {
    Hover/click to activate sidebar panels in mega menu
    ---------------------------------------------------------------------------- */
   (function() {
+    function escapeSelector(value) {
+      if (window.CSS && CSS.escape) {
+        return CSS.escape(value);
+      }
+      return String(value).replace(/([ #;?%&,.+*~':"!^$[\]()=>|\/@])/g, '\\$1');
+    }
+
     document.querySelectorAll('.caco-nav-item.mega-menu').forEach(function(megaItem) {
       var sidebarLinks = megaItem.querySelectorAll('.caco-mega-sidebar-link');
       var panels = megaItem.querySelectorAll('.caco-mega-panel');
@@ -4044,7 +4051,7 @@ document.addEventListener('visibilitychange', function () {
         if (linkEl) linkEl.classList.add('active');
 
         var panelId = 'panel-' + targetHandle;
-        var targetPanel = megaItem.querySelector('#' + CSS.escape(panelId));
+        var targetPanel = megaItem.querySelector('#' + escapeSelector(panelId));
         if (targetPanel) targetPanel.classList.add('active');
       }
 
