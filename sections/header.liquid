@@ -386,12 +386,12 @@
   {%- if section.settings.show_announcement -%}
     {%- assign announcements = section.blocks | where: "type", "announcement" -%}
     <div
-      class="caco-announcement-bar caco-reveal caco-announcement-bar--{{ section.settings.announcement_effect | default: 'fade' }}"
+      class="caco-announcement-bar caco-announcement-bar--{{ section.settings.announcement_effect | default: 'fade' }}"
       id="caco-announcement-bar"
       data-interval="{{ section.settings.announcement_interval | default: 8 }}"
     >
       <div class="caco-container" style="position:relative;display:flex;align-items:center;justify-content:center;height:100%;">
-        <div class="caco-announcement-content">
+        <div class="caco-announcement-content caco-reveal">
           <div class="caco-announcement-slider">
             {%- if announcements.size > 0 -%}
               {%- comment -%} 
@@ -456,7 +456,7 @@
     <div class="caco-container caco-grid-container">
       <div class="caco-area-left">
         <!-- Burger (mobile only) -->
-        <button class="caco-mobile-toggle caco-reveal md-hidden" id="caco-mobile-trigger" aria-label="Toggle menu">
+        <button class="caco-mobile-toggle md-hidden" id="caco-mobile-trigger" aria-label="Toggle menu">
           <span class="caco-burger-icon caco-burger-icon--menu">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
               <line x1="3" y1="6"  x2="21" y2="6"></line>
@@ -473,7 +473,7 @@
         </button>
 
         <!-- Logo -->
-        <div class="caco-logo caco-reveal">
+        <div class="caco-logo">
           <a href="{{ routes.root_url }}">
             {%- if section.settings.logo != blank -%}
               {%- assign logo_height = section.settings.logo_width | divided_by: section.settings.logo.aspect_ratio -%}
