@@ -71,6 +71,19 @@
     pointer-events: none !important;
   }
 
+  /* 🌫️ FADE-IN REVEAL SYSTEM */
+  .caco-reveal {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.6s !important;
+    will-change: opacity;
+  }
+  .caco-is-visible .caco-reveal,
+  .caco-reveal.caco-is-visible {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
   /* Apply cloak to existing classes as backup */
   .caco-dropdown,
   .caco-predictive-results,
@@ -373,7 +386,7 @@
   {%- if section.settings.show_announcement -%}
     {%- assign announcements = section.blocks | where: "type", "announcement" -%}
     <div
-      class="caco-announcement-bar caco-announcement-bar--{{ section.settings.announcement_effect | default: 'fade' }}"
+      class="caco-announcement-bar caco-reveal caco-announcement-bar--{{ section.settings.announcement_effect | default: 'fade' }}"
       id="caco-announcement-bar"
       data-interval="{{ section.settings.announcement_interval | default: 8 }}"
     >
@@ -443,7 +456,7 @@
     <div class="caco-container caco-grid-container">
       <div class="caco-area-left">
         <!-- Burger (mobile only) -->
-        <button class="caco-mobile-toggle md-hidden" id="caco-mobile-trigger" aria-label="Toggle menu">
+        <button class="caco-mobile-toggle caco-reveal md-hidden" id="caco-mobile-trigger" aria-label="Toggle menu">
           <span class="caco-burger-icon caco-burger-icon--menu">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
               <line x1="3" y1="6"  x2="21" y2="6"></line>
@@ -460,7 +473,7 @@
         </button>
 
         <!-- Logo -->
-        <div class="caco-logo">
+        <div class="caco-logo caco-reveal">
           <a href="{{ routes.root_url }}">
             {%- if section.settings.logo != blank -%}
               {%- assign logo_height = section.settings.logo_width | divided_by: section.settings.logo.aspect_ratio -%}
@@ -474,7 +487,7 @@
 
       <!-- Desktop search in the middle -->
       <div class="caco-area-center small-hidden">
-        <div class="caco-search-bar-container">
+        <div class="caco-search-bar-container caco-reveal">
           <form action="{{ routes.search_url }}" method="get" role="search" class="caco-search-form caco-search-form--desktop">
             <div class="caco-search-icon">
               <svg
@@ -574,7 +587,7 @@
 
           <a
             href="{{ routes.cart_url }}"
-            class="caco-icon-btn caco-cart-btn"
+            class="caco-icon-btn caco-cart-btn caco-reveal"
             data-caco-cart-drawer
             aria-label="{{ 'sections.cart.title' | t }}"
           >
@@ -947,7 +960,7 @@
 
           {%- if help_items.size > 0 -%}
             <!-- HELP CENTER DROPDOWN (DESKTOP) -->
-            <div class="caco-help-menu">
+            <div class="caco-help-menu caco-reveal">
               <button
                 type="button"
                 class="caco-nav-aux-link caco-help-toggle"
@@ -1090,7 +1103,7 @@
 
           {%- if industry_items.size > 0 -%}
             <!-- INDUSTRIES DROPDOWN (DESKTOP) -->
-            <div class="caco-industries-menu">
+            <div class="caco-industries-menu caco-reveal">
               <button
                 type="button"
                 class="caco-nav-aux-link caco-industries-toggle"
@@ -5134,6 +5147,29 @@ document.addEventListener('DOMContentLoaded', function() {
   setPlaceholder(basePlaceholder);
   setTimeout(startCycle, 1500);
 });
+</script>
+
+<script>
+  /* 🏁 REVEAL HEADER COMPONENTS WHEN LOADED
+     Ensures that search bar, announcement bar, and social pills 
+     appear only after CSS/Assets are settled to prevent "broken" look.
+  */
+  (function() {
+    const reveal = () => {
+      document.querySelectorAll('.caco-reveal').forEach(el => {
+        el.classList.add('caco-is-visible');
+      });
+    };
+
+    // Trigger reveal when everything is ready
+    window.addEventListener('load', reveal);
+
+    // Fallback if load event takes too long
+    setTimeout(reveal, 2500);
+    
+    // Immediate reveal if already loaded (cache/fast network)
+    if (document.readyState === 'complete') reveal();
+  })();
 </script>
 
 
