@@ -221,7 +221,7 @@
   .caco-partner-dropdown,
   .caco-mobile-drawer,
   .caco-search-bar-container--deferred {
-    display: none;
+    display: none !important;
   }
 
   .caco-nav {
@@ -2385,7 +2385,7 @@
     z-index:180;
   }
   .caco-partner-menu.open .caco-partner-dropdown{
-    display: block;
+    display: block !important;
     opacity:1;visibility:visible;transform:translateY(0);
   }
   .caco-partner-dropdown ul{margin:0;padding:0;list-style:none;}
@@ -2430,7 +2430,7 @@
     border-radius:0 0 8px 8px;
   }
   .caco-nav-item:hover>.caco-dropdown{
-    display: block;
+    display: block !important;
     opacity:1;visibility:visible;transform:translateY(0);
   }
 
@@ -2943,7 +2943,7 @@
 
   .caco-help-menu.open .caco-help-dropdown,
   .caco-industries-menu.open .caco-industries-dropdown{
-    display: block;
+    display: block !important;
     opacity:1 !important;
     visibility:visible !important;
     transform:translateY(0) !important;
@@ -4523,7 +4523,7 @@ document.addEventListener('visibilitychange', function () {
 
       function show(html) {
         container.innerHTML = html;
-        container.style.display = 'block';
+        container.style.setProperty('display', 'block', 'important');
         container.style.visibility = 'visible';
         container.style.opacity = '1';
         container.classList.add('is-visible');
