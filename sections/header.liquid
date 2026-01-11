@@ -1209,47 +1209,6 @@
             </a>
           {%- endif -%}
 
-          <div class="caco-loading-icon" aria-hidden="true">
-            <span class="caco-loading-dot"></span>
-            <span class="caco-loading-dot"></span>
-            <span class="caco-loading-dot"></span>
-          </div>
-        </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            <span class="caco-loading-dot"></span>
-            <span class="caco-loading-dot"></span>
-            <span class="caco-loading-dot"></span>
-          </div>
         </div>
       </nav>
     </div>
@@ -1317,11 +1276,6 @@
         </button>
         <span class="caco-mobile-drawer-title" data-panel-title>Menu</span>
 
-        <div class="caco-loading-icon caco-loading-icon--mobile" aria-hidden="true">
-          <span class="caco-loading-dot"></span>
-          <span class="caco-loading-dot"></span>
-          <span class="caco-loading-dot"></span>
-        </div>
       </div>
 
       <!-- Mobile navigation: panel-based -->
@@ -2035,7 +1989,12 @@
     position:relative;
     filter:drop-shadow(0 2px 8px rgba(0,0,0,.035));
   }
-  .caco-search-form{position:relative;width:100%;}
+  .caco-search-form{
+    position:relative;
+    width:100%;
+    display: flex;
+    align-items: center;
+  }
   .caco-search-input{
     width:100%;
     background:#fff;
