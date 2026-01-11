@@ -4730,14 +4730,24 @@ document.addEventListener('visibilitychange', function () {
     var burger   = document.getElementById('caco-mobile-trigger');
     var searchBtn= document.getElementById('caco-mobile-search-toggle');
 
-    // Robust check: retry finding if not found initially (sometimes Liquid rendering order is weird)
+    // Robust check: retry finding if not found initially
     if (!drawer || !overlay) {
-      document.addEventListener('DOMContentLoaded', function() {
-        drawer = drawer || document.getElementById('caco-mobile-drawer');
-        overlay = overlay || document.getElementById('caco-mobile-overlay');
-        burger = burger || document.getElementById('caco-mobile-trigger');
-        if (drawer && overlay) init();
-      });
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          drawer = drawer || document.getElementById('caco-mobile-drawer');
+          overlay = overlay || document.getElementById('caco-mobile-overlay');
+          burger = burger || document.getElementById('caco-mobile-trigger');
+          if (drawer && overlay) init();
+        });
+      } else {
+        // DOM already parsed, but maybe elements were lazy-loaded or we need a tiny delay
+        setTimeout(function() {
+          drawer = drawer || document.getElementById('caco-mobile-drawer');
+          overlay = overlay || document.getElementById('caco-mobile-overlay');
+          burger = burger || document.getElementById('caco-mobile-trigger');
+          if (drawer && overlay) init();
+        }, 50);
+      }
     } else {
       init();
     }
@@ -4748,6 +4758,8 @@ document.addEventListener('visibilitychange', function () {
       overlay = document.getElementById('caco-mobile-overlay');
       burger = document.getElementById('caco-mobile-trigger');
       if (!drawer || !overlay) return;
+
+      attachListeners();
 
     var panels   = drawer.querySelectorAll('.caco-mobile-panel');
     var titleEl  = drawer.querySelector('[data-panel-title]');
@@ -4804,16 +4816,19 @@ document.addEventListener('visibilitychange', function () {
     }
 
     window.cacoToggleMobileDrawer = function(force) {
-      if (force === true) {
+      if (!drawer || !overlay) {
+        drawer = document.getElementById('caco-mobile-drawer');
+        overlay = document.getElementById('caco-mobile-overlay');
+        burger = document.getElementById('caco-mobile-trigger');
+        if (drawer && overlay) init();
+      }
+      if (!drawer) return;
+
+      var isOpen = drawer.classList.contains('open');
+      if (force === true || (force === undefined && !isOpen)) {
         openDrawer();
-      } else if (force === false) {
-        closeDrawer();
       } else {
-        if (drawer.classList.contains('open')) {
-          closeDrawer();
-        } else {
-          openDrawer();
-        }
+        closeDrawer();
       }
     };
 
@@ -4848,68 +4863,69 @@ document.addEventListener('visibilitychange', function () {
       resetPanels();
     }
 
-    [burger, searchBtn].forEach(function(btn) {
-      if (!btn) return;
-      btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        if (drawer.classList.contains('open')) {
+    function attachListeners() {
+      if (drawer.dataset.cacoEvents) return;
+      drawer.dataset.cacoEvents = 'true';
+
+      [burger, searchBtn].forEach(function(btn) {
+        if (!btn) return;
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          window.cacoToggleMobileDrawer();
+        });
+      });
+
+      if (overlay) overlay.addEventListener('click', closeDrawer);
+
+      document.addEventListener('keyup', function(e) {
+        if (e.key === 'Escape' && drawer.classList.contains('open')) {
           closeDrawer();
-        } else {
-          openDrawer();
         }
       });
-    });
 
-    overlay.addEventListener('click', closeDrawer);
-
-    document.addEventListener('keyup', function(e) {
-      if (e.key === 'Escape' && drawer.classList.contains('open')) {
-        closeDrawer();
-      }
-    });
-
-    drawer.addEventListener('click', function(e) {
-      var grandLink = e.target.closest('.caco-mobile-link-grand');
-      if (grandLink) {
-        var panel = grandLink.closest('.caco-mobile-panel');
-        if (panel) {
-          panel.querySelectorAll('.caco-mobile-item.is-grand-active').forEach(function(li){
-            li.classList.remove('is-grand-active');
-          });
-          var liGrand = grandLink.closest('.caco-mobile-item');
-          if (liGrand) liGrand.classList.add('is-grand-active');
+      drawer.addEventListener('click', function(e) {
+        var grandLink = e.target.closest('.caco-mobile-link-grand');
+        if (grandLink) {
+          var panel = grandLink.closest('.caco-mobile-panel');
+          if (panel) {
+            panel.querySelectorAll('.caco-mobile-item.is-grand-active').forEach(function(li){
+              li.classList.remove('is-grand-active');
+            });
+            var liGrand = grandLink.closest('.caco-mobile-item');
+            if (liGrand) liGrand.classList.add('is-grand-active');
+          }
         }
-      }
 
-      var trigger = e.target.closest('[data-panel-target]');
-      if (!trigger) return;
-      var targetId = trigger.getAttribute('data-panel-target');
-      if (!targetId) return;
-
-      var parentPanel = trigger.closest('.caco-mobile-panel');
-
-      if (parentPanel && parentPanel.hasAttribute('data-panel-root')) {
-        clearRootActive();
-        var li = trigger.closest('.caco-mobile-item');
-        if (li) li.classList.add('caco-mobile-item--root-active');
-      }
-
-      if (currentPanelId) {
-        historyStack.push(currentPanelId);
-      }
-      showPanel(targetId);
-    });
-
-    if (backBtn) {
-      backBtn.addEventListener('click', function() {
-        if (!historyStack.length) return;
-        historyStack.pop();
-        var prev = historyStack[historyStack.length - 1] || 'root';
-        showPanel(prev);
-        if (!historyStack.length) {
-          setBackVisibility();
+        var trigger = e.target.closest('[data-panel-target]');
+        if (trigger) {
+          var targetId = trigger.getAttribute('data-panel-target');
+          if (targetId) {
+             var parentPanel = trigger.closest('.caco-mobile-panel');
+             if (parentPanel && parentPanel.hasAttribute('data-panel-root')) {
+               clearRootActive();
+               var li = trigger.closest('.caco-mobile-item');
+               if (li) li.classList.add('caco-mobile-item--root-active');
+             }
+             if (currentPanelId) historyStack.push(currentPanelId);
+             showPanel(targetId);
+          }
         }
       });
+
+      if (backBtn) {
+        backBtn.addEventListener('click', function() {
+          if (!historyStack.length) return;
+          historyStack.pop();
+          var prev = historyStack[historyStack.length - 1] || 'root';
+          showPanel(prev);
+          if (!historyStack.length) setBackVisibility();
+        });
+      }
+
+      drawer.addEventListener('touchstart', onDrawerTouchStart);
+      drawer.addEventListener('touchmove', onDrawerTouchMove);
+      drawer.addEventListener('touchend', onDrawerTouchEnd);
+      drawer.addEventListener('touchcancel', onDrawerTouchEnd);
     }
 
     var startX = 0;
@@ -4952,10 +4968,6 @@ document.addEventListener('visibilitychange', function () {
       }
     }
 
-    drawer.addEventListener('touchstart', onDrawerTouchStart);
-    drawer.addEventListener('touchmove', onDrawerTouchMove);
-    drawer.addEventListener('touchend', onDrawerTouchEnd);
-    drawer.addEventListener('touchcancel', onDrawerTouchEnd);
 
     var edgeStartX = null;
 
