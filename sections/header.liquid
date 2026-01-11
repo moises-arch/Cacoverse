@@ -60,8 +60,17 @@
     --primary-blue: #0051c3;
     --header-text: #1f2933;
     --border-color: #e5e7eb;
+  /* 👻 PREVENT GHOST ELEMENTS (Chrome Fix) */
+  .caco-dropdown,
+  .caco-predictive-results,
+  .caco-help-dropdown,
+  .caco-industries-dropdown,
+  .caco-partner-dropdown,
+  .caco-mobile-drawer,
+  .caco-search-bar-container--deferred {
+    display: none !important;
   }
-  
+
   @media (max-width: 1024px) {
     :root { --caco-header-height: 118px; }
   }
@@ -4504,7 +4513,7 @@ document.addEventListener('visibilitychange', function () {
       // Create Results Container
       var container = document.createElement('div');
       container.className = 'caco-predictive-results';
-      container.style.display = 'none'; 
+      container.style.setProperty('display', 'none', 'important');
       container.style.visibility = 'hidden';
       // Append to the form's parent to ensure it sits correctly relative to the input wrapper
       form.parentNode.appendChild(container);
