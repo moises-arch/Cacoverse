@@ -4524,141 +4524,162 @@ document.addEventListener('visibilitychange', function () {
    - predictive_debounce: Delay in ms before API call
    - predictive_overlay: Show dimming overlay
    ---------------------------------------------------------------------------- */
+  /* ----------------------------------------------------------------------------
+   5.10 Predictive Search (Refactored)
+   ---------------------------------------------------------------------------- */
   (function() {
-    var overlay = document.getElementById('caco-search-overlay');
-    var defaultImage = 'https://www.cacoamerica.com/cdn/shop/files/caco-usa.png';
-    var searchBase = '{{ routes.search_url }}';
+    var searchUrl = '{{ routes.predictive_search_url }}';
+    // Normalize URL
+    if (searchUrl.indexOf('http') === -1 && searchUrl.indexOf('/') !== 0) {
+      searchUrl = '/search/suggest';
+    }
+    
+    // Configuration
+    var CONFIG = {
+      limit: {{ section.settings.predictive_limit | default: 5 }},
+      minChars: {{ section.settings.predictive_min_chars | default: 2 }},
+      debounce: {{ section.settings.predictive_debounce | default: 250 }},
+      overlay: {{ section.settings.predictive_overlay | default: true }}
+    };
 
-    var predictiveEnabled   = {{ section.settings.enable_predictive_search | default: true | json }};
-    var predictiveLimit     = {{ section.settings.predictive_limit | default: 5 | json }};
-    var predictiveMinChars  = {{ section.settings.predictive_min_chars | default: 2 | json }};
-    var predictiveDebounce  = {{ section.settings.predictive_debounce | default: 250 | json }};
-    var predictiveOverlayOn = {{ section.settings.predictive_overlay | default: true | json }};
-
-    if (!predictiveEnabled) return;
-
-    var predictiveUrl = '{{ routes.predictive_search_url | default: "/search/suggest" }}';
-
-    function setupPredictive(formSelector, inputSelector) {
-      var form  = document.querySelector(formSelector);
+    function initSearch(inputSelector) {
       var input = document.querySelector(inputSelector);
-      if (!form || !input) return;
+      if (!input) return;
 
-      var resultsContainer = document.createElement('div');
-      resultsContainer.className = 'caco-predictive-results';
-      resultsContainer.style.display = 'none'; // Ensure hidden initially
-      resultsContainer.style.visibility = 'hidden';
-      form.parentNode.appendChild(resultsContainer);
+      var form = input.closest('form');
+      if (!form) return;
 
-      var typingTimer;
+      // Create Results Container
+      var container = document.createElement('div');
+      container.className = 'caco-predictive-results';
+      container.style.display = 'none'; 
+      container.style.visibility = 'hidden';
+      // Append to the form's parent to ensure it sits correctly relative to the input wrapper
+      form.parentNode.appendChild(container);
 
-      function closePredictive() {
-        resultsContainer.innerHTML = '';
-        resultsContainer.style.display = 'none';
-        resultsContainer.classList.remove('is-visible');
-        if (cacoOverlayManager) cacoOverlayManager.hide('search');
-      }
+      var timer = null;
+      var defaultImage = window.location.protocol + '//cdn.shopify.com/s/images/admin/no-image-large.gif';
 
-      function openOverlay() {
-        try {
-          if (cacoOverlayManager && predictiveOverlayOn) cacoOverlayManager.show('search');
-        } catch(e) { console.warn('Overlay error', e); }
-      }
-
-      input.addEventListener('focus', function() {
-        if (input.value.trim().length >= predictiveMinChars) {
-          openOverlay();
+      function hide() {
+        container.innerHTML = '';
+        container.style.display = 'none';
+        container.classList.remove('is-visible');
+        if (CONFIG.overlay && typeof cacoOverlayManager !== 'undefined') {
+          cacoOverlayManager.hide('search');
         }
-      });
+      }
 
-      input.addEventListener('input', function() {
-        var q = input.value.trim();
-        clearTimeout(typingTimer);
+      function show(html) {
+        container.innerHTML = html;
+        container.style.display = 'block';
+        container.style.visibility = 'visible';
+        container.style.opacity = '1';
+        container.classList.add('is-visible');
+        
+        if (CONFIG.overlay && typeof cacoOverlayManager !== 'undefined' && CONFIG.overlay) {
+          cacoOverlayManager.show('search');
+        }
+      }
 
-        if (!q || q.length < predictiveMinChars) {
-          closePredictive();
+      function fetchResults(term) {
+        var q = term.trim();
+        if (q.length < CONFIG.minChars) {
+          hide();
           return;
         }
 
-        typingTimer = setTimeout(function() {
+        // Build API URL
+        var params = new URLSearchParams();
+        params.append('q', q);
+        params.append('resources[type]', 'product');
+        params.append('resources[limit]', CONFIG.limit);
+        params.append('resources[options][unavailable_products]', 'last');
+        params.append('resources[options][fields]', 'title,product_type,variants.sku,vendor,tag'); 
 
+        var finalUrl = searchUrl + '.json?' + params.toString();
 
-          var url = predictiveUrl + '.json' +
-            '?q=' + encodeURIComponent(q) +
-            '&resources[type]=product' +
-            '&resources[options][unavailable_products]=last' +
-            '&resources[limit]=' + encodeURIComponent(predictiveLimit);
+        fetch(finalUrl)
+          .then(function(r) { return r.json(); })
+          .then(function(data) {
+            // Guard: ensure input hasn't changed while fetching
+            if (input.value.trim() !== q) return;
 
-          fetch(url)
-            .then(function(res){ return res.json(); })
-            .then(function(data) {
-              if (input.value.trim() !== q) return;
-              
-              var products = [];
-              if (data.resources && data.resources.results && data.resources.results.products) {
-                products = data.resources.results.products;
-              } else if (data.products) {
-                products = data.products;
-              } else if (data.results) {
-                products = data.results;
-              }
-              
-              if (!products || !products.length) {
-                closePredictive();
-                return;
-              }
+            var products = (data.resources && data.resources.results && data.resources.results.products) || [];
+            
+            // Fallbacks for different API shapes just in case
+            if (!products.length && data.products) products = data.products;
+            if (!products.length && data.results) products = data.results;
 
-              var html = '<ul class="caco-predictive-list">';
-              products.forEach(function(p) {
-                var image = p.image || p.featured_image || p.image_url;
-                var imgSrc = (image && typeof image === 'object') ? image.src : (image || defaultImage);
-                
-                html += ''
-                  + '<li class="caco-predictive-item">'
-                  +   '<a class="caco-predictive-link" href="' + p.url + '">'
-                  +     '<img src="' + imgSrc + '" alt="' + (p.title || '') + '">'
-                  +     '<div class="caco-predictive-info">'
-                  +       '<span class="caco-predictive-title">' + p.title + '</span>'
-                  +       (p.price ? '<span class="caco-predictive-price">' + p.price + '</span>' : '')
-                  +     '</div>'
-                  +   '</a>'
-                  + '</li>';
-              });
+            if (products.length === 0) {
+               hide();
+               return;
+            }
 
-              html += '</ul>'
-                + '<div class="caco-view-all">'
-                +   '<a href="' + searchBase + '?q=' + encodeURIComponent(q) + '" class="caco-view-all-link">'
-                +     'View all results'
-                +   '</a>'
-                + '</div>';
+            // Generate HTML
+            var listHtml = '<ul class="caco-predictive-list">';
+            products.forEach(function(p) {
+               // Image fallback logic
+               var imgObj = p.image || p.featured_image || p.image_url;
+               var imgSrc = (imgObj && typeof imgObj === 'object') ? imgObj.src : (imgObj || defaultImage);
 
-              resultsContainer.innerHTML = html;
-              resultsContainer.style.display = 'block';
-              resultsContainer.style.visibility = 'visible';
-              resultsContainer.style.opacity = '1';
-              resultsContainer.classList.add('is-visible');
-              openOverlay();
-            })
-            .catch(function() {
-              closePredictive();
+               listHtml += '<li class="caco-predictive-item">' +
+                 '<a href="' + p.url + '" class="caco-predictive-link">' +
+                   '<img src="' + imgSrc + '" alt="' + (p.title || '') + '">' +
+                   '<div class="caco-predictive-info">' +
+                     '<span class="caco-predictive-title">' + p.title + '</span>' +
+                     '<span class="caco-predictive-price">' + (p.price || '') + '</span>' +
+                   '</div>' +
+                 '</a>' +
+               '</li>';
             });
-        }, predictiveDebounce);
+            listHtml += '</ul>';
+
+            // "View All" link
+            var viewAllUrl = '{{ routes.search_url }}?q=' + encodeURIComponent(q);
+            listHtml += '<div class="caco-view-all"><a href="' + viewAllUrl + '" class="caco-view-all-link">View all results</a></div>';
+
+            show(listHtml);
+          })
+          .catch(function(err) {
+            console.error('Predictive Search Error:', err);
+            hide();
+          });
+      }
+
+      // Event Listeners
+      input.addEventListener('input', function() {
+        if (timer) clearTimeout(timer);
+        var val = input.value;
+        if (val.trim().length < CONFIG.minChars) {
+           hide();
+           return;
+        }
+        timer = setTimeout(function() {
+          fetchResults(val);
+        }, CONFIG.debounce);
       });
 
-      document.addEventListener('click', function(e) {
-        if (!resultsContainer.contains(e.target) && !form.contains(e.target)) {
-          closePredictive();
+      input.addEventListener('focus', function() {
+        if (input.value.trim().length >= CONFIG.minChars) {
+          fetchResults(input.value);
         }
       });
 
-      input.addEventListener('blur', function() {
-        setTimeout(closePredictive, 150);
+      // Handle closing
+      document.addEventListener('click', function(e) {
+        if (!container.contains(e.target) && !form.contains(e.target)) {
+          hide();
+        }
+      });
+      
+      input.addEventListener('blur', function(){
+        setTimeout(hide, 200);
       });
     }
 
-    // Initialize immediately to ensure responsiveness
-    setupPredictive('.caco-search-form--desktop', '#CacoSearchInputDesktop');
-    setupPredictive('.caco-search-form--mobile',  '#CacoSearchInputMobile');
+    // Initialize inputs
+    initSearch('#CacoSearchInputDesktop');
+    initSearch('#CacoSearchInputMobile');
   })();
 
 /* ----------------------------------------------------------------------------
