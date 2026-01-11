@@ -4428,7 +4428,7 @@ document.addEventListener('visibilitychange', function () {
     var currentMode = null; // 'mobile' or 'desktop'
 
     function initAnnouncement() {
-      var isMobile = window.innerWidth <= 768;
+      var isMobile = window.innerWidth <= 1024; // Aligned with CSS breakpoint
       var newMode = isMobile ? 'mobile' : 'desktop';
       
       // Only re-init if mode changed to avoid killing active animations on minor resize
@@ -4546,6 +4546,8 @@ document.addEventListener('visibilitychange', function () {
 
       var resultsContainer = document.createElement('div');
       resultsContainer.className = 'caco-predictive-results';
+      resultsContainer.style.display = 'none'; // Ensure hidden initially
+      resultsContainer.style.visibility = 'hidden';
       form.parentNode.appendChild(resultsContainer);
 
       var typingTimer;
@@ -4654,10 +4656,7 @@ document.addEventListener('visibilitychange', function () {
       });
     }
 
-<<<<<<< HEAD
     // Initialize immediately to ensure responsiveness
-=======
->>>>>>> 45cccbd28be8d56986369b2d3b74f74188721532
     setupPredictive('.caco-search-form--desktop', '#CacoSearchInputDesktop');
     setupPredictive('.caco-search-form--mobile',  '#CacoSearchInputMobile');
   })();
@@ -4910,8 +4909,7 @@ document.addEventListener('visibilitychange', function () {
       }
     });
   })();
-
-
+});
 </script>
 
 <!-- ============================================================================
@@ -5096,7 +5094,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-{%- render 'cart-drawer' -%}
+
 
 
 
