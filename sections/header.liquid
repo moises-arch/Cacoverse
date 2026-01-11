@@ -88,15 +88,11 @@
   }
 
   /* Apply cloak to existing classes as backup */
-  .caco-dropdown,
-  .caco-predictive-results,
-  .caco-help-dropdown,
-  .caco-industries-dropdown,
-  .caco-partner-dropdown,
-  .caco-mobile-drawer,
-  .caco-search-bar-container--deferred {
+  /* Apply cloak only to drop-down elements that need it */
+  .caco-cloak {
     display: none !important;
   }
+
 
   @media (max-width: 1024px) {
     :root { --caco-header-height: 118px; }
@@ -250,15 +246,7 @@
   .caco-announcement-slide { display: none; }
   .caco-announcement-slide.active { display: block !important; }
 
-  .caco-dropdown,
-  .caco-predictive-results,
-  .caco-help-dropdown,
-  .caco-industries-dropdown,
-  .caco-partner-dropdown,
-  .caco-mobile-drawer,
-  .caco-search-bar-container--deferred {
-    display: none !important;
-  }
+  /* Cloaking of secondary elements handled by caco-cloak and .open classes */
 
   .caco-nav {
     display: flex !important;
@@ -459,7 +447,8 @@
     <div class="caco-container caco-grid-container">
       <div class="caco-area-left">
         <!-- Burger (mobile only) -->
-        <button class="caco-mobile-toggle" id="caco-mobile-trigger" aria-label="Toggle menu">
+        <!-- Burger (mobile only) -->
+        <button class="caco-mobile-toggle md-hidden" id="caco-mobile-trigger" aria-label="Toggle menu">
           <span class="caco-burger-icon caco-burger-icon--menu">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
               <line x1="3" y1="12" x2="21" y2="12"></line>
@@ -3282,7 +3271,7 @@
   .caco-mobile-overlay{
     position:fixed;
     inset:0;
-    background:transparent;
+    background:rgba(0,0,0,0.5);
     opacity:0;
     visibility:hidden;
     pointer-events:none;
@@ -4778,6 +4767,7 @@ document.addEventListener('visibilitychange', function () {
       drawer = document.getElementById('caco-mobile-drawer');
       overlay = document.getElementById('caco-mobile-overlay');
       burger = document.getElementById('caco-mobile-trigger');
+      searchBtn = document.getElementById('caco-mobile-search-toggle');
       if (!drawer || !overlay) return;
 
       panels    = drawer.querySelectorAll('.caco-mobile-panel');
@@ -5035,61 +5025,8 @@ document.addEventListener('visibilitychange', function () {
 });
 </script>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  var drawer = document.getElementById('caco-mobile-drawer');
-  var overlay = document.getElementById('caco-mobile-overlay');
-  var burger = document.getElementById('caco-mobile-trigger');
 
-  if (!drawer || !overlay || !burger) return;
-  if (drawer.dataset.cacoEvents) return;
-
-  function openDrawer() {
-    drawer.classList.remove('caco-cloak');
-    drawer.classList.add('open');
-    drawer.style.transform = '';
-    overlay.classList.add('open');
-    drawer.setAttribute('aria-hidden', 'false');
-    document.documentElement.classList.add('caco-mobile-open');
-    burger.classList.add('is-open');
-  }
-
-  function closeDrawer() {
-    drawer.classList.remove('open');
-    drawer.style.transform = '';
-    overlay.classList.remove('open');
-    drawer.setAttribute('aria-hidden', 'true');
-    document.documentElement.classList.remove('caco-mobile-open');
-    burger.classList.remove('is-open');
-  }
-
-  if (!window.cacoToggleMobileDrawer) {
-    window.cacoToggleMobileDrawer = function(force) {
-      var isOpen = drawer.classList.contains('open');
-      if (force === true || (force === undefined && !isOpen)) {
-        openDrawer();
-      } else {
-        closeDrawer();
-      }
-    };
-  }
-
-  burger.addEventListener('click', function(e) {
-    e.preventDefault();
-    window.cacoToggleMobileDrawer();
-  });
-
-  overlay.addEventListener('click', closeDrawer);
-
-  document.addEventListener('keyup', function(e) {
-    if (e.key === 'Escape' && drawer.classList.contains('open')) {
-      closeDrawer();
-    }
-  });
-});
-</script>
-
-<!-- ============================================================================
+ <!-- ============================================================================
      5.12 Voice Search (Web Speech API)
      ============================================================================ -->
 <script>
