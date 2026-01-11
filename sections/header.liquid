@@ -60,7 +60,18 @@
     --primary-blue: #0051c3;
     --header-text: #1f2933;
     --border-color: #e5e7eb;
+  /* Close root */
+  }
+
   /* 👻 PREVENT GHOST ELEMENTS (Chrome Fix) */
+  .caco-cloak {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  /* Apply cloak to existing classes as backup */
   .caco-dropdown,
   .caco-predictive-results,
   .caco-help-dropdown,
@@ -542,7 +553,7 @@
                   <path d="M16 7h4"></path>
                 </svg>
               </button>
-              <div class="caco-partner-dropdown" role="menu">
+              <div class="caco-partner-dropdown caco-cloak" role="menu">
                 <ul>
                   {%- for block in partner_links -%}
                     <li><a href="{{ block.settings.url }}" class="caco-partner-link">{{ block.settings.label }}</a></li>
@@ -616,7 +627,7 @@
               </a>
 
               {%- if link.links != blank -%}
-                <div class="caco-dropdown">
+                <div class="caco-dropdown caco-cloak">
 
 
 {%- if is_mega -%}
@@ -993,7 +1004,7 @@
                 </svg>
               </button>
 
-              <div class="caco-help-dropdown" role="menu">
+              <div class="caco-help-dropdown caco-cloak" role="menu">
                 <ul>
                   {%- for block in help_items -%}
                     <li>
@@ -1135,7 +1146,7 @@
                 </svg>
               </button>
 
-              <div class="caco-industries-dropdown" role="menu">
+              <div class="caco-industries-dropdown caco-cloak" role="menu">
                 <ul>
                   {%- for block in industry_items -%}
                     <li>
@@ -1228,7 +1239,7 @@
   <!-- -------------------------------------------------------------------------
        3.4 Mobile Drawer (Navigation & Mobile Search)
        ------------------------------------------------------------------------- -->
-  <div class="caco-mobile-drawer md-hidden" id="caco-mobile-drawer" aria-hidden="true">
+  <div class="caco-mobile-drawer caco-cloak md-hidden" id="caco-mobile-drawer" aria-hidden="true">
     <div class="caco-mobile-drawer-inner">
       <!-- Search inside drawer -->  
       <div class="caco-mobile-drawer-search">
@@ -4512,7 +4523,7 @@ document.addEventListener('visibilitychange', function () {
 
       // Create Results Container
       var container = document.createElement('div');
-      container.className = 'caco-predictive-results';
+      container.className = 'caco-predictive-results caco-cloak';
       container.style.setProperty('display', 'none', 'important');
       container.style.visibility = 'hidden';
       // Append to the form's parent to ensure it sits correctly relative to the input wrapper
@@ -4535,6 +4546,7 @@ document.addEventListener('visibilitychange', function () {
         container.style.setProperty('display', 'block', 'important');
         container.style.visibility = 'visible';
         container.style.opacity = '1';
+        container.classList.remove('caco-cloak');
         container.classList.add('is-visible');
         
         if (CONFIG.overlay && typeof cacoOverlayManager !== 'undefined' && CONFIG.overlay) {
