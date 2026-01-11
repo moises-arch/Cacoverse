@@ -2407,15 +2407,17 @@
   .caco-partner-dropdown::before {
     content: '';
     position: absolute;
-    top: -20px;
+    top: -40px; /* Wider bridge */
     left: 0;
     width: 100%;
-    height: 20px;
+    height: 40px;
+    z-index: 200;
   }
   .caco-partner-menu.open .caco-partner-dropdown{
     display: block !important;
     opacity: 1 !important;
     visibility: visible !important;
+    pointer-events: auto !important;
     transform: translateY(0);
   }
   .caco-partner-dropdown ul{margin:0;padding:0;list-style:none;}
@@ -2462,15 +2464,17 @@
   .caco-dropdown::before {
     content: '';
     position: absolute;
-    top: -20px;
+    top: -40px; /* Wider bridge */
     left: 0;
     width: 100%;
-    height: 20px;
+    height: 40px;
+    z-index: 200; /* Ensure bridge is on top */
   }
   .caco-nav-item:hover>.caco-dropdown{
     display: block !important;
     opacity: 1 !important;
     visibility: visible !important;
+    pointer-events: auto !important;
     transform: translateY(0);
   }
 
@@ -2514,6 +2518,7 @@
     display:flex;
     min-height:400px;
     width: 100%;
+    position: relative;
   }
   .caco-mega-sidebar{
     width: 28%;
@@ -2984,10 +2989,11 @@
   .caco-industries-dropdown::before {
     content: '';
     position: absolute;
-    top: -20px;
+    top: -40px; /* Wider bridge */
     left: 0;
     width: 100%;
-    height: 20px;
+    height: 40px;
+    z-index: 200;
   }
 
   .caco-help-menu:hover .caco-help-dropdown,
@@ -2997,6 +3003,7 @@
     display: block !important;
     opacity: 1 !important;
     visibility: visible !important;
+    pointer-events: auto !important;
     transform: translateY(0) !important;
   }
 
