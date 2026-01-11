@@ -459,7 +459,7 @@
     <div class="caco-container caco-grid-container">
       <div class="caco-area-left">
         <!-- Burger (mobile only) -->
-        <button class="caco-mobile-toggle md-hidden" id="caco-mobile-trigger" aria-label="Toggle menu">
+        <button class="caco-mobile-toggle md-hidden" id="caco-mobile-trigger" aria-label="Toggle menu" onclick="if(window.cacoToggleMobileDrawer) window.cacoToggleMobileDrawer();">
           <span class="caco-burger-icon caco-burger-icon--menu">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
               <line x1="3" y1="6"  x2="21" y2="6"></line>
@@ -1255,7 +1255,7 @@
   <!-- -------------------------------------------------------------------------
        3.4 Mobile Drawer (Navigation & Mobile Search)
        ------------------------------------------------------------------------- -->
-  <div class="caco-mobile-drawer caco-cloak md-hidden" id="caco-mobile-drawer" aria-hidden="true">
+  <div class="caco-mobile-drawer md-hidden" id="caco-mobile-drawer" aria-hidden="true">
     <div class="caco-mobile-drawer-inner">
       <!-- Search inside drawer -->  
       <div class="caco-mobile-drawer-search">
@@ -4729,7 +4729,25 @@ document.addEventListener('visibilitychange', function () {
     var overlay  = document.getElementById('caco-mobile-overlay');
     var burger   = document.getElementById('caco-mobile-trigger');
     var searchBtn= document.getElementById('caco-mobile-search-toggle');
-    if (!drawer || !overlay) return;
+
+    // Robust check: retry finding if not found initially (sometimes Liquid rendering order is weird)
+    if (!drawer || !overlay) {
+      document.addEventListener('DOMContentLoaded', function() {
+        drawer = drawer || document.getElementById('caco-mobile-drawer');
+        overlay = overlay || document.getElementById('caco-mobile-overlay');
+        burger = burger || document.getElementById('caco-mobile-trigger');
+        if (drawer && overlay) init();
+      });
+    } else {
+      init();
+    }
+
+    function init() {
+      // Re-query in case they were updated
+      drawer = document.getElementById('caco-mobile-drawer');
+      overlay = document.getElementById('caco-mobile-overlay');
+      burger = document.getElementById('caco-mobile-trigger');
+      if (!drawer || !overlay) return;
 
     var panels   = drawer.querySelectorAll('.caco-mobile-panel');
     var titleEl  = drawer.querySelector('[data-panel-title]');
@@ -4785,7 +4803,22 @@ document.addEventListener('visibilitychange', function () {
       showPanel('root');
     }
 
+    window.cacoToggleMobileDrawer = function(force) {
+      if (force === true) {
+        openDrawer();
+      } else if (force === false) {
+        closeDrawer();
+      } else {
+        if (drawer.classList.contains('open')) {
+          closeDrawer();
+        } else {
+          openDrawer();
+        }
+      }
+    };
+
     function openDrawer() {
+      drawer.classList.remove('caco-cloak'); // Safety removal
       drawer.classList.add('open');
       drawer.style.transform = '';
       overlay.classList.add('open');
@@ -4945,6 +4978,7 @@ document.addEventListener('visibilitychange', function () {
       }
       edgeStartX = null;
     });
+    } // End init
   })();
 
   // Simple dropdowns: si tienen más de 4 items, pasar a 3 columnas y hacer la caja más ancha
