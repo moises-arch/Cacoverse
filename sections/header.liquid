@@ -2404,14 +2404,15 @@
     transition:all .18s ease-out;
     z-index:180;
   }
-  .caco-partner-dropdown::before {
+  .caco-partner-menu { position: relative; } /* Ensure absolute positioning works */
+  .caco-partner-menu::after {
     content: '';
     position: absolute;
-    top: -40px; /* Wider bridge */
+    bottom: -20px;
     left: 0;
     width: 100%;
-    height: 40px;
-    z-index: 200;
+    height: 30px;
+    z-index: 120;
   }
   .caco-partner-menu.open .caco-partner-dropdown{
     display: block !important;
@@ -2461,14 +2462,16 @@
     min-width:220px;
     border-radius:0 0 8px 8px;
   }
-  .caco-dropdown::before {
+  /* 🌉 INTERACTION BRIDGE (Parent-Based)
+     Prevents mouse gap issues without blocking adjacent items */
+  .caco-nav-item::after {
     content: '';
     position: absolute;
-    top: -40px; /* Wider bridge */
+    bottom: -20px; /* Extend downward */
     left: 0;
     width: 100%;
-    height: 40px;
-    z-index: 200; /* Ensure bridge is on top */
+    height: 30px; /* Enough to catch fast mouse movements */
+    z-index: 120; /* Below dropdown (130) but above content */
   }
   .caco-nav-item:hover>.caco-dropdown{
     display: block !important;
@@ -2985,15 +2988,15 @@
     transition:all .18s ease-out;
     z-index: 999;
   }
-  .caco-help-dropdown::before,
-  .caco-industries-dropdown::before {
+  .caco-help-menu::after,
+  .caco-industries-menu::after {
     content: '';
     position: absolute;
-    top: -40px; /* Wider bridge */
+    bottom: -20px;
     left: 0;
     width: 100%;
-    height: 40px;
-    z-index: 200;
+    height: 30px;
+    z-index: 120;
   }
 
   .caco-help-menu:hover .caco-help-dropdown,
