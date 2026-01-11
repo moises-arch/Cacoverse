@@ -425,7 +425,12 @@
       // 🧪 EXPERT: Hijack script injection to delay common TBT offenders
       (function() {
         var originalInsertBefore = Node.prototype.insertBefore;
-        var delayedScripts = ['shopify_pay', 'shop-pay', 'facebook-pixel', 'connect.facebook.net', 'klaviyo', 'junip', 'shopifyChatV1Widget'];
+        var delayedScripts = [
+          'shopify_pay', 'shop-pay', 'facebook-pixel', 'connect.facebook.net', 'klaviyo', 'junip', 
+          'shopifyChatV1Widget', 'microsoft-clarity', 'clarity.ms', 'luckyorange', 'gl-formbuilder', 
+          'mailchimp', 'tiktok.com', 'snapchat.com', 'pinterest.com', 'doubleclick.net', 
+          'google-analytics', 'analytics.js', 'gtag/js', 'collect?', 'smile.io', 'yotpo'
+        ];
         
         Node.prototype.insertBefore = function(newNode, referenceNode) {
           if (newNode && newNode.tagName === 'SCRIPT' && newNode.src) {
