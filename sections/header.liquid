@@ -193,18 +193,16 @@
     background: var(--announcement-bg);
     overflow: hidden;
     position: relative;
-    opacity: 0;
-    transform: translateY(-5px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-    pointer-events: none;
-  }
-  .caco-announcement-ready .caco-announcement-bar {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
   }
   .caco-announcement-bar .caco-container {
     height: 100%;
+  }
+  .caco-announcement-content {
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+  .caco-announcement-ready .caco-announcement-content {
+    opacity: 1;
   }
   .caco-announcement-slider {
     display: flex;
