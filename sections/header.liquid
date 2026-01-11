@@ -4752,6 +4752,10 @@ document.addEventListener('visibilitychange', function () {
       init();
     }
 
+    var panels, titleEl, backBtn, rootPanel;
+    var currentPanelId = 'root';
+    var historyStack   = [];
+
     function init() {
       // Re-query in case they were updated
       drawer = document.getElementById('caco-mobile-drawer');
@@ -4759,14 +4763,13 @@ document.addEventListener('visibilitychange', function () {
       burger = document.getElementById('caco-mobile-trigger');
       if (!drawer || !overlay) return;
 
-      attachListeners();
+      panels    = drawer.querySelectorAll('.caco-mobile-panel');
+      titleEl   = drawer.querySelector('[data-panel-title]');
+      backBtn   = drawer.querySelector('.caco-mobile-back');
+      rootPanel = drawer.querySelector('.caco-mobile-panel[data-panel-root]');
 
-    var panels   = drawer.querySelectorAll('.caco-mobile-panel');
-    var titleEl  = drawer.querySelector('[data-panel-title]');
-    var backBtn  = drawer.querySelector('.caco-mobile-back');
-    var rootPanel = drawer.querySelector('.caco-mobile-panel[data-panel-root]');
-    var currentPanelId = 'root';
-    var historyStack   = [];
+      attachListeners();
+    }
 
     function clearRootActive() {
       if (!rootPanel) return;
@@ -4990,7 +4993,6 @@ document.addEventListener('visibilitychange', function () {
       }
       edgeStartX = null;
     });
-    } // End init
   })();
 
   // Simple dropdowns: si tienen más de 4 items, pasar a 3 columnas y hacer la caja más ancha
