@@ -1129,15 +1129,16 @@
     </div>
   </div>
 
-  <div class="wd40-collection-layout defer-section">
-     <div id="wd40-mobile-overlay" class="wd40-drawer-overlay" onclick="wd40ToggleMobileDrawer(false)"></div>
-     <div id="wd40-mobile-drawer" class="wd40-drawer">
-        <div class="wd40-drawer-header">
-           <span>Filter & Sort</span>
-           <button class="wd40-drawer-close" onclick="wd40ToggleMobileDrawer(false)">×</button>
-        </div>
-        <div class="wd40-drawer-body">
-           <div class="wd40-sidebar-block" style="margin-bottom: 15px;">
+
+
+  <div id="wd40-mobile-overlay" class="wd40-drawer-overlay" onclick="wd40ToggleMobileDrawer(false)"></div>
+  <div id="wd40-mobile-drawer" class="wd40-drawer">
+     <div class="wd40-drawer-header">
+        <span>Filter & Sort</span>
+        <button class="wd40-drawer-close" onclick="wd40ToggleMobileDrawer(false)">×</button>
+     </div>
+     <div class="wd40-drawer-body">
+<div class="wd40-sidebar-block" style="margin-bottom: 15px;">
              <div class="wd40-sidebar-header mobile-sort-header" onclick="wd40ToggleSidebar(this)"><span>Sort By</span><span class="wd40-sidebar-icon" style="transform: rotate(0deg); transition: transform 0.2s;"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg></span></div>
              <div class="wd40-sidebar-content" style="display: none;">
                <div class="facet-display mobile-sort-options" style="display:flex">
@@ -1275,6 +1276,11 @@
            <button onclick="wd40ToggleMobileDrawer(false)" style="width: 100%; padding: 12px; background: #222222; color: #fff; font-weight: 700; border-radius: 4px; border: none; cursor: pointer;">APPLY</button>
         </div>
      </div>
+     </div>
+
+<div class="wd40-collection-layout defer-section">
+
+           
 
      <aside class="wd40-sidebar">
        <div class="wd40-category-menu">
@@ -1682,7 +1688,6 @@
        {% endpaginate %}
      </div>
   </div>
-</div>
 </div>
 
 <!-- Modal HTML -->
