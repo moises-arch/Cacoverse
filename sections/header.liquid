@@ -2404,6 +2404,14 @@
     transition:all .18s ease-out;
     z-index:180;
   }
+  .caco-partner-dropdown::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 0;
+    width: 100%;
+    height: 20px;
+  }
   .caco-partner-menu.open .caco-partner-dropdown{
     display: block !important;
     opacity: 1 !important;
@@ -2450,6 +2458,14 @@
     z-index:130;
     min-width:220px;
     border-radius:0 0 8px 8px;
+  }
+  .caco-dropdown::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 0;
+    width: 100%;
+    height: 20px;
   }
   .caco-nav-item:hover>.caco-dropdown{
     display: block !important;
@@ -2964,9 +2980,20 @@
     transition:all .18s ease-out;
     z-index: 999;
   }
+  .caco-help-dropdown::before,
+  .caco-industries-dropdown::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 0;
+    width: 100%;
+    height: 20px;
+  }
 
+  .caco-help-menu:hover .caco-help-dropdown,
+  .caco-industries-menu:hover .caco-industries-dropdown,
   .caco-help-menu.open .caco-help-dropdown,
-  .caco-industries-menu.open .caco-industries-dropdown{
+  .caco-industries-menu.open .caco-industries-dropdown {
     display: block !important;
     opacity: 1 !important;
     visibility: visible !important;
@@ -4309,8 +4336,9 @@ document.addEventListener('visibilitychange', function () {
   })();
 
 /* ----------------------------------------------------------------------------
-   5.7 Help Center Dropdown
+   5.7 Help Center Dropdown (Disabled JS - Handled by CSS Hover)
    ---------------------------------------------------------------------------- */
+  /*
   (function() {
     var helpMenu = document.querySelector('.caco-help-menu');
     if (!helpMenu) return;
@@ -4347,11 +4375,16 @@ document.addEventListener('visibilitychange', function () {
       }
     });
   })();
+  */
 
 
 /* ----------------------------------------------------------------------------
    5.8 Industries Dropdown
    ---------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------
+   5.8 Industries Dropdown (Disabled JS - Handled by CSS Hover)
+   ---------------------------------------------------------------------------- */
+  /*
   (function() {
     var industriesMenu = document.querySelector('.caco-industries-menu');
     if (!industriesMenu) return;
@@ -4388,6 +4421,7 @@ document.addEventListener('visibilitychange', function () {
       }
     });
   })();
+  */
 
 /* ----------------------------------------------------------------------------
    5.9 Announcement Slider & Mobile Marquee
