@@ -75,7 +75,7 @@
   .caco-reveal {
     opacity: 0 !important;
     visibility: hidden !important;
-    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.6s !important;
+    transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.35s !important;
     will-change: opacity;
   }
   .caco-is-visible .caco-reveal,
@@ -5161,14 +5161,14 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     };
 
-    // Trigger reveal when everything is ready
-    window.addEventListener('load', reveal);
+    // Trigger reveal as soon as the DOM is ready (much faster than 'load')
+    document.addEventListener('DOMContentLoaded', reveal);
 
-    // Fallback if load event takes too long
-    setTimeout(reveal, 2500);
+    // Faster fallback: 800ms
+    setTimeout(reveal, 800);
     
-    // Immediate reveal if already loaded (cache/fast network)
-    if (document.readyState === 'complete') reveal();
+    // Immediate reveal if already interactive or complete (cache)
+    if (document.readyState === 'interactive' || document.readyState === 'complete') reveal();
   })();
 </script>
 
