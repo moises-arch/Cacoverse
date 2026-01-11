@@ -4694,8 +4694,12 @@ document.addEventListener('visibilitychange', function () {
       });
     }
 
-    setupPredictive('.caco-search-form--desktop', '#CacoSearchInputDesktop');
-    setupPredictive('.caco-search-form--mobile',  '#CacoSearchInputMobile');
+    var runSetup = function() {
+      setupPredictive('.caco-search-form--desktop', '#CacoSearchInputDesktop');
+      setupPredictive('.caco-search-form--mobile',  '#CacoSearchInputMobile');
+    };
+    if (window.cacoOnIdle) window.cacoOnIdle(runSetup);
+    else runSetup();
   })();
 
 /* ----------------------------------------------------------------------------
@@ -4954,7 +4958,11 @@ document.addEventListener('visibilitychange', function () {
      5.12 Voice Search (Web Speech API)
      ============================================================================ -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+(function(run) {
+  if (window.cacoOnIdle) window.cacoOnIdle(run);
+  else if (document.readyState === 'complete') run();
+  else window.addEventListener('load', run);
+})(function() {
   var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
   if (!SpeechRecognition) {
@@ -5000,14 +5008,8 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
 
-    recognition.addEventListener('start', function() {
-      setListening(true);
-    });
-
-    recognition.addEventListener('end', function() {
-      setListening(false);
-    });
-
+    recognition.addEventListener('start', function() { setListening(true); });
+    recognition.addEventListener('end', function() { setListening(false); });
     recognition.addEventListener('result', function(event) {
       var transcript = '';
       for (var i = event.resultIndex; i < event.results.length; i++) {
@@ -5015,13 +5017,10 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       transcript = transcript.trim();
       if (!transcript) return;
-
       input.value = transcript;
-
       var ev = new Event('input', { bubbles: true });
       input.dispatchEvent(ev);
     });
-
     recognition.addEventListener('error', function(e) {
       console.warn('Voice recognition error', e.error);
       setListening(false);
@@ -5038,101 +5037,104 @@ document.addEventListener('DOMContentLoaded', function() {
      Cycles through hint text in search input
      ============================================================================ -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  var desktopInput = document.getElementById('CacoSearchInputDesktop');
-  var mobileInput  = document.getElementById('CacoSearchInputMobile');
+(function() {
+  var run = function() {
+    var desktopInput = document.getElementById('CacoSearchInputDesktop');
+    var mobileInput  = document.getElementById('CacoSearchInputMobile');
 
-  if (!desktopInput && !mobileInput) return;
+    if (!desktopInput && !mobileInput) return;
 
-  var hints = [
-    'Search gloves, helmets, tools and more…',
-    'Try “cut resistant gloves”',
-    'Looking for safety helmets?',
-    'Try typing a SKU like “GH400”…'
-  ];
+    var hints = [
+      'Search gloves, helmets, tools and more…',
+      'Try “cut resistant gloves”',
+      'Looking for safety helmets?',
+      'Try typing a SKU like “GH400”…'
+    ];
 
-  var basePlaceholder = hints[0];
-  var currentIndex = 0;
-  var typingTimer = null;
-  var cycleTimer  = null;
-  var isFocused   = false;
+    var basePlaceholder = hints[0];
+    var currentIndex = 0;
+    var typingTimer = null;
+    var cycleTimer  = null;
+    var isFocused   = false;
 
-  function setPlaceholder(text) {
-    if (desktopInput) desktopInput.setAttribute('placeholder', text);
-    if (mobileInput)  mobileInput.setAttribute('placeholder', text);
-  }
-
-  function clearTimers() {
-    if (typingTimer) {
-      clearInterval(typingTimer);
-      typingTimer = null;
+    function setPlaceholder(text) {
+      if (desktopInput) desktopInput.setAttribute('placeholder', text);
+      if (mobileInput)  mobileInput.setAttribute('placeholder', text);
     }
-    if (cycleTimer) {
-      clearTimeout(cycleTimer);
-      cycleTimer = null;
+
+    function clearTimers() {
+      if (typingTimer) { clearInterval(typingTimer); typingTimer = null; }
+      if (cycleTimer) { clearTimeout(cycleTimer); cycleTimer = null; }
     }
-  }
 
-  function typeText(text, done) {
-    clearTimers();
-    var i = 0;
-    setPlaceholder('');
+    function typeText(text, done) {
+      clearTimers();
+      var i = 0;
+      setPlaceholder('');
 
-    typingTimer = setInterval(function() {
+      typingTimer = setInterval(function() {
+        if (isFocused) {
+          clearTimers();
+          setPlaceholder(basePlaceholder);
+          return;
+        }
+
+        i++;
+        setPlaceholder(text.slice(0, i));
+
+        if (i >= text.length) {
+          clearInterval(typingTimer);
+          typingTimer = null;
+
+          cycleTimer = setTimeout(function() {
+            if (typeof done === 'function') done();
+          }, 9900);
+        }
+      }, 55);
+    }
+
+    function startCycle() {
       if (isFocused) {
-        clearTimers();
         setPlaceholder(basePlaceholder);
         return;
       }
 
-      i++;
-      setPlaceholder(text.slice(0, i));
-
-      if (i >= text.length) {
-        clearInterval(typingTimer);
-        typingTimer = null;
-
-        cycleTimer = setTimeout(function() {
-          if (typeof done === 'function') done();
-        }, 9900);
-      }
-    }, 55);
-  }
-
-  function startCycle() {
-    if (isFocused) {
-      setPlaceholder(basePlaceholder);
-      return;
+      var text = hints[currentIndex];
+      currentIndex = (currentIndex + 1) % hints.length;
+      typeText(text, startCycle);
     }
 
-    var text = hints[currentIndex];
-    currentIndex = (currentIndex + 1) % hints.length;
-    typeText(text, startCycle);
-  }
+    function attachFocusHandlers(input) {
+      if (!input) return;
+      input.addEventListener('focus', function() {
+        isFocused = true;
+        clearTimers();
+        setPlaceholder(basePlaceholder);
+      });
+      input.addEventListener('blur', function() {
+        isFocused = false;
+        clearTimers();
+        cycleTimer = setTimeout(startCycle, 1500);
+      });
+    }
 
-  function attachFocusHandlers(input) {
-    if (!input) return;
-    input.addEventListener('focus', function() {
-      isFocused = true;
-      clearTimers();
-      setPlaceholder(basePlaceholder);
-    });
-    input.addEventListener('blur', function() {
-      isFocused = false;
-      clearTimers();
-      cycleTimer = setTimeout(startCycle, 1500);
-    });
-  }
+    attachFocusHandlers(desktopInput);
+    attachFocusHandlers(mobileInput);
 
-  attachFocusHandlers(desktopInput);
-  attachFocusHandlers(mobileInput);
+    setPlaceholder(basePlaceholder);
+    setTimeout(startCycle, 1500);
+  };
 
-  setPlaceholder(basePlaceholder);
-  setTimeout(startCycle, 1500);
-});
+  if (window.cacoOnIdle) window.cacoOnIdle(run);
+  else document.addEventListener('DOMContentLoaded', run);
+})();
 </script>
 
-{%- render 'cart-drawer' -%}
+{%- comment -%} 
+  REMOVED DUPLICATE: cart-drawer is now rendered only in theme.liquid 
+  to improve performance and avoid duplicate IDs.
+{%- endcomment -%}
+
 
 
 

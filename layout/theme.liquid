@@ -387,6 +387,7 @@
       var CLARITY_ID = '';   // p.ej. 'abc123' (déjalo vacío si no usas)
 
       function onIdle(fn){ if('requestIdleCallback' in window){ requestIdleCallback(fn,{timeout:2000}); } else { setTimeout(fn,1200); } }
+      window.cacoOnIdle = onIdle; // Expose globally
       function firstInteraction(cb){
         var fired=false, types=['pointerdown','keydown','scroll','touchstart'], opt={passive:true};
         function fire(){ if(fired) return; fired=true; cb(); types.forEach(function(t){window.removeEventListener(t,fire,opt);}); }
@@ -410,10 +411,36 @@
       }
       function loadDeferredApps(){
         if(window.__appsLoaded) return; window.__appsLoaded=true;
+        
+        // 1. Trigger non-critical Shopify scripts that were held back
         onIdle(function(){
-            console.log("Cacoverse: Interaction detected, loading apps...");
+            console.log("Cacoverse: Interaction detected, loading non-critical apps...");
+            
+            // Example factor: trigger Shopify Chat if it exists in DOM but hasn't initialized
+            var chatBtn = document.querySelector('#shopify-chat');
+            if(chatBtn) chatBtn.style.display = 'block';
         });
       }
+
+      // 🧪 EXPERT: Hijack script injection to delay common TBT offenders
+      (function() {
+        var originalInsertBefore = Node.prototype.insertBefore;
+        var delayedScripts = ['shopify_pay', 'shop-pay', 'facebook-pixel', 'connect.facebook.net', 'klaviyo', 'junip', 'shopifyChatV1Widget'];
+        
+        Node.prototype.insertBefore = function(newNode, referenceNode) {
+          if (newNode && newNode.tagName === 'SCRIPT' && newNode.src) {
+            var shouldDelay = delayedScripts.some(function(d) { return newNode.src.indexOf(d) > -1; });
+            if (shouldDelay && !window.__appsLoaded) {
+              // Delay this script until interaction
+              firstInteraction(function() {
+                originalInsertBefore.call(this, newNode, referenceNode);
+              }.bind(this));
+              return newNode;
+            }
+          }
+          return originalInsertBefore.apply(this, arguments);
+        };
+      })();
 
       firstInteraction(function(){ 
         onIdle(function(){ 
@@ -423,10 +450,9 @@
         }); 
       });
 
-      // Post-load: mueve inicializaciones pesadas a idle
       window.addEventListener('load', function(){
         onIdle(function(){
-          // lugar para inicializar widgets no críticos (reviews, upsells, etc.)
+           // Cleanup or secondary triggers
         });
       }, {once:true});
     })();
