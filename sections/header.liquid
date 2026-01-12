@@ -60,17 +60,8 @@
     --primary-blue: #0051c3;
     --header-text: #1f2933;
     --border-color: #e5e7eb;
-  /* 👻 PREVENT GHOST ELEMENTS (Chrome Fix) */
-  .caco-dropdown,
-  .caco-predictive-results,
-  .caco-help-dropdown,
-  .caco-industries-dropdown,
-  .caco-partner-dropdown,
-  .caco-mobile-drawer,
-  .caco-search-bar-container--deferred {
-    display: none !important;
   }
-
+  
   @media (max-width: 1024px) {
     :root { --caco-header-height: 118px; }
   }
@@ -230,7 +221,7 @@
   .caco-partner-dropdown,
   .caco-mobile-drawer,
   .caco-search-bar-container--deferred {
-    display: none !important;
+    display: none;
   }
 
   .caco-nav {
@@ -1218,6 +1209,47 @@
             </a>
           {%- endif -%}
 
+          <div class="caco-loading-icon" aria-hidden="true">
+            <span class="caco-loading-dot"></span>
+            <span class="caco-loading-dot"></span>
+            <span class="caco-loading-dot"></span>
+          </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <span class="caco-loading-dot"></span>
+            <span class="caco-loading-dot"></span>
+            <span class="caco-loading-dot"></span>
+          </div>
         </div>
       </nav>
     </div>
@@ -1285,6 +1317,11 @@
         </button>
         <span class="caco-mobile-drawer-title" data-panel-title>Menu</span>
 
+        <div class="caco-loading-icon caco-loading-icon--mobile" aria-hidden="true">
+          <span class="caco-loading-dot"></span>
+          <span class="caco-loading-dot"></span>
+          <span class="caco-loading-dot"></span>
+        </div>
       </div>
 
       <!-- Mobile navigation: panel-based -->
@@ -1998,12 +2035,7 @@
     position:relative;
     filter:drop-shadow(0 2px 8px rgba(0,0,0,.035));
   }
-  .caco-search-form{
-    position:relative;
-    width:100%;
-    display: flex;
-    align-items: center;
-  }
+  .caco-search-form{position:relative;width:100%;}
   .caco-search-input{
     width:100%;
     background:#fff;
@@ -2394,7 +2426,7 @@
     z-index:180;
   }
   .caco-partner-menu.open .caco-partner-dropdown{
-    display: block !important;
+    display: block;
     opacity:1;visibility:visible;transform:translateY(0);
   }
   .caco-partner-dropdown ul{margin:0;padding:0;list-style:none;}
@@ -2439,7 +2471,7 @@
     border-radius:0 0 8px 8px;
   }
   .caco-nav-item:hover>.caco-dropdown{
-    display: block !important;
+    display: block;
     opacity:1;visibility:visible;transform:translateY(0);
   }
 
@@ -2952,7 +2984,7 @@
 
   .caco-help-menu.open .caco-help-dropdown,
   .caco-industries-menu.open .caco-industries-dropdown{
-    display: block !important;
+    display: block;
     opacity:1 !important;
     visibility:visible !important;
     transform:translateY(0) !important;
@@ -4513,7 +4545,7 @@ document.addEventListener('visibilitychange', function () {
       // Create Results Container
       var container = document.createElement('div');
       container.className = 'caco-predictive-results';
-      container.style.setProperty('display', 'none', 'important');
+      container.style.display = 'none'; 
       container.style.visibility = 'hidden';
       // Append to the form's parent to ensure it sits correctly relative to the input wrapper
       form.parentNode.appendChild(container);
@@ -4532,7 +4564,7 @@ document.addEventListener('visibilitychange', function () {
 
       function show(html) {
         container.innerHTML = html;
-        container.style.setProperty('display', 'block', 'important');
+        container.style.display = 'block';
         container.style.visibility = 'visible';
         container.style.opacity = '1';
         container.classList.add('is-visible');
