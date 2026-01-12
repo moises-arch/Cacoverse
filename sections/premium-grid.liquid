@@ -476,7 +476,7 @@
        --section-padding-bottom: {{ section.settings.section_padding_bottom | default: 20 }}px;
     }
 
-    .wd40-collection-container { width: 100%; max-width: {{ settings.page_width }}px; margin: 0 auto; padding: 0 20px; box-sizing: border-box; background-color: #ffffff; padding-top: var(--section-padding-top); padding-bottom: var(--section-padding-bottom); font-family: Inter, sans-serif; position: relative; }
+    .wd40-collection-container { width: 100%; max-width: 1500px; margin: 0 auto; padding: 0 20px; box-sizing: border-box; background-color: #ffffff; padding-top: var(--section-padding-top); padding-bottom: var(--section-padding-bottom); font-family: Inter, sans-serif; position: relative; }
     
     .wd40-collection-layout { display: flex; gap: 34px; align-items: flex-start; padding: 20px; margin: -20px; }
     
@@ -579,7 +579,7 @@
     .wd40-drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2147483646; display: none; }
     .wd40-drawer-overlay.open { display: block; }
     .wd40-drawer-header { padding: 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; font-weight: 700; font-size: 16px; background: #fff; }
-    .wd40-drawer-close { background: none; border: none; font-size: 32px; font-weight: 300; cursor: pointer; line-height: 1; padding: 4px; display: flex; align-items: center; justify-content: center; }
+    .wd40-drawer-close { background: none; border: none; font-size: 24px; cursor: pointer; }
     .wd40-drawer-body { padding: 20px; overflow-y: auto; flex: 1; background: #fff; }
 
     /* Mobile Sort Header (Thinner) */
@@ -1129,16 +1129,15 @@
     </div>
   </div>
 
-
-
-  <div id="wd40-mobile-overlay" class="wd40-drawer-overlay" onclick="wd40ToggleMobileDrawer(false)"></div>
-  <div id="wd40-mobile-drawer" class="wd40-drawer">
-     <div class="wd40-drawer-header">
-        <span>Filter & Sort</span>
-        <button class="wd40-drawer-close" onclick="wd40ToggleMobileDrawer(false)">×</button>
-     </div>
-     <div class="wd40-drawer-body">
-<div class="wd40-sidebar-block" style="margin-bottom: 15px;">
+  <div class="wd40-collection-layout defer-section">
+     <div id="wd40-mobile-overlay" class="wd40-drawer-overlay" onclick="wd40ToggleMobileDrawer(false)"></div>
+     <div id="wd40-mobile-drawer" class="wd40-drawer">
+        <div class="wd40-drawer-header">
+           <span>Filter & Sort</span>
+           <button class="wd40-drawer-close" onclick="wd40ToggleMobileDrawer(false)">×</button>
+        </div>
+        <div class="wd40-drawer-body">
+           <div class="wd40-sidebar-block" style="margin-bottom: 15px;">
              <div class="wd40-sidebar-header mobile-sort-header" onclick="wd40ToggleSidebar(this)"><span>Sort By</span><span class="wd40-sidebar-icon" style="transform: rotate(0deg); transition: transform 0.2s;"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg></span></div>
              <div class="wd40-sidebar-content" style="display: none;">
                <div class="facet-display mobile-sort-options" style="display:flex">
@@ -1276,11 +1275,6 @@
            <button onclick="wd40ToggleMobileDrawer(false)" style="width: 100%; padding: 12px; background: #222222; color: #fff; font-weight: 700; border-radius: 4px; border: none; cursor: pointer;">APPLY</button>
         </div>
      </div>
-     </div>
-
-<div class="wd40-collection-layout defer-section">
-
-           
 
      <aside class="wd40-sidebar">
        <div class="wd40-category-menu">
@@ -1688,6 +1682,7 @@
        {% endpaginate %}
      </div>
   </div>
+</div>
 </div>
 
 <!-- Modal HTML -->
