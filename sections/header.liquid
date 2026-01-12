@@ -60,39 +60,16 @@
     --primary-blue: #0051c3;
     --header-text: #1f2933;
     --border-color: #e5e7eb;
-  /* Close root */
-  }
-
   /* 👻 PREVENT GHOST ELEMENTS (Chrome Fix) */
-  .caco-cloak {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-  }
-
-  /* 🌫️ FADE-IN REVEAL SYSTEM */
-  .caco-reveal {
-    opacity: 0 !important;
-    visibility: hidden !important;
-    transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.35s !important;
-    will-change: opacity;
-  }
-  .caco-is-visible .caco-reveal,
-  .caco-reveal.caco-is-visible {
-    opacity: 1 !important;
-    visibility: visible !important;
-  }
-  .caco-reveal-delayed {
-    transition-delay: 0.6s !important;
-  }
-
-  /* Apply cloak to existing classes as backup */
-  /* Apply cloak only to drop-down elements that need it */
-  .caco-cloak {
+  .caco-dropdown,
+  .caco-predictive-results,
+  .caco-help-dropdown,
+  .caco-industries-dropdown,
+  .caco-partner-dropdown,
+  .caco-mobile-drawer,
+  .caco-search-bar-container--deferred {
     display: none !important;
   }
-
 
   @media (max-width: 1024px) {
     :root { --caco-header-height: 118px; }
@@ -246,7 +223,15 @@
   .caco-announcement-slide { display: none; }
   .caco-announcement-slide.active { display: block !important; }
 
-  /* Cloaking of secondary elements handled by caco-cloak and .open classes */
+  .caco-dropdown,
+  .caco-predictive-results,
+  .caco-help-dropdown,
+  .caco-industries-dropdown,
+  .caco-partner-dropdown,
+  .caco-mobile-drawer,
+  .caco-search-bar-container--deferred {
+    display: none !important;
+  }
 
   .caco-nav {
     display: flex !important;
@@ -382,7 +367,7 @@
       data-interval="{{ section.settings.announcement_interval | default: 8 }}"
     >
       <div class="caco-container" style="position:relative;display:flex;align-items:center;justify-content:center;height:100%;">
-        <div class="caco-announcement-content caco-reveal">
+        <div class="caco-announcement-content">
           <div class="caco-announcement-slider">
             {%- if announcements.size > 0 -%}
               {%- comment -%} 
@@ -413,7 +398,7 @@
           </div>
         </div>
 
-        <div class="caco-ann-controls caco-reveal caco-reveal-delayed">
+        <div class="caco-ann-controls">
           <div class="caco-ann-nav-group">
             <button class="caco-ann-nav caco-ann-prev" type="button" aria-label="Previous announcement">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
@@ -447,17 +432,16 @@
     <div class="caco-container caco-grid-container">
       <div class="caco-area-left">
         <!-- Burger (mobile only) -->
-        <!-- Burger (mobile only) -->
-        <button class="caco-mobile-toggle" id="caco-mobile-trigger" aria-label="Toggle menu">
+        <button class="caco-mobile-toggle md-hidden" id="caco-mobile-trigger" aria-label="Toggle menu">
           <span class="caco-burger-icon caco-burger-icon--menu">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="3" y1="6" x2="21" y2="6"></line>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+              <line x1="3" y1="6"  x2="21" y2="6"></line>
               <line x1="3" y1="12" x2="21" y2="12"></line>
               <line x1="3" y1="18" x2="21" y2="18"></line>
             </svg>
           </span>
           <span class="caco-burger-icon caco-burger-icon--close">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
               <line x1="18" y1="6" x2="6" y2="18"></line>
               <line x1="6" y1="6" x2="18" y2="18"></line>
             </svg>
@@ -479,7 +463,7 @@
 
       <!-- Desktop search in the middle -->
       <div class="caco-area-center small-hidden">
-        <div class="caco-search-bar-container caco-reveal">
+        <div class="caco-search-bar-container">
           <form action="{{ routes.search_url }}" method="get" role="search" class="caco-search-form caco-search-form--desktop">
             <div class="caco-search-icon">
               <svg
@@ -547,14 +531,6 @@
 
       <div class="caco-area-right">
         <div class="caco-tools">
-          <!-- Mobile search icon (Mobile only toggle) -->
-          <button type="button" class="caco-icon-btn caco-mobile-search-toggle-btn" id="caco-mobile-search-toggle" aria-label="Search">
-            <svg class="caco-search-icon-svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="6"></circle>
-              <line x1="15" y1="15" x2="20" y2="20" stroke-linecap="round"></line>
-            </svg>
-          </button>
-
           {%- assign partner_links = section.blocks | where: 'type', 'partner_link' -%}
           {%- if partner_links.size > 0 -%}
             <div class="caco-partner-menu small-hidden">
@@ -566,7 +542,7 @@
                   <path d="M16 7h4"></path>
                 </svg>
               </button>
-              <div class="caco-partner-dropdown caco-cloak" role="menu">
+              <div class="caco-partner-dropdown" role="menu">
                 <ul>
                   {%- for block in partner_links -%}
                     <li><a href="{{ block.settings.url }}" class="caco-partner-link">{{ block.settings.label }}</a></li>
@@ -587,7 +563,7 @@
 
           <a
             href="{{ routes.cart_url }}"
-            class="caco-icon-btn caco-cart-btn caco-reveal"
+            class="caco-icon-btn caco-cart-btn"
             data-caco-cart-drawer
             aria-label="{{ 'sections.cart.title' | t }}"
           >
@@ -640,7 +616,7 @@
               </a>
 
               {%- if link.links != blank -%}
-                <div class="caco-dropdown caco-cloak">
+                <div class="caco-dropdown">
 
 
 {%- if is_mega -%}
@@ -960,7 +936,7 @@
 
           {%- if help_items.size > 0 -%}
             <!-- HELP CENTER DROPDOWN (DESKTOP) -->
-            <div class="caco-help-menu caco-reveal">
+            <div class="caco-help-menu">
               <button
                 type="button"
                 class="caco-nav-aux-link caco-help-toggle"
@@ -1017,7 +993,7 @@
                 </svg>
               </button>
 
-              <div class="caco-help-dropdown caco-cloak" role="menu">
+              <div class="caco-help-dropdown" role="menu">
                 <ul>
                   {%- for block in help_items -%}
                     <li>
@@ -1103,7 +1079,7 @@
 
           {%- if industry_items.size > 0 -%}
             <!-- INDUSTRIES DROPDOWN (DESKTOP) -->
-            <div class="caco-industries-menu caco-reveal">
+            <div class="caco-industries-menu">
               <button
                 type="button"
                 class="caco-nav-aux-link caco-industries-toggle"
@@ -1159,7 +1135,7 @@
                 </svg>
               </button>
 
-              <div class="caco-industries-dropdown caco-cloak" role="menu">
+              <div class="caco-industries-dropdown" role="menu">
                 <ul>
                   {%- for block in industry_items -%}
                     <li>
@@ -1248,19 +1224,18 @@
   </div>
 
   <!-- MOBILE OVERLAY + DRAWER (Panels) -->
-  <div class="caco-mobile-overlay" id="caco-mobile-overlay"></div>
+  <div class="caco-mobile-overlay md-hidden" id="caco-mobile-overlay"></div>
   <!-- -------------------------------------------------------------------------
        3.4 Mobile Drawer (Navigation & Mobile Search)
        ------------------------------------------------------------------------- -->
-  <div class="caco-mobile-drawer" id="caco-mobile-drawer" aria-hidden="true" style="display:none;">
+  <div class="caco-mobile-drawer md-hidden" id="caco-mobile-drawer" aria-hidden="true">
     <div class="caco-mobile-drawer-inner">
       <!-- Search inside drawer -->  
       <div class="caco-mobile-drawer-search">
         <form action="{{ routes.search_url }}" method="get" role="search" class="caco-search-form caco-search-form--mobile">
           <div class="caco-search-icon caco-search-icon--mobile">
             <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <circle cx="11" cy="11" r="6" stroke-width="2"></circle>
-              <line x1="15" y1="15" x2="20" y2="20" stroke-width="2" stroke-linecap="round"></line>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
             </svg>
           </div>
 
@@ -1307,7 +1282,6 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
             <polyline points="15 18 9 12 15 6"></polyline>
           </svg>
-          <span class="caco-mobile-back-text">Back</span>
         </button>
         <span class="caco-mobile-drawer-title" data-panel-title>Menu</span>
 
@@ -2419,22 +2393,9 @@
     transition:all .18s ease-out;
     z-index:180;
   }
-  .caco-partner-menu { position: relative; } /* Ensure absolute positioning works */
-  .caco-partner-menu::after {
-    content: '';
-    position: absolute;
-    bottom: -20px;
-    left: 0;
-    width: 100%;
-    height: 30px;
-    z-index: 120;
-  }
   .caco-partner-menu.open .caco-partner-dropdown{
     display: block !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    pointer-events: auto !important;
-    transform: translateY(0);
+    opacity:1;visibility:visible;transform:translateY(0);
   }
   .caco-partner-dropdown ul{margin:0;padding:0;list-style:none;}
   .caco-partner-link{
@@ -2477,23 +2438,9 @@
     min-width:220px;
     border-radius:0 0 8px 8px;
   }
-  /* 🌉 INTERACTION BRIDGE (Parent-Based)
-     Prevents mouse gap issues without blocking adjacent items */
-  .caco-nav-item::after {
-    content: '';
-    position: absolute;
-    bottom: -20px; /* Extend downward */
-    left: 0;
-    width: 100%;
-    height: 30px; /* Enough to catch fast mouse movements */
-    z-index: 120; /* Below dropdown (130) but above content */
-  }
   .caco-nav-item:hover>.caco-dropdown{
     display: block !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    pointer-events: auto !important;
-    transform: translateY(0);
+    opacity:1;visibility:visible;transform:translateY(0);
   }
 
   .caco-nav-item.mega-menu{
@@ -2536,7 +2483,6 @@
     display:flex;
     min-height:400px;
     width: 100%;
-    position: relative;
   }
   .caco-mega-sidebar{
     width: 28%;
@@ -3003,26 +2949,13 @@
     transition:all .18s ease-out;
     z-index: 999;
   }
-  .caco-help-menu::after,
-  .caco-industries-menu::after {
-    content: '';
-    position: absolute;
-    bottom: -20px;
-    left: 0;
-    width: 100%;
-    height: 30px;
-    z-index: 120;
-  }
 
-  .caco-help-menu:hover .caco-help-dropdown,
-  .caco-industries-menu:hover .caco-industries-dropdown,
   .caco-help-menu.open .caco-help-dropdown,
-  .caco-industries-menu.open .caco-industries-dropdown {
+  .caco-industries-menu.open .caco-industries-dropdown{
     display: block !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    pointer-events: auto !important;
-    transform: translateY(0) !important;
+    opacity:1 !important;
+    visibility:visible !important;
+    transform:translateY(0) !important;
   }
 
 
@@ -3271,7 +3204,7 @@
   .caco-mobile-overlay{
     position:fixed;
     inset:0;
-    background:rgba(0,0,0,0.5);
+    background:transparent;
     opacity:0;
     visibility:hidden;
     pointer-events:none;
@@ -3305,29 +3238,11 @@
   }
 
   .caco-mobile-drawer.open {
-    display: flex !important;
-    pointer-events: auto !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    transform: translateX(0) !important;
+    pointer-events:auto;
+    opacity:1;
+    visibility:visible;
+    transform:translateX(0);
   }
-
-  /* Triggers and Toggles Visibility */
-  @media (max-width: 1024px) {
-    .caco-mobile-toggle,
-    .caco-mobile-search-toggle-btn {
-      display: inline-flex !important;
-    }
-  }
-  @media (min-width: 1025px) {
-    .caco-mobile-toggle,
-    .caco-mobile-search-toggle-btn,
-    .caco-mobile-drawer,
-    .caco-mobile-overlay {
-      display: none !important;
-    }
-  }
-
 
   .caco-mobile-drawer-inner{
     display:flex;
@@ -4048,13 +3963,6 @@ document.addEventListener('visibilitychange', function () {
    Hover/click to activate sidebar panels in mega menu
    ---------------------------------------------------------------------------- */
   (function() {
-    function escapeSelector(value) {
-      if (window.CSS && CSS.escape) {
-        return CSS.escape(value);
-      }
-      return String(value).replace(/([ #;?%&,.+*~':"!^$[\]()=>|\/@])/g, '\\$1');
-    }
-
     document.querySelectorAll('.caco-nav-item.mega-menu').forEach(function(megaItem) {
       var sidebarLinks = megaItem.querySelectorAll('.caco-mega-sidebar-link');
       var panels = megaItem.querySelectorAll('.caco-mega-panel');
@@ -4067,7 +3975,7 @@ document.addEventListener('visibilitychange', function () {
         if (linkEl) linkEl.classList.add('active');
 
         var panelId = 'panel-' + targetHandle;
-        var targetPanel = megaItem.querySelector('#' + escapeSelector(panelId));
+        var targetPanel = megaItem.querySelector('#' + CSS.escape(panelId));
         if (targetPanel) targetPanel.classList.add('active');
       }
 
@@ -4385,9 +4293,8 @@ document.addEventListener('visibilitychange', function () {
   })();
 
 /* ----------------------------------------------------------------------------
-   5.7 Help Center Dropdown (Disabled JS - Handled by CSS Hover)
+   5.7 Help Center Dropdown
    ---------------------------------------------------------------------------- */
-  /*
   (function() {
     var helpMenu = document.querySelector('.caco-help-menu');
     if (!helpMenu) return;
@@ -4424,16 +4331,11 @@ document.addEventListener('visibilitychange', function () {
       }
     });
   })();
-  */
 
 
 /* ----------------------------------------------------------------------------
    5.8 Industries Dropdown
    ---------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------
-   5.8 Industries Dropdown (Disabled JS - Handled by CSS Hover)
-   ---------------------------------------------------------------------------- */
-  /*
   (function() {
     var industriesMenu = document.querySelector('.caco-industries-menu');
     if (!industriesMenu) return;
@@ -4470,7 +4372,6 @@ document.addEventListener('visibilitychange', function () {
       }
     });
   })();
-  */
 
 /* ----------------------------------------------------------------------------
    5.9 Announcement Slider & Mobile Marquee
@@ -4611,7 +4512,7 @@ document.addEventListener('visibilitychange', function () {
 
       // Create Results Container
       var container = document.createElement('div');
-      container.className = 'caco-predictive-results caco-cloak';
+      container.className = 'caco-predictive-results';
       container.style.setProperty('display', 'none', 'important');
       container.style.visibility = 'hidden';
       // Append to the form's parent to ensure it sits correctly relative to the input wrapper
@@ -4634,7 +4535,6 @@ document.addEventListener('visibilitychange', function () {
         container.style.setProperty('display', 'block', 'important');
         container.style.visibility = 'visible';
         container.style.opacity = '1';
-        container.classList.remove('caco-cloak');
         container.classList.add('is-visible');
         
         if (CONFIG.overlay && typeof cacoOverlayManager !== 'undefined' && CONFIG.overlay) {
@@ -4752,48 +4652,14 @@ document.addEventListener('visibilitychange', function () {
     var overlay  = document.getElementById('caco-mobile-overlay');
     var burger   = document.getElementById('caco-mobile-trigger');
     var searchBtn= document.getElementById('caco-mobile-search-toggle');
+    if (!drawer || !overlay) return;
 
-    // Robust check: retry finding if not found initially
-    if (!drawer || !overlay) {
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function() {
-          drawer = drawer || document.getElementById('caco-mobile-drawer');
-          overlay = overlay || document.getElementById('caco-mobile-overlay');
-          burger = burger || document.getElementById('caco-mobile-trigger');
-          if (drawer && overlay) init();
-        });
-      } else {
-        // DOM already parsed, but maybe elements were lazy-loaded or we need a tiny delay
-        setTimeout(function() {
-          drawer = drawer || document.getElementById('caco-mobile-drawer');
-          overlay = overlay || document.getElementById('caco-mobile-overlay');
-          burger = burger || document.getElementById('caco-mobile-trigger');
-          if (drawer && overlay) init();
-        }, 50);
-      }
-    } else {
-      init();
-    }
-
-    var panels, titleEl, backBtn, rootPanel;
+    var panels   = drawer.querySelectorAll('.caco-mobile-panel');
+    var titleEl  = drawer.querySelector('[data-panel-title]');
+    var backBtn  = drawer.querySelector('.caco-mobile-back');
+    var rootPanel = drawer.querySelector('.caco-mobile-panel[data-panel-root]');
     var currentPanelId = 'root';
     var historyStack   = [];
-
-    function init() {
-      // Re-query in case they were updated
-      drawer = document.getElementById('caco-mobile-drawer');
-      overlay = document.getElementById('caco-mobile-overlay');
-      burger = document.getElementById('caco-mobile-trigger');
-      searchBtn = document.getElementById('caco-mobile-search-toggle');
-      if (!drawer || !overlay) return;
-
-      panels    = drawer.querySelectorAll('.caco-mobile-panel');
-      titleEl   = drawer.querySelector('[data-panel-title]');
-      backBtn   = drawer.querySelector('.caco-mobile-back');
-      rootPanel = drawer.querySelector('.caco-mobile-panel[data-panel-root]');
-
-      attachListeners();
-    }
 
     function clearRootActive() {
       if (!rootPanel) return;
@@ -4842,25 +4708,7 @@ document.addEventListener('visibilitychange', function () {
       showPanel('root');
     }
 
-    window.cacoToggleMobileDrawer = function(force) {
-      if (!drawer || !overlay) {
-        drawer = document.getElementById('caco-mobile-drawer');
-        overlay = document.getElementById('caco-mobile-overlay');
-        burger = document.getElementById('caco-mobile-trigger');
-        if (drawer && overlay) init();
-      }
-      if (!drawer) return;
-
-      var isOpen = drawer.classList.contains('open');
-      if (force === true || (force === undefined && !isOpen)) {
-        openDrawer();
-      } else {
-        closeDrawer();
-      }
-    };
-
     function openDrawer() {
-      drawer.classList.remove('caco-cloak'); // Safety removal
       drawer.classList.add('open');
       drawer.style.transform = '';
       overlay.classList.add('open');
@@ -4890,69 +4738,68 @@ document.addEventListener('visibilitychange', function () {
       resetPanels();
     }
 
-    function attachListeners() {
-      if (drawer.dataset.cacoEvents) return;
-      drawer.dataset.cacoEvents = 'true';
-
-      [burger, searchBtn].forEach(function(btn) {
-        if (!btn) return;
-        btn.onclick = function(e) {
-          e.preventDefault();
-          window.cacoToggleMobileDrawer();
-        };
-      });
-
-      if (overlay) overlay.onclick = closeDrawer;
-
-      document.addEventListener('keyup', function(e) {
-        if (e.key === 'Escape' && drawer.classList.contains('open')) {
+    [burger, searchBtn].forEach(function(btn) {
+      if (!btn) return;
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (drawer.classList.contains('open')) {
           closeDrawer();
+        } else {
+          openDrawer();
         }
       });
+    });
 
-      drawer.addEventListener('click', function(e) {
-        var grandLink = e.target.closest('.caco-mobile-link-grand');
-        if (grandLink) {
-          var panel = grandLink.closest('.caco-mobile-panel');
-          if (panel) {
-            panel.querySelectorAll('.caco-mobile-item.is-grand-active').forEach(function(li){
-              li.classList.remove('is-grand-active');
-            });
-            var liGrand = grandLink.closest('.caco-mobile-item');
-            if (liGrand) liGrand.classList.add('is-grand-active');
-          }
+    overlay.addEventListener('click', closeDrawer);
+
+    document.addEventListener('keyup', function(e) {
+      if (e.key === 'Escape' && drawer.classList.contains('open')) {
+        closeDrawer();
+      }
+    });
+
+    drawer.addEventListener('click', function(e) {
+      var grandLink = e.target.closest('.caco-mobile-link-grand');
+      if (grandLink) {
+        var panel = grandLink.closest('.caco-mobile-panel');
+        if (panel) {
+          panel.querySelectorAll('.caco-mobile-item.is-grand-active').forEach(function(li){
+            li.classList.remove('is-grand-active');
+          });
+          var liGrand = grandLink.closest('.caco-mobile-item');
+          if (liGrand) liGrand.classList.add('is-grand-active');
         }
-
-        var trigger = e.target.closest('[data-panel-target]');
-        if (trigger) {
-          var targetId = trigger.getAttribute('data-panel-target');
-          if (targetId) {
-             var parentPanel = trigger.closest('.caco-mobile-panel');
-             if (parentPanel && parentPanel.hasAttribute('data-panel-root')) {
-               clearRootActive();
-               var li = trigger.closest('.caco-mobile-item');
-               if (li) li.classList.add('caco-mobile-item--root-active');
-             }
-             if (currentPanelId) historyStack.push(currentPanelId);
-             showPanel(targetId);
-          }
-        }
-      });
-
-      if (backBtn) {
-        backBtn.addEventListener('click', function() {
-          if (!historyStack.length) return;
-          historyStack.pop();
-          var prev = historyStack[historyStack.length - 1] || 'root';
-          showPanel(prev);
-          if (!historyStack.length) setBackVisibility();
-        });
       }
 
-      drawer.addEventListener('touchstart', onDrawerTouchStart);
-      drawer.addEventListener('touchmove', onDrawerTouchMove);
-      drawer.addEventListener('touchend', onDrawerTouchEnd);
-      drawer.addEventListener('touchcancel', onDrawerTouchEnd);
+      var trigger = e.target.closest('[data-panel-target]');
+      if (!trigger) return;
+      var targetId = trigger.getAttribute('data-panel-target');
+      if (!targetId) return;
+
+      var parentPanel = trigger.closest('.caco-mobile-panel');
+
+      if (parentPanel && parentPanel.hasAttribute('data-panel-root')) {
+        clearRootActive();
+        var li = trigger.closest('.caco-mobile-item');
+        if (li) li.classList.add('caco-mobile-item--root-active');
+      }
+
+      if (currentPanelId) {
+        historyStack.push(currentPanelId);
+      }
+      showPanel(targetId);
+    });
+
+    if (backBtn) {
+      backBtn.addEventListener('click', function() {
+        if (!historyStack.length) return;
+        historyStack.pop();
+        var prev = historyStack[historyStack.length - 1] || 'root';
+        showPanel(prev);
+        if (!historyStack.length) {
+          setBackVisibility();
+        }
+      });
     }
 
     var startX = 0;
@@ -4995,6 +4842,10 @@ document.addEventListener('visibilitychange', function () {
       }
     }
 
+    drawer.addEventListener('touchstart', onDrawerTouchStart);
+    drawer.addEventListener('touchmove', onDrawerTouchMove);
+    drawer.addEventListener('touchend', onDrawerTouchEnd);
+    drawer.addEventListener('touchcancel', onDrawerTouchEnd);
 
     var edgeStartX = null;
 
@@ -5042,8 +4893,7 @@ document.addEventListener('visibilitychange', function () {
 });
 </script>
 
-
- <!-- ============================================================================
+<!-- ============================================================================
      5.12 Voice Search (Web Speech API)
      ============================================================================ -->
 <script>
@@ -5223,29 +5073,6 @@ document.addEventListener('DOMContentLoaded', function() {
   setPlaceholder(basePlaceholder);
   setTimeout(startCycle, 1500);
 });
-</script>
-
-<script>
-  /* 🏁 REVEAL HEADER COMPONENTS WHEN LOADED
-     Ensures that search bar, announcement bar, and social pills 
-     appear only after CSS/Assets are settled to prevent "broken" look.
-  */
-  (function() {
-    const reveal = () => {
-      document.querySelectorAll('.caco-reveal').forEach(el => {
-        el.classList.add('caco-is-visible');
-      });
-    };
-
-    // Trigger reveal as soon as the DOM is ready (much faster than 'load')
-    document.addEventListener('DOMContentLoaded', reveal);
-
-    // Faster fallback: 800ms
-    setTimeout(reveal, 800);
-    
-    // Immediate reveal if already interactive or complete (cache)
-    if (document.readyState === 'interactive' || document.readyState === 'complete') reveal();
-  })();
 </script>
 
 
