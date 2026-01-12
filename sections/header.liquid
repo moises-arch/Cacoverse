@@ -2674,7 +2674,7 @@
 
   .caco-mega-grid{
     display:grid;
-    grid-template-columns:repeat(3, minmax(240px, 1fr));
+    grid-template-columns:repeat(3, minmax(0, 1fr));
     gap:12px 24px;
     margin-bottom:24px;
     width: 100%;
@@ -2837,7 +2837,9 @@
     font-weight:500;
     padding: 6px 0;
     transition: all 0.2s ease;
-    white-space: nowrap;
+    width: 100%;
+    white-space: normal;
+    word-break: break-word;
   }
   .caco-mega-grid li a::before{
     content: "";
