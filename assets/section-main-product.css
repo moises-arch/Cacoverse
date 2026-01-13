@@ -349,16 +349,16 @@ a.product__text {
 }
 
 .product .price .badge {
-  margin-bottom: 0;
+  margin-bottom: 5px;
   font-size: 11px;
   line-height: 1;
   font-weight: 700;
   vertical-align: middle;
-  height: 28px;
+  height: 20px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0 12px !important;
+  padding: 0 2px !important;
   text-transform: uppercase;
   border-radius: 999px !important;
 }
