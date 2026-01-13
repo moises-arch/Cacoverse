@@ -85,7 +85,30 @@ if (!customElements.get("product-info")) {
         const shouldFetchFullPage =
           this.dataset.updateUrl === "true" && shouldSwapProduct;
 
+        // Optimistic update
         const variant = this.findVariantByValues(selectedOptionValues);
+        if (variant) {
+          window.__lastSelectedVariant = variant;
+          this.updateURL(productUrl, variant.id);
+          this.updateVariantInputs(variant.id);
+          this.filterMedia(variant);
+          this.filterMediaGallery(variant);
+
+          // Show loading state for price and dynamic elements
+          const loadingSelectors = ["price", "Inventory", "Sku", "Price-Per-Item", "Volume"];
+          loadingSelectors.forEach(id => {
+            const el = document.getElementById(`${id}-${this.sectionId}`);
+            if (el) el.style.opacity = '0.5';
+          });
+        } else {
+          // Attempt to find a fallback if exact match doesn't exist optimistically
+          const fallbackVariant = this.findFallbackVariant(selectedOptionValues);
+          if (fallbackVariant && fallbackVariant.id !== (window.__lastSelectedVariant?.id)) {
+            // We could apply fallback here, but it might be safer to let the server decide 
+            // or just wait for the render loop to handle strict fallbacks.
+            // For now, we mainly want to catch valid clicks fast.
+          }
+        }
 
         this.renderProductInfo({
           requestUrl: this.buildRequestUrlWithParams(
@@ -281,6 +304,13 @@ if (!customElements.get("product-info")) {
           updateSourceFromDestination("Price-Per-Item", ({ classList }) =>
             classList.contains("hidden")
           );
+
+          // Remove loading state
+          const loadingSelectors = ["price", "Inventory", "Sku", "Price-Per-Item", "Volume"];
+          loadingSelectors.forEach(id => {
+            const el = document.getElementById(`${id}-${this.sectionId}`);
+            if (el) el.style.opacity = '';
+          });
 
           this.updateQuantityRules(this.sectionId, html);
           this.querySelector(
