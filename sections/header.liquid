@@ -4108,6 +4108,22 @@ document.addEventListener('visibilitychange', function () {
         });
       }
 
+      // Feature: Default to first option when Mega Menu opens
+      megaItem.addEventListener('mouseenter', function() {
+        if (window.innerWidth >= 1025) {
+          // If no link is currently active, activate the first one
+          var activeLink = megaItem.querySelector('.caco-mega-sidebar-link.active');
+          if (!activeLink && sidebarLinks.length > 0) {
+            var firstLink = sidebarLinks[0];
+            var handle = firstLink.getAttribute('data-target');
+            if (handle) {
+              activatePanel(handle, firstLink);
+              openSecondColumn();
+            }
+          }
+        }
+      });
+
       megaItem.addEventListener('mouseleave', function() {
         if (window.innerWidth >= 1025) resetColumns();
       });
@@ -4416,23 +4432,53 @@ document.addEventListener('visibilitychange', function () {
     var dropdown = helpMenu.querySelector('.caco-help-dropdown');
     if (!toggle || !dropdown) return;
 
-    toggle.addEventListener('click', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      var isOpen = helpMenu.classList.contains('open');
-      
-      // Close industries if open
+    var closeTimer = null;
+
+    function openHelp() {
+      if (closeTimer) clearTimeout(closeTimer);
+
       var industriesMenu = document.querySelector('.caco-industries-menu');
       if (industriesMenu) industriesMenu.classList.remove('open');
 
-      if (isOpen) {
+      helpMenu.classList.add('open');
+      toggle.setAttribute('aria-expanded', 'true');
+      if (typeof cacoOverlayManager !== 'undefined') cacoOverlayManager.show('nav');
+    }
+
+    function closeHelp() {
+      closeTimer = setTimeout(function() {
         helpMenu.classList.remove('open');
         toggle.setAttribute('aria-expanded', 'false');
         if (typeof cacoOverlayManager !== 'undefined') cacoOverlayManager.hide('nav');
-      } else {
-        helpMenu.classList.add('open');
-        toggle.setAttribute('aria-expanded', 'true');
-        if (typeof cacoOverlayManager !== 'undefined') cacoOverlayManager.show('nav');
+      }, 150);
+    }
+
+    // Hover triggers
+    helpMenu.addEventListener('mouseenter', function() {
+      if (window.innerWidth >= 1025) openHelp();
+    });
+    helpMenu.addEventListener('mouseleave', function() {
+      if (window.innerWidth >= 1025) closeHelp();
+    });
+
+    // Fallback click for touch/mobile or edge cases
+    toggle.addEventListener('click', function(e) {
+      if (window.innerWidth < 1025) {
+        e.preventDefault();
+        e.stopPropagation();
+        var isOpen = helpMenu.classList.contains('open');
+        if (isOpen) {
+          helpMenu.classList.remove('open');
+          toggle.setAttribute('aria-expanded', 'false');
+        } else {
+          helpMenu.classList.add('open');
+          toggle.setAttribute('aria-expanded', 'true');
+        }
+      } 
+      // On desktop, click does nothing (preventDefault) to avoid double-processing if hover handles it
+      // or we can let it redirect if it was a link, but this is a button.
+      else {
+        e.preventDefault();
       }
     });
 
@@ -4457,23 +4503,50 @@ document.addEventListener('visibilitychange', function () {
     var dropdown = industriesMenu.querySelector('.caco-industries-dropdown');
     if (!toggle || !dropdown) return;
 
-    toggle.addEventListener('click', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      var isOpen = industriesMenu.classList.contains('open');
+    var closeTimer = null;
 
-      // Close help if open
+    function openIndustries() {
+      if (closeTimer) clearTimeout(closeTimer);
+
       var helpMenu = document.querySelector('.caco-help-menu');
       if (helpMenu) helpMenu.classList.remove('open');
 
-      if (isOpen) {
+      industriesMenu.classList.add('open');
+      toggle.setAttribute('aria-expanded', 'true');
+      if (typeof cacoOverlayManager !== 'undefined') cacoOverlayManager.show('nav');
+    }
+
+    function closeIndustries() {
+      closeTimer = setTimeout(function() {
         industriesMenu.classList.remove('open');
         toggle.setAttribute('aria-expanded', 'false');
         if (typeof cacoOverlayManager !== 'undefined') cacoOverlayManager.hide('nav');
+      }, 150);
+    }
+
+    // Hover triggers
+    industriesMenu.addEventListener('mouseenter', function() {
+      if (window.innerWidth >= 1025) openIndustries();
+    });
+    industriesMenu.addEventListener('mouseleave', function() {
+      if (window.innerWidth >= 1025) closeIndustries();
+    });
+
+    // Fallback click
+    toggle.addEventListener('click', function(e) {
+      if (window.innerWidth < 1025) {
+        e.preventDefault();
+        e.stopPropagation();
+        var isOpen = industriesMenu.classList.contains('open');
+        if (isOpen) {
+          industriesMenu.classList.remove('open');
+          toggle.setAttribute('aria-expanded', 'false');
+        } else {
+          industriesMenu.classList.add('open');
+          toggle.setAttribute('aria-expanded', 'true');
+        }
       } else {
-        industriesMenu.classList.add('open');
-        toggle.setAttribute('aria-expanded', 'true');
-        if (typeof cacoOverlayManager !== 'undefined') cacoOverlayManager.show('nav');
+        e.preventDefault();
       }
     });
 
