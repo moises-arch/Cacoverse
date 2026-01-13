@@ -4111,9 +4111,19 @@ document.addEventListener('visibilitychange', function () {
       // Feature: Default to first option when Mega Menu opens
       megaItem.addEventListener('mouseenter', function() {
         if (window.innerWidth >= 1025) {
-          // If no link is currently active, activate the first one
+          // Check if any link is already active (from server-side Liquid)
           var activeLink = megaItem.querySelector('.caco-mega-sidebar-link.active');
-          if (!activeLink && sidebarLinks.length > 0) {
+          
+          if (activeLink) {
+            // Liquid made it active, but we must ensure the container is open
+            openSecondColumn();
+            
+            // Optional: Ensure the corresponding panel is also active in JS state
+            var handle = activeLink.getAttribute('data-target');
+            if (handle) activatePanel(handle, activeLink); 
+          } 
+          else if (sidebarLinks.length > 0) {
+            // No active link found? Force first one.
             var firstLink = sidebarLinks[0];
             var handle = firstLink.getAttribute('data-target');
             if (handle) {
