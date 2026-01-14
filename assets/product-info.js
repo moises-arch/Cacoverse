@@ -321,6 +321,8 @@ if (!customElements.get("product-info")) {
             classList.contains("hidden")
           );
 
+          this.updatePurchaseOptions(html);
+
           // Remove loading state
           const loadingSelectors = ["price", "Inventory", "Sku", "Price-Per-Item", "Volume"];
           loadingSelectors.forEach(id => {
@@ -656,8 +658,8 @@ if (!customElements.get("product-info")) {
           const purchaseOptionInput = this.querySelector('input[name="purchase_option"]:checked');
           const mainPriceEl = document.getElementById(`price-${this.sectionId}`);
 
-          if (onetimePriceEl) onetimePriceEl.textContent = variantData.onetime_formatted;
-          if (subscriptionPriceEl) subscriptionPriceEl.textContent = variantData.subscription_formatted;
+          if (onetimePriceEl) onetimePriceEl.innerHTML = variantData.onetime_formatted;
+          if (subscriptionPriceEl) subscriptionPriceEl.innerHTML = variantData.subscription_formatted;
 
           if (discountBadge) {
             if (variantData.discount > 0) {
@@ -685,6 +687,28 @@ if (!customElements.get("product-info")) {
         } catch (e) {
           console.error('Error updating subscription cards optimistically:', e);
         }
+      }
+
+      updatePurchaseOptions(html) {
+        const newProductInfo = html.querySelector(`product-info`) || html;
+
+        const update = (selector, attribute = 'innerHTML') => {
+          const newEl = newProductInfo.querySelector(selector);
+          const currentEl = this.querySelector(selector);
+          if (newEl && currentEl) {
+            if (attribute === 'combined') {
+              currentEl.innerHTML = newEl.innerHTML;
+              currentEl.className = newEl.className;
+            } else {
+              currentEl[attribute] = newEl[attribute];
+            }
+          }
+        };
+
+        update('.price-onetime');
+        update('.price-subscription');
+        update('.subscription-badge-pill', 'combined');
+        update('.discount-text');
       }
 
       updateQuantityRules(sectionId, html) {
