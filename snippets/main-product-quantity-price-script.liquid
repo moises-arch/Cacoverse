@@ -1,0 +1,83 @@
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const sectionId = '{{ section.id }}';
+    const qtyInput = document.getElementById(`Quantity-${sectionId}`);
+    if (!qtyInput) return;
+
+    function parseMoney(str) {
+      return parseFloat(str.replace(/[^0-9.]/g, '')) * 100;
+    }
+
+    // Simple robust replacer that respects the original string's formatting (for USD/simple currencies)
+    function formatTotal(cents, originalStr) {
+      if (!originalStr) return '';
+      const val = (cents / 100).toFixed(2);
+      // Replace the number in the string with the new value
+      // This regex looks for a number sequence that might look like money
+      return originalStr.replace(/[\d,]+(\.\d+)?/, val);
+    }
+
+    function updatePrices() {
+      const qty = parseInt(qtyInput.value) || 1;
+      
+      const onetimePriceEl = document.querySelector('.price-onetime');
+      const subPriceEl = document.querySelector('.price-subscription');
+      
+      const internalDataScript = document.getElementById(`VariantSubscription-${sectionId}`);
+      if (!internalDataScript) return; 
+      
+      let variantData;
+      try {
+        variantData = JSON.parse(internalDataScript.textContent);
+      } catch(e) { console.error('Error parsing variant pricing data', e); return; }
+
+      const variantInput = document.querySelector(`form[action*="/cart/add"] input[name="id"]`);
+      const currentVariantId = variantInput ? variantInput.value : '{{ product.selected_or_first_available_variant.id }}';
+      
+      const data = variantData[currentVariantId];
+      if (!data) return;
+
+      const onetimeBase = data.onetime; // cents
+      const subBase = data.subscription; // cents
+      
+      const onetimeStr = data.onetime_formatted;
+      const subStr = data.subscription_formatted;
+
+      if (qty > 1) {
+        const onetimeTotal = onetimeBase * qty;
+        const subTotal = subBase * qty;
+        
+        const onetimeTotalStr = formatTotal(onetimeTotal, onetimeStr);
+        const subTotalStr = formatTotal(subTotal, subStr);
+        
+        if (onetimePriceEl) {
+          onetimePriceEl.innerHTML = `
+            ${onetimeStr}
+            <div style="font-size: 0.75em; font-weight: 500; color: #666; margin-top: 2px;">Total: ${onetimeTotalStr}</div>
+          `;
+        }
+        if (subPriceEl) {
+          subPriceEl.innerHTML = `
+            ${subStr}
+            <div style="font-size: 0.75em; font-weight: 500; color: #666; margin-top: 2px;">Total: ${subTotalStr}</div>
+          `;
+        }
+      } else {
+        if (onetimePriceEl) onetimePriceEl.textContent = onetimeStr;
+        if (subPriceEl) subPriceEl.textContent = subStr;
+      }
+    }
+
+    qtyInput.addEventListener('input', updatePrices);
+    qtyInput.addEventListener('change', updatePrices);
+    
+    // Listen for theme variant changes
+    document.addEventListener('variant:change', function() {
+      setTimeout(updatePrices, 100);
+    });
+    
+    // Initial check
+    updatePrices();
+  });
+</script>
