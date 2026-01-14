@@ -692,7 +692,7 @@
 
   <!-- Video Hub Assets -->
   {{ 'product-video-hub.css' | asset_url | stylesheet_tag }}
-  <script src="{{ 'product-video-hub.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'product-video-hub.js' | asset_url | append: '&t=' | append: 'now' | date: '%N' }}" defer="defer"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       // Initialize Video Hub

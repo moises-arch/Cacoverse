@@ -89,6 +89,8 @@ class ProductVideoHub {
   switchVideo(item, autoplay = true) {
     if (!item) return;
     const index = parseInt(item.dataset.index, 10);
+    console.log("CacoAmerica: switchVideo called", index, item);
+
     if (this.activeVideo === index) return;
 
     this.playlistItems.forEach((entry) => {
@@ -99,14 +101,20 @@ class ProductVideoHub {
     item.setAttribute('aria-selected', 'true');
 
     const video = this.videoData[index];
+    console.log("CacoAmerica: video data", video);
+
     if (video && video.video_url) {
       this.renderPlayer(video.video_url, video.type, autoplay);
+    } else {
+      console.warn("CacoAmerica: No video URL found for index", index);
+      this.playerContainer.innerHTML = '<div style="color:white; padding:20px;">No video URL available</div>';
     }
 
     this.activeVideo = index;
   }
 
   renderPlayer(url, type, autoplay) {
+    console.log("CacoAmerica: renderPlayer", url, type, autoplay);
     if (!this.playerContainer || !url) return;
 
     const autoParam = autoplay ? 'autoplay=1' : 'autoplay=0';
@@ -126,6 +134,7 @@ class ProductVideoHub {
           frameborder="0" allow="autoplay; fullscreen; picture-in-picture"
           allowfullscreen class="video-hub-iframe"></iframe>`;
       } else {
+        // Fallback for generic iframe usage
         html = `<iframe src="${url}" frameborder="0" allowfullscreen class="video-hub-iframe"></iframe>`;
       }
     } else {
