@@ -145,9 +145,8 @@
     transition: background 0.2s ease;
   }
 
-  /* 🧪 REMOVED DEFERRED LOADING (Fixes Ghosting) */
+  /* 🧪 PREVIOUSLY REMOVED DEFERRED LOADING (Now handled by .caco-header-ready) */
   .caco-search-bar-container {
-    opacity: 1;
     transform: none;
     pointer-events: auto;
   }
@@ -222,6 +221,35 @@
   .caco-mobile-drawer,
   .caco-search-bar-container--deferred {
     display: none;
+  }
+
+  /* 🛡️ GHOSTING PREVENTION: Hide key items until header is fully ready */
+  .caco-ann-controls,
+  .caco-help-menu,
+  .caco-industries-menu,
+  .caco-search-bar-container,
+  .caco-cart-btn,
+  .caco-mobile-toggle,
+  .caco-search-icon--mobile,
+  .caco-mobile-drawer,
+  .caco-predictive-results {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: opacity 0.4s ease-out, visibility 0.4s ease-out !important;
+  }
+
+  /* Reveal once ready */
+  .caco-header-ready .caco-ann-controls,
+  .caco-header-ready .caco-help-menu,
+  .caco-header-ready .caco-industries-menu,
+  .caco-header-ready .caco-search-bar-container,
+  .caco-header-ready .caco-cart-btn,
+  .caco-header-ready .caco-mobile-toggle,
+  .caco-header-ready .caco-search-icon--mobile,
+  .caco-header-ready .caco-mobile-drawer,
+  .caco-header-ready .caco-predictive-results {
+    opacity: 1 !important;
+    visibility: visible !important;
   }
 
   .caco-nav {
@@ -4653,11 +4681,14 @@ document.addEventListener('visibilitychange', function () {
     initAnnouncement();
     window.addEventListener('resize', initAnnouncement);
 
-    // 🧪 Reveal deferred announcement bar
+    // 🧪 Reveal deferred elements to prevent ghosting
     setTimeout(function() {
       var wrapper = document.querySelector('.caco-header-wrapper');
-      if (wrapper) wrapper.classList.add('caco-announcement-ready');
-    }, 300);
+      if (wrapper) {
+        wrapper.classList.add('caco-header-ready');
+        wrapper.classList.add('caco-announcement-ready');
+      }
+    }, 400); // Small buffer to ensure everything is rendered
 
     var closeBtn = bar.querySelector('.caco-announcement-close');
     if (closeBtn) {
