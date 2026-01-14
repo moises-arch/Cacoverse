@@ -76,7 +76,7 @@
                       <li class="feature-pill">
                         <span class="feature-pill__icon">
                           <img
-                            src="{{ 'feature-icon.png' | asset_img_url : 'master' }}"
+                            src="{{ 'feature-icon.png' | asset_url }}"
                             alt="Feature icon"
                             width="16"
                             height="16"
@@ -208,7 +208,7 @@
                         <span class="resource-chip__cta">
                           <a href="{% if document_links[forloop.index0] != blank %}{{ document_links[forloop.index0] }}{% else %}#{% endif %}"  target="_blank" aria-label="Download {{ document }}">
                             <img
-                              src="{{  'PDF.png' | asset_img_url : 'master' }}"
+                              src="{{ 'PDF.png' | asset_url }}"
                               width="40"
                               height="40"
                               alt="PDF download icon"

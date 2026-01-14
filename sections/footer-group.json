@@ -159,7 +159,7 @@
         "text_niiQMV": {
           "type": "text",
           "settings": {
-            "image_logo": "shopify://shop_images/Logo.png",
+            "image_logo": "shopify://shop_images/logo_caco.png",
             "subtext": "<p>Caco America LLC is a subsidiary of Caco Abbo Group which was established in 1986 by Mr. Isaac \"Caco\" Abbo and his two sons. We have over 30 years of experience designing, producing, and distributing plumbing, electrical accessories, hand tools, PPE, hardware products, and other product lines like auto accessories.</p>",
             "show_social": true
           }
@@ -224,7 +224,7 @@
             "main_padding_bottom": 60,
             "bottom_padding": 30,
             "column_gap": 60,
-            "logo": "shopify://shop_images/Logo.png",
+            "logo": "shopify://shop_images/logo_caco.png",
             "logo_width": 250,
             "description": "<p>Caco America LLC is a subsidiary of Caco Abbo Group which was established in 1986 by Mr. Isaac \"Caco\" Abbo and his two sons. We have over 30 years of experience designing, producing, and distributing plumbing, electrical accessories, hand tools, PPE, hardware products, and other product lines like auto accessories.</p>",
             "description_font_size": 15,
