@@ -46,6 +46,31 @@ if (!customElements.get('product-form')) {
             this._afterVariantChanged(window.__lastSelectedVariant || null);
           }
         }, 300);
+
+        // ===== CacoAmerica: Listen to Quantity Changes =====
+        const sid = this.dataset.sectionId || (this.productEl?.id?.replace('MainProduct-', ''));
+        const qtyInput = this.querySelector('[name="quantity"]') || document.getElementById(`Quantity-${sid}`);
+
+        if (qtyInput) {
+          // Bind to input events
+          qtyInput.addEventListener('input', this.updateDetailedButtonPrice.bind(this));
+          qtyInput.addEventListener('change', this.updateDetailedButtonPrice.bind(this));
+
+          // Bind to +/- buttons if inside quantity-input component
+          const wrapper = qtyInput.closest('quantity-input');
+          if (wrapper) {
+            wrapper.querySelectorAll('button').forEach(btn => {
+              btn.addEventListener('click', () => setTimeout(this.updateDetailedButtonPrice.bind(this), 50));
+            });
+          }
+        }
+
+        // Listen to subscription radio changes
+        const radios = this.form.querySelectorAll('input[name="purchase_option"]');
+        radios.forEach(r => r.addEventListener('change', this.updateDetailedButtonPrice.bind(this)));
+
+        // Initial run
+        this.updateDetailedButtonPrice();
       }
 
       disconnectedCallback() {
@@ -262,6 +287,9 @@ if (!customElements.get('product-form')) {
 
         // 4) NUEVO: sincroniza galería con el featured_media de la variante
         this._syncGalleryToVariant(passedVariant);
+
+        // 5) CacoAmerica: Update Price on Button
+        this.updateDetailedButtonPrice();
       }
 
       // ========= ENVÍO AL CARRITO (código original) =========
@@ -447,6 +475,109 @@ if (!customElements.get('product-form')) {
         } else {
           this.submitButton.removeAttribute('disabled');
           this.submitButtonText.textContent = window.variantStrings.addToCart;
+        }
+      }
+
+      /* ==========================================================
+         NATIVE PRICE UPDATE LOGIC (CacoAmerica)
+         Integrates dynamic total price calculation directly into button
+      ========================================================== */
+
+      _formatMoney(cents, format) {
+        if (typeof cents === 'string') cents = cents.replace('.', '');
+        let value = '';
+        const placeholderRegex = /\{\{\s*(\w+)\s*\}\}/;
+        const formatString = format || window.variantStrings?.moneyFormat || '${{amount}}';
+
+        function defaultOption(opt, def) {
+          return (typeof opt == 'undefined' ? def : opt);
+        }
+
+        function formatWithDelimiters(number, precision, thousands, decimal) {
+          precision = defaultOption(precision, 2);
+          thousands = defaultOption(thousands, ',');
+          decimal = defaultOption(decimal, '.');
+
+          if (isNaN(number) || number == null) { return 0; }
+
+          number = (number / 100).toFixed(precision);
+
+          var parts = number.split('.');
+          var dollars = parts[0].replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1' + thousands);
+          var cents = parts[1] ? (decimal + parts[1]) : '';
+
+          return dollars + cents;
+        }
+
+        const match = formatString.match(placeholderRegex);
+        if (!match) return '$' + (cents / 100).toFixed(2);
+
+        switch (match[1]) {
+          case 'amount': value = formatWithDelimiters(cents, 2); break;
+          case 'amount_no_decimals': value = formatWithDelimiters(cents, 0); break;
+          case 'amount_with_comma_separator': value = formatWithDelimiters(cents, 2, '.', ','); break;
+          case 'amount_no_decimals_with_comma_separator': value = formatWithDelimiters(cents, 0, '.', ','); break;
+          default: value = formatWithDelimiters(cents, 2);
+        }
+
+        return formatString.replace(placeholderRegex, value);
+      }
+
+      _getVariantPrice(vid) {
+        // Robust lookup using the global JSON object injected by 'product-prices-data'
+        // We look for a script tag that starts with ProductPrices-
+        const sectionId = this.dataset.sectionId || (this.productEl?.id?.replace('MainProduct-', ''));
+        const s1 = document.getElementById(`ProductPrices-${sectionId}`);
+
+        if (s1) {
+          try {
+            const data = JSON.parse(s1.textContent);
+            if (data[vid]) {
+              // Check subscription status relative to this form
+              const subRadio = this.form.querySelector(`input[name="purchase_option"][value="subscription"]:checked`) ||
+                document.querySelector(`input[name="purchase_option"][value="subscription"]:checked`); // Global fallback
+              return subRadio ? data[vid].subscription : data[vid].price;
+            }
+          } catch (e) { }
+        }
+        return null;
+      }
+
+      updateDetailedButtonPrice() {
+        if (!this.submitButton || !this.submitButtonText) return;
+
+        // Find Qty Input related to this form
+        let qtyInput = this.form.querySelector('[name="quantity"]');
+        if (!qtyInput) {
+          // Fallback: search by section ID pattern
+          const sid = this.dataset.sectionId;
+          if (sid) qtyInput = document.getElementById(`Quantity-${sid}`);
+        }
+
+        const qty = parseInt(qtyInput?.value) || 1;
+        const defaultText = window.variantStrings?.addToCart || 'Add to Cart';
+
+        // Reset if Qty <= 1
+        if (qty <= 1) {
+          // Only reset if it looks modified by us (contains " - ")
+          // But to be safe, we let standard 'toggleSubmitButton' handle availability text, 
+          // we only force reset if it shows a price.
+          if (this.submitButtonText.textContent.includes(' - ')) {
+            this.submitButtonText.textContent = defaultText;
+          }
+          return;
+        }
+
+        const vid = this.variantIdInput?.value;
+        const price = this._getVariantPrice(vid);
+
+        if (price !== null) {
+          const total = price * qty;
+          const formatted = this._formatMoney(total);
+          const newText = `${defaultText} - ${formatted}`;
+          if (this.submitButtonText.textContent !== newText) {
+            this.submitButtonText.textContent = newText;
+          }
         }
       }
 
