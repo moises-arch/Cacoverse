@@ -1212,9 +1212,14 @@
                           -%}
 
                           <div class="scd-item__price-block">
-                            <div class="scd-item__price-unit{% if item_is_on_sale %} scd-item__price-unit--sale{% endif %}">
+                            <div class="scd-item__price-unit{% if item_is_on_sale or item.selling_plan_allocation != null %} scd-item__price-unit--sale{% endif %}">
                               {{ item.final_price | money }} each
-                              {%- if item_is_on_sale -%}
+                              
+                              {%- if item.selling_plan_allocation != null -%}
+                                {% if item.variant.price > item.final_price %}
+                                  <s class="scd-item__price-compare" style="color: #6c757d; font-size: 0.85em;">{{ item.variant.price | money }}</s>
+                                {% endif %}
+                              {%- elsif item_is_on_sale -%}
                                 <s class="scd-item__price-compare">{{ item_compare_at | money }}</s>
                               {%- endif -%}
                             </div>
