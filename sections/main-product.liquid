@@ -883,7 +883,7 @@
               <div class="subscription-selector-wrapper mt-4 mb-4">
                 <legend class="form__label mb-3 fw-bold" style="font-size: 1.1rem; letter-spacing: 0.05rem;">Purchase Options</legend>
                 
-                <div class="subscription-options-list d-flex gap-3">
+                <div class="subscription-options-list d-flex gap-3 align-items-stretch">
                   {%- liquid
                     assign current_variant = product.selected_or_first_available_variant
                     assign onetime_price = current_variant.price
@@ -928,17 +928,24 @@
                     <input type="radio" id="PurchaseOption-OneTime-{{ section.id }}" name="purchase_option" value="onetime" {% unless is_subscription_selected %}checked{% endunless %} class="subscription-radio-input">
                     <label for="PurchaseOption-OneTime-{{ section.id }}" class="subscription-card-label h-100">
                       <div class="subscription-card-content d-flex flex-column align-items-center text-center">
-                        <span class="subscription-card-title mb-1">One-time purchase</span>
+                        <div class="subscription-icon mb-1">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+                        </div>
+                        <span class="subscription-card-title">One-time</span>
                         <span class="price-onetime fw-bold">{{ onetime_price | money }}</span>
                       </div>
                     </label>
                   </div>
 
-                  <div class="subscription-option-card flex-grow-1">
+                  <div class="subscription-option-card subscription-option-card--subscription flex-grow-1">
+                    <div class="subscription-popular-badge">Best Value</div>
                     <input type="radio" id="PurchaseOption-Subscription-{{ section.id }}" name="purchase_option" value="subscription" {% if is_subscription_selected %}checked{% endif %} class="subscription-radio-input">
                     <label for="PurchaseOption-Subscription-{{ section.id }}" class="subscription-card-label h-100">
                       <div class="subscription-card-content d-flex flex-column align-items-center text-center">
-                        <span class="subscription-card-title mb-1">Subscribe & Save</span>
+                        <div class="subscription-icon mb-1">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+                        </div>
+                        <span class="subscription-card-title">Subscribe</span>
                         <div class="subscription-card-price-info d-flex flex-column align-items-center">
                           <span class="price-subscription fw-bold text-success">{{ subscription_price | money }}</span>
                           {%- if shown_discount > 0 -%}
@@ -978,16 +985,18 @@
                   width: 0;
                   height: 0;
                 }
+                .subscription-option-card {
+                  position: relative;
+                }
                 .subscription-card-label {
                   display: block;
                   cursor: pointer;
-                  padding: 1.25rem 1rem;
-                  border: 1px solid #d1d1d1;
+                  padding: 0.75rem 0.5rem;
+                  border: 1.5px solid #e0e0e0;
                   border-radius: 12px;
-                  transition: all 0.2s ease;
+                  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
                   background: #fff;
                   position: relative;
-                  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
                 }
                 .subscription-card-label:hover {
                   border-color: #1761A2;
@@ -995,16 +1004,19 @@
                 }
                 .subscription-radio-input:checked + .subscription-card-label {
                   border-color: #1761A2;
-                  background: rgba(23, 97, 162, 0.04);
+                  background: rgba(23, 97, 162, 0.05);
                   border-width: 2px;
                   box-shadow: 0 4px 12px rgba(23, 97, 162, 0.08);
                 }
                 .subscription-card-title {
                   font-weight: 700;
-                  font-size: 0.9rem;
-                  color: #111;
+                  font-size: 0.85rem;
+                  color: #444;
                   letter-spacing: -0.01rem;
-                  line-height: 1.2;
+                  line-height: 1.1;
+                }
+                .subscription-radio-input:checked + .subscription-card-label .subscription-card-title {
+                  color: #111;
                 }
                 .subscription-badge {
                   display: inline-block;
@@ -1012,21 +1024,38 @@
                   color: #fff;
                   font-size: 0.6rem;
                   font-weight: 800;
-                  padding: 2px 6px;
+                  padding: 1px 6px;
                   border-radius: 4px;
                   text-transform: uppercase;
                 }
                 .subscription-card-price-info .fw-bold {
-                  font-size: 1.1rem;
-                }
-                .subscription-radio-input:checked + .subscription-card-label::after {
-                  content: '✓';
-                  position: absolute;
-                  top: 8px;
-                  right: 12px;
-                  color: #1761A2;
-                  font-weight: bold;
                   font-size: 1rem;
+                }
+                .subscription-icon {
+                  color: #888;
+                  transition: color 0.2s ease;
+                }
+                .subscription-radio-input:checked + .subscription-card-label .subscription-icon {
+                  color: #1761A2;
+                }
+                .subscription-popular-badge {
+                  position: absolute;
+                  top: -10px;
+                  left: 50%;
+                  transform: translateX(-50%);
+                  background: #1761A2;
+                  color: white;
+                  font-size: 0.6rem;
+                  font-weight: 800;
+                  padding: 2px 10px;
+                  border-radius: 20px;
+                  text-transform: uppercase;
+                  z-index: 1;
+                  white-space: nowrap;
+                  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                }
+                .subscription-option-card--subscription .subscription-card-label {
+                  border-color: rgba(23, 97, 162, 0.2);
                 }
                 .subscription-frequencies.hidden {
                   display: none;
