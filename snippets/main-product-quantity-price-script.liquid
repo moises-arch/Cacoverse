@@ -34,7 +34,7 @@
       }
 
       const match = formatString.match(placeholderRegex);
-      if (!match) return '$' + (cents/100).toFixed(2); // Fallback
+      if (!match) return '$' + (cents/100).toFixed(2); 
 
       switch(match[1]) {
         case 'amount':
@@ -56,90 +56,101 @@
       return formatString.replace(placeholderRegex, value);
     }
 
-    // Default button text
     const defaultText = {{ 'products.product.add_to_cart' | t | json }};
     const moneyFormat = {{ shop.money_format | json }};
+    
+    let isUpdating = false;
 
-    function updateAddToCartButton() {
-      // Delay slightly for React/Theme updates
-      setTimeout(() => {
-        const qty = parseInt(qtyInput.value) || 1;
-        
-        // Find the checkout button
+    function getAttributes() {
         const btn = document.getElementById(`ProductSubmitButton-${sectionId}`);
-        if (!btn || btn.hasAttribute('disabled')) return; 
-        
-        const btnTextSpan = btn.querySelector('span');
-        if (!btnTextSpan) return;
+        if (!btn) return null;
+        const span = btn.querySelector('span');
+        return { btn, span };
+    }
 
-         // Reset if qty is 1
-        if (qty <= 1) {
-             btnTextSpan.textContent = defaultText;
-             return;
-        }
-
+    function calculateTotal() {
         // Get pricing data
         const internalDataScript = document.getElementById(`VariantSubscription-${sectionId}`);
         let variantData = null;
-        
-        if (internalDataScript) {
-          try {
-            variantData = JSON.parse(internalDataScript.textContent);
-          } catch(e) {}
-        }
+        try {
+            if (internalDataScript) variantData = JSON.parse(internalDataScript.textContent);
+        } catch(e) {}
 
-        // Scoped variant lookup
+        // Variant ID
         const productForm = document.getElementById(formId);
         let currentVariantId = '{{ product.selected_or_first_available_variant.id }}';
-
         if (productForm) {
             const variantInput = productForm.querySelector('input[name="id"]');
             if (variantInput) currentVariantId = variantInput.value;
         }
-        
-        // Determine price
+
+        // Qty
+        const qty = parseInt(qtyInput.value) || 1;
+
+        // Base Price
         let basePrice = 0;
-        
         if (variantData && variantData[currentVariantId]) {
-             // We have subscription data
             const data = variantData[currentVariantId];
             const subRadio = document.querySelector(`input[name="purchase_option"][value="subscription"]`);
             const isSub = subRadio && subRadio.checked;
             basePrice = isSub ? data.subscription : data.onetime;
-        } else {
-            // Fallback to basic variant data if sub data missing
-            // (Note: This might not account for changing variants if not in the JSON, but basic robustness)
-            // Ideally we'd read it from the DOM or a global object, but let's stick to initial logic
-             // Try to parse from a "data-price" if available, or just ignore update
-             return; 
         }
 
-        const total = basePrice * qty;
-        const formattedTotal = formatMoney(total, moneyFormat);
+        return { qty, total: basePrice * qty };
+    }
 
-        // Update button text
-        btnTextSpan.textContent = `${defaultText} - ${formattedTotal}`;
+    function updateAddToCartButton() {
+        if (isUpdating) return;
+        
+        const { btn, span } = getAttributes() || {};
+        if (!btn || !span || btn.hasAttribute('disabled')) return;
 
-      }, 50);
+        const { qty, total } = calculateTotal();
+
+        isUpdating = true;
+        
+        // Logic: Only change text if Qty > 1 AND text needs update
+        if (qty <= 1) {
+             // Let theme handle singular or we reset if needed, but best not to interfere too much
+             // If we want to strictly reset:
+             if (span.textContent.includes(' - ')) {
+                 span.textContent = defaultText;
+             }
+        } else {
+            const formattedTotal = formatMoney(total, moneyFormat);
+            const newText = `${defaultText} - ${formattedTotal}`;
+            if (span.textContent !== newText) {
+                span.textContent = newText;
+            }
+        }
+        
+        isUpdating = false;
+    }
+
+    // Observer to fight race conditions
+    const { span } = getAttributes() || {};
+    if (span) {
+        const observer = new MutationObserver(() => {
+            if (!isUpdating) updateAddToCartButton();
+        });
+        observer.observe(span, { childList: true, characterData: true, subtree: true });
     }
 
     // Event Listeners
     qtyInput.addEventListener('input', updateAddToCartButton);
     qtyInput.addEventListener('change', updateAddToCartButton);
     
-    // Purchase option toggles (One-time vs Sub)
-    const radios = document.querySelectorAll(`input[name="purchase_option"]`);
-    radios.forEach(r => r.addEventListener('change', updateAddToCartButton));
-
-    // Quantity buttons
+    // Buttons
     const wrapper = qtyInput.closest('quantity-input');
     if (wrapper) {
-      wrapper.querySelectorAll('button').forEach(btn => {
-        btn.addEventListener('click', updateAddToCartButton);
-      });
+        wrapper.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', () => setTimeout(updateAddToCartButton, 50));
+        });
     }
+
+    const radios = document.querySelectorAll(`input[name="purchase_option"]`);
+    radios.forEach(r => r.addEventListener('change', updateAddToCartButton));
     
-    // Variant changes
     document.addEventListener('variant:change', () => setTimeout(updateAddToCartButton, 100));
     
     // Initial Run
