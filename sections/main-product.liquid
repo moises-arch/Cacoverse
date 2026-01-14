@@ -924,7 +924,45 @@
                     endif
                   -%}
 
-                  <div class="subscription-option-card flex-grow-1">
+                  <script type="application/json" id="VariantSubscription-{{ section.id }}">
+                    {
+                      {%- for variant in product.variants -%}
+                        "{{ variant.id }}": {
+                          "onetime": {{ variant.price | json }},
+                          {%- if settings.currency_code_enabled -%}
+                            "onetime_formatted": {{ variant.price | money_with_currency | json }},
+                          {%- else -%}
+                            "onetime_formatted": {{ variant.price | money | json }},
+                          {%- endif -%}
+                          {%- assign best_alloc = null -%}
+                          {%- assign best_disc = 0 -%}
+                          {%- for alloc in variant.selling_plan_allocations -%}
+                            {%- assign disc = 0 -%}
+                            {%- if alloc.compare_at_price > alloc.price -%}
+                              {%- assign disc = alloc.compare_at_price | minus: alloc.price | times: 100.0 | divided_by: alloc.compare_at_price | round -%}
+                            {%- endif -%}
+                            {%- if disc > best_disc -%}
+                              {%- assign best_disc = disc -%}
+                              {%- assign best_alloc = alloc -%}
+                            {%- endif -%}
+                          {%- endfor -%}
+                          {%- if best_alloc == null and variant.selling_plan_allocations.size > 0 -%}
+                             {%- assign best_alloc = variant.selling_plan_allocations[0] -%}
+                          {%- endif -%}
+                          "subscription": {{ best_alloc.price | default: variant.price | json }},
+                          {%- if settings.currency_code_enabled -%}
+                            "subscription_formatted": {{ best_alloc.price | default: variant.price | money_with_currency | json }},
+                          {%- else -%}
+                            "subscription_formatted": {{ best_alloc.price | default: variant.price | money | json }},
+                          {%- endif -%}
+                          "discount": {{ best_disc | json }},
+                          "selling_plan_id": {{ best_alloc.selling_plan.id | json }}
+                        }{% unless forloop.last %},{% endunless %}
+                      {%- endfor -%}
+                    }
+                  </script>
+
+                  <div class="subscription-option-card flex-grow-1" data-type="onetime">
                     <input type="radio" id="PurchaseOption-OneTime-{{ section.id }}" name="purchase_option" value="onetime" {% unless is_subscription_selected %}checked{% endunless %} class="subscription-radio-input">
                     <label for="PurchaseOption-OneTime-{{ section.id }}" class="subscription-card-label h-100">
                       <div class="subscription-card-content d-flex flex-column align-items-center text-center">
@@ -937,7 +975,7 @@
                     </label>
                   </div>
 
-                  <div class="subscription-option-card subscription-option-card--subscription flex-grow-1">
+                  <div class="subscription-option-card subscription-option-card--subscription flex-grow-1" data-type="subscription">
                     <div class="subscription-popular-badge">Best Value</div>
                     <input type="radio" id="PurchaseOption-Subscription-{{ section.id }}" name="purchase_option" value="subscription" {% if is_subscription_selected %}checked{% endif %} class="subscription-radio-input">
                     <label for="PurchaseOption-Subscription-{{ section.id }}" class="subscription-card-label h-100">
@@ -948,9 +986,7 @@
                         <span class="subscription-card-title">Subscribe</span>
                         <div class="subscription-card-price-info d-flex flex-column align-items-center">
                           <span class="price-subscription fw-bold text-success">{{ subscription_price | money }}</span>
-                          {%- if shown_discount > 0 -%}
-                            <span class="subscription-badge mt-1">Save {{ shown_discount }}%</span>
-                          {%- endif -%}
+                          <span class="subscription-badge mt-1 {% if shown_discount == 0 %}hidden{% endif %}">Save {{ shown_discount }}%</span>
                         </div>
                       </div>
                     </label>

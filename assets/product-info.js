@@ -112,12 +112,21 @@ if (!customElements.get("product-info")) {
           }
         }
 
+        const sellingPlanSelect = this.querySelector('select[name="selling_plan"]');
+        const purchaseOption = this.querySelector('input[name="purchase_option"]:checked')?.value;
+        const sellingPlanId = purchaseOption === 'subscription' ? sellingPlanSelect?.value : null;
+
+        if (variant) {
+          this.updateSubscriptionCardsOptimistically(variant.id);
+        }
+
         this.renderProductInfo({
           requestUrl: this.buildRequestUrlWithParams(
             productUrl,
             selectedOptionValues,
             shouldFetchFullPage,
-            variant?.id
+            variant?.id,
+            sellingPlanId
           ),
           targetId: target.id,
           callback: shouldSwapProduct
@@ -219,7 +228,8 @@ if (!customElements.get("product-info")) {
         url,
         optionValues,
         shouldFetchFullPage = false,
-        variantId = null
+        variantId = null,
+        sellingPlanId = null
       ) {
         const params = [];
 
@@ -229,6 +239,10 @@ if (!customElements.get("product-info")) {
           params.push(`variant=${variantId}`);
         } else if (optionValues.length) {
           params.push(`option_values=${optionValues.join(",")}`);
+        }
+
+        if (sellingPlanId) {
+          params.push(`selling_plan=${sellingPlanId}`);
         }
 
         return `${url}?${params.join("&")}`;
@@ -571,6 +585,12 @@ if (!customElements.get("product-info")) {
             } else {
               this.updateUrlWithSellingPlan(null);
             }
+
+            // Sync main price optimistically on toggle
+            const variant = this.getSelectedVariant(this);
+            if (variant) {
+              this.updateSubscriptionCardsOptimistically(variant.id);
+            }
           });
         });
 
@@ -618,6 +638,48 @@ if (!customElements.get("product-info")) {
         if (variantId) params.push(`variant=${variantId}`);
         if (sellingPlanId) params.push(`selling_plan=${sellingPlanId}`);
         return `${url}?${params.join("&")}`;
+      }
+
+      updateSubscriptionCardsOptimistically(variantId) {
+        const script = this.querySelector(`#VariantSubscription-${this.sectionId}`);
+        if (!script) return;
+
+        try {
+          const data = JSON.parse(script.textContent);
+          const variantData = data[variantId];
+          if (!variantData) return;
+
+          const onetimePriceEl = this.querySelector('.subscription-option-card[data-type="onetime"] .price-onetime');
+          const subscriptionPriceEl = this.querySelector('.subscription-option-card[data-type="subscription"] .price-subscription');
+          const discountBadge = this.querySelector('.subscription-option-card[data-type="subscription"] .subscription-badge');
+          const purchaseOptionInput = this.querySelector('input[name="purchase_option"]:checked');
+          const mainPriceEl = document.getElementById(`price-${this.sectionId}`);
+
+          if (onetimePriceEl) onetimePriceEl.textContent = variantData.onetime_formatted;
+          if (subscriptionPriceEl) subscriptionPriceEl.textContent = variantData.subscription_formatted;
+
+          if (discountBadge) {
+            if (variantData.discount > 0) {
+              discountBadge.textContent = `Save ${variantData.discount}%`;
+              discountBadge.classList.remove('hidden');
+            } else {
+              discountBadge.classList.add('hidden');
+            }
+          }
+
+          if (mainPriceEl) {
+            const priceItem = mainPriceEl.querySelector('.price-item--regular, .price-item--sale');
+            if (priceItem) {
+              priceItem.textContent = purchaseOptionInput?.value === 'subscription'
+                ? variantData.subscription_formatted
+                : variantData.onetime_formatted;
+              mainPriceEl.style.opacity = '1';
+            }
+          }
+
+        } catch (e) {
+          console.error('Error updating subscription cards optimistically:', e);
+        }
       }
 
       updateQuantityRules(sectionId, html) {
