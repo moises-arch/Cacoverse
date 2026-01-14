@@ -871,6 +871,96 @@
 
             {%- when 'variant_picker' -%}
               {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
+            
+            {%- liquid
+              assign has_selling_plans = false
+              if product.selling_plan_groups.size > 0
+                assign has_selling_plans = true
+              endif
+            -%}
+
+            {%- if has_selling_plans -%}
+              <div class="product-form__input product-form__input--pill subscription-selector-wrapper mt-3 mb-4">
+                <legend class="form__label mb-2">Purchase options</legend>
+                <div class="subscription-toggle-buttons d-flex gap-2">
+                  <div class="subscription-option-item flex-grow-1">
+                    <input type="radio" id="PurchaseOption-OneTime-{{ section.id }}" name="purchase_option" value="onetime" checked class="visually-hidden">
+                    <label for="PurchaseOption-OneTime-{{ section.id }}" class="subscription-label w-100 text-center py-2 px-3 border rounded-pill cursor-pointer">
+                      <span class="d-block fw-bold">One-time purchase</span>
+                      <span class="d-block small text-muted price-onetime">{{ product.selected_or_first_available_variant.price | money }}</span>
+                    </label>
+                  </div>
+                  <div class="subscription-option-item flex-grow-1">
+                    <input type="radio" id="PurchaseOption-Subscription-{{ section.id }}" name="purchase_option" value="subscription" class="visually-hidden">
+                    <label for="PurchaseOption-Subscription-{{ section.id }}" class="subscription-label w-100 text-center py-2 px-3 border rounded-pill cursor-pointer">
+                      <span class="d-block fw-bold">Subscribe & Save</span>
+                      {%- liquid
+                        assign best_discount = 0
+                        for allocation in product.selected_or_first_available_variant.selling_plan_allocations
+                          if allocation.compare_at_price > allocation.price
+                            assign discount = allocation.compare_at_price | minus: allocation.price | times: 100.0 | divided_by: allocation.compare_at_price | round
+                            if discount > best_discount
+                              assign best_discount = discount
+                            endif
+                          endif
+                        endfor
+                      -%}
+                      <span class="d-block small text-success price-subscription">
+                        {%- if best_discount > 0 -%}Save {{ best_discount }}%{%- else -%}Recurring delivery{%- endif -%}
+                      </span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="subscription-frequencies mt-3 hidden">
+                  <label class="form__label mb-1" for="SellingPlan-{{ section.id }}">Delivery frequency</label>
+                  <div class="select">
+                    <select id="SellingPlan-{{ section.id }}" name="selling_plan" class="select__select" form="{{ product_form_id }}">
+                      {%- for group in product.selling_plan_groups -%}
+                        {%- for plan in group.selling_plans -%}
+                          <option value="{{ plan.id }}">{{ plan.name }}</option>
+                        {%- endfor -%}
+                      {%- endfor -%}
+                    </select>
+                    <span class="svg-wrapper">
+                      {{- 'icon-caret.svg' | inline_asset_content -}}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <style>
+                .subscription-selector-wrapper .visually-hidden {
+                  position: absolute !important;
+                  overflow: hidden;
+                  width: 1px;
+                  height: 1px;
+                  margin: -1px;
+                  padding: 0;
+                  border: 0;
+                  clip: rect(0 0 0 0);
+                  word-wrap: normal !important;
+                }
+                .subscription-label {
+                  transition: all 0.2s ease;
+                  border: 1px solid #e5e5e5 !important;
+                  background: #fff;
+                  color: #333;
+                }
+                .subscription-option-item input:checked + .subscription-label {
+                  border-color: #1761A2 !important;
+                  background: rgba(23, 97, 162, 0.05);
+                  box-shadow: 0 0 0 1px #1761A2;
+                }
+                .subscription-option-item input:checked + .subscription-label .fw-bold {
+                  color: #1761A2;
+                }
+                .subscription-frequencies.hidden {
+                  display: none;
+                }
+              </style>
+            {%- endif -%}
+
             {%- when 'buy_buttons' -%}
               {%- render 'buy-buttons',
                 block: block,

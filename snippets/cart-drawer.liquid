@@ -1240,6 +1240,15 @@
                                 {%- endfor -%}
                               {%- endif -%}
 
+                              {%- if item.selling_plan_allocation != null -%}
+                                <div class="scd-item__option">
+                                  <dt style="display:inline">Frequency:</dt>
+                                  <dd style="display:inline; margin:0">
+                                    {{ item.selling_plan_allocation.selling_plan.name }}
+                                  </dd>
+                                </div>
+                              {%- endif -%}
+
                               {%- for property in item.properties -%}
                                 {%- assign property_first_char = property.first | slice: 0 -%}
                                 {%- if property.last != blank and property_first_char != '_' -%}

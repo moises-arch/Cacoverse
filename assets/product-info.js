@@ -26,6 +26,7 @@ if (!customElements.get("product-info")) {
         );
 
         this.initQuantityHandlers();
+        this.initSubscriptionHandlers();
         this.dispatchEvent(
           new CustomEvent("product-info:loaded", { bubbles: true })
         );
@@ -66,6 +67,7 @@ if (!customElements.get("product-info")) {
         this.postProcessHtmlCallbacks.push((newNode) => {
           window?.Shopify?.PaymentButton?.init();
           window?.ProductModel?.loadShopifyXR();
+          this.initSubscriptionHandlers();
         });
       }
 
@@ -544,6 +546,78 @@ if (!customElements.get("product-info")) {
               ".quantity__rules-cart .loading__spinner"
             ).classList.add("hidden")
           );
+      }
+
+      initSubscriptionHandlers() {
+        const toggleButtons = this.querySelectorAll('input[name="purchase_option"]');
+        const frequencySelector = this.querySelector('.subscription-frequencies');
+        const sellingPlanSelect = this.querySelector('select[name="selling_plan"]');
+
+        if (!toggleButtons.length) return;
+
+        toggleButtons.forEach(input => {
+          input.addEventListener('change', (e) => {
+            const isSubscription = e.target.value === 'subscription';
+            frequencySelector?.classList.toggle('hidden', !isSubscription);
+
+            if (sellingPlanSelect) {
+              sellingPlanSelect.disabled = !isSubscription;
+            }
+
+            // Sync price if allocation data is available or just rely on server update if needed
+            // For now, we'll try to trigger a section update with selling_plan if possible
+            if (isSubscription) {
+              this.updateUrlWithSellingPlan(sellingPlanSelect?.value);
+            } else {
+              this.updateUrlWithSellingPlan(null);
+            }
+          });
+        });
+
+        // Initialize state
+        const checked = this.querySelector('input[name="purchase_option"]:checked');
+        const isSubscription = checked && checked.value === 'subscription';
+
+        frequencySelector?.classList.toggle('hidden', !isSubscription);
+        if (sellingPlanSelect) {
+          sellingPlanSelect.disabled = !isSubscription;
+
+          // Listen for frequency changes
+          sellingPlanSelect.addEventListener('change', () => {
+            if (!sellingPlanSelect.disabled) {
+              this.updateUrlWithSellingPlan(sellingPlanSelect.value);
+            }
+          });
+        }
+      }
+
+      updateUrlWithSellingPlan(sellingPlanId) {
+        const productUrl = this.dataset.url;
+        const variant = this.getSelectedVariant(this);
+        const variantId = variant?.id;
+
+        const params = new URLSearchParams(window.location.search);
+        if (sellingPlanId) {
+          params.set('selling_plan', sellingPlanId);
+        } else {
+          params.delete('selling_plan');
+        }
+
+        const newUrl = `${window.location.pathname}${params.toString() ? '?' + params.toString() : ''}`;
+
+        // We trigger renderProductInfo to get the updated price and UI from server
+        this.renderProductInfo({
+          requestUrl: this.buildRequestUrlWithSellingPlan(productUrl, variantId, sellingPlanId),
+          targetId: 'subscription-toggle', // dummy target
+          callback: this.handleUpdateProductInfo(productUrl)
+        });
+      }
+
+      buildRequestUrlWithSellingPlan(url, variantId, sellingPlanId) {
+        const params = [`section_id=${this.sectionId}`];
+        if (variantId) params.push(`variant=${variantId}`);
+        if (sellingPlanId) params.push(`selling_plan=${sellingPlanId}`);
+        return `${url}?${params.join("&")}`;
       }
 
       updateQuantityRules(sectionId, html) {
