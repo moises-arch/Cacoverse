@@ -1,4 +1,3 @@
-
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const sectionId = '{{ section.id }}';
@@ -50,21 +49,35 @@
       return formatString.replace(placeholderRegex, value);
     }
 
-    function updatePrices() {
-      // Small delay to allow the input value to actually update before we read it
+    // Default button text
+    const defaultText = "{{ 'products.product.add_to_cart' | t }}";
+
+    function updateAddToCartButton() {
+      // Delay slightly for React/Theme updates
       setTimeout(() => {
         const qty = parseInt(qtyInput.value) || 1;
         
-        const onetimePriceEl = document.querySelector('.price-onetime');
-        const subPriceEl = document.querySelector('.price-subscription');
+        // Find the checkout button
+        const btn = document.getElementById(`ProductSubmitButton-${sectionId}`);
+        if (!btn || btn.hasAttribute('disabled')) return; 
         
+        const btnTextSpan = btn.querySelector('span');
+        if (!btnTextSpan) return;
+
+         // Reset if qty is 1
+        if (qty <= 1) {
+             btnTextSpan.textContent = defaultText;
+             return;
+        }
+
+        // Get pricing data
         const internalDataScript = document.getElementById(`VariantSubscription-${sectionId}`);
         if (!internalDataScript) return; 
         
         let variantData;
         try {
           variantData = JSON.parse(internalDataScript.textContent);
-        } catch(e) { console.error('Error parsing variant pricing data', e); return; }
+        } catch(e) { return; }
 
         const variantInput = document.querySelector(`form[action*="/cart/add"] input[name="id"]`);
         const currentVariantId = variantInput ? variantInput.value : '{{ product.selected_or_first_available_variant.id }}';
@@ -72,56 +85,43 @@
         const data = variantData[currentVariantId];
         if (!data) return;
 
-        const onetimeBase = data.onetime; // cents
-        const subBase = data.subscription; // cents
-        
-        // Get shop currency format
-        const moneyFormat = "{{ shop.money_format }}"; 
+        // Determine if subscription handles are selected
+        const subRadio = document.querySelector(`input[name="purchase_option"][value="subscription"]`);
+        const isSub = subRadio && subRadio.checked;
 
-        if (qty > 1) {
-          const onetimeTotal = onetimeBase * qty;
-          const subTotal = subBase * qty;
-          
-          const onetimeTotalStr = formatMoney(onetimeTotal, moneyFormat);
-          const subTotalStr = formatMoney(subTotal, moneyFormat);
-          
-          if (onetimePriceEl) {
-            onetimePriceEl.innerHTML = `
-              ${data.onetime_formatted}
-              <div style="font-size: 0.75em; font-weight: 500; color: #666; margin-top: 2px;">Total: ${onetimeTotalStr}</div>
-            `;
-          }
-          if (subPriceEl) {
-            subPriceEl.innerHTML = `
-              ${data.subscription_formatted}
-              <div style="font-size: 0.75em; font-weight: 500; color: #666; margin-top: 2px;">Total: ${subTotalStr}</div>
-            `;
-          }
-        } else {
-          // Reset to single price
-          if (onetimePriceEl) onetimePriceEl.innerHTML = data.onetime_formatted;
-          if (subPriceEl) subPriceEl.innerHTML = data.subscription_formatted;
-        }
+        const basePrice = isSub ? data.subscription : data.onetime; 
+        const total = basePrice * qty;
+        
+        // Format
+        const moneyFormat = "{{ shop.money_format }}"; 
+        const formattedTotal = formatMoney(total, moneyFormat);
+
+        // Update button text
+        btnTextSpan.textContent = `${defaultText} - ${formattedTotal}`;
+
       }, 50);
     }
 
-    // Input changes
-    qtyInput.addEventListener('input', updatePrices);
-    qtyInput.addEventListener('change', updatePrices);
+    // Event Listeners
+    qtyInput.addEventListener('input', updateAddToCartButton);
+    qtyInput.addEventListener('change', updateAddToCartButton);
     
-    // Catch button clicks provided by theme wrapper
+    // Purchase option toggles (One-time vs Sub)
+    const radios = document.querySelectorAll(`input[name="purchase_option"]`);
+    radios.forEach(r => r.addEventListener('change', updateAddToCartButton));
+
+    // Quantity buttons
     const wrapper = qtyInput.closest('quantity-input');
     if (wrapper) {
-      const buttons = wrapper.querySelectorAll('button');
-      buttons.forEach(btn => {
-        btn.addEventListener('click', updatePrices);
+      wrapper.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('click', updateAddToCartButton);
       });
     }
     
-    // Theme variant changes
-    document.addEventListener('variant:change', () => setTimeout(updatePrices, 100));
+    // Variant changes
+    document.addEventListener('variant:change', () => setTimeout(updateAddToCartButton, 100));
     
-    // Initial check
-    updatePrices();
+    // Initial Run
+    updateAddToCartButton();
   });
 </script>
