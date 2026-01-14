@@ -8,7 +8,7 @@
   assign media_count = product.media.size
   assign video_data = nil
   assign has_videos = false
-  assign video_cover_image = product.featured_media | image_url: width: 800
+  assign video_cover_image = product.featured_media | img_url: '800x'
 
   if product.metafields.custom.video_hub.value
     assign video_data = product.metafields.custom.video_hub.value
@@ -44,11 +44,11 @@
     if first_thumb_url != blank
       assign video_cover_image = first_thumb_url
     elsif first_thumb != blank
-      assign video_cover_image = first_thumb | image_url: width: 800
+      assign video_cover_image = first_thumb | img_url: '800x'
     elsif first_file.preview_image
-       assign video_cover_image = first_file.preview_image | image_url: width: 800
+       assign video_cover_image = first_file.preview_image | img_url: '800x'
     elsif first_file_url != blank
-       assign video_cover_image = product.featured_media | image_url: width: 800
+       assign video_cover_image = product.featured_media | img_url: '800x'
     elsif first_url contains 'youtube' or first_url contains 'youtu.be'
        assign yt_id = first_url | split: 'v=' | last | split: '&' | first | split: '/' | last
        assign video_cover_image = 'https://img.youtube.com/vi/' | append: yt_id | append: '/hqdefault.jpg'
@@ -501,11 +501,11 @@
                data-index="0">
             
             {% if media.media_type == 'image' and media != blank %}
-                <img src="{{ media | image_url: width: 950 }}" 
+                <img src="{{ media | img_url: '950x' }}" 
                      alt="{{ media.alt | escape }}" 
                      loading="eager"
                      fetchpriority="high"
-                     data-zoom-url="{{ media | image_url: width: 2048 }}"
+                     data-zoom-url="{{ media | img_url: '2048x' }}"
                      class="gallery-image">
             {% endif %}
 
@@ -538,10 +538,10 @@
                  data-index="{{ forloop.index }}">
               
               {% if media.media_type == 'image' and media != blank %}
-                  <img src="{{ media | image_url: width: 950 }}" 
+                  <img src="{{ media | img_url: '950x' }}" 
                        alt="{{ media.alt | escape }}" 
                        loading="lazy"
-                       data-zoom-url="{{ media | image_url: width: 2048 }}"
+                       data-zoom-url="{{ media | img_url: '2048x' }}"
                        class="gallery-image">
               {% endif %}
 
@@ -610,7 +610,7 @@
                  data-media-id="{{ media.id }}"
                  data-variants="{{ variant_ids | strip | remove_last: ',' }}"
                  data-color="{{ m_colors | strip }}">
-              <img src="{{ media | image_url: width: 150 }}" alt="{{ media.alt | escape }}" loading="lazy">
+              <img src="{{ media | img_url: '150x' }}" alt="{{ media.alt | escape }}" loading="lazy">
             </div>
           {%- endif -%}
           
@@ -636,7 +636,7 @@
                   data-media-id="{{ media.id }}"
                   data-variants="{{ variant_ids | strip | remove_last: ',' }}"
                   data-color="{{ m_colors | strip }}">
-                <img src="{{ media | image_url: width: 150 }}" alt="{{ media.alt | escape }}" loading="lazy">
+                <img src="{{ media | img_url: '150x' }}" alt="{{ media.alt | escape }}" loading="lazy">
              </div>
               {%- endif -%}
             {%- endif -%}
@@ -759,11 +759,11 @@
                         if v_thumb_url
                            assign v_thumb = v_thumb_url
                         elsif v_thumb_image
-                           assign v_thumb = v_thumb_image | image_url: width: 150
+                           assign v_thumb = v_thumb_image | img_url: '150x'
                         elsif file_ref.preview_image
-                           assign v_thumb = file_ref.preview_image | image_url: width: 150
+                           assign v_thumb = file_ref.preview_image | img_url: '150x'
                         elsif file_ref_url != blank
-                           assign v_thumb = product.featured_media | image_url: width: 150
+                           assign v_thumb = product.featured_media | img_url: '150x'
                         elsif v_url_text contains 'youtube' or v_url_text contains 'youtu.be'
                            assign yt = v_url_text | split: 'v=' | last | split: '&' | first | split: '/' | last
                            assign v_thumb = 'https://img.youtube.com/vi/' | append: yt | append: '/hqdefault.jpg'
