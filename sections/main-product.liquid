@@ -882,7 +882,7 @@
             {%- if has_selling_plans -%}
               <div class="purchase-options-container mt-5 mb-4">
                 <div class="purchase-options-header d-flex justify-content-between align-items-center mb-4">
-                  <span class="fw-bold text-uppercase small tracking-widest text-muted">Purchase Options</span>
+                  <span class="fw-bold text-uppercase small text-muted" style="letter-spacing: 0.5px;">Purchase Options</span>
                   <div class="purchase-options-secure d-flex align-items-center gap-1 text-muted small">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                     <span>Secure Checkout</span>
@@ -1004,11 +1004,14 @@
                                 <!-- Info Tooltip -->
                                 <div class="subscription-tooltip-container">
                                   <svg class="subscription-info-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #94a3b8; cursor: help;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                                  <div class="subscription-tooltip-content">
-                                    <strong>How it works:</strong><br>
-                                    We'll ship your selected quantity automatically at your chosen frequency.<br><br>
-                                    <span style="color: #4ade80;">✔</span> Cancel or skip anytime.<br>
-                                    <span style="color: #4ade80;">✔</span> Change quantity anytime.
+                                  <div class="subscription-tooltip-content text-start">
+                                    <div class="mb-2 fw-bold text-white border-bottom border-white-50 pb-2" style="font-size: 0.8rem;">Why Subscribe?</div>
+                                    <ul class="list-unstyled mb-0" style="line-height: 1.5; text-align: left;">
+                                      <li class="d-flex align-items-start gap-2 mb-1"><span style="color: #4ade80; min-width: 12px;">✔</span> <span>Save <span class="discount-text">{{ shown_discount }}</span>% instantly</span></li>
+                                      <li class="d-flex align-items-start gap-2 mb-1"><span style="color: #4ade80; min-width: 12px;">✔</span> <span>Never run out again</span></li>
+                                      <li class="d-flex align-items-start gap-2 mb-1"><span style="color: #4ade80; min-width: 12px;">✔</span> <span>Pause or cancel anytime</span></li>
+                                      <li class="d-flex align-items-start gap-2"><span style="color: #4ade80; min-width: 12px;">✔</span> <span>SMS reminders before shipping</span></li>
+                                    </ul>
                                   </div>
                                 </div>
                               </div>
@@ -1193,21 +1196,19 @@
                   visibility: hidden;
                   opacity: 0;
                   position: absolute;
-                  bottom: 24px;
+                  bottom: 28px;
                   left: 50%;
                   transform: translateX(-50%) translateY(10px);
                   background: #1e293b;
-                  color: #fff;
-                  padding: 12px;
-                  border-radius: 8px;
-                  width: 220px;
+                  color: #cbd5e1;
+                  padding: 16px;
+                  border-radius: 12px;
+                  width: 260px;
                   font-size: 0.75rem;
                   font-weight: 400;
                   z-index: 100;
                   transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
-                  text-align: center;
-                  line-height: 1.5;
-                  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+                  box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
                   pointer-events: none;
                 }
 

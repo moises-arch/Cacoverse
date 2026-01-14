@@ -693,15 +693,20 @@ if (!customElements.get("product-info")) {
         const newProductInfo = html.querySelector(`product-info`) || html;
 
         const update = (selector, attribute = 'innerHTML') => {
-          const newEl = newProductInfo.querySelector(selector);
-          const currentEl = this.querySelector(selector);
-          if (newEl && currentEl) {
-            if (attribute === 'combined') {
-              currentEl.innerHTML = newEl.innerHTML;
-              currentEl.className = newEl.className;
-            } else {
-              currentEl[attribute] = newEl[attribute];
-            }
+          const newEls = newProductInfo.querySelectorAll(selector);
+          const currentEls = this.querySelectorAll(selector);
+
+          if (newEls.length && currentEls.length) {
+            currentEls.forEach((el, index) => {
+              if (newEls[index]) {
+                if (attribute === 'combined') {
+                  el.innerHTML = newEls[index].innerHTML;
+                  el.className = newEls[index].className;
+                } else {
+                  el[attribute] = newEls[index][attribute];
+                }
+              }
+            });
           }
         };
 
