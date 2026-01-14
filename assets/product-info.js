@@ -652,6 +652,7 @@ if (!customElements.get("product-info")) {
           const onetimePriceEl = this.querySelector('.price-onetime');
           const subscriptionPriceEl = this.querySelector('.price-subscription');
           const discountBadge = this.querySelector('.subscription-badge-pill');
+          const discountText = this.querySelector('.discount-text');
           const purchaseOptionInput = this.querySelector('input[name="purchase_option"]:checked');
           const mainPriceEl = document.getElementById(`price-${this.sectionId}`);
 
@@ -665,6 +666,10 @@ if (!customElements.get("product-info")) {
             } else {
               discountBadge.classList.add('hidden');
             }
+          }
+
+          if (discountText) {
+            discountText.textContent = variantData.discount;
           }
 
           if (mainPriceEl) {
