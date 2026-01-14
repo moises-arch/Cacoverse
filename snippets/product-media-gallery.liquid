@@ -693,6 +693,27 @@
   <!-- Video Hub Assets -->
   {{ 'product-video-hub.css' | asset_url | stylesheet_tag }}
   <script src="{{ 'product-video-hub.js' | asset_url }}" defer="defer"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize Video Hub
+      if (typeof ProductVideoHub !== 'undefined') {
+        const videoHub = new ProductVideoHub('{{ section.id }}');
+        
+        // Bind Triggers (Main Slide & Thumbnails) inside this specific gallery
+        const galleryContainer = document.querySelector(`media-gallery[data-section="{{ section.id }}"]`);
+        if (galleryContainer) {
+            const triggers = galleryContainer.querySelectorAll('[data-video-trigger="true"]');
+            triggers.forEach(trigger => {
+                trigger.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    videoHub.open();
+                });
+            });
+        }
+      }
+    });
+  </script>
 
   <div class="video-lightbox" id="VideoLightbox-{{ section.id }}" hidden>
     <div class="video-lightbox__backdrop"></div>
