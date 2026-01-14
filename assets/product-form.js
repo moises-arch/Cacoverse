@@ -47,9 +47,14 @@ if (!customElements.get('product-form')) {
           }
         }, 300);
 
+        /* force reload */
         // ===== CacoAmerica: Listen to Quantity Changes =====
+        console.log("CacoAmerica: ProductForm Constructor");
         const sid = this.dataset.sectionId || (this.productEl?.id?.replace('MainProduct-', ''));
+        console.log("CacoAmerica: Section ID", sid);
+
         const qtyInput = this.querySelector('[name="quantity"]') || document.getElementById(`Quantity-${sid}`);
+        console.log("CacoAmerica: QtyInput found?", !!qtyInput, qtyInput);
 
         if (qtyInput) {
           // Bind to input events
@@ -64,6 +69,7 @@ if (!customElements.get('product-form')) {
             });
           }
         }
+
 
         // Listen to subscription radio changes
         const radios = this.form.querySelectorAll('input[name="purchase_option"]');
@@ -528,6 +534,7 @@ if (!customElements.get('product-form')) {
         // We look for a script tag that starts with ProductPrices-
         const sectionId = this.dataset.sectionId || (this.productEl?.id?.replace('MainProduct-', ''));
         const s1 = document.getElementById(`ProductPrices-${sectionId}`);
+        console.log("CacoAmerica: looking for price data", `ProductPrices-${sectionId}`, !!s1);
 
         if (s1) {
           try {
@@ -536,15 +543,24 @@ if (!customElements.get('product-form')) {
               // Check subscription status relative to this form
               const subRadio = this.form.querySelector(`input[name="purchase_option"][value="subscription"]:checked`) ||
                 document.querySelector(`input[name="purchase_option"][value="subscription"]:checked`); // Global fallback
-              return subRadio ? data[vid].subscription : data[vid].price;
+
+              const finalPrice = subRadio ? data[vid].subscription : data[vid].price;
+              console.log("CacoAmerica: found price for vid", vid, "=>", finalPrice, "Is Sub?", !!subRadio);
+              return finalPrice;
+            } else {
+              console.log("CacoAmerica: vid not found in data", vid);
             }
-          } catch (e) { }
+          } catch (e) { console.error("CacoAmerica: JSON parse error", e); }
         }
         return null;
       }
 
       updateDetailedButtonPrice() {
-        if (!this.submitButton || !this.submitButtonText) return;
+        console.log("CacoAmerica: updateDetailedButtonPrice called");
+        if (!this.submitButton || !this.submitButtonText) {
+          console.log("CacoAmerica: no submit button found");
+          return;
+        }
 
         // Find Qty Input related to this form
         let qtyInput = this.form.querySelector('[name="quantity"]');
@@ -554,8 +570,12 @@ if (!customElements.get('product-form')) {
           if (sid) qtyInput = document.getElementById(`Quantity-${sid}`);
         }
 
+        console.log("CacoAmerica: qtyInput in update", qtyInput);
+
         const qty = parseInt(qtyInput?.value) || 1;
         const defaultText = window.variantStrings?.addToCart || 'Add to Cart';
+
+        console.log("CacoAmerica: current qty", qty);
 
         // Reset if Qty <= 1
         if (qty <= 1) {
@@ -570,11 +590,13 @@ if (!customElements.get('product-form')) {
 
         const vid = this.variantIdInput?.value;
         const price = this._getVariantPrice(vid);
+        console.log("CacoAmerica: price calc", { vid, price, qty });
 
         if (price !== null) {
           const total = price * qty;
           const formatted = this._formatMoney(total);
           const newText = `${defaultText} - ${formatted}`;
+          console.log("CacoAmerica: setting button text", newText);
           if (this.submitButtonText.textContent !== newText) {
             this.submitButtonText.textContent = newText;
           }
