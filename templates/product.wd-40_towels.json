@@ -321,36 +321,12 @@
       "disabled": true,
       "name": "Towels Comparission",
       "settings": {}
-    },
-    "1768235926ba37d482": {
-      "type": "apps",
-      "blocks": {
-        "subscriptions_app_block_riBCUc": {
-          "type": "shopify://apps/subscriptions/blocks/app-block/a3bfe9ec-96f8-4508-a003-df608a36d2ad",
-          "settings": {
-            "color_text_body": "#6D7175",
-            "dividers_color": "#8F8D8D",
-            "bacgkround_color": "#FFFFFF",
-            "border_thickness": 1,
-            "border_radius": 0,
-            "subscription_policy_url": "",
-            "product": "{{product}}"
-          }
-        }
-      },
-      "block_order": [
-        "subscriptions_app_block_riBCUc"
-      ],
-      "settings": {
-        "include_margins": true
-      }
     }
   },
   "order": [
     "custom_liquid_UfWnRM",
     "main_product_knCpEk",
     "main_product_details_XmVyVJ",
-    "1768235926ba37d482",
     "17597761342469516c",
     "1758310866f3ce4031",
     "related-products",
