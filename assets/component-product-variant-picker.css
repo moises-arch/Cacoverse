@@ -2,6 +2,10 @@ variant-selects {
   display: block;
 }
 
+.product-form__input {
+  margin-bottom: 2.5rem;
+}
+
 .product--no-media .product-form__input--pill,
 .product--no-media .product-form__input--swatch,
 .product--no-media .product-form__input--dropdown {
@@ -157,14 +161,13 @@ variant-selects {
 }
 
 .product-form__input--swatch .swatch-input__input+.swatch-input__label {
-  --swatch-input--size: 3.6rem;
-
+  --swatch-input--size: 5.2rem;
   margin: 0.7rem 1.2rem 0.2rem 0;
 }
 
 @media screen and (min-width: 750px) {
   .product-form__input--swatch .swatch-input__input+.swatch-input__label {
-    --swatch-input--size: 3.2rem;
+    --swatch-input--size: 5.2rem;
   }
 }
 
