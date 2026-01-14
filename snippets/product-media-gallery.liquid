@@ -490,7 +490,7 @@
                data-color-tokens="{{ raw_alt | downcase | escape }}"
                data-index="0">
             
-            {% if media.media_type == 'image' %}
+            {% if media.media_type == 'image' and media != blank %}
                 <img src="{{ media | image_url: width: 950 }}" 
                      alt="{{ media.alt | escape }}" 
                      loading="eager"
@@ -527,7 +527,7 @@
                  data-color-tokens="{{ raw_alt | downcase | escape }}"
                  data-index="{{ forloop.index }}">
               
-              {% if media.media_type == 'image' %}
+              {% if media.media_type == 'image' and media != blank %}
                   <img src="{{ media | image_url: width: 950 }}" 
                        alt="{{ media.alt | escape }}" 
                        loading="lazy"
@@ -548,7 +548,9 @@
                data-color="all"
                data-video-trigger="true">
             <div class="video-slide-container">
-               <img src="{{ video_cover_image }}" class="video-hub-cover" loading="lazy" alt="Video Gallery">
+               {% if video_cover_image != blank %}
+                 <img src="{{ video_cover_image }}" class="video-hub-cover" loading="lazy" alt="Video Gallery">
+               {% endif %}
                <div class="video-play-button">
                  <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                </div>
