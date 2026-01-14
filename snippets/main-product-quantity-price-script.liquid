@@ -5,77 +5,121 @@
     const qtyInput = document.getElementById(`Quantity-${sectionId}`);
     if (!qtyInput) return;
 
-    function parseMoney(str) {
-      return parseFloat(str.replace(/[^0-9.]/g, '')) * 100;
-    }
+    // Helper to find the currency symbol and format
+    function formatMoney(cents, format) {
+      if (typeof cents === 'string') cents = cents.replace('.', '');
+      let value = '';
+      const placeholderRegex = /\{\{\s*(\w+)\s*\}\}/;
+      const formatString = format || '{{amount}}';
 
-    // Simple robust replacer that respects the original string's formatting (for USD/simple currencies)
-    function formatTotal(cents, originalStr) {
-      if (!originalStr) return '';
-      const val = (cents / 100).toFixed(2);
-      // Replace the number in the string with the new value
-      // This regex looks for a number sequence that might look like money
-      return originalStr.replace(/[\d,]+(\.\d+)?/, val);
+      function defaultOption(opt, def) {
+        return (typeof opt == 'undefined' ? def : opt);
+      }
+
+      function formatWithDelimiters(number, precision, thousands, decimal) {
+        precision = defaultOption(precision, 2);
+        thousands = defaultOption(thousands, ',');
+        decimal = defaultOption(decimal, '.');
+
+        if (isNaN(number) || number == null) { return 0; }
+
+        number = (number / 100).toFixed(precision);
+
+        var parts = number.split('.');
+        var dollars = parts[0].replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1' + thousands);
+        var cents = parts[1] ? (decimal + parts[1]) : '';
+
+        return dollars + cents;
+      }
+
+      switch(formatString.match(placeholderRegex)[1]) {
+        case 'amount':
+          value = formatWithDelimiters(cents, 2);
+          break;
+        case 'amount_no_decimals':
+          value = formatWithDelimiters(cents, 0);
+          break;
+        case 'amount_with_comma_separator':
+          value = formatWithDelimiters(cents, 2, '.', ',');
+          break;
+        case 'amount_no_decimals_with_comma_separator':
+          value = formatWithDelimiters(cents, 0, '.', ',');
+          break;
+      }
+
+      return formatString.replace(placeholderRegex, value);
     }
 
     function updatePrices() {
-      const qty = parseInt(qtyInput.value) || 1;
-      
-      const onetimePriceEl = document.querySelector('.price-onetime');
-      const subPriceEl = document.querySelector('.price-subscription');
-      
-      const internalDataScript = document.getElementById(`VariantSubscription-${sectionId}`);
-      if (!internalDataScript) return; 
-      
-      let variantData;
-      try {
-        variantData = JSON.parse(internalDataScript.textContent);
-      } catch(e) { console.error('Error parsing variant pricing data', e); return; }
-
-      const variantInput = document.querySelector(`form[action*="/cart/add"] input[name="id"]`);
-      const currentVariantId = variantInput ? variantInput.value : '{{ product.selected_or_first_available_variant.id }}';
-      
-      const data = variantData[currentVariantId];
-      if (!data) return;
-
-      const onetimeBase = data.onetime; // cents
-      const subBase = data.subscription; // cents
-      
-      const onetimeStr = data.onetime_formatted;
-      const subStr = data.subscription_formatted;
-
-      if (qty > 1) {
-        const onetimeTotal = onetimeBase * qty;
-        const subTotal = subBase * qty;
+      // Small delay to allow the input value to actually update before we read it
+      setTimeout(() => {
+        const qty = parseInt(qtyInput.value) || 1;
         
-        const onetimeTotalStr = formatTotal(onetimeTotal, onetimeStr);
-        const subTotalStr = formatTotal(subTotal, subStr);
+        const onetimePriceEl = document.querySelector('.price-onetime');
+        const subPriceEl = document.querySelector('.price-subscription');
         
-        if (onetimePriceEl) {
-          onetimePriceEl.innerHTML = `
-            ${onetimeStr}
-            <div style="font-size: 0.75em; font-weight: 500; color: #666; margin-top: 2px;">Total: ${onetimeTotalStr}</div>
-          `;
+        const internalDataScript = document.getElementById(`VariantSubscription-${sectionId}`);
+        if (!internalDataScript) return; 
+        
+        let variantData;
+        try {
+          variantData = JSON.parse(internalDataScript.textContent);
+        } catch(e) { console.error('Error parsing variant pricing data', e); return; }
+
+        const variantInput = document.querySelector(`form[action*="/cart/add"] input[name="id"]`);
+        const currentVariantId = variantInput ? variantInput.value : '{{ product.selected_or_first_available_variant.id }}';
+        
+        const data = variantData[currentVariantId];
+        if (!data) return;
+
+        const onetimeBase = data.onetime; // cents
+        const subBase = data.subscription; // cents
+        
+        // Get shop currency format
+        const moneyFormat = "{{ shop.money_format }}"; 
+
+        if (qty > 1) {
+          const onetimeTotal = onetimeBase * qty;
+          const subTotal = subBase * qty;
+          
+          const onetimeTotalStr = formatMoney(onetimeTotal, moneyFormat);
+          const subTotalStr = formatMoney(subTotal, moneyFormat);
+          
+          if (onetimePriceEl) {
+            onetimePriceEl.innerHTML = `
+              ${data.onetime_formatted}
+              <div style="font-size: 0.75em; font-weight: 500; color: #666; margin-top: 2px;">Total: ${onetimeTotalStr}</div>
+            `;
+          }
+          if (subPriceEl) {
+            subPriceEl.innerHTML = `
+              ${data.subscription_formatted}
+              <div style="font-size: 0.75em; font-weight: 500; color: #666; margin-top: 2px;">Total: ${subTotalStr}</div>
+            `;
+          }
+        } else {
+          // Reset to single price
+          if (onetimePriceEl) onetimePriceEl.innerHTML = data.onetime_formatted;
+          if (subPriceEl) subPriceEl.innerHTML = data.subscription_formatted;
         }
-        if (subPriceEl) {
-          subPriceEl.innerHTML = `
-            ${subStr}
-            <div style="font-size: 0.75em; font-weight: 500; color: #666; margin-top: 2px;">Total: ${subTotalStr}</div>
-          `;
-        }
-      } else {
-        if (onetimePriceEl) onetimePriceEl.textContent = onetimeStr;
-        if (subPriceEl) subPriceEl.textContent = subStr;
-      }
+      }, 50);
     }
 
+    // Input changes
     qtyInput.addEventListener('input', updatePrices);
     qtyInput.addEventListener('change', updatePrices);
     
-    // Listen for theme variant changes
-    document.addEventListener('variant:change', function() {
-      setTimeout(updatePrices, 100);
-    });
+    // Catch button clicks provided by theme wrapper
+    const wrapper = qtyInput.closest('quantity-input');
+    if (wrapper) {
+      const buttons = wrapper.querySelectorAll('button');
+      buttons.forEach(btn => {
+        btn.addEventListener('click', updatePrices);
+      });
+    }
+    
+    // Theme variant changes
+    document.addEventListener('variant:change', () => setTimeout(updatePrices, 100));
     
     // Initial check
     updatePrices();
