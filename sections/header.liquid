@@ -4396,7 +4396,8 @@ document.addEventListener('visibilitychange', function () {
           urlStr = url.url;
         }
 
-        var isCartCall = urlStr.indexOf('/cart') !== -1;
+        // Fix: Exclude /cart.js (GET) to avoid infinite loop where fetching the cart count triggers another fetch.
+        var isCartCall = urlStr.indexOf('/cart') !== -1 && urlStr.indexOf('/cart.js') === -1;
 
         var p = originalFetch.apply(this, args);
 
@@ -4419,7 +4420,7 @@ document.addEventListener('visibilitychange', function () {
 
       XMLHttpRequest.prototype.open = function(method, url) {
         this.__cacoIsCart =
-          typeof url === 'string' && url.indexOf('/cart') !== -1;
+          typeof url === 'string' && url.indexOf('/cart') !== -1 && url.indexOf('/cart.js') === -1;
         return XHROpen.apply(this, arguments);
       };
 
