@@ -1,0 +1,31 @@
+{%- comment -%}
+  Renders a JSON script with variant pricing data (One-time & Subscription).
+  Usage: {% render 'product-prices-data', section_id: section.id, product: product %}
+{%- endcomment -%}
+<script type="application/json" id="ProductPrices-{{ section_id }}">
+  {
+    {%- for variant in product.variants -%}
+      "{{ variant.id }}": {
+        "price": {{ variant.price | json }},
+        "onetime_formatted": {% if settings.currency_code_enabled %}{{ variant.price | money_with_currency | json }}{% else %}{{ variant.price | money | json }}{% endif %},
+        {%- assign best_alloc = null -%}
+        {%- assign best_disc = 0 -%}
+        {%- for alloc in variant.selling_plan_allocations -%}
+          {%- assign disc = 0 -%}
+          {%- if alloc.compare_at_price > alloc.price -%}
+            {%- assign disc = alloc.compare_at_price | minus: alloc.price | times: 100.0 | divided_by: alloc.compare_at_price | round -%}
+          {%- endif -%}
+          {%- if disc > best_disc -%}
+            {%- assign best_disc = disc -%}
+            {%- assign best_alloc = alloc -%}
+          {%- endif -%}
+        {%- endfor -%}
+        {%- if best_alloc == null and variant.selling_plan_allocations.size > 0 -%}
+           {%- assign best_alloc = variant.selling_plan_allocations[0] -%}
+        {%- endif -%}
+        "subscription": {{ best_alloc.price | default: variant.price | json }},
+        "subscription_formatted": {% if settings.currency_code_enabled %}{{ best_alloc.price | default: variant.price | money_with_currency | json }}{% else %}{{ best_alloc.price | default: variant.price | money | json }}{% endif %}
+      }{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  }
+</script>

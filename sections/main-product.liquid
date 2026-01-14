@@ -498,6 +498,7 @@
         class="product__info-container{% if section.settings.enable_sticky_info %} product__column-sticky{% endif %}"
       >
         {%- assign product_form_id = 'product-form-' | append: section.id -%}
+        {% render 'product-prices-data', section_id: section.id, product: product %}
 
         {%- assign has_opened_first_accordion = false -%}
         {%- for block in section.blocks -%}

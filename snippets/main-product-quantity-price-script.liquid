@@ -1,12 +1,67 @@
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const sectionId = '{{ section.id }}';
-    const formId = 'product-form-' + sectionId;
-    const qtyInput = document.getElementById(`Quantity-${sectionId}`);
+    console.log("CacoAmerica: Quantity Price Script Loaded");
     
-    if (!qtyInput) return;
+    // We bind to the section but search looser if needed
+    const sectionId = '{{ section.id }}';
+    
+    // Attempt to find key elements
+    function findElements() {
+        const qtyInput = document.getElementById(`Quantity-${sectionId}`) || document.querySelector(`[id^="Quantity-"][data-section="${sectionId}"]`);
+        
+        let btn = document.getElementById(`ProductSubmitButton-${sectionId}`);
+        if (!btn) {
+            // Fallback: search essentially for the main add to cart button in this section's product form
+            const forms = document.querySelectorAll(`product-form[data-section-id="${sectionId}"] form, form[action*="/cart/add"]`);
+            for (let f of forms) {
+                const b = f.querySelector('[type="submit"][name="add"]');
+                if (b) { btn = b; break; }
+            }
+        }
+        
+        return { qtyInput, btn };
+    }
 
-    // Robust Money Formatter
+    const { qtyInput, btn } = findElements();
+    
+    if (!qtyInput || !btn) {
+        console.warn("CacoAmerica: Missing Qty Input or Button. Aborting.");
+        return;
+    }
+    
+    const btnSpan = btn.querySelector('span') || btn;
+
+    // Data Source
+    function getVariantPrice(vid) {
+        // Source 1: The new robust script
+        const s1 = document.getElementById(`ProductPrices-${sectionId}`);
+        if (s1) {
+            try {
+                const data = JSON.parse(s1.textContent);
+                if (data[vid]) {
+                     // Check subscription
+                     const subRadio = document.querySelector(`input[name="purchase_option"][value="subscription"]:checked`);
+                     return subRadio ? data[vid].subscription : data[vid].price;
+                }
+            } catch(e) {}
+        }
+        // Source 2: Legacy/Theme data?
+        const s2 = document.getElementById(`VariantSubscription-${sectionId}`);
+        if (s2) {
+             try {
+                const data = JSON.parse(s2.textContent);
+                if (data[vid]) {
+                     // Check subscription
+                     const subRadio = document.querySelector(`input[name="purchase_option"][value="subscription"]:checked`);
+                     return subRadio ? data[vid].subscription : data[vid].onetime;
+                }
+            } catch(e) {}
+        }
+        
+        return null;
+    }
+    
+     // Robust Money Formatter
     function formatMoney(cents, format) {
       if (typeof cents === 'string') cents = cents.replace('.', '');
       let value = '';
@@ -55,105 +110,68 @@
 
       return formatString.replace(placeholderRegex, value);
     }
-
-    const defaultText = {{ 'products.product.add_to_cart' | t | json }};
+    
     const moneyFormat = {{ shop.money_format | json }};
+    // Save original text once
+    const originalText = btnSpan.textContent.trim().split(' - ')[0] || {{ 'products.product.add_to_cart' | t | json }};
     
-    let isUpdating = false;
+    let isInternalUpdate = false;
 
-    function getAttributes() {
-        const btn = document.getElementById(`ProductSubmitButton-${sectionId}`);
-        if (!btn) return null;
-        const span = btn.querySelector('span');
-        return { btn, span };
-    }
-
-    function calculateTotal() {
-        // Get pricing data
-        const internalDataScript = document.getElementById(`VariantSubscription-${sectionId}`);
-        let variantData = null;
-        try {
-            if (internalDataScript) variantData = JSON.parse(internalDataScript.textContent);
-        } catch(e) {}
-
-        // Variant ID
-        const productForm = document.getElementById(formId);
-        let currentVariantId = '{{ product.selected_or_first_available_variant.id }}';
-        if (productForm) {
-            const variantInput = productForm.querySelector('input[name="id"]');
-            if (variantInput) currentVariantId = variantInput.value;
+    function update() {
+        if (isInternalUpdate) return;
+        
+        // Find current variant ID
+        let vid = '{{ product.selected_or_first_available_variant.id }}';
+        const form = btn.closest('form');
+        if (form) {
+            const i = form.querySelector('input[name="id"]');
+            if (i) vid = i.value;
         }
-
-        // Qty
+        
         const qty = parseInt(qtyInput.value) || 1;
-
-        // Base Price
-        let basePrice = 0;
-        if (variantData && variantData[currentVariantId]) {
-            const data = variantData[currentVariantId];
-            const subRadio = document.querySelector(`input[name="purchase_option"][value="subscription"]`);
-            const isSub = subRadio && subRadio.checked;
-            basePrice = isSub ? data.subscription : data.onetime;
-        }
-
-        return { qty, total: basePrice * qty };
-    }
-
-    function updateAddToCartButton() {
-        if (isUpdating) return;
         
-        const { btn, span } = getAttributes() || {};
-        if (!btn || !span || btn.hasAttribute('disabled')) return;
-
-        const { qty, total } = calculateTotal();
-
-        isUpdating = true;
-        
-        // Logic: Only change text if Qty > 1 AND text needs update
         if (qty <= 1) {
-             // Let theme handle singular or we reset if needed, but best not to interfere too much
-             // If we want to strictly reset:
-             if (span.textContent.includes(' - ')) {
-                 span.textContent = defaultText;
+             // Revert
+             // Only revert if we messed it up
+             if (btnSpan.textContent.includes(' - ')) {
+                 isInternalUpdate = true;
+                 btnSpan.textContent = originalText;
+                 isInternalUpdate = false;
              }
-        } else {
-            const formattedTotal = formatMoney(total, moneyFormat);
-            const newText = `${defaultText} - ${formattedTotal}`;
-            if (span.textContent !== newText) {
-                span.textContent = newText;
-            }
+             return;
         }
         
-        isUpdating = false;
+        // Calculate
+        const price = getVariantPrice(vid);
+        if (price === null) return;
+        
+        const total = price * qty;
+        const totalFormatted = formatMoney(total, moneyFormat);
+        
+        const newText = `${originalText} - ${totalFormatted}`;
+        
+        if (btnSpan.textContent !== newText) {
+             isInternalUpdate = true;
+             btnSpan.textContent = newText;
+             isInternalUpdate = false;
+        }
     }
-
-    // Observer to fight race conditions
-    const { span } = getAttributes() || {};
-    if (span) {
-        const observer = new MutationObserver(() => {
-            if (!isUpdating) updateAddToCartButton();
-        });
-        observer.observe(span, { childList: true, characterData: true, subtree: true });
-    }
-
-    // Event Listeners
-    qtyInput.addEventListener('input', updateAddToCartButton);
-    qtyInput.addEventListener('change', updateAddToCartButton);
     
-    // Buttons
-    const wrapper = qtyInput.closest('quantity-input');
-    if (wrapper) {
-        wrapper.querySelectorAll('button').forEach(btn => {
-            btn.addEventListener('click', () => setTimeout(updateAddToCartButton, 50));
-        });
-    }
-
-    const radios = document.querySelectorAll(`input[name="purchase_option"]`);
-    radios.forEach(r => r.addEventListener('change', updateAddToCartButton));
+    // Observers
+    const obs = new MutationObserver(() => update());
+    obs.observe(btnSpan, { childList: true, characterData: true, subtree: true });
     
-    document.addEventListener('variant:change', () => setTimeout(updateAddToCartButton, 100));
+    // Listeners
+    qtyInput.addEventListener('input', update);
+    qtyInput.addEventListener('change', update);
     
-    // Initial Run
-    updateAddToCartButton();
+    // Helper for buttons around input
+    document.querySelectorAll('quantity-input button').forEach(b => b.addEventListener('click', () => setTimeout(update, 50)));
+    
+    document.addEventListener('variant:change', () => setTimeout(update, 100));
+    document.querySelectorAll('input[name="purchase_option"]').forEach(r => r.addEventListener('change', update));
+    
+    // Init
+    update();
   });
 </script>
