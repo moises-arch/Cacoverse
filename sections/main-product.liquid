@@ -609,7 +609,7 @@
                       {% for logos in product.selected_or_first_available_variant.metafields.custom.standards_logo.value %}
                         <li class="imager" role="listitem">
                           <img
-                            src="{{ logos | img_url: 'master' }}"
+                            src="{{ logos | image_url: width: 200 }}"
                             width="{{ logos.width }}"
                             height="{{ logos.height }}"
                             loading="lazy"
