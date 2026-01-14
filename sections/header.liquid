@@ -1803,6 +1803,11 @@
     /* Fallback optimizado para evitar flicker de salto de contenido */
     --caco-header-height:170px;
   }
+  @media (max-width: 1024px) {
+    :root {
+      --caco-header-height: 60px;
+    }
+  }
 /* Evitar el "rubber-band" solo en desktop */
 @media (min-width: 1025px) {
   html,
@@ -3951,11 +3956,8 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function computeHeaderHeight() {
-    // Prevent layout thrashing: Do not update during transitions or if header is hidden
+    // Prevent layout thrashing: Do not update during transitions
     if (isTransitioning) return;
-    if (headerWrapper.classList.contains('caco-hide-announcement') || headerWrapper.classList.contains('caco-hide-nav')) {
-      return;
-    }
 
     var h = headerWrapper.offsetHeight || 0;
     if (h > 0) {
