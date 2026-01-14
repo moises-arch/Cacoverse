@@ -444,7 +444,7 @@
           <a href="{{ routes.root_url }}">
             {%- if section.settings.logo != blank -%}
               {%- assign logo_height = section.settings.logo_width | divided_by: section.settings.logo.aspect_ratio -%}
-              {{ section.settings.logo | image_url: width: 600 | image_tag: class: 'caco-logo-img', width: section.settings.logo_width, height: logo_height, alt: shop.name, preload: true, fetchpriority: 'high', loading: 'eager' }}
+              {{ section.settings.logo | image_url: width: 600 | image_tag: class: 'caco-logo-img', width: section.settings.logo_width, height: logo_height, alt: shop.name, preload: true, fetchpriority: 'high', loading: 'eager', widths: '250, 450, 600', sizes: '(min-width: 1024px) 250px, 150px' }}
             {%- else -%}
               <span class="caco-logo-text">{{ shop.name }}</span>
             {%- endif -%}
