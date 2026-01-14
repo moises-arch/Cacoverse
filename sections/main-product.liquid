@@ -1000,6 +1000,17 @@
                               <div class="purchase-label-group">
                                 <span class="purchase-label">Subscribe & Save</span>
                                 <span class="subscription-badge-pill {% if shown_discount == 0 %}hidden{% endif %}">SAVE {{ shown_discount }}%</span>
+                                
+                                <!-- Info Tooltip -->
+                                <div class="subscription-tooltip-container">
+                                  <svg class="subscription-info-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #94a3b8; cursor: help;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                                  <div class="subscription-tooltip-content">
+                                    <strong>How it works:</strong><br>
+                                    We'll ship your selected quantity automatically at your chosen frequency.<br><br>
+                                    <span style="color: #4ade80;">✔</span> Cancel or skip anytime.<br>
+                                    <span style="color: #4ade80;">✔</span> Change quantity anytime.
+                                  </div>
+                                </div>
                               </div>
                               <div class="purchase-benefits small text-success fw-600 d-flex align-items-center gap-1 mt-1">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
@@ -1169,6 +1180,52 @@
                 @keyframes slideDropdown {
                   from { opacity: 0; transform: translateY(-8px); }
                   to { opacity: 1; transform: translateY(0); }
+                }
+
+                .subscription-tooltip-container {
+                  position: relative;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                }
+
+                .subscription-tooltip-content {
+                  visibility: hidden;
+                  opacity: 0;
+                  position: absolute;
+                  bottom: 24px;
+                  left: 50%;
+                  transform: translateX(-50%) translateY(10px);
+                  background: #1e293b;
+                  color: #fff;
+                  padding: 12px;
+                  border-radius: 8px;
+                  width: 220px;
+                  font-size: 0.75rem;
+                  font-weight: 400;
+                  z-index: 100;
+                  transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+                  text-align: center;
+                  line-height: 1.5;
+                  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+                  pointer-events: none;
+                }
+
+                .subscription-tooltip-content::after {
+                  content: '';
+                  position: absolute;
+                  top: 100%;
+                  left: 50%;
+                  margin-left: -5px;
+                  border-width: 5px;
+                  border-style: solid;
+                  border-color: #1e293b transparent transparent transparent;
+                }
+
+                .subscription-tooltip-container:hover .subscription-tooltip-content {
+                  visibility: visible;
+                  opacity: 1;
+                  transform: translateX(-50%) translateY(0);
                 }
               </style>
             {%- endif -%}
