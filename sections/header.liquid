@@ -4319,6 +4319,7 @@ document.addEventListener('visibilitychange', function () {
     function fetchCartAndUpdate(delay) {
       if (refreshTimeout) clearTimeout(refreshTimeout);
       refreshTimeout = setTimeout(function() {
+        window.__cacoCtx = true; // Lock: We are fetching cart
         fetch('/cart.js', {
           credentials: 'same-origin',
           cache: 'no-store'
@@ -4326,9 +4327,11 @@ document.addEventListener('visibilitychange', function () {
           .then(function(res) { return res.json(); })
           .then(function(cart) {
             updateFromCart(cart);
+            window.__cacoCtx = false; // Unlock
           })
           .catch(function(err) {
             console.warn('Cart count update failed', err);
+            window.__cacoCtx = false; // Unlock
           });
       }, delay || 120);
     }
@@ -4396,12 +4399,12 @@ document.addEventListener('visibilitychange', function () {
           urlStr = url.url;
         }
 
-        // Fix: Exclude /cart.js (GET) to avoid infinite loop where fetching the cart count triggers another fetch.
-        var isCartCall = urlStr.indexOf('/cart') !== -1 && urlStr.indexOf('/cart.js') === -1;
+        // Fix: Uses flag to detect our own call
+        var isCartCall = urlStr.indexOf('/cart') !== -1;
 
         var p = originalFetch.apply(this, args);
 
-        if (isCartCall) {
+        if (isCartCall && !window.__cacoCtx) {
           p.then(function() {
             fetchCartAndUpdate(120);
           }).catch(function() {
@@ -4420,12 +4423,12 @@ document.addEventListener('visibilitychange', function () {
 
       XMLHttpRequest.prototype.open = function(method, url) {
         this.__cacoIsCart =
-          typeof url === 'string' && url.indexOf('/cart') !== -1 && url.indexOf('/cart.js') === -1;
+          typeof url === 'string' && url.indexOf('/cart') !== -1;
         return XHROpen.apply(this, arguments);
       };
 
       XMLHttpRequest.prototype.send = function(body) {
-        if (this.__cacoIsCart) {
+        if (this.__cacoIsCart && !window.__cacoCtx) {
           this.addEventListener('load', function() {
             fetchCartAndUpdate(120);
           });
