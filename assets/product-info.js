@@ -564,7 +564,7 @@ if (!customElements.get("product-info")) {
 
       initSubscriptionHandlers() {
         const toggleButtons = this.querySelectorAll('input[name="purchase_option"]');
-        const frequencySelector = this.querySelector('.subscription-frequencies');
+        const frequencySelector = this.querySelector('.subscription-frequencies-inline-wrapper');
         const sellingPlanSelect = this.querySelector('select[name="selling_plan"]');
 
         if (!toggleButtons.length) return;
@@ -649,9 +649,9 @@ if (!customElements.get("product-info")) {
           const variantData = data[variantId];
           if (!variantData) return;
 
-          const onetimePriceEl = this.querySelector('.subscription-option-card[data-type="onetime"] .price-onetime');
-          const subscriptionPriceEl = this.querySelector('.subscription-option-card[data-type="subscription"] .price-subscription');
-          const discountBadge = this.querySelector('.subscription-option-card[data-type="subscription"] .subscription-badge');
+          const onetimePriceEl = this.querySelector('.price-onetime');
+          const subscriptionPriceEl = this.querySelector('.price-subscription');
+          const discountBadge = this.querySelector('.subscription-badge-pill');
           const purchaseOptionInput = this.querySelector('input[name="purchase_option"]:checked');
           const mainPriceEl = document.getElementById(`price-${this.sectionId}`);
 
@@ -660,7 +660,7 @@ if (!customElements.get("product-info")) {
 
           if (discountBadge) {
             if (variantData.discount > 0) {
-              discountBadge.textContent = `Save ${variantData.discount}%`;
+              discountBadge.textContent = `SAVE ${variantData.discount}%`;
               discountBadge.classList.remove('hidden');
             } else {
               discountBadge.classList.add('hidden');

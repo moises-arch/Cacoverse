@@ -880,10 +880,16 @@
             -%}
 
             {%- if has_selling_plans -%}
-              <div class="subscription-selector-wrapper mt-4 mb-4">
-                <legend class="form__label mb-3 fw-bold" style="font-size: 1.1rem; letter-spacing: 0.05rem;">Purchase Options</legend>
+              <div class="purchase-options-container mt-5 mb-4">
+                <div class="purchase-options-header d-flex justify-content-between align-items-center mb-4">
+                  <span class="fw-bold text-uppercase small tracking-widest text-muted">Purchase Options</span>
+                  <div class="purchase-options-secure d-flex align-items-center gap-1 text-muted small">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    <span>Secure Checkout</span>
+                  </div>
+                </div>
                 
-                <div class="subscription-options-list d-flex gap-3 align-items-stretch">
+                <div class="subscription-options-list d-flex flex-column gap-3">
                   {%- liquid
                     assign current_variant = product.selected_or_first_available_variant
                     assign onetime_price = current_variant.price
@@ -962,58 +968,75 @@
                     }
                   </script>
 
-                  <div class="subscription-option-card flex-grow-1" data-type="onetime">
+                  <!-- Card 1: One-Time -->
+                  <div class="purchase-option-row">
                     <input type="radio" id="PurchaseOption-OneTime-{{ section.id }}" name="purchase_option" value="onetime" {% unless is_subscription_selected %}checked{% endunless %} class="subscription-radio-input">
-                    <label for="PurchaseOption-OneTime-{{ section.id }}" class="subscription-card-label h-100">
-                      <div class="subscription-card-content d-flex flex-column align-items-center text-center">
-                        <div class="subscription-icon mb-1">
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+                    <label for="PurchaseOption-OneTime-{{ section.id }}" class="purchase-card-label">
+                      <div class="purchase-card-inner d-flex align-items-center justify-content-between w-100">
+                        <div class="purchase-card-main d-flex align-items-center gap-3">
+                          <div class="purchase-selector-dot"></div>
+                          <div class="purchase-info">
+                            <span class="purchase-label">One-time purchase</span>
+                            <div class="purchase-benefits small text-muted">Single delivery, no commitment</div>
+                          </div>
                         </div>
-                        <span class="subscription-card-title">One-time</span>
-                        <span class="price-onetime fw-bold">{{ onetime_price | money }}</span>
+                        <div class="purchase-pricing text-end">
+                          <span class="price-onetime fw-bold h5 mb-0">{{ onetime_price | money }}</span>
+                        </div>
                       </div>
                     </label>
                   </div>
 
-                  <div class="subscription-option-card subscription-option-card--subscription flex-grow-1" data-type="subscription">
-                    <div class="subscription-popular-badge">Best Value</div>
+                  <!-- Card 2: Subscribe & Save -->
+                  <div class="purchase-option-row subscription-highlight">
+                    <div class="popular-tag">Best Value</div>
                     <input type="radio" id="PurchaseOption-Subscription-{{ section.id }}" name="purchase_option" value="subscription" {% if is_subscription_selected %}checked{% endif %} class="subscription-radio-input">
-                    <label for="PurchaseOption-Subscription-{{ section.id }}" class="subscription-card-label h-100">
-                      <div class="subscription-card-content d-flex flex-column align-items-center text-center">
-                        <div class="subscription-icon mb-1">
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+                    <label for="PurchaseOption-Subscription-{{ section.id }}" class="purchase-card-label">
+                      <div class="purchase-card-inner w-100">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                          <div class="purchase-card-main d-flex align-items-center gap-3">
+                            <div class="purchase-selector-dot"></div>
+                            <div class="purchase-info">
+                              <span class="purchase-label">Subscribe & Save</span>
+                              <div class="purchase-benefits small text-success fw-600 d-flex align-items-center gap-1">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                Save up to {{ shown_discount }}% + auto-delivery
+                              </div>
+                            </div>
+                          </div>
+                          <div class="purchase-pricing text-end">
+                            <span class="price-subscription fw-bold h4 mb-0 text-success">{{ subscription_price | money }}</span>
+                            <div class="subscription-badge-pill mt-1 {% if shown_discount == 0 %}hidden{% endif %}">SAVE {{ shown_discount }}%</div>
+                          </div>
                         </div>
-                        <span class="subscription-card-title">Subscribe</span>
-                        <div class="subscription-card-price-info d-flex flex-column align-items-center">
-                          <span class="price-subscription fw-bold text-success">{{ subscription_price | money }}</span>
-                          <span class="subscription-badge mt-1 {% if shown_discount == 0 %}hidden{% endif %}">Save {{ shown_discount }}%</span>
+
+                        <!-- Frequency nested inside the card -->
+                        <div class="subscription-frequencies-inline-wrapper {% unless is_subscription_selected %}hidden{% endunless %}">
+                          <div class="subscription-frequency-box px-3 py-2 rounded-3">
+                            <label class="small text-muted mb-1 d-block text-uppercase fw-bold" style="font-size: 0.65rem;">Delivery Frequency</label>
+                            <div class="frequency-select-wrapper position-relative">
+                              <select id="SellingPlan-{{ section.id }}" name="selling_plan" class="w-100 border-0 bg-transparent fw-bold" style="cursor:pointer; font-size: 0.9rem;" form="{{ product_form_id }}">
+                                {%- for group in product.selling_plan_groups -%}
+                                  {%- for plan in group.selling_plans -%}
+                                    <option value="{{ plan.id }}" {% if selected_allocation.selling_plan.id == plan.id %}selected{% endif %}>{{ plan.name }}</option>
+                                  {%- endfor -%}
+                                {%- endfor -%}
+                              </select>
+                              <div class="select-arrow-custom">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </label>
-                  </div>
-                </div>
-
-                <div class="subscription-frequencies mt-4 py-3 px-4 border rounded-3 bg-light {% unless is_subscription_selected %}hidden{% endunless %}">
-                  <label class="form__label mb-2 d-block fw-bold small text-uppercase" for="SellingPlan-{{ section.id }}" style="letter-spacing: 0.1rem;">Delivery Frequency</label>
-                  <div class="select">
-                    <select id="SellingPlan-{{ section.id }}" name="selling_plan" class="select__select border-0 bg-transparent ps-0" style="font-size: 1rem;" form="{{ product_form_id }}">
-                      {%- for group in product.selling_plan_groups -%}
-                        {%- for plan in group.selling_plans -%}
-                          <option value="{{ plan.id }}" {% if selected_allocation.selling_plan.id == plan.id %}selected{% endif %}>{{ plan.name }}</option>
-                        {%- endfor -%}
-                      {%- endfor -%}
-                    </select>
-                    <span class="svg-wrapper">
-                      {{- 'icon-caret.svg' | inline_asset_content -}}
-                    </span>
                   </div>
                 </div>
               </div>
 
               <style>
-                .subscription-selector-wrapper {
-                  font-family: inherit;
-                  max-width: 600px;
+                .purchase-options-container {
+                  max-width: 550px;
                 }
                 .subscription-radio-input {
                   position: absolute;
@@ -1021,85 +1044,117 @@
                   width: 0;
                   height: 0;
                 }
-                .subscription-option-card {
+                .purchase-option-row {
                   position: relative;
+                  margin-bottom: 12px;
                 }
-                .subscription-card-label {
+                .purchase-card-label {
                   display: block;
                   cursor: pointer;
-                  padding: 0.75rem 0.5rem;
-                  border: 1.5px solid #e0e0e0;
-                  border-radius: 12px;
-                  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+                  padding: 1.25rem 1.5rem;
+                  border: 2px solid #eaebed;
+                  border-radius: 16px;
+                  transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
                   background: #fff;
                   position: relative;
                 }
-                .subscription-card-label:hover {
+                .purchase-card-label:hover {
                   border-color: #1761A2;
-                  background: #fcfcfc;
+                  transform: translateY(-2px);
                 }
-                .subscription-radio-input:checked + .subscription-card-label {
+                .subscription-radio-input:checked + .purchase-card-label {
                   border-color: #1761A2;
-                  background: rgba(23, 97, 162, 0.05);
-                  border-width: 2px;
-                  box-shadow: 0 4px 12px rgba(23, 97, 162, 0.08);
+                  background: rgba(23, 97, 162, 0.02);
+                  box-shadow: 0 10px 30px rgba(23, 97, 162, 0.08);
                 }
-                .subscription-card-title {
+                .purchase-selector-dot {
+                  width: 20px;
+                  height: 20px;
+                  border: 2px solid #cbd5e1;
+                  border-radius: 50%;
+                  position: relative;
+                  transition: all 0.3s ease;
+                  flex-shrink: 0;
+                }
+                .subscription-radio-input:checked + .purchase-card-label .purchase-selector-dot {
+                  border-color: #1761A2;
+                  background: #1761A2;
+                }
+                .subscription-radio-input:checked + .purchase-card-label .purchase-selector-dot::after {
+                  content: '';
+                  position: absolute;
+                  top: 50%;
+                  left: 50%;
+                  transform: translate(-50%, -50%);
+                  width: 8px;
+                  height: 8px;
+                  background: #fff;
+                  border-radius: 50%;
+                }
+                .purchase-label {
                   font-weight: 700;
-                  font-size: 0.85rem;
-                  color: #444;
-                  letter-spacing: -0.01rem;
-                  line-height: 1.1;
+                  font-size: 1.05rem;
+                  color: #1a1a1a;
+                  display: block;
+                  line-height: 1.2;
                 }
-                .subscription-radio-input:checked + .subscription-card-label .subscription-card-title {
-                  color: #111;
-                }
-                .subscription-badge {
-                  display: inline-block;
+                .popular-tag {
+                  position: absolute;
+                  top: -12px;
+                  right: 25px;
                   background: #1761A2;
                   color: #fff;
-                  font-size: 0.6rem;
+                  font-size: 0.7rem;
                   font-weight: 800;
-                  padding: 1px 6px;
-                  border-radius: 4px;
-                  text-transform: uppercase;
-                }
-                .subscription-card-price-info .fw-bold {
-                  font-size: 1rem;
-                }
-                .subscription-icon {
-                  color: #888;
-                  transition: color 0.2s ease;
-                }
-                .subscription-radio-input:checked + .subscription-card-label .subscription-icon {
-                  color: #1761A2;
-                }
-                .subscription-popular-badge {
-                  position: absolute;
-                  top: -10px;
-                  left: 50%;
-                  transform: translateX(-50%);
-                  background: #1761A2;
-                  color: white;
-                  font-size: 0.6rem;
-                  font-weight: 800;
-                  padding: 2px 10px;
+                  padding: 4px 14px;
                   border-radius: 20px;
                   text-transform: uppercase;
-                  z-index: 1;
-                  white-space: nowrap;
-                  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                  z-index: 2;
+                  box-shadow: 0 4px 10px rgba(23, 97, 162, 0.2);
+                  letter-spacing: 0.05rem;
                 }
-                .subscription-option-card--subscription .subscription-card-label {
-                  border-color: rgba(23, 97, 162, 0.2);
+                .subscription-badge-pill {
+                  background: #28a745;
+                  color: #fff;
+                  font-size: 0.65rem;
+                  font-weight: 800;
+                  padding: 2px 10px;
+                  border-radius: 4px;
+                  display: inline-block;
                 }
-                .subscription-frequencies.hidden {
-                  display: none;
+                .subscription-frequencies-inline-wrapper {
+                  margin-top: 1rem;
+                  padding-top: 1rem;
+                  border-top: 1px solid rgba(0,0,0,0.05);
+                  animation: slideDropdown 0.3s ease-out;
                 }
-                .subscription-frequencies {
-                  border: 1px solid #e0e0e0 !important;
-                  background-color: #fcfcfc !important;
-                  box-shadow: inset 0 1px 3px rgba(0,0,0,0.02);
+                .subscription-frequencies-inline-wrapper.hidden {
+                   display: none;
+                }
+                .subscription-frequency-box {
+                  background: #f8fafc;
+                  border: 1px solid #e2e8f0;
+                  transition: all 0.2s ease;
+                }
+                .subscription-frequency-box:hover {
+                  border-color: #1761A2;
+                }
+                .select-arrow-custom {
+                  position: absolute;
+                  right: 0;
+                  top: 50%;
+                  transform: translateY(-50%);
+                  pointer-events: none;
+                  color: #1761A2;
+                }
+                .tracking-widest {
+                  letter-spacing: 0.1em;
+                }
+                .fw-600 { font-weight: 600; }
+                
+                @keyframes slideDropdown {
+                  from { opacity: 0; transform: translateY(-10px); }
+                  to { opacity: 1; transform: translateY(0); }
                 }
               </style>
             {%- endif -%}
