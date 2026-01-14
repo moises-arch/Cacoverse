@@ -883,7 +883,7 @@
               <div class="subscription-selector-wrapper mt-4 mb-4">
                 <legend class="form__label mb-3 fw-bold" style="font-size: 1.1rem; letter-spacing: 0.05rem;">Purchase Options</legend>
                 
-                <div class="subscription-options-list d-flex flex-column gap-3">
+                <div class="subscription-options-list d-flex gap-3">
                   {%- liquid
                     assign current_variant = product.selected_or_first_available_variant
                     assign onetime_price = current_variant.price
@@ -924,34 +924,26 @@
                     endif
                   -%}
 
-                  <div class="subscription-option-card">
+                  <div class="subscription-option-card flex-grow-1">
                     <input type="radio" id="PurchaseOption-OneTime-{{ section.id }}" name="purchase_option" value="onetime" {% unless is_subscription_selected %}checked{% endunless %} class="subscription-radio-input">
-                    <label for="PurchaseOption-OneTime-{{ section.id }}" class="subscription-card-label">
-                      <div class="subscription-card-content">
-                        <div class="subscription-card-info">
-                          <span class="subscription-card-title">One-time purchase</span>
-                        </div>
-                        <div class="subscription-card-price">
-                          <span class="price-onetime fw-bold">{{ onetime_price | money }}</span>
-                        </div>
+                    <label for="PurchaseOption-OneTime-{{ section.id }}" class="subscription-card-label h-100">
+                      <div class="subscription-card-content d-flex flex-column align-items-center text-center">
+                        <span class="subscription-card-title mb-1">One-time purchase</span>
+                        <span class="price-onetime fw-bold">{{ onetime_price | money }}</span>
                       </div>
                     </label>
                   </div>
 
-                  <div class="subscription-option-card">
+                  <div class="subscription-option-card flex-grow-1">
                     <input type="radio" id="PurchaseOption-Subscription-{{ section.id }}" name="purchase_option" value="subscription" {% if is_subscription_selected %}checked{% endif %} class="subscription-radio-input">
-                    <label for="PurchaseOption-Subscription-{{ section.id }}" class="subscription-card-label">
-                      <div class="subscription-card-content">
-                        <div class="subscription-card-info">
-                          <span class="subscription-card-title">Subscribe & Save</span>
+                    <label for="PurchaseOption-Subscription-{{ section.id }}" class="subscription-card-label h-100">
+                      <div class="subscription-card-content d-flex flex-column align-items-center text-center">
+                        <span class="subscription-card-title mb-1">Subscribe & Save</span>
+                        <div class="subscription-card-price-info d-flex flex-column align-items-center">
+                          <span class="price-subscription fw-bold text-success">{{ subscription_price | money }}</span>
                           {%- if shown_discount > 0 -%}
-                            <span class="subscription-badge">Save {{ shown_discount }}%</span>
+                            <span class="subscription-badge mt-1">Save {{ shown_discount }}%</span>
                           {%- endif -%}
-                        </div>
-                        <div class="subscription-card-price">
-                          <span class="price-subscription fw-bold text-success">
-                            {{ subscription_price | money }}
-                          </span>
                         </div>
                       </div>
                     </label>
@@ -978,7 +970,7 @@
               <style>
                 .subscription-selector-wrapper {
                   font-family: inherit;
-                  max-width: 500px;
+                  max-width: 600px;
                 }
                 .subscription-radio-input {
                   position: absolute;
@@ -989,10 +981,10 @@
                 .subscription-card-label {
                   display: block;
                   cursor: pointer;
-                  padding: 1rem 1.25rem;
+                  padding: 1.25rem 1rem;
                   border: 1px solid #d1d1d1;
                   border-radius: 12px;
-                  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+                  transition: all 0.2s ease;
                   background: #fff;
                   position: relative;
                   box-shadow: 0 1px 2px rgba(0,0,0,0.05);
@@ -1005,53 +997,36 @@
                   border-color: #1761A2;
                   background: rgba(23, 97, 162, 0.04);
                   border-width: 2px;
-                  padding-left: 1.75rem;
-                }
-                .subscription-card-content {
-                  display: flex;
-                  justify-content: space-between;
-                  align-items: center;
-                }
-                .subscription-card-info {
-                  display: flex;
-                  flex-direction: column;
-                  gap: 0.2rem;
+                  box-shadow: 0 4px 12px rgba(23, 97, 162, 0.08);
                 }
                 .subscription-card-title {
                   font-weight: 700;
-                  font-size: 0.95rem;
+                  font-size: 0.9rem;
                   color: #111;
                   letter-spacing: -0.01rem;
+                  line-height: 1.2;
                 }
                 .subscription-badge {
                   display: inline-block;
                   background: #1761A2;
                   color: #fff;
-                  font-size: 0.65rem;
+                  font-size: 0.6rem;
                   font-weight: 800;
                   padding: 2px 6px;
                   border-radius: 4px;
                   text-transform: uppercase;
-                  width: fit-content;
                 }
-                .subscription-card-price {
-                  text-align: right;
-                  display: flex;
-                  flex-direction: column;
+                .subscription-card-price-info .fw-bold {
+                  font-size: 1.1rem;
                 }
-                .subscription-card-price .fw-bold {
-                  font-size: 1.05rem;
-                  color: #111;
-                }
-                .subscription-radio-input:checked + .subscription-card-label::before {
+                .subscription-radio-input:checked + .subscription-card-label::after {
                   content: '✓';
                   position: absolute;
-                  left: 0.6rem;
-                  top: 50%;
-                  transform: translateY(-50%);
+                  top: 8px;
+                  right: 12px;
                   color: #1761A2;
                   font-weight: bold;
-                  font-size: 1.1rem;
+                  font-size: 1rem;
                 }
                 .subscription-frequencies.hidden {
                   display: none;
