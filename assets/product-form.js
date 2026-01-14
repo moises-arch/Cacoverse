@@ -1,7 +1,9 @@
-/* assets/product-form.js — CacoAmerica fix
-   - Hard-reset de swatches (evita que desaparezcan al volver)
-   - Filtro suave opcional con JSON de variantes
-   - Sincronización de galería con featured_media de la variante
+/* assets/product-form.js — CacoAmerica fix */
+console.log("CacoAmerica: product-form.js file loaded");
+
+/* - Hard-reset de swatches (evita que desaparezcan al volver)
+- Filtro suave opcional con JSON de variantes
+- Sincronización de galería con featured_media de la variante
 */
 if (!customElements.get('product-form')) {
   customElements.define(
