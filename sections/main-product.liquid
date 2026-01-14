@@ -880,45 +880,91 @@
             -%}
 
             {%- if has_selling_plans -%}
-              <div class="product-form__input product-form__input--pill subscription-selector-wrapper mt-3 mb-4">
-                <legend class="form__label mb-2">Purchase options</legend>
-                <div class="subscription-toggle-buttons d-flex gap-2">
-                  <div class="subscription-option-item flex-grow-1">
-                    <input type="radio" id="PurchaseOption-OneTime-{{ section.id }}" name="purchase_option" value="onetime" checked class="visually-hidden">
-                    <label for="PurchaseOption-OneTime-{{ section.id }}" class="subscription-label w-100 text-center py-2 px-3 border rounded-pill cursor-pointer">
-                      <span class="d-block fw-bold">One-time purchase</span>
-                      <span class="d-block small text-muted price-onetime">{{ product.selected_or_first_available_variant.price | money }}</span>
+              <div class="subscription-selector-wrapper mt-4 mb-4">
+                <legend class="form__label mb-3 fw-bold" style="font-size: 1.1rem; letter-spacing: 0.05rem;">Purchase Options</legend>
+                
+                <div class="subscription-options-list d-flex flex-column gap-3">
+                  {%- liquid
+                    assign current_variant = product.selected_or_first_available_variant
+                    assign onetime_price = current_variant.price
+                    
+                    assign selected_allocation = current_variant.selected_selling_plan_allocation
+                    assign shown_discount = 0
+                    
+                    if selected_allocation == null
+                      for allocation in current_variant.selling_plan_allocations
+                        assign discount = 0
+                        if allocation.compare_at_price > allocation.price
+                          assign discount = allocation.compare_at_price | minus: allocation.price | times: 100.0 | divided_by: allocation.compare_at_price | round
+                        endif
+                        
+                        if discount > shown_discount
+                          assign shown_discount = discount
+                          assign selected_allocation = allocation
+                        endif
+                      endfor
+                    endif
+                    
+                    if selected_allocation == null and current_variant.selling_plan_allocations.size > 0
+                      assign selected_allocation = current_variant.selling_plan_allocations[0]
+                    endif
+                    
+                    if selected_allocation
+                      assign subscription_price = selected_allocation.price
+                      if selected_allocation.compare_at_price > selected_allocation.price
+                        assign shown_discount = selected_allocation.compare_at_price | minus: selected_allocation.price | times: 100.0 | divided_by: selected_allocation.compare_at_price | round
+                      endif
+                    else
+                      assign subscription_price = onetime_price
+                    endif
+                    
+                    assign is_subscription_selected = false
+                    if current_variant.selected_selling_plan_allocation
+                       assign is_subscription_selected = true
+                    endif
+                  -%}
+
+                  <div class="subscription-option-card">
+                    <input type="radio" id="PurchaseOption-OneTime-{{ section.id }}" name="purchase_option" value="onetime" {% unless is_subscription_selected %}checked{% endunless %} class="subscription-radio-input">
+                    <label for="PurchaseOption-OneTime-{{ section.id }}" class="subscription-card-label">
+                      <div class="subscription-card-content">
+                        <div class="subscription-card-info">
+                          <span class="subscription-card-title">One-time purchase</span>
+                        </div>
+                        <div class="subscription-card-price">
+                          <span class="price-onetime fw-bold">{{ onetime_price | money }}</span>
+                        </div>
+                      </div>
                     </label>
                   </div>
-                  <div class="subscription-option-item flex-grow-1">
-                    <input type="radio" id="PurchaseOption-Subscription-{{ section.id }}" name="purchase_option" value="subscription" class="visually-hidden">
-                    <label for="PurchaseOption-Subscription-{{ section.id }}" class="subscription-label w-100 text-center py-2 px-3 border rounded-pill cursor-pointer">
-                      <span class="d-block fw-bold">Subscribe & Save</span>
-                      {%- liquid
-                        assign best_discount = 0
-                        for allocation in product.selected_or_first_available_variant.selling_plan_allocations
-                          if allocation.compare_at_price > allocation.price
-                            assign discount = allocation.compare_at_price | minus: allocation.price | times: 100.0 | divided_by: allocation.compare_at_price | round
-                            if discount > best_discount
-                              assign best_discount = discount
-                            endif
-                          endif
-                        endfor
-                      -%}
-                      <span class="d-block small text-success price-subscription">
-                        {%- if best_discount > 0 -%}Save {{ best_discount }}%{%- else -%}Recurring delivery{%- endif -%}
-                      </span>
+
+                  <div class="subscription-option-card">
+                    <input type="radio" id="PurchaseOption-Subscription-{{ section.id }}" name="purchase_option" value="subscription" {% if is_subscription_selected %}checked{% endif %} class="subscription-radio-input">
+                    <label for="PurchaseOption-Subscription-{{ section.id }}" class="subscription-card-label">
+                      <div class="subscription-card-content">
+                        <div class="subscription-card-info">
+                          <span class="subscription-card-title">Subscribe & Save</span>
+                          {%- if shown_discount > 0 -%}
+                            <span class="subscription-badge">Save {{ shown_discount }}%</span>
+                          {%- endif -%}
+                        </div>
+                        <div class="subscription-card-price">
+                          <span class="price-subscription fw-bold text-success">
+                            {{ subscription_price | money }}
+                          </span>
+                        </div>
+                      </div>
                     </label>
                   </div>
                 </div>
 
-                <div class="subscription-frequencies mt-3 hidden">
-                  <label class="form__label mb-1" for="SellingPlan-{{ section.id }}">Delivery frequency</label>
+                <div class="subscription-frequencies mt-4 py-3 px-4 border rounded-3 bg-light {% unless is_subscription_selected %}hidden{% endunless %}">
+                  <label class="form__label mb-2 d-block fw-bold small text-uppercase" for="SellingPlan-{{ section.id }}" style="letter-spacing: 0.1rem;">Delivery Frequency</label>
                   <div class="select">
-                    <select id="SellingPlan-{{ section.id }}" name="selling_plan" class="select__select" form="{{ product_form_id }}">
+                    <select id="SellingPlan-{{ section.id }}" name="selling_plan" class="select__select border-0 bg-transparent ps-0" style="font-size: 1rem;" form="{{ product_form_id }}">
                       {%- for group in product.selling_plan_groups -%}
                         {%- for plan in group.selling_plans -%}
-                          <option value="{{ plan.id }}">{{ plan.name }}</option>
+                          <option value="{{ plan.id }}" {% if selected_allocation.selling_plan.id == plan.id %}selected{% endif %}>{{ plan.name }}</option>
                         {%- endfor -%}
                       {%- endfor -%}
                     </select>
@@ -930,33 +976,90 @@
               </div>
 
               <style>
-                .subscription-selector-wrapper .visually-hidden {
-                  position: absolute !important;
-                  overflow: hidden;
-                  width: 1px;
-                  height: 1px;
-                  margin: -1px;
-                  padding: 0;
-                  border: 0;
-                  clip: rect(0 0 0 0);
-                  word-wrap: normal !important;
+                .subscription-selector-wrapper {
+                  font-family: inherit;
+                  max-width: 500px;
                 }
-                .subscription-label {
-                  transition: all 0.2s ease;
-                  border: 1px solid #e5e5e5 !important;
+                .subscription-radio-input {
+                  position: absolute;
+                  opacity: 0;
+                  width: 0;
+                  height: 0;
+                }
+                .subscription-card-label {
+                  display: block;
+                  cursor: pointer;
+                  padding: 1rem 1.25rem;
+                  border: 1px solid #d1d1d1;
+                  border-radius: 12px;
+                  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
                   background: #fff;
-                  color: #333;
+                  position: relative;
+                  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
                 }
-                .subscription-option-item input:checked + .subscription-label {
-                  border-color: #1761A2 !important;
-                  background: rgba(23, 97, 162, 0.05);
-                  box-shadow: 0 0 0 1px #1761A2;
+                .subscription-card-label:hover {
+                  border-color: #1761A2;
+                  background: #fcfcfc;
                 }
-                .subscription-option-item input:checked + .subscription-label .fw-bold {
+                .subscription-radio-input:checked + .subscription-card-label {
+                  border-color: #1761A2;
+                  background: rgba(23, 97, 162, 0.04);
+                  border-width: 2px;
+                  padding-left: 1.75rem;
+                }
+                .subscription-card-content {
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                }
+                .subscription-card-info {
+                  display: flex;
+                  flex-direction: column;
+                  gap: 0.2rem;
+                }
+                .subscription-card-title {
+                  font-weight: 700;
+                  font-size: 0.95rem;
+                  color: #111;
+                  letter-spacing: -0.01rem;
+                }
+                .subscription-badge {
+                  display: inline-block;
+                  background: #1761A2;
+                  color: #fff;
+                  font-size: 0.65rem;
+                  font-weight: 800;
+                  padding: 2px 6px;
+                  border-radius: 4px;
+                  text-transform: uppercase;
+                  width: fit-content;
+                }
+                .subscription-card-price {
+                  text-align: right;
+                  display: flex;
+                  flex-direction: column;
+                }
+                .subscription-card-price .fw-bold {
+                  font-size: 1.05rem;
+                  color: #111;
+                }
+                .subscription-radio-input:checked + .subscription-card-label::before {
+                  content: '✓';
+                  position: absolute;
+                  left: 0.6rem;
+                  top: 50%;
+                  transform: translateY(-50%);
                   color: #1761A2;
+                  font-weight: bold;
+                  font-size: 1.1rem;
                 }
                 .subscription-frequencies.hidden {
                   display: none;
+                }
+                .subscription-frequencies {
+                  border: 1px solid #e0e0e0 !important;
+                  background-color: #fcfcfc !important;
+                  box-shadow: inset 0 1px 3px rgba(0,0,0,0.02);
                 }
               </style>
             {%- endif -%}
