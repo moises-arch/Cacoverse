@@ -1,10 +1,12 @@
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const sectionId = '{{ section.id }}';
+    const formId = 'product-form-' + sectionId;
     const qtyInput = document.getElementById(`Quantity-${sectionId}`);
+    
     if (!qtyInput) return;
 
-    // Helper to find the currency symbol and format
+    // Robust Money Formatter
     function formatMoney(cents, format) {
       if (typeof cents === 'string') cents = cents.replace('.', '');
       let value = '';
@@ -31,7 +33,10 @@
         return dollars + cents;
       }
 
-      switch(formatString.match(placeholderRegex)[1]) {
+      const match = formatString.match(placeholderRegex);
+      if (!match) return '$' + (cents/100).toFixed(2); // Fallback
+
+      switch(match[1]) {
         case 'amount':
           value = formatWithDelimiters(cents, 2);
           break;
@@ -44,13 +49,16 @@
         case 'amount_no_decimals_with_comma_separator':
           value = formatWithDelimiters(cents, 0, '.', ',');
           break;
+        default:
+          value = formatWithDelimiters(cents, 2);
       }
 
       return formatString.replace(placeholderRegex, value);
     }
 
     // Default button text
-    const defaultText = "{{ 'products.product.add_to_cart' | t }}";
+    const defaultText = {{ 'products.product.add_to_cart' | t | json }};
+    const moneyFormat = {{ shop.money_format | json }};
 
     function updateAddToCartButton() {
       // Delay slightly for React/Theme updates
@@ -72,28 +80,41 @@
 
         // Get pricing data
         const internalDataScript = document.getElementById(`VariantSubscription-${sectionId}`);
-        if (!internalDataScript) return; 
+        let variantData = null;
         
-        let variantData;
-        try {
-          variantData = JSON.parse(internalDataScript.textContent);
-        } catch(e) { return; }
+        if (internalDataScript) {
+          try {
+            variantData = JSON.parse(internalDataScript.textContent);
+          } catch(e) {}
+        }
 
-        const variantInput = document.querySelector(`form[action*="/cart/add"] input[name="id"]`);
-        const currentVariantId = variantInput ? variantInput.value : '{{ product.selected_or_first_available_variant.id }}';
+        // Scoped variant lookup
+        const productForm = document.getElementById(formId);
+        let currentVariantId = '{{ product.selected_or_first_available_variant.id }}';
+
+        if (productForm) {
+            const variantInput = productForm.querySelector('input[name="id"]');
+            if (variantInput) currentVariantId = variantInput.value;
+        }
         
-        const data = variantData[currentVariantId];
-        if (!data) return;
+        // Determine price
+        let basePrice = 0;
+        
+        if (variantData && variantData[currentVariantId]) {
+             // We have subscription data
+            const data = variantData[currentVariantId];
+            const subRadio = document.querySelector(`input[name="purchase_option"][value="subscription"]`);
+            const isSub = subRadio && subRadio.checked;
+            basePrice = isSub ? data.subscription : data.onetime;
+        } else {
+            // Fallback to basic variant data if sub data missing
+            // (Note: This might not account for changing variants if not in the JSON, but basic robustness)
+            // Ideally we'd read it from the DOM or a global object, but let's stick to initial logic
+             // Try to parse from a "data-price" if available, or just ignore update
+             return; 
+        }
 
-        // Determine if subscription handles are selected
-        const subRadio = document.querySelector(`input[name="purchase_option"][value="subscription"]`);
-        const isSub = subRadio && subRadio.checked;
-
-        const basePrice = isSub ? data.subscription : data.onetime; 
         const total = basePrice * qty;
-        
-        // Format
-        const moneyFormat = "{{ shop.money_format }}"; 
         const formattedTotal = formatMoney(total, moneyFormat);
 
         // Update button text
