@@ -45,6 +45,7 @@
     },
     "custom_liquid_KJpyU9": {
       "type": "custom-liquid",
+      "disabled": true,
       "name": "t:sections.custom-liquid.presets.name",
       "settings": {
         "custom_liquid": "<div id=\"caco-calculator-wrapper\" style=\"width: 100%; overflow: hidden;\">\n    <iframe \n        src=\"https://caco-ge-calculator.vercel.app\" \n        id=\"caco-iframe-dynamic\"\n        style=\"width: 100%; min-height: 600px; border: none; overflow: hidden; transition: height 0.2s ease-out;\"\n        scrolling=\"no\"\n        loading=\"lazy\"\n    ></iframe>\n</div>\n\n<script>\n    (function() {\n        const iframe = document.getElementById('caco-iframe-dynamic');\n        \n        window.addEventListener('message', function(event) {\n            // Seguridad: Solo aceptamos mensajes de tu dominio en Vercel\n            if (event.origin !== \"https://caco-ge-calculator.vercel.app\") return;\n\n            if (event.data && event.data.type === 'resize' && event.data.height) {\n                // Ajustamos la altura basándonos en el mensaje recibido desde React\n                iframe.style.height = event.data.height + 'px';\n            }\n        }, false);\n    })();\n</script>",
