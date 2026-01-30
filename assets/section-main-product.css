@@ -133,6 +133,14 @@ product-info {
     padding-top: 0 !important;
   }
 
+  /* Fix potential global overflow issues blocking sticky */
+  html,
+  body {
+    overflow-x: clip !important;
+    /* 'clip' is safer than 'visible' for horizontal without breaking sticky */
+    overflow-y: visible !important;
+  }
+
   /* Force parents to allow sticky */
   #MainContent,
   product-info,

@@ -5,7 +5,7 @@
   data-product-id="{{ product.id }}"
   data-update-url="true"
   data-url="{{ product.url }}">
-  {{ 'section-main-product.css' | asset_url | append: '&v=2.9' | stylesheet_tag }}
+  {{ 'section-main-product.css' | asset_url | append: '&v=3.0' | stylesheet_tag }}
   <link rel="stylesheet" href="{{ 'component-accordion.css' | asset_url }}" media="print" onload="this.media='all'">
   {{ 'component-price.css' | asset_url | stylesheet_tag }}
   {{ 'component-slider.css' | asset_url | stylesheet_tag }}
@@ -2020,102 +2020,6 @@
 
 
 
-<script>
-  (function() {
-    // Custom Sticky Media Gallery Script
-    // Solves CSS 'sticky' issues caused by global overflow settings
-    
-    let stickyEnabled = false;
-    let mediaWrapper, infoWrapper, productContainer;
-
-    function initSticky() {
-      mediaWrapper = document.querySelector('.product__media-wrapper');
-      infoWrapper = document.querySelector('.product__info-wrapper');
-      productContainer = document.querySelector('.product');
-      
-      if (!mediaWrapper || !infoWrapper || !productContainer) return;
-      
-      // Initial check
-      handleScroll();
-      
-      window.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('resize', onResize);
-    }
-
-    let ticking = false;
-    function onScroll() {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          handleScroll();
-          ticking = false;
-        });
-        ticking = true;
-      }
-    }
-
-    function onResize() {
-      handleScroll();
-    }
-
-    function handleScroll() {
-      // Only run on desktop
-      if (window.innerWidth < 750) {
-        if (stickyEnabled) {
-          mediaWrapper.style.transform = '';
-          stickyEnabled = false;
-        }
-        return;
-      }
-
-      stickyEnabled = true;
-
-      const infoRect = infoWrapper.getBoundingClientRect();
-      const mediaRect = mediaWrapper.getBoundingClientRect();
-      const containerRect = productContainer.getBoundingClientRect();
-      
-      // If content is shorter than viewport or media is taller than info, don't stick
-      if (mediaWrapper.offsetHeight >= infoWrapper.offsetHeight) {
-        mediaWrapper.style.transform = '';
-        return;
-      }
-
-      const headerOffset = 90; // Approx header height + spacing
-      const scrollY = window.scrollY;
-      const containerTop = productContainer.offsetTop;
-      const containerBottom = containerTop + productContainer.offsetHeight;
-      const mediaHeight = mediaWrapper.offsetHeight;
-
-      // Calculate desired scroll position (relative to container)
-      // Subtract headerOffset only if you want it to stop below header. 
-      // For initial alignment, we want targetY = 0 when we are at the top.
-      let targetY = scrollY - containerTop + headerOffset;
-
-      // Force alignment: Ensure it starts at 0 (top of container)
-      if (scrollY + headerOffset < containerTop) {
-        targetY = 0;
-      }
-      
-      // Clamp: Don't go above 0 (top of container)
-      if (targetY < 0) targetY = 0;
-
-      // Clamp: Don't go below bottom alignment
-      const maxTranslate = infoWrapper.offsetHeight - mediaHeight;
-      if (targetY > maxTranslate) targetY = maxTranslate;
-
-      // Apply transform
-      // We use transform instead of position:fixed to stay within layout flow
-      mediaWrapper.style.transform = `translateY(${targetY}px)`;
-      // Clean transition for smooth catch-up
-      mediaWrapper.style.transition = 'transform 0.1s linear';
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initSticky);
-    } else {
-      initSticky();
-    }
-  })();
-</script>
 {% schema %}
 
 
