@@ -126,7 +126,74 @@
 </script>
 
 
-  <script src="{{ 'product-info.js' | asset_url }}" defer="defer"></script>
+  {%- style -%}
+  .product-description-simple, 
+  .product__description,
+  .product__gallery-footer {
+    letter-spacing: normal !important;
+    line-height: 1.6 !important;
+    color: #333;
+  }
+  .product-description-simple h1, .product-description-simple h2, .product-description-simple h3,
+  .product__description h1, .product__description h2, .product__description h3,
+  .product__gallery-footer h1, .product__gallery-footer h2, .product__gallery-footer h3 {
+    letter-spacing: normal !important;
+    text-decoration: none !important;
+    text-transform: none !important;
+    font-weight: 700;
+  }
+  .product-description-simple a, .product__description a, .product__gallery-footer a {
+    text-decoration: none !important;
+  }
+  .product-description-simple summary, .product__description summary, .product__gallery-footer summary {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 600;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+  }
+  .product-description-simple summary::-webkit-details-marker,
+  .product__description summary::-webkit-details-marker,
+  .product__gallery-footer summary::-webkit-details-marker {
+    display: none;
+  }
+  .product-description-simple details[open] summary,
+  .product__description details[open] summary,
+  .product__gallery-footer details[open] summary {
+     border-bottom: none;
+  }
+{%- endstyle -%}
+
+{%- if product.metafields.custom.faq.value != blank -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {%- for item in product.metafields.custom.faq.value -%}
+      {%- capture row_type -%}{%- cycle 'question', 'answer' -%}{%- endcapture -%}
+      {%- if row_type == 'question' -%}
+        {
+          "@type": "Question",
+          "name": {{ item | json }},
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": 
+      {%- else -%}
+            {{ item | strip_html | json }}
+          }
+        }{%- unless forloop.last -%},{%- endunless -%}
+      {%- endif -%}
+    {%- endfor -%}
+  ]
+}
+</script>
+{%- endif -%}
+
+<script src="{{ 'product-info.js' | asset_url }}" defer="defer"></script>
   <script src="{{ 'product-form.js' | asset_url | append: '&t=' | append: 'now' | date: '%N' }}" defer="defer"></script>
   {%- if product.quantity_price_breaks_configured? -%}
     <script src="{{ 'show-more.js' | asset_url }}" defer="defer"></script>
