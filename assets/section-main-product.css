@@ -163,7 +163,8 @@ product-info {
     position: sticky !important;
     top: 5rem !important;
     /* Increased top offset to clear header */
-    z-index: 20;
+    z-index: 1;
+    /* Lower Z-index to avoid covering header */
     display: block !important;
     height: fit-content !important;
     align-self: flex-start !important;
