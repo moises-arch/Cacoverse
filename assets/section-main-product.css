@@ -128,7 +128,8 @@ product-info {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    margin-top: -45px !important;
+    margin-top: 0 !important;
+    /* Reset from -45px to fix alignment */
     padding-top: 0 !important;
   }
 

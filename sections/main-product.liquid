@@ -5,7 +5,7 @@
   data-product-id="{{ product.id }}"
   data-update-url="true"
   data-url="{{ product.url }}">
-  {{ 'section-main-product.css' | asset_url | append: '&v=2.8' | stylesheet_tag }}
+  {{ 'section-main-product.css' | asset_url | append: '&v=2.9' | stylesheet_tag }}
   <link rel="stylesheet" href="{{ 'component-accordion.css' | asset_url }}" media="print" onload="this.media='all'">
   {{ 'component-price.css' | asset_url | stylesheet_tag }}
   {{ 'component-slider.css' | asset_url | stylesheet_tag }}
@@ -2086,9 +2086,16 @@
       const mediaHeight = mediaWrapper.offsetHeight;
 
       // Calculate desired scroll position (relative to container)
+      // Subtract headerOffset only if you want it to stop below header. 
+      // For initial alignment, we want targetY = 0 when we are at the top.
       let targetY = scrollY - containerTop + headerOffset;
 
-      // Clamp: Don't go above 0
+      // Force alignment: Ensure it starts at 0 (top of container)
+      if (scrollY + headerOffset < containerTop) {
+        targetY = 0;
+      }
+      
+      // Clamp: Don't go above 0 (top of container)
       if (targetY < 0) targetY = 0;
 
       // Clamp: Don't go below bottom alignment
