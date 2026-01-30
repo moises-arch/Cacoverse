@@ -149,7 +149,7 @@ product-info {
     /* Increased top offset to clear header */
     z-index: 20;
     display: block !important;
-    height: auto !important;
+    height: fit-content !important;
     align-self: flex-start !important;
   }
 
