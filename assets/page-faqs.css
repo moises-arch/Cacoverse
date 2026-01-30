@@ -141,7 +141,7 @@
   background: #ffffff;
   border: 1px;
   border-radius: 12px;
-  margin: 0 0 8px;
+  margin: 0 0 4px;
   box-shadow: none;
   overflow: hidden;
 }
@@ -158,7 +158,7 @@
   gap: 14px;
   border: none;
   background: transparent;
-  padding: 14px 18px;
+  padding: 8px 18px;
   text-align: left;
 }
 
@@ -189,7 +189,7 @@
 }
 
 .faq-question__title {
-  font-size: 19px;
+  font-size: 17px;
   font-weight: 700;
   color: #0f172a;
 }
@@ -199,7 +199,8 @@
 
 /* Set the icon size once */
 .faq-question__icon {
-  --icon-size: 52px;
+  --icon-size: 32px;
+  margin-left: auto;
 
   width: var(--icon-size);
   height: var(--icon-size);
@@ -226,10 +227,29 @@
 
 /* Make the SVG (or icon element) scale with the container */
 .faq-question__icon svg {
-  width: calc(var(--icon-size) * 0.45);
-  /* tweak 0.40–0.55 to taste */
-  height: calc(var(--icon-size) * 0.45);
+  width: 14px;
+  height: 14px;
   display: block;
+}
+
+.faq-question__icon .minus {
+  height: 2px;
+}
+
+.faq-item .minus {
+  display: none;
+}
+
+.faq-item .plus {
+  display: block;
+}
+
+.faq-item.active .minus {
+  display: block;
+}
+
+.faq-item.active .plus {
+  display: none;
 }
 
 /* If the icon is not an SVG but an <i> or <span> */
