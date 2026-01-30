@@ -533,17 +533,7 @@
     <div class="grid__item product__media-wrapper">
       {% render 'product-media-gallery', variant_images: variant_images %}
       
-      {%- for block in section.blocks -%}
-        {%- if block.type == 'gallery_footer' or block.type == 'description' -%}
-          <div class="product__gallery-footer rte" {{ block.shopify_attributes }} style="margin-top: {{ block.settings.margin_top }}px;">
-            {%- if block.type == 'description' -%}
-              {{ product.description }}
-            {%- else -%}
-              {{ block.settings.content }}
-            {%- endif -%}
-          </div>
-        {%- endif -%}
-      {%- endfor -%}
+      {% comment %} Description moved to bottom for mobile UX {% endcomment %}
 
     </div>
     <div class="product__info-wrapper grid__item{% if settings.page_width > 1400 and section.settings.media_size == "small" %} product__info-wrapper--extra-padding{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
@@ -1512,8 +1502,58 @@
           {% render 'main-product-details', product: product, closed: has_bundle %}
         </div>
       {% endif %}
+
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'gallery_footer' or block.type == 'description' -%}
+          <div class="product__description-full-width product__gallery-footer-container" id="DescriptionContainer-{{ block.id }}">
+            <div class="product__gallery-footer rte is-collapsed" id="DescriptionContent-{{ block.id }}" {{ block.shopify_attributes }} style="margin-top: {{ block.settings.margin_top }}px;">
+              {%- if block.type == 'description' -%}
+                {{ product.description }}
+              {%- else -%}
+                {{ block.settings.content }}
+              {%- endif -%}
+            </div>
+            <button type="button" class="description-read-more-btn" id="ReadMoreBtn-{{ block.id }}" aria-expanded="false">
+              More info
+            </button>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+
     </div>
   </div>
+
+  <script>
+    (function() {
+      const initDescriptionToggle = () => {
+        document.querySelectorAll('.product__gallery-footer-container').forEach(container => {
+          const content = container.querySelector('.product__gallery-footer');
+          const btn = container.querySelector('.description-read-more-btn');
+          if (btn && content) {
+            // Only show button if content exceeds truncation height on mobile
+            const isMobile = window.innerWidth < 750;
+            if (isMobile && content.scrollHeight <= 300) {
+              btn.style.display = 'none';
+              content.classList.remove('is-collapsed');
+              return;
+            }
+
+            btn.addEventListener('click', () => {
+              const isCollapsed = content.classList.contains('is-collapsed');
+              content.classList.toggle('is-collapsed');
+              btn.textContent = isCollapsed ? 'Read Less' : 'More info';
+              btn.setAttribute('aria-expanded', isCollapsed ? 'true' : 'false');
+              if (!isCollapsed) {
+                container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }
+            });
+          }
+        });
+      };
+      document.addEventListener('DOMContentLoaded', initDescriptionToggle);
+      document.addEventListener('shopify:section:load', initDescriptionToggle);
+    })();
+  </script>
 
   {% assign popups = section.blocks | where: 'type', 'popup' %}
   {%- for block in popups -%}
