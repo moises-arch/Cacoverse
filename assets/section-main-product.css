@@ -118,62 +118,7 @@ product-info {
 }
 
 @media screen and (min-width: 750px) {
-
-  .product__info-wrapper,
-  .product__media-wrapper {
-    align-self: flex-start !important;
-  }
-
-  .product__info-wrapper {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-    position: relative;
-    z-index: 22;
-    /* Ensure info stays above sticky media */
-    background: #ffffff;
-    /* Prevent transparency overlap issues */
-  }
-
-  /* Fix potential global overflow issues blocking sticky */
-  /* Fix potential global overflow issues blocking sticky */
-  html,
-  body {
-    overflow-x: visible !important;
-    /* 'visible' is the only 100% safe value for sticky, risking horizontal scroll */
-    overflow-y: visible !important;
-  }
-
-  /* Force parents to allow sticky */
-  #MainContent,
-  product-info,
-  .product,
-  .shopify-section,
-  .page-width,
-  .gradient {
-    overflow: visible !important;
-    clip-path: none !important;
-  }
-
-  .product__media-wrapper {
-    margin-top: 0 !important;
-    position: -webkit-sticky !important;
-    /* Safari */
-    position: sticky !important;
-    top: 5rem !important;
-    /* Increased top offset to clear header */
-    z-index: 10;
-    /* Mid-range Z-index: below header, above standard content */
-    display: block !important;
-    height: fit-content !important;
-    align-self: flex-start !important;
-  }
-
-  .product__column-sticky {
-    top: 0 !important;
-  }
+  /* Reverted to original state: No forced sticky overrides */
 }
 
 @media screen and (min-width: 990px) {
