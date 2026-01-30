@@ -50,7 +50,10 @@
               </div>
               <div class="product-description-actions">
                 <button type="button" class="btn-read-more" id="BtnReadMoreDescription">
-                  Read More
+                  <span>Show full description</span>
+                  <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 8px;">
+                    <path d="M1 1L5 5L9 1"></path>
+                  </svg>
                 </button>
               </div>
             </div>
@@ -74,29 +77,43 @@
             left: 0;
             width: 100%;
             height: 120px;
-            /* Gradient to white since accordion background is white */
             background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 90%);
             pointer-events: none;
             z-index: 2;
           }
           .product-description-actions {
             text-align: center;
-            margin-top: 10px;
+            margin-top: 15px;
+            position: relative;
+            z-index: 3; /* Ensure button is above gradient */
           }
           .btn-read-more {
-            background: transparent;
-            border: 1px solid #e3eaf5;
-            padding: 8px 20px;
-            border-radius: 20px;
-            color: #0ea5e9;
-            font-weight: 700;
-            font-size: 14px;
+            background: #ffffff;
+            border: 1px solid #E2E8F0;
+            padding: 10px 24px;
+            border-radius: 8px; /* Slightly rounded, modern */
+            color: #1E293B; /* Slate 800 */
+            font-weight: 600;
+            font-size: 13px;
             cursor: pointer;
             transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
           }
           .btn-read-more:hover {
-            background: #f0f7ff;
-            border-color: #0ea5e9;
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+            color: #0F172A;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+          }
+          .btn-read-more svg {
+            transition: transform 0.3s ease;
+          }
+          .btn-read-more.expanded svg {
+            transform: rotate(180deg);
           }
         </style>
 
@@ -113,14 +130,18 @@
               } else {
                 btn.addEventListener('click', function() {
                   const isCollapsed = content.classList.contains('is-collapsed');
+                  const span = btn.querySelector('span');
+                  
                   if(isCollapsed) {
                     content.classList.remove('is-collapsed');
-                    btn.textContent = 'Read Less';
+                    span.textContent = 'Show less';
+                    btn.classList.add('expanded');
                   } else {
                     content.classList.add('is-collapsed');
-                    btn.textContent = 'Read More';
-                    // Optional: scroll back to top of description?
-                    // content.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    span.textContent = 'Show full description';
+                    btn.classList.remove('expanded');
+                    // Optional: scroll back?
+                    // content.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                   }
                 });
               }
