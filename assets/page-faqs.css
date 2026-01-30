@@ -139,9 +139,9 @@
 
 .product-details-accordion .faq-item {
   background: #ffffff;
-  border: 1px;
-  border-radius: 12px;
-  margin: 0 0 12px;
+  border: 1px solid #EBF0F5;
+  border-radius: 14px;
+  margin: 0 0 14px;
   box-shadow: none;
   overflow: hidden;
 }
