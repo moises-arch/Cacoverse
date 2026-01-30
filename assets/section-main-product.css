@@ -132,13 +132,24 @@ product-info {
     padding-top: 0 !important;
   }
 
+  /* Force parents to allow sticky */
+  product-info,
+  .product {
+    overflow: visible !important;
+    clip-path: none !important;
+  }
+
   .product__media-wrapper {
     margin-top: 0 !important;
-    position: sticky;
-    top: 3rem;
-    z-index: 2;
-    display: block;
-    /* Ensure it behaves as a block for sticky */
+    position: -webkit-sticky !important;
+    /* Safari */
+    position: sticky !important;
+    top: 5rem !important;
+    /* Increased top offset to clear header */
+    z-index: 20;
+    display: block !important;
+    height: auto !important;
+    align-self: flex-start !important;
   }
 
   .product__column-sticky {
