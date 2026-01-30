@@ -133,6 +133,7 @@ product-info {
   }
 
   /* Force parents to allow sticky */
+  #MainContent,
   product-info,
   .product {
     overflow: visible !important;
