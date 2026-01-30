@@ -291,7 +291,7 @@
         "constrain_to_viewport": false,
         "media_fit": "cover",
         "gallery_layout": "stacked",
-        "media_position": "right",
+        "media_position": "left",
         "image_zoom": "lightbox",
         "mobile_thumbnails": "show",
         "hide_variants": true,
