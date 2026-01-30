@@ -285,13 +285,13 @@
         "compatible_products_U9xrW4"
       ],
       "settings": {
-        "enable_sticky_info": true,
+        "enable_sticky_info": false,
         "color_scheme": "scheme-1",
         "media_size": "medium",
         "constrain_to_viewport": false,
         "media_fit": "cover",
         "gallery_layout": "stacked",
-        "media_position": "left",
+        "media_position": "right",
         "image_zoom": "lightbox",
         "mobile_thumbnails": "show",
         "hide_variants": true,
