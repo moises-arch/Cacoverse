@@ -70,9 +70,9 @@
             max-height: 250px;
             overflow: hidden;
           }
-          /* Hide redundant header block (Title + Badges) present in description HTML */
-          .product-description-truncated > div:first-child {
-            display: none !important;
+          /* Header block is now manually controlled by user HTML */
+          .product-description-truncated > :first-child {
+            margin-top: 0 !important;
           }
           .product-description-truncated.is-collapsed::after {
             content: "";
