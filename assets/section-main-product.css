@@ -118,7 +118,20 @@ product-info {
 }
 
 @media screen and (min-width: 750px) {
-  /* Reverted to original state: No forced sticky overrides */
+
+  .product__info-wrapper,
+  .product__media-wrapper {
+    align-self: flex-start !important;
+  }
+
+  .product__info-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin-top: -45px !important;
+    /* Restored original theme alignment */
+    padding-top: 0 !important;
+  }
 }
 
 @media screen and (min-width: 990px) {
