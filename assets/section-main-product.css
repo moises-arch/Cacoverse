@@ -128,8 +128,8 @@ product-info {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    margin-top: -45px !important;
-    /* Restored original theme alignment */
+    margin-top: 0 !important;
+    /* Reset to 0 for clean alignment */
     padding-top: 0 !important;
   }
 }
