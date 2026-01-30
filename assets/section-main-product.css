@@ -138,10 +138,11 @@ product-info {
   }
 
   /* Fix potential global overflow issues blocking sticky */
+  /* Fix potential global overflow issues blocking sticky */
   html,
   body {
-    overflow-x: clip !important;
-    /* 'clip' is safer than 'visible' for horizontal without breaking sticky */
+    overflow-x: visible !important;
+    /* 'visible' is the only 100% safe value for sticky, risking horizontal scroll */
     overflow-y: visible !important;
   }
 
@@ -163,8 +164,8 @@ product-info {
     position: sticky !important;
     top: 5rem !important;
     /* Increased top offset to clear header */
-    z-index: 1;
-    /* Lower Z-index to avoid covering header */
+    z-index: 10;
+    /* Mid-range Z-index: below header, above standard content */
     display: block !important;
     height: fit-content !important;
     align-self: flex-start !important;
