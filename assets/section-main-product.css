@@ -134,6 +134,11 @@ product-info {
 
   .product__media-wrapper {
     margin-top: 0 !important;
+    position: sticky;
+    top: 3rem;
+    z-index: 2;
+    display: block;
+    /* Ensure it behaves as a block for sticky */
   }
 
   .product__column-sticky {
