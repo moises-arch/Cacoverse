@@ -490,7 +490,18 @@
   <div class="product product--{{ section.settings.media_size }} product--{{ section.settings.media_position }} product--{{ section.settings.gallery_layout }} product--mobile-{{ section.settings.mobile_thumbnails }} grid grid--1-col {% if product.media.size > 0 %}grid--2-col-tablet{% else %}product--no-media{% endif %}">
     <div class="grid__item product__media-wrapper">
       {% render 'product-media-gallery', variant_images: variant_images %}
-
+      
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'gallery_footer' or block.type == 'description' -%}
+          <div class="product__gallery-footer rte" {{ block.shopify_attributes }}>
+            {%- if block.type == 'description' -%}
+              {{ product.description }}
+            {%- else -%}
+              {{ block.settings.content }}
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
     </div>
     <div class="product__info-wrapper grid__item{% if settings.page_width > 1400 and section.settings.media_size == "small" %} product__info-wrapper--extra-padding{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
       <div
@@ -1986,6 +1997,18 @@
   "tag": "section",
   "class": "section page-width container-fluid product-bg",
   "blocks": [
+    {
+      "type": "gallery_footer",
+      "name": "Gallery Footer Content",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content",
+          "default": "<p>Add your description or content here to be displayed below the image gallery.</p>"
+        }
+      ]
+    },
     {
       "type": "@app"
     },

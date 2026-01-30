@@ -37,6 +37,10 @@
           "type": "price",
           "settings": {}
         },
+        "description_XfR9wL": {
+          "type": "description",
+          "settings": {}
+        },
         "sku_dbJGXK": {
           "type": "sku",
           "settings": {
@@ -73,18 +77,26 @@
           "settings": {
             "custom_liquid": "<p\n                  class=\"product__sku{% if block.settings.text_style == 'uppercase' %} caption-with-letter-spacing{% elsif block.settings.text_style == 'subtitle' %} subtitle{% endif %}{% if product.selected_or_first_available_variant.sku.size == 0 %} visibility-hidden{% endif %}\"\n                  id=\"Sku-{{ section.id }}\"\n                  role=\"status\"\n                  {{ block.shopify_attributes }}\n                >\n                  <span class=\"visually-hidden\">{{ 'products.product.sku' | t }}:</span>\n                  {{- product.selected_or_first_available_variant.sku -}}\n                </p>"
           }
+        },
+        "gallery_footer_extra": {
+          "type": "gallery_footer",
+          "settings": {
+            "content": "<p>Esta es el área para descripción o lo que tú quieras colocar debajo de la galería.</p>"
+          }
         }
       },
       "block_order": [
         "text_VREWcp",
         "title_4WN4Hx",
         "price_4iDF4i",
+        "description_XfR9wL",
         "sku_dbJGXK",
         "variant_picker_a8Lh7E",
         "quantity_selector_3tBddz",
         "buy_buttons_ghREYE",
         "custom_liquid_hWczik",
-        "custom_liquid_zcMTkR"
+        "custom_liquid_zcMTkR",
+        "gallery_footer_extra"
       ],
       "settings": {
         "enable_sticky_info": true,
