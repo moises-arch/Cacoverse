@@ -249,7 +249,7 @@
 
 .product-details-accordion .faq-answer {
   display: none;
-  border-top: 1px dashed #e2e8f0;
+  border-top: none;
   padding-bottom: 0;
 }
 
