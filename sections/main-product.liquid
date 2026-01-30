@@ -535,7 +535,7 @@
       
       {%- for block in section.blocks -%}
         {%- if block.type == 'gallery_footer' or block.type == 'description' -%}
-          <div class="product__gallery-footer rte" {{ block.shopify_attributes }}>
+          <div class="product__gallery-footer rte" {{ block.shopify_attributes }} style="margin-top: {{ block.settings.margin_top }}px;">
             {%- if block.type == 'description' -%}
               {{ product.description }}
             {%- else -%}
@@ -2045,6 +2045,16 @@
           "id": "content",
           "label": "Content",
           "default": "<p>Add your description or content here to be displayed below the image gallery.</p>"
+        },
+        {
+          "type": "range",
+          "id": "margin_top",
+          "min": 0,
+          "max": 100,
+          "step": 4,
+          "unit": "px",
+          "label": "Margin top",
+          "default": 0
         }
       ]
     },
@@ -2236,7 +2246,19 @@
     {
       "type": "description",
       "name": "t:sections.main-product.blocks.description.name",
-      "limit": 1
+      "limit": 1,
+      "settings": [
+        {
+          "type": "range",
+          "id": "margin_top",
+          "min": 0,
+          "max": 100,
+          "step": 4,
+          "unit": "px",
+          "label": "Margin top",
+          "default": 0
+        }
+      ]
     },
     {
       "type": "share",
