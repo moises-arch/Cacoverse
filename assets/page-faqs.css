@@ -199,7 +199,7 @@
 
 /* Set the icon size once */
 .faq-question__icon {
-  --icon-size: 34px;
+  --icon-size: 20px;
 
   width: var(--icon-size);
   height: var(--icon-size);
@@ -207,15 +207,21 @@
   aspect-ratio: 1 / 1;
   box-sizing: border-box;
 
-  border-radius: 50%;
-  border: 1px solid #d7e1ec;
-  background: #f7fafc;
+  background: transparent;
+  border: none;
 
   display: grid;
   place-items: center;
 
-  transition: transform .2s ease, background-color .2s ease, border-color .2s ease, color .2s ease;
-  color: #a6b1bf;
+  transition: transform .3s ease, color .2s ease;
+  color: #64748b;
+}
+
+.product-details-accordion .faq-item.active .faq-question__icon {
+  transform: rotate(180deg);
+  background: transparent;
+  border: none;
+  color: #0f172a;
 }
 
 /* Make the SVG (or icon element) scale with the container */
@@ -238,12 +244,8 @@
 
 
 
-.product-details-accordion .faq-item.active .faq-question__icon {
-  background: #f7fafc;
-  border-color: #d7e1ec;
-  color: #a6b1bf;
 
-}
+
 
 .product-details-accordion .faq-answer {
   display: none;
