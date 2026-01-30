@@ -1,1 +1,515 @@
-{"sections":{"1761594781c3e1cef5":{"type":"_blocks","blocks":{"ai_gen_block_0bc890e_cJRefy":{"type":"ai_gen_block_0bc890e","settings":{"container_width":1350,"banner_height":600,"content_width":45,"image_max_width":600,"gradient_start":"#0023a3","gradient_end":"#000d41","gradient_angle":135,"heading":"YOUR BRAND. OUR AWARD-WINNING HELMETS.","heading_size":68,"heading_color":"#ffffff","typing_speed":90,"subheading":"<p>Put your mark where the hard work happens — crafted to elevate your brand, unify your team, and deliver a professional look on every jobsite. Built to perform and exceed the toughest industry standards.<\/p>","subheading_size":20,"subheading_color":"#ffffff","foreground_image":"shopify:\/\/shop_images\/helmet-2.png","image_border_radius":0,"overlay_image":"shopify:\/\/shop_images\/Your-Logo-here-300x193-1.png","stamp_effect":"slide","overlay_size":35,"overlay_position_x":50,"overlay_position_y":42},"blocks":{}}},"block_order":["ai_gen_block_0bc890e_cJRefy"],"settings":{}},"main":{"type":"main-page","disabled":true,"settings":{"padding_top":28,"padding_bottom":28}},"hero_banner_Kkw9KM":{"type":"hero-banner","disabled":true,"custom_css":[".hero-banner h1 {font-size: 4rem; font-weight: 800; line-height: 1.2; text-transform: uppercase; letter-spacing: 1px;}"],"name":"Hero Banner","settings":{"bg_image":"shopify:\/\/shop_images\/Slider_2_Background_f73262f1-3251-4ba1-b21c-856e43dedb51.png","image":"shopify:\/\/shop_images\/logo_here_2a90d63b-0d37-4151-a954-4165bd7f764d.jpg","heading":"Your Brand. Our Award-Winning Helmets.","sub_heading":"Put your mark where the hard work happens — crafted to elevate your brand, unify your team, and deliver a professional look on every jobsite. Built to perform and exceed the toughest industry standards.","first_link":"#","first_link_label":"","second_link":"","second_link_label":"","padding_top_desktop":"80px","padding_bottom_desktop":"80px","padding_top_mobile":"40px","padding_bottom_mobile":"40px"}},"custom_liquid_cdpxrm":{"type":"custom-liquid","custom_css":[],"name":"t:sections.custom-liquid.presets.name","settings":{"custom_liquid":"{% render 'product-smart-bar' %}","color_scheme":"scheme-63f6198a-fa53-44c5-b59b-c8d5fbf7f1a8","padding_top":8,"padding_bottom":8}},"trending_products_custom_4e4zxz":{"type":"trending_products_custom","blocks":{"trending_product_Gxzwnh":{"type":"trending_product","settings":{"product_id":"gh326"}},"trending_product_PQhUjn":{"type":"trending_product","settings":{"product_id":"gh327"}},"trending_product_ERiQHC":{"type":"trending_product","settings":{"product_id":"gh328"}},"trending_product_Lb3iLD":{"type":"trending_product","settings":{"product_id":"gh329"}},"trending_product_7MmNAk":{"type":"trending_product","settings":{"product_id":"safety-helmet"}},"trending_product_8VzDzm":{"type":"trending_product","settings":{"product_id":"gh500"}}},"block_order":["trending_product_Gxzwnh","trending_product_PQhUjn","trending_product_ERiQHC","trending_product_Lb3iLD","trending_product_7MmNAk","trending_product_8VzDzm"],"name":"Trending Products Cus","settings":{"heading":"<h2 class=\"hi-2\">\n<span>Step 1:<\/span> Choose Your Helmet Type<\/h2>\n<p class=\"p-2\">Our safety helmets are designed by our leading team of engineers to keep your team safe on the job. See below for the printing areas and technical details of each.<\/p>","padding_top_desktop":"50px","padding_bottom_desktop":"30px","padding_top_mobile":"40px","padding_bottom_mobile":"30px"}},"custom_logo_form_ijBqLT":{"type":"custom-logo-form","disabled":true,"name":"Custom Logo Form","settings":{"heading":"<h2 class=\"hi-2\">\n<span>Step 2:<\/span> Fill Out the Form<\/h2>\n<p class=\"p-2\">Fill out the form to get started. You will receive a proof within 24 hours.<\/p>","padding_top_desktop":"60px","padding_bottom_desktop":"80px","padding_top_mobile":"40px","padding_bottom_mobile":"40px"}},"partners_logos_V3tCWq":{"type":"partners-logos","blocks":{"partner_logo_hc8Ypx":{"type":"partner_logo","settings":{"logo":"shopify:\/\/shop_images\/ace_1_b04e60a2-400b-4ba4-acb4-3086ddd4d53f.png"}},"partner_logo_6WwrdD":{"type":"partner_logo","settings":{"logo":"shopify:\/\/shop_images\/ace_2_538a5797-af91-4c5d-82d2-3ed6552cb09e.png"}},"partner_logo_iwXiRd":{"type":"partner_logo","settings":{"logo":"shopify:\/\/shop_images\/ace_3.png"}},"partner_logo_Cbqw3k":{"type":"partner_logo","settings":{"logo":"shopify:\/\/shop_images\/ace_4.png"}},"partner_logo_TVgYqW":{"type":"partner_logo","settings":{"logo":"shopify:\/\/shop_images\/ace_5_d883d0b3-a0e2-4a3d-8de2-66202f620032.png"}},"partner_logo_jH7peb":{"type":"partner_logo","settings":{"logo":"shopify:\/\/shop_images\/ace_6.png"}},"partner_logo_JHLxLr":{"type":"partner_logo","settings":{"logo":"shopify:\/\/shop_images\/ace_7_a310d837-0881-4c27-bc0b-3f15e26bbd38.png"}},"partner_logo_4Xxjfm":{"type":"partner_logo","settings":{"logo":"shopify:\/\/shop_images\/ace_8_18b4ded4-35c4-4ec8-8812-133d12d9f539.png"}},"partner_logo_8KXe4w":{"type":"partner_logo","settings":{"logo":"shopify:\/\/shop_images\/ace_9.png"}},"partner_logo_ywfUQh":{"type":"partner_logo","settings":{"logo":"shopify:\/\/shop_images\/ace_10_093bbb8a-2342-41b6-a520-f681f575e514.png"}},"partner_logo_4tTiLX":{"type":"partner_logo","settings":{"logo":"shopify:\/\/shop_images\/ace_11.png"}},"partner_logo_JUfqmy":{"type":"partner_logo","settings":{"logo":"shopify:\/\/shop_images\/ace_12_563722e4-6a7b-495d-a29b-bb4b6c182f71.png"}},"partner_logo_JqmPnW":{"type":"partner_logo","settings":{"logo":"shopify:\/\/shop_images\/ace_13.png"}},"partner_logo_QTwYpg":{"type":"partner_logo","settings":{"logo":"shopify:\/\/shop_images\/ace_14_18baaa32-ca87-4166-9101-5566281fb3bf.png"}}},"block_order":["partner_logo_hc8Ypx","partner_logo_6WwrdD","partner_logo_iwXiRd","partner_logo_Cbqw3k","partner_logo_TVgYqW","partner_logo_jH7peb","partner_logo_JHLxLr","partner_logo_4Xxjfm","partner_logo_8KXe4w","partner_logo_ywfUQh","partner_logo_4tTiLX","partner_logo_JUfqmy","partner_logo_JqmPnW","partner_logo_QTwYpg"],"custom_css":[],"settings":{"heading":"Who We Have Worked With","padding_top_desktop":"","padding_bottom_desktop":"65px","padding_top_mobile":"40px","padding_bottom_mobile":"40px"}},"faqs_9eaLgA":{"type":"faqs","blocks":{"qa_K4HeNc":{"type":"QA","settings":{"question":"Why Logo?","answer":"Your logo and messaging is important to your business and Defender Safety wants to help foster your brand identity along with your messaging on our safety products.  By doing so it communicates ownership, team, quality, and instantly brings your company’s values and culture to your employees. Let Caco American help you with the details!"}},"qa_WCFAVm":{"type":"QA","settings":{"question":"What is the cost to logo product?","answer":"Our pricing is quoted per job by our Customer Support Team.  We will require your artwork and any messaging you would like to put on the products.  Once we have this information our team can quote."}},"qa_gwteJJ":{"type":"QA","settings":{"question":"What are the fees associated with custom printing?","answer":"There is a $50 plate set-up fee as a one-time charge for creating the printing plate used in the printing process. The additional fee for printing each helmet would vary depending on the quantity of helmets ordered. Our Customer Support Team can send you an estimate once we have your logo and helmet quantity."}},"qa_M6tXjA":{"type":"QA","settings":{"question":"How long does it take to get my custom printed products?","answer":"Our logo process for the initial order typically takes two (2) weeks from the time you approve the artwork, send an official PO, and the order is paid in full.  Repeat orders typically take less time."}},"qa_GBibgM":{"type":"QA","settings":{"question":"What if I need to have my order faster?","answer":"We will try to support your request and we will be honest with you on timelines.  If we can’t meet your timeline we will let you know up front so there are no surprises."}},"qa_mrCqCw":{"type":"QA","settings":{"question":"What do you need for artwork?","answer":"We need a high resolution (3000 DPI or greater) in an AI or EPS  file of your logo."}},"qa_eXh9j8":{"type":"QA","settings":{"question":"Can you accommodate multi-color logos?","answer":"Yes, we can accept logos with up to 4 colors."}},"qa_qQfaiK":{"type":"QA","settings":{"question":"Once I approve can I get a sample?","answer":"We cannot supply samples of a finished logoed product. You will receive a digital mock-up of what the finished product will look like along with the details for your approval."}},"qa_DqXHWJ":{"type":"QA","settings":{"question":"Can I put any message or logo on products?","answer":"As part of the our code of conduct we reserve the right to decline any design submission we deem vulgar, offensive, uses profanity or infringe on any intellectual property or third party rights."}},"qa_tAyXFN":{"type":"QA","settings":{"question":"Is there minimum order quantity?","answer":"There is a 12 piece minimum order."}}},"block_order":["qa_K4HeNc","qa_WCFAVm","qa_gwteJJ","qa_M6tXjA","qa_GBibgM","qa_mrCqCw","qa_eXh9j8","qa_qQfaiK","qa_DqXHWJ","qa_tAyXFN"],"name":"Faqs Section","settings":{"heading":"Frequently\u2028Asked Questions About Logo","padding_top_desktop":"80px","padding_bottom_desktop":"80px","padding_top_mobile":"40px","padding_bottom_mobile":"40px"}},"company_video_EDbCXN":{"type":"company-video","disabled":true,"name":"Company Video","settings":{"video":"https:\/\/cdn.shopify.com\/videos\/c\/o\/v\/5e210c19570a483ba3d14f43a2ecdfae.mp4","padding_top_desktop":"0px","padding_bottom_desktop":"0px","padding_top_mobile":"0px","padding_bottom_mobile":"0px"}},"make_difference_mRHxMr":{"type":"make-difference","blocks":{"images_4xHq64":{"type":"Images","settings":{"image":"shopify:\/\/shop_images\/Icon.png","text":"Top Brands"}},"images_ff34Ma":{"type":"Images","settings":{"image":"shopify:\/\/shop_images\/Icon_1.png","text":"Higher Margins"}},"images_wRD36j":{"type":"Images","settings":{"image":"shopify:\/\/shop_images\/Icon_4.png","text":"Direct Import Programs"}},"images_88kHci":{"type":"Images","settings":{"image":"shopify:\/\/shop_images\/Icon_5.png","text":"Marketing Support"}},"images_iHE4Gb":{"type":"Images","settings":{"image":"shopify:\/\/shop_images\/Icon_3.png","text":"Innovative Products"}},"images_xyATdk":{"type":"Images","settings":{"image":"shopify:\/\/shop_images\/Icon_2.png","text":"Extensive PPE Assortment"}},"images_nbj89D":{"type":"Images","settings":{"image":"shopify:\/\/shop_images\/Frame.png","text":"Custom Product Development"}},"images_pGUX3c":{"type":"Images","settings":{"image":"shopify:\/\/shop_images\/Icon_6.png","text":"Healthcare, Electrical and Construction Industries"}}},"block_order":["images_4xHq64","images_ff34Ma","images_wRD36j","images_88kHci","images_iHE4Gb","images_xyATdk","images_nbj89D","images_pGUX3c"],"disabled":true,"settings":{"heading":"<span>What Makes Us Different —<\/span><br>Tailored Safety Solutions. Global Expertise.","padding_top_desktop":"80px","padding_bottom_desktop":"80px","padding_top_mobile":"40px","padding_bottom_mobile":"40px"}},"trending_products_YwT7NQ":{"type":"trending_products","blocks":{"trending_product_nMExdB":{"type":"trending_product","settings":{"product_id":"gh600"}},"trending_product_Ri6CmG":{"type":"trending_product","settings":{"product_id":"gh601"}},"trending_product_mgLdeE":{"type":"trending_product","settings":{"product_id":"gh603"}},"trending_product_JbPeDz":{"type":"trending_product","settings":{"product_id":"gh604"}}},"block_order":["trending_product_nMExdB","trending_product_Ri6CmG","trending_product_mgLdeE","trending_product_JbPeDz"],"custom_css":[],"name":"Trending Products","settings":{"heading":"Accessories Made Easy","padding_top_desktop":"60px","padding_bottom_desktop":"80px","padding_top_mobile":"40px","padding_bottom_mobile":"40px"}}},"order":["1761594781c3e1cef5","main","hero_banner_Kkw9KM","custom_liquid_cdpxrm","trending_products_custom_4e4zxz","custom_logo_form_ijBqLT","partners_logos_V3tCWq","faqs_9eaLgA","company_video_EDbCXN","make_difference_mRHxMr","trending_products_YwT7NQ"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "1761594781c3e1cef5": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_0bc890e_cJRefy": {
+          "type": "ai_gen_block_0bc890e",
+          "settings": {
+            "container_width": 1350,
+            "banner_height": 600,
+            "content_width": 45,
+            "image_max_width": 600,
+            "gradient_start": "#0023a3",
+            "gradient_end": "#000d41",
+            "gradient_angle": 135,
+            "heading": "YOUR BRAND. OUR AWARD-WINNING HELMETS.",
+            "heading_size": 68,
+            "heading_color": "#ffffff",
+            "typing_speed": 90,
+            "subheading": "<p>Put your mark where the hard work happens — crafted to elevate your brand, unify your team, and deliver a professional look on every jobsite. Built to perform and exceed the toughest industry standards.</p>",
+            "subheading_size": 20,
+            "subheading_color": "#ffffff",
+            "foreground_image": "shopify://shop_images/helmet-2.png",
+            "image_border_radius": 0,
+            "overlay_image": "shopify://shop_images/Your-Logo-here-300x193-1.png",
+            "stamp_effect": "slide",
+            "overlay_size": 35,
+            "overlay_position_x": 50,
+            "overlay_position_y": 42
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_0bc890e_cJRefy"
+      ],
+      "settings": {}
+    },
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "hero_banner_Kkw9KM": {
+      "type": "hero-banner",
+      "disabled": true,
+      "custom_css": [
+        ".hero-banner h1 {font-size: 4rem; font-weight: 800; line-height: 1.2; text-transform: uppercase; letter-spacing: 1px;}"
+      ],
+      "name": "Hero Banner",
+      "settings": {
+        "bg_image": "shopify://shop_images/Slider_2_Background_f73262f1-3251-4ba1-b21c-856e43dedb51.png",
+        "image": "shopify://shop_images/logo_here_2a90d63b-0d37-4151-a954-4165bd7f764d.jpg",
+        "heading": "Your Brand. Our Award-Winning Helmets.",
+        "sub_heading": "Put your mark where the hard work happens — crafted to elevate your brand, unify your team, and deliver a professional look on every jobsite. Built to perform and exceed the toughest industry standards.",
+        "first_link": "#",
+        "first_link_label": "",
+        "second_link": "",
+        "second_link_label": "",
+        "padding_top_desktop": "80px",
+        "padding_bottom_desktop": "80px",
+        "padding_top_mobile": "40px",
+        "padding_bottom_mobile": "40px"
+      }
+    },
+    "custom_liquid_cdpxrm": {
+      "type": "custom-liquid",
+      "custom_css": [],
+      "name": "t:sections.custom-liquid.presets.name",
+      "settings": {
+        "custom_liquid": "{% render 'product-smart-bar' %}",
+        "color_scheme": "scheme-63f6198a-fa53-44c5-b59b-c8d5fbf7f1a8",
+        "padding_top": 8,
+        "padding_bottom": 8
+      }
+    },
+    "trending_products_custom_4e4zxz": {
+      "type": "trending_products_custom",
+      "blocks": {
+        "trending_product_Gxzwnh": {
+          "type": "trending_product",
+          "settings": {
+            "product_id": "ge-gh326-vented-hard-hat-osha-2025-chin-strap"
+          }
+        },
+        "trending_product_PQhUjn": {
+          "type": "trending_product",
+          "settings": {
+            "product_id": "gh327"
+          }
+        },
+        "trending_product_ERiQHC": {
+          "type": "trending_product",
+          "settings": {
+            "product_id": "gh328"
+          }
+        },
+        "trending_product_Lb3iLD": {
+          "type": "trending_product",
+          "settings": {
+            "product_id": "gh329"
+          }
+        },
+        "trending_product_7MmNAk": {
+          "type": "trending_product",
+          "settings": {
+            "product_id": "safety-helmet"
+          }
+        },
+        "trending_product_8VzDzm": {
+          "type": "trending_product",
+          "settings": {
+            "product_id": "gh500"
+          }
+        }
+      },
+      "block_order": [
+        "trending_product_Gxzwnh",
+        "trending_product_PQhUjn",
+        "trending_product_ERiQHC",
+        "trending_product_Lb3iLD",
+        "trending_product_7MmNAk",
+        "trending_product_8VzDzm"
+      ],
+      "name": "Trending Products Cus",
+      "settings": {
+        "heading": "<h2 class=\"hi-2\">\n<span>Step 1:</span> Choose Your Helmet Type</h2>\n<p class=\"p-2\">Our safety helmets are designed by our leading team of engineers to keep your team safe on the job. See below for the printing areas and technical details of each.</p>",
+        "padding_top_desktop": "50px",
+        "padding_bottom_desktop": "30px",
+        "padding_top_mobile": "40px",
+        "padding_bottom_mobile": "30px"
+      }
+    },
+    "custom_logo_form_ijBqLT": {
+      "type": "custom-logo-form",
+      "disabled": true,
+      "name": "Custom Logo Form",
+      "settings": {
+        "heading": "<h2 class=\"hi-2\">\n<span>Step 2:</span> Fill Out the Form</h2>\n<p class=\"p-2\">Fill out the form to get started. You will receive a proof within 24 hours.</p>",
+        "padding_top_desktop": "60px",
+        "padding_bottom_desktop": "80px",
+        "padding_top_mobile": "40px",
+        "padding_bottom_mobile": "40px"
+      }
+    },
+    "partners_logos_V3tCWq": {
+      "type": "partners-logos",
+      "blocks": {
+        "partner_logo_hc8Ypx": {
+          "type": "partner_logo",
+          "settings": {
+            "logo": "shopify://shop_images/ace_1_b04e60a2-400b-4ba4-acb4-3086ddd4d53f.png"
+          }
+        },
+        "partner_logo_6WwrdD": {
+          "type": "partner_logo",
+          "settings": {
+            "logo": "shopify://shop_images/ace_2_538a5797-af91-4c5d-82d2-3ed6552cb09e.png"
+          }
+        },
+        "partner_logo_iwXiRd": {
+          "type": "partner_logo",
+          "settings": {
+            "logo": "shopify://shop_images/ace_3.png"
+          }
+        },
+        "partner_logo_Cbqw3k": {
+          "type": "partner_logo",
+          "settings": {
+            "logo": "shopify://shop_images/ace_4.png"
+          }
+        },
+        "partner_logo_TVgYqW": {
+          "type": "partner_logo",
+          "settings": {
+            "logo": "shopify://shop_images/ace_5_d883d0b3-a0e2-4a3d-8de2-66202f620032.png"
+          }
+        },
+        "partner_logo_jH7peb": {
+          "type": "partner_logo",
+          "settings": {
+            "logo": "shopify://shop_images/ace_6.png"
+          }
+        },
+        "partner_logo_JHLxLr": {
+          "type": "partner_logo",
+          "settings": {
+            "logo": "shopify://shop_images/ace_7_a310d837-0881-4c27-bc0b-3f15e26bbd38.png"
+          }
+        },
+        "partner_logo_4Xxjfm": {
+          "type": "partner_logo",
+          "settings": {
+            "logo": "shopify://shop_images/ace_8_18b4ded4-35c4-4ec8-8812-133d12d9f539.png"
+          }
+        },
+        "partner_logo_8KXe4w": {
+          "type": "partner_logo",
+          "settings": {
+            "logo": "shopify://shop_images/ace_9.png"
+          }
+        },
+        "partner_logo_ywfUQh": {
+          "type": "partner_logo",
+          "settings": {
+            "logo": "shopify://shop_images/ace_10_093bbb8a-2342-41b6-a520-f681f575e514.png"
+          }
+        },
+        "partner_logo_4tTiLX": {
+          "type": "partner_logo",
+          "settings": {
+            "logo": "shopify://shop_images/ace_11.png"
+          }
+        },
+        "partner_logo_JUfqmy": {
+          "type": "partner_logo",
+          "settings": {
+            "logo": "shopify://shop_images/ace_12_563722e4-6a7b-495d-a29b-bb4b6c182f71.png"
+          }
+        },
+        "partner_logo_JqmPnW": {
+          "type": "partner_logo",
+          "settings": {
+            "logo": "shopify://shop_images/ace_13.png"
+          }
+        },
+        "partner_logo_QTwYpg": {
+          "type": "partner_logo",
+          "settings": {
+            "logo": "shopify://shop_images/ace_14_18baaa32-ca87-4166-9101-5566281fb3bf.png"
+          }
+        }
+      },
+      "block_order": [
+        "partner_logo_hc8Ypx",
+        "partner_logo_6WwrdD",
+        "partner_logo_iwXiRd",
+        "partner_logo_Cbqw3k",
+        "partner_logo_TVgYqW",
+        "partner_logo_jH7peb",
+        "partner_logo_JHLxLr",
+        "partner_logo_4Xxjfm",
+        "partner_logo_8KXe4w",
+        "partner_logo_ywfUQh",
+        "partner_logo_4tTiLX",
+        "partner_logo_JUfqmy",
+        "partner_logo_JqmPnW",
+        "partner_logo_QTwYpg"
+      ],
+      "custom_css": [],
+      "settings": {
+        "heading": "Who We Have Worked With",
+        "padding_top_desktop": "",
+        "padding_bottom_desktop": "65px",
+        "padding_top_mobile": "40px",
+        "padding_bottom_mobile": "40px"
+      }
+    },
+    "faqs_9eaLgA": {
+      "type": "faqs",
+      "blocks": {
+        "qa_K4HeNc": {
+          "type": "QA",
+          "settings": {
+            "question": "Why Logo?",
+            "answer": "Your logo and messaging is important to your business and Defender Safety wants to help foster your brand identity along with your messaging on our safety products.  By doing so it communicates ownership, team, quality, and instantly brings your company’s values and culture to your employees. Let Caco American help you with the details!"
+          }
+        },
+        "qa_WCFAVm": {
+          "type": "QA",
+          "settings": {
+            "question": "What is the cost to logo product?",
+            "answer": "Our pricing is quoted per job by our Customer Support Team.  We will require your artwork and any messaging you would like to put on the products.  Once we have this information our team can quote."
+          }
+        },
+        "qa_gwteJJ": {
+          "type": "QA",
+          "settings": {
+            "question": "What are the fees associated with custom printing?",
+            "answer": "There is a $50 plate set-up fee as a one-time charge for creating the printing plate used in the printing process. The additional fee for printing each helmet would vary depending on the quantity of helmets ordered. Our Customer Support Team can send you an estimate once we have your logo and helmet quantity."
+          }
+        },
+        "qa_M6tXjA": {
+          "type": "QA",
+          "settings": {
+            "question": "How long does it take to get my custom printed products?",
+            "answer": "Our logo process for the initial order typically takes two (2) weeks from the time you approve the artwork, send an official PO, and the order is paid in full.  Repeat orders typically take less time."
+          }
+        },
+        "qa_GBibgM": {
+          "type": "QA",
+          "settings": {
+            "question": "What if I need to have my order faster?",
+            "answer": "We will try to support your request and we will be honest with you on timelines.  If we can’t meet your timeline we will let you know up front so there are no surprises."
+          }
+        },
+        "qa_mrCqCw": {
+          "type": "QA",
+          "settings": {
+            "question": "What do you need for artwork?",
+            "answer": "We need a high resolution (3000 DPI or greater) in an AI or EPS  file of your logo."
+          }
+        },
+        "qa_eXh9j8": {
+          "type": "QA",
+          "settings": {
+            "question": "Can you accommodate multi-color logos?",
+            "answer": "Yes, we can accept logos with up to 4 colors."
+          }
+        },
+        "qa_qQfaiK": {
+          "type": "QA",
+          "settings": {
+            "question": "Once I approve can I get a sample?",
+            "answer": "We cannot supply samples of a finished logoed product. You will receive a digital mock-up of what the finished product will look like along with the details for your approval."
+          }
+        },
+        "qa_DqXHWJ": {
+          "type": "QA",
+          "settings": {
+            "question": "Can I put any message or logo on products?",
+            "answer": "As part of the our code of conduct we reserve the right to decline any design submission we deem vulgar, offensive, uses profanity or infringe on any intellectual property or third party rights."
+          }
+        },
+        "qa_tAyXFN": {
+          "type": "QA",
+          "settings": {
+            "question": "Is there minimum order quantity?",
+            "answer": "There is a 12 piece minimum order."
+          }
+        }
+      },
+      "block_order": [
+        "qa_K4HeNc",
+        "qa_WCFAVm",
+        "qa_gwteJJ",
+        "qa_M6tXjA",
+        "qa_GBibgM",
+        "qa_mrCqCw",
+        "qa_eXh9j8",
+        "qa_qQfaiK",
+        "qa_DqXHWJ",
+        "qa_tAyXFN"
+      ],
+      "name": "Faqs Section",
+      "settings": {
+        "heading": "Frequently Asked Questions About Logo",
+        "padding_top_desktop": "80px",
+        "padding_bottom_desktop": "80px",
+        "padding_top_mobile": "40px",
+        "padding_bottom_mobile": "40px"
+      }
+    },
+    "company_video_EDbCXN": {
+      "type": "company-video",
+      "disabled": true,
+      "name": "Company Video",
+      "settings": {
+        "video": "https://cdn.shopify.com/videos/c/o/v/5e210c19570a483ba3d14f43a2ecdfae.mp4",
+        "padding_top_desktop": "0px",
+        "padding_bottom_desktop": "0px",
+        "padding_top_mobile": "0px",
+        "padding_bottom_mobile": "0px"
+      }
+    },
+    "make_difference_mRHxMr": {
+      "type": "make-difference",
+      "blocks": {
+        "images_4xHq64": {
+          "type": "Images",
+          "settings": {
+            "image": "shopify://shop_images/Icon.png",
+            "text": "Top Brands"
+          }
+        },
+        "images_ff34Ma": {
+          "type": "Images",
+          "settings": {
+            "image": "shopify://shop_images/Icon_1.png",
+            "text": "Higher Margins"
+          }
+        },
+        "images_wRD36j": {
+          "type": "Images",
+          "settings": {
+            "image": "shopify://shop_images/Icon_4.png",
+            "text": "Direct Import Programs"
+          }
+        },
+        "images_88kHci": {
+          "type": "Images",
+          "settings": {
+            "image": "shopify://shop_images/Icon_5.png",
+            "text": "Marketing Support"
+          }
+        },
+        "images_iHE4Gb": {
+          "type": "Images",
+          "settings": {
+            "image": "shopify://shop_images/Icon_3.png",
+            "text": "Innovative Products"
+          }
+        },
+        "images_xyATdk": {
+          "type": "Images",
+          "settings": {
+            "image": "shopify://shop_images/Icon_2.png",
+            "text": "Extensive PPE Assortment"
+          }
+        },
+        "images_nbj89D": {
+          "type": "Images",
+          "settings": {
+            "image": "shopify://shop_images/Frame.png",
+            "text": "Custom Product Development"
+          }
+        },
+        "images_pGUX3c": {
+          "type": "Images",
+          "settings": {
+            "image": "shopify://shop_images/Icon_6.png",
+            "text": "Healthcare, Electrical and Construction Industries"
+          }
+        }
+      },
+      "block_order": [
+        "images_4xHq64",
+        "images_ff34Ma",
+        "images_wRD36j",
+        "images_88kHci",
+        "images_iHE4Gb",
+        "images_xyATdk",
+        "images_nbj89D",
+        "images_pGUX3c"
+      ],
+      "disabled": true,
+      "settings": {
+        "heading": "<span>What Makes Us Different —</span><br>Tailored Safety Solutions. Global Expertise.",
+        "padding_top_desktop": "80px",
+        "padding_bottom_desktop": "80px",
+        "padding_top_mobile": "40px",
+        "padding_bottom_mobile": "40px"
+      }
+    },
+    "trending_products_YwT7NQ": {
+      "type": "trending_products",
+      "blocks": {
+        "trending_product_nMExdB": {
+          "type": "trending_product",
+          "settings": {
+            "product_id": "gh600"
+          }
+        },
+        "trending_product_Ri6CmG": {
+          "type": "trending_product",
+          "settings": {
+            "product_id": "gh601"
+          }
+        },
+        "trending_product_mgLdeE": {
+          "type": "trending_product",
+          "settings": {
+            "product_id": "gh603"
+          }
+        },
+        "trending_product_JbPeDz": {
+          "type": "trending_product",
+          "settings": {
+            "product_id": "gh604"
+          }
+        }
+      },
+      "block_order": [
+        "trending_product_nMExdB",
+        "trending_product_Ri6CmG",
+        "trending_product_mgLdeE",
+        "trending_product_JbPeDz"
+      ],
+      "custom_css": [],
+      "name": "Trending Products",
+      "settings": {
+        "heading": "Accessories Made Easy",
+        "padding_top_desktop": "60px",
+        "padding_bottom_desktop": "80px",
+        "padding_top_mobile": "40px",
+        "padding_bottom_mobile": "40px"
+      }
+    }
+  },
+  "order": [
+    "1761594781c3e1cef5",
+    "main",
+    "hero_banner_Kkw9KM",
+    "custom_liquid_cdpxrm",
+    "trending_products_custom_4e4zxz",
+    "custom_logo_form_ijBqLT",
+    "partners_logos_V3tCWq",
+    "faqs_9eaLgA",
+    "company_video_EDbCXN",
+    "make_difference_mRHxMr",
+    "trending_products_YwT7NQ"
+  ]
+}
