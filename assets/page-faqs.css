@@ -199,7 +199,7 @@
 
 /* Set the icon size once */
 .faq-question__icon {
-  --icon-size: 42px;
+  --icon-size: 52px;
 
   width: var(--icon-size);
   height: var(--icon-size);
