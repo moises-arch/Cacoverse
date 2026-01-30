@@ -167,32 +167,6 @@
   }
 {%- endstyle -%}
 
-{%- if product.metafields.custom.faq.value != blank -%}
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {%- for item in product.metafields.custom.faq.value -%}
-      {%- capture row_type -%}{%- cycle 'question', 'answer' -%}{%- endcapture -%}
-      {%- if row_type == 'question' -%}
-        {%- unless forloop.first -%},{%- endunless -%}
-        {
-          "@type": "Question",
-          "name": {{ item | json }},
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": 
-      {%- else -%}
-            {{ item | strip_html | json }}
-          }
-        }
-      {%- endif -%}
-    {%- endfor -%}
-  ]
-}
-</script>
-{%- endif -%}
 
 <script src="{{ 'product-info.js' | asset_url }}" defer="defer"></script>
   <script src="{{ 'product-form.js' | asset_url | append: '&t=' | append: 'now' | date: '%N' }}" defer="defer"></script>
@@ -571,24 +545,6 @@
         {%- endif -%}
       {%- endfor -%}
 
-      {%- if product.metafields.custom.faq.value != blank -%}
-        <div class="product__faqs-automated product-description-simple" style="margin-top: 3rem;">
-          <p style="font-weight: 700; font-size: 1.1rem; margin-bottom: 1.2rem;">Frequently Asked Questions</p>
-          {%- for faq_item in product.metafields.custom.faq.value -%}
-            {%- capture row_type -%}{%- cycle 'question', 'answer' -%}{%- endcapture -%}
-            {%- if row_type == 'question' -%}
-              <details style="border-bottom: 1px solid #eee; padding: 12px 0; cursor: pointer;">
-                <summary style="font-weight: 600; list-style: none; display: flex; justify-content: space-between;">
-                  {{ faq_item }}
-                  <span class="faq-icon">[+]</span>
-                </summary>
-            {%- else -%}
-                <p style="margin-top: 10px; color: #444; line-height: 1.6;">{{ faq_item }}</p>
-              </details>
-            {%- endif -%}
-          {%- endfor -%}
-        </div>
-      {%- endif -%}
     </div>
     <div class="product__info-wrapper grid__item{% if settings.page_width > 1400 and section.settings.media_size == "small" %} product__info-wrapper--extra-padding{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
       <div

@@ -31,12 +31,12 @@
       </p>
     </div>
 
-    <div class="faq-list" itemscope="" itemtype="https://schema.org/FAQPage">
+    <div class="faq-list">
       {%- assign first_item_active = true -%}
       <!-- Features -->
       {% if product.metafields.custom.product_details_features %}
-        <div class="faq-item{% if first_item_active %} active{% endif %}" itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
-          <button class="faq-question" type="button" itemprop="name" aria-expanded="{% if first_item_active %}true{% else %}false{% endif %}">
+        <div class="faq-item{% if first_item_active %} active{% endif %}">
+          <button class="faq-question" type="button" aria-expanded="{% if first_item_active %}true{% else %}false{% endif %}">
             <div class="faq-question__copy">
               <span class="faq-question__eyebrow">Essentials</span>
               <span class="faq-question__title">Features</span>
@@ -67,7 +67,7 @@
             </span>
           </button>
 
-          <div class="faq-answer" itemscope="" itemprop="acceptedAnswer" itemtype="https://schema.org/Answer" aria-hidden="{% if first_item_active %}false{% else %}true{% endif %}" {% if first_item_active %}style="display: block;"{% endif %}>
+          <div class="faq-answer" aria-hidden="{% if first_item_active %}false{% else %}true{% endif %}" {% if first_item_active %}style="display: block;"{% endif %}>
             <div class="faq-answer__inner">
               <p class="faq-answer__lede">Top benefits and standout attributes for this product.</p>
               <div class="meta-fields-details">
@@ -98,8 +98,8 @@
       {% endif %}
 
       {% if product.metafields.custom.product_details_specifications_name %}
-        <div class="faq-item{% if first_item_active %} active{% endif %}" itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
-          <button class="faq-question" type="button" itemprop="name" aria-expanded="{% if first_item_active %}true{% else %}false{% endif %}">
+        <div class="faq-item{% if first_item_active %} active{% endif %}">
+          <button class="faq-question" type="button" aria-expanded="{% if first_item_active %}true{% else %}false{% endif %}">
             <div class="faq-question__copy">
               <span class="faq-question__eyebrow">Tech sheet</span>
               <span class="faq-question__title">Specifications</span>
@@ -130,7 +130,7 @@
             </span>
           </button>
 
-          <div class="faq-answer" itemscope="" itemprop="acceptedAnswer" itemtype="https://schema.org/Answer" aria-hidden="{% if first_item_active %}false{% else %}true{% endif %}" {% if first_item_active %}style="display: block;"{% endif %}>
+          <div class="faq-answer" aria-hidden="{% if first_item_active %}false{% else %}true{% endif %}" {% if first_item_active %}style="display: block;"{% endif %}>
             <div class="faq-answer__inner">
               <p class="faq-answer__lede">Check the key technical data to validate compatibility and performance.</p>
               <div class="meta-fields-details">
@@ -154,8 +154,8 @@
 
       <!-- Documentations -->
       {% if product.metafields.custom.product_details_download_title %}
-        <div class="faq-item{% if first_item_active %} active{% endif %}" itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
-          <button class="faq-question" type="button" itemprop="name" aria-expanded="{% if first_item_active %}true{% else %}false{% endif %}">
+        <div class="faq-item{% if first_item_active %} active{% endif %}">
+          <button class="faq-question" type="button" aria-expanded="{% if first_item_active %}true{% else %}false{% endif %}">
             <div class="faq-question__copy">
               <span class="faq-question__eyebrow">Resources</span>
               <span class="faq-question__title">Documentation & downloads</span>
@@ -186,7 +186,7 @@
             </span>
           </button>
 
-          <div class="faq-answer" itemscope="" itemprop="acceptedAnswer" itemtype="https://schema.org/Answer" aria-hidden="{% if first_item_active %}false{% else %}true{% endif %}" {% if first_item_active %}style="display: block;"{% endif %}>
+          <div class="faq-answer" aria-hidden="{% if first_item_active %}false{% else %}true{% endif %}" {% if first_item_active %}style="display: block;"{% endif %}>
             <div class="faq-answer__inner">
               <p class="faq-answer__lede">Manuals, sheets, and helpful files ready to download.</p>
               <div class="meta-fields-details">
@@ -233,8 +233,8 @@
 
       <!-- About the Product -->
       {% if product.metafields.custom.product_details_title and product.metafields.custom.product_detail_description %}
-        <div class="faq-item{% if first_item_active %} active{% endif %}" itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
-          <button class="faq-question" type="button" itemprop="name" aria-expanded="{% if first_item_active %}true{% else %}false{% endif %}">
+        <div class="faq-item{% if first_item_active %} active{% endif %}">
+          <button class="faq-question" type="button" aria-expanded="{% if first_item_active %}true{% else %}false{% endif %}">
             <div class="faq-question__copy">
               <span class="faq-question__eyebrow">Overview</span>
               <span class="faq-question__title">About the product</span>
@@ -265,7 +265,7 @@
             </span>
           </button>
 
-          <div class="faq-answer" itemscope="" itemprop="acceptedAnswer" itemtype="https://schema.org/Answer" aria-hidden="{% if first_item_active %}false{% else %}true{% endif %}" {% if first_item_active %}style="display: block;"{% endif %}>
+          <div class="faq-answer" aria-hidden="{% if first_item_active %}false{% else %}true{% endif %}" {% if first_item_active %}style="display: block;"{% endif %}>
             {% if product.metafields.custom.product_details_title
               and product.metafields.custom.product_detail_description
             %}
@@ -285,8 +285,8 @@
 
       <!-- About Some Feature detail the Product -->
       {% if product.metafields.custom.product_details_sub_title %}
-        <div class="faq-item{% if first_item_active %} active{% endif %}" itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
-          <button class="faq-question" type="button" itemprop="name" aria-expanded="{% if first_item_active %}true{% else %}false{% endif %}">
+        <div class="faq-item{% if first_item_active %} active{% endif %}">
+          <button class="faq-question" type="button" aria-expanded="{% if first_item_active %}true{% else %}false{% endif %}">
             <div class="faq-question__copy">
               <span class="faq-question__eyebrow">Additional details</span>
               <span class="faq-question__title">{{ product.metafields.custom.product_details_sub_title }}</span>
@@ -317,7 +317,7 @@
             </span>
           </button>
 
-          <div class="faq-answer" itemscope="" itemprop="acceptedAnswer" itemtype="https://schema.org/Answer" aria-hidden="{% if first_item_active %}false{% else %}true{% endif %}" {% if first_item_active %}style="display: block;"{% endif %}>
+          <div class="faq-answer" aria-hidden="{% if first_item_active %}false{% else %}true{% endif %}" {% if first_item_active %}style="display: block;"{% endif %}>
             {% if product.metafields.custom.product_details_sub_title %}
               <div class="faq-answer__inner">
                 <div class="meta-fields-details">
@@ -331,6 +331,109 @@
         </div>
         {%- assign first_item_active = false -%}
       {% endif %}
+
+      <!-- Automated FAQ Integration -->
+      {% if product.metafields.custom.faq.value != blank %}
+        {%- for faq_item in product.metafields.custom.faq.value -%}
+          {%- capture row_type -%}{%- cycle 'question', 'answer' -%}{%- endcapture -%}
+          {%- if row_type == 'question' -%}
+            <div class="faq-item{% if first_item_active %} active{% endif %}">
+              <button class="faq-question" type="button" aria-expanded="{% if first_item_active %}true{% else %}false{% endif %}">
+                <div class="faq-question__copy">
+                  <span class="faq-question__eyebrow">FAQ</span>
+                  <span class="faq-question__title">{{ faq_item }}</span>
+                </div>
+                <span class="faq-question__icon" aria-hidden="true">
+                  <svg class="plus" width="26" height="26" viewBox="0 0 29 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="14.5" y1="8.74226e-08" x2="14.5" y2="28" stroke="#222222" stroke-width="4"/>
+                    <line x1="28.5" y1="14" x2="0.5" y2="14" stroke="#222222" stroke-width="4"/>
+                  </svg>
+                  <svg class="minus" width="26" height="4" viewBox="0 0 29 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="28.5" y1="2" x2="0.5" y2="2" stroke="#222222" stroke-width="4"/>
+                    <line x1="28.5" y1="2" x2="0.5" y2="2" stroke="#222222" stroke-width="4"/>
+                  </svg>
+                </span>
+              </button>
+          {%- else -%}
+              <div class="faq-answer" aria-hidden="{% if first_item_active %}false{% else %}true{% endif %}" {% if first_item_active %}style="display: block;"{% endif %}>
+                <div class="faq-answer__inner">
+                  <div class="meta-fields-details">
+                    <p class="sp-16">{{ faq_item }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {%- assign first_item_active = false -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {% endif %}
+
     </div>
   </div>
 </div>
+
+{%- comment -%}
+  Unified JSON-LD FAQ Schema
+  This script handles SEO for ALL accordion items (Features, Specs, and FAQs).
+{%- endcomment -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {%- assign schema_items = "" -%}
+    
+    {%- if product.metafields.custom.product_details_features -%}
+      {%- capture item -%}
+      {
+        "@type": "Question",
+        "name": "What are the main features of {{ product.title }}?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "{{ product.metafields.custom.product_details_features.value | join: ', ' | escape }}"
+        }
+      }
+      {%- endcapture -%}
+      {%- assign schema_items = schema_items | append: item -%}
+    {%- endif -%}
+
+    {%- if product.metafields.custom.product_details_specifications_name -%}
+      {%- capture item -%}
+      {%- if schema_items != "" -%},{%- endif -%}
+      {
+        "@type": "Question",
+        "name": "What are the technical specifications for {{ product.title }}?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "{%- assign spec_names = product.metafields.custom.product_details_specifications_name.value -%}{%- assign spec_vals = product.metafields.custom.product_details_specification_values.value -%}{%- for name in spec_names -%}{{ name }}: {{ spec_vals[forloop.index0] }}{%- unless forloop.last -%}; {% endunless %}{%- endfor -%}"
+        }
+      }
+      {%- endcapture -%}
+      {%- assign schema_items = schema_items | append: item -%}
+    {%- endif -%}
+
+    {%- if product.metafields.custom.faq.value != blank -%}
+      {%- for faq_item in product.metafields.custom.faq.value -%}
+        {%- capture row_type -%}{%- cycle 'question', 'answer' -%}{%- endcapture -%}
+        {%- if row_type == 'question' -%}
+          {%- if schema_items != "" -%},{%- endif -%}
+          {
+            "@type": "Question",
+            "name": {{ faq_item | json }},
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": 
+        {%- else -%}
+              {{ faq_item | strip_html | json }}
+            }
+          }
+          {%- capture item -%}{%- endcapture -%}
+          {%- assign schema_items = schema_items | append: item -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
+
+    {{ schema_items }}
+  ]
+}
+</script>
