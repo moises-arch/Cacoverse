@@ -25,10 +25,6 @@
   <div class="product-details-accordion__shell">
     <div class="product-details-accordion__header">
       <p class="product-details-accordion__eyebrow">Product details</p>
-      <h3 class="product-details-accordion__title">Everything you need to know</h3>
-      <p class="product-details-accordion__subtitle">
-        Explore key features, technical specs, and downloadable resources without leaving the page.
-      </p>
     </div>
 
       <div class="faq-list">
@@ -49,13 +45,88 @@
 
           <div class="faq-answer" aria-hidden="{% if first_item_active %}false{% else %}true{% endif %}" {% if first_item_active %}style="display: block;"{% endif %}>
             <div class="faq-answer__inner">
-              <div class="rte">
+              <div class="rte product-description-truncated is-collapsed" id="ProductDescriptionContent">
                 {{ product.description }}
+              </div>
+              <div class="product-description-actions">
+                <button type="button" class="btn-read-more" id="BtnReadMoreDescription">
+                  Read More
+                </button>
               </div>
             </div>
           </div>
         </div>
         {%- assign first_item_active = false -%}
+
+        <style>
+          .product-description-truncated {
+            position: relative;
+            transition: max-height 0.4s ease;
+          }
+          .product-description-truncated.is-collapsed {
+            max-height: 250px;
+            overflow: hidden;
+          }
+          .product-description-truncated.is-collapsed::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 120px;
+            /* Gradient to white since accordion background is white */
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 90%);
+            pointer-events: none;
+            z-index: 2;
+          }
+          .product-description-actions {
+            text-align: center;
+            margin-top: 10px;
+          }
+          .btn-read-more {
+            background: transparent;
+            border: 1px solid #e3eaf5;
+            padding: 8px 20px;
+            border-radius: 20px;
+            color: #0ea5e9;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+          }
+          .btn-read-more:hover {
+            background: #f0f7ff;
+            border-color: #0ea5e9;
+          }
+        </style>
+
+        <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            const content = document.getElementById('ProductDescriptionContent');
+            const btn = document.getElementById('BtnReadMoreDescription');
+            
+            if(content && btn) {
+              // Hide button if content is short
+              if(content.scrollHeight <= 250) {
+                btn.style.display = 'none';
+                content.classList.remove('is-collapsed');
+              } else {
+                btn.addEventListener('click', function() {
+                  const isCollapsed = content.classList.contains('is-collapsed');
+                  if(isCollapsed) {
+                    content.classList.remove('is-collapsed');
+                    btn.textContent = 'Read Less';
+                  } else {
+                    content.classList.add('is-collapsed');
+                    btn.textContent = 'Read More';
+                    // Optional: scroll back to top of description?
+                    // content.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  }
+                });
+              }
+            }
+          });
+        </script>
       {% endif %}
 
       <!-- Features -->
