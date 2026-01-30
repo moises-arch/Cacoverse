@@ -144,7 +144,10 @@ product-info {
   /* Force parents to allow sticky */
   #MainContent,
   product-info,
-  .product {
+  .product,
+  .shopify-section,
+  .page-width,
+  .gradient {
     overflow: visible !important;
     clip-path: none !important;
   }
