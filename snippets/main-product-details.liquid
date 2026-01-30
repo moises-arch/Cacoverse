@@ -31,8 +31,33 @@
       </p>
     </div>
 
-    <div class="faq-list">
+      <div class="faq-list">
       {%- assign first_item_active = true -%}
+
+      <!-- Product Description Tab -->
+      {% if product.description != blank %}
+        <div class="faq-item{% if first_item_active %} active{% endif %}">
+          <button class="faq-question" type="button" aria-expanded="{% if first_item_active %}true{% else %}false{% endif %}">
+            <div class="faq-question__copy">
+              <span class="faq-question__eyebrow">Overview</span>
+              <span class="faq-question__title">Product Description</span>
+            </div>
+            <span class="faq-question__icon" aria-hidden="true" style="margin-left: auto;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="chevron-icon"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </span>
+          </button>
+
+          <div class="faq-answer" aria-hidden="{% if first_item_active %}false{% else %}true{% endif %}" {% if first_item_active %}style="display: block;"{% endif %}>
+            <div class="faq-answer__inner">
+              <div class="rte">
+                {{ product.description }}
+              </div>
+            </div>
+          </div>
+        </div>
+        {%- assign first_item_active = false -%}
+      {% endif %}
+
       <!-- Features -->
       {% if product.metafields.custom.product_details_features %}
         <div class="faq-item{% if first_item_active %} active{% endif %}">
