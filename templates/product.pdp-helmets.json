@@ -213,12 +213,6 @@
     "main_product_knCpEk": {
       "type": "main-product",
       "blocks": {
-        "description_pbAVDV": {
-          "type": "description",
-          "settings": {
-            "margin_top": 0
-          }
-        },
         "text_VREWcp": {
           "type": "text",
           "settings": {
@@ -279,7 +273,6 @@
         }
       },
       "block_order": [
-        "description_pbAVDV",
         "text_VREWcp",
         "title_4WN4Hx",
         "price_4iDF4i",

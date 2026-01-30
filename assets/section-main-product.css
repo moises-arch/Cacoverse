@@ -5532,3 +5532,18 @@ body.template-product .product__media-modal * {
     display: none !important;
   }
 }
+/* --- Visibility Utilities for Description --- */
+@media screen and (min-width: 750px) {
+  .small-hide { display: none !important; }
+}
+
+@media screen and (max-width: 749px) {
+  .medium-hide { display: none !important; }
+  .large-up-hide { display: none !important; }
+}
+
+/* Ensure mobile specific styles don't leak */
+.product__description-mobile {
+  width: 100%;
+  display: block;
+}
