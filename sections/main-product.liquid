@@ -606,11 +606,7 @@
                 {%- endif -%}
               </p>
             {%- when 'description' -%}
-              {%- if product.description != blank -%}
-                <div class="product__description rte quick-add-hidden" {{ block.shopify_attributes }}>
-                  {{ product.description }}
-                </div>
-              {%- endif -%}
+              {% comment %} Rendered below the gallery instead {% endcomment %}
             {%- when 'sku' -%}
               <div class="product__meta d-flex align-items-center justify-content-between flex-wrap">
                 {% render 'junip-product-summary', product: product %}
