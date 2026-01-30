@@ -32,10 +32,11 @@
     </div>
 
     <div class="faq-list" itemscope="" itemtype="https://schema.org/FAQPage">
+      {%- assign first_item_active = true -%}
       <!-- Features -->
       {% if product.metafields.custom.product_details_features %}
-        <div class="faq-item{% unless closed %} active{% endunless %}" itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
-          <button class="faq-question" type="button" itemprop="name" aria-expanded="{% if closed %}false{% else %}true{% endif %}">
+        <div class="faq-item{% if first_item_active %} active{% endif %}" itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
+          <button class="faq-question" type="button" itemprop="name" aria-expanded="{% if first_item_active %}true{% else %}false{% endif %}">
             <div class="faq-question__copy">
               <span class="faq-question__eyebrow">Essentials</span>
               <span class="faq-question__title">Features</span>
@@ -66,7 +67,7 @@
             </span>
           </button>
 
-          <div class="faq-answer" itemscope="" itemprop="acceptedAnswer" itemtype="https://schema.org/Answer" aria-hidden="{% if closed %}true{% else %}false{% endif %}" {% unless closed %}style="display: block;"{% endunless %}>
+          <div class="faq-answer" itemscope="" itemprop="acceptedAnswer" itemtype="https://schema.org/Answer" aria-hidden="{% if first_item_active %}false{% else %}true{% endif %}" {% if first_item_active %}style="display: block;"{% endif %}>
             <div class="faq-answer__inner">
               <p class="faq-answer__lede">Top benefits and standout attributes for this product.</p>
               <div class="meta-fields-details">
@@ -93,11 +94,12 @@
             </div>
           </div>
         </div>
+        {%- assign first_item_active = false -%}
       {% endif %}
 
       {% if product.metafields.custom.product_details_specifications_name %}
-        <div class="faq-item" itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
-          <button class="faq-question" type="button" itemprop="name" aria-expanded="false">
+        <div class="faq-item{% if first_item_active %} active{% endif %}" itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
+          <button class="faq-question" type="button" itemprop="name" aria-expanded="{% if first_item_active %}true{% else %}false{% endif %}">
             <div class="faq-question__copy">
               <span class="faq-question__eyebrow">Tech sheet</span>
               <span class="faq-question__title">Specifications</span>
@@ -128,7 +130,7 @@
             </span>
           </button>
 
-          <div class="faq-answer" itemscope="" itemprop="acceptedAnswer" itemtype="https://schema.org/Answer" aria-hidden="true">
+          <div class="faq-answer" itemscope="" itemprop="acceptedAnswer" itemtype="https://schema.org/Answer" aria-hidden="{% if first_item_active %}false{% else %}true{% endif %}" {% if first_item_active %}style="display: block;"{% endif %}>
             <div class="faq-answer__inner">
               <p class="faq-answer__lede">Check the key technical data to validate compatibility and performance.</p>
               <div class="meta-fields-details">
@@ -147,12 +149,13 @@
             </div>
           </div>
         </div>
+        {%- assign first_item_active = false -%}
       {% endif %}
 
       <!-- Documentations -->
       {% if product.metafields.custom.product_details_download_title %}
-        <div class="faq-item" itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
-          <button class="faq-question" type="button" itemprop="name" aria-expanded="false">
+        <div class="faq-item{% if first_item_active %} active{% endif %}" itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
+          <button class="faq-question" type="button" itemprop="name" aria-expanded="{% if first_item_active %}true{% else %}false{% endif %}">
             <div class="faq-question__copy">
               <span class="faq-question__eyebrow">Resources</span>
               <span class="faq-question__title">Documentation & downloads</span>
@@ -183,7 +186,7 @@
             </span>
           </button>
 
-          <div class="faq-answer" itemscope="" itemprop="acceptedAnswer" itemtype="https://schema.org/Answer" aria-hidden="true">
+          <div class="faq-answer" itemscope="" itemprop="acceptedAnswer" itemtype="https://schema.org/Answer" aria-hidden="{% if first_item_active %}false{% else %}true{% endif %}" {% if first_item_active %}style="display: block;"{% endif %}>
             <div class="faq-answer__inner">
               <p class="faq-answer__lede">Manuals, sheets, and helpful files ready to download.</p>
               <div class="meta-fields-details">
@@ -225,12 +228,13 @@
             </div>
           </div>
         </div>
+        {%- assign first_item_active = false -%}
       {% endif %}
 
       <!-- About the Product -->
       {% if product.metafields.custom.product_details_title and product.metafields.custom.product_detail_description %}
-        <div class="faq-item" itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
-          <button class="faq-question" type="button" itemprop="name" aria-expanded="false">
+        <div class="faq-item{% if first_item_active %} active{% endif %}" itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
+          <button class="faq-question" type="button" itemprop="name" aria-expanded="{% if first_item_active %}true{% else %}false{% endif %}">
             <div class="faq-question__copy">
               <span class="faq-question__eyebrow">Overview</span>
               <span class="faq-question__title">About the product</span>
@@ -261,7 +265,7 @@
             </span>
           </button>
 
-          <div class="faq-answer" itemscope="" itemprop="acceptedAnswer" itemtype="https://schema.org/Answer" aria-hidden="true">
+          <div class="faq-answer" itemscope="" itemprop="acceptedAnswer" itemtype="https://schema.org/Answer" aria-hidden="{% if first_item_active %}false{% else %}true{% endif %}" {% if first_item_active %}style="display: block;"{% endif %}>
             {% if product.metafields.custom.product_details_title
               and product.metafields.custom.product_detail_description
             %}
@@ -276,12 +280,13 @@
             {% endif %}
           </div>
         </div>
+        {%- assign first_item_active = false -%}
       {% endif %}
 
       <!-- About Some Feature detail the Product -->
       {% if product.metafields.custom.product_details_sub_title %}
-        <div class="faq-item" itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
-          <button class="faq-question" type="button" itemprop="name" aria-expanded="false">
+        <div class="faq-item{% if first_item_active %} active{% endif %}" itemscope="" itemprop="mainEntity" itemtype="https://schema.org/Question">
+          <button class="faq-question" type="button" itemprop="name" aria-expanded="{% if first_item_active %}true{% else %}false{% endif %}">
             <div class="faq-question__copy">
               <span class="faq-question__eyebrow">Additional details</span>
               <span class="faq-question__title">{{ product.metafields.custom.product_details_sub_title }}</span>
@@ -312,7 +317,7 @@
             </span>
           </button>
 
-          <div class="faq-answer" itemscope="" itemprop="acceptedAnswer" itemtype="https://schema.org/Answer" aria-hidden="true">
+          <div class="faq-answer" itemscope="" itemprop="acceptedAnswer" itemtype="https://schema.org/Answer" aria-hidden="{% if first_item_active %}false{% else %}true{% endif %}" {% if first_item_active %}style="display: block;"{% endif %}>
             {% if product.metafields.custom.product_details_sub_title %}
               <div class="faq-answer__inner">
                 <div class="meta-fields-details">
@@ -324,6 +329,7 @@
             {% endif %}
           </div>
         </div>
+        {%- assign first_item_active = false -%}
       {% endif %}
     </div>
   </div>
