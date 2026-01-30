@@ -108,10 +108,10 @@
 }
 
 .product-details-accordion__header {
-  padding: 10px 0 14px;
+  padding: 10px 0 6px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 0px;
 }
 
 .product-details-accordion__eyebrow {
