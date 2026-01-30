@@ -70,10 +70,8 @@
             max-height: 250px;
             overflow: hidden;
           }
-          /* Hide redundant title if present as first element */
-          .product-description-truncated h1:first-child,
-          .product-description-truncated h2:first-child,
-          .product-description-truncated h3:first-child {
+          /* Hide redundant header block (Title + Badges) present in description HTML */
+          .product-description-truncated > div:first-child {
             display: none !important;
           }
           .product-description-truncated.is-collapsed::after {
