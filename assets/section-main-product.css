@@ -129,8 +129,12 @@ product-info {
     flex-direction: column;
     justify-content: flex-start;
     margin-top: 0 !important;
-    /* Reset from -45px to fix alignment */
     padding-top: 0 !important;
+    position: relative;
+    z-index: 22;
+    /* Ensure info stays above sticky media */
+    background: #ffffff;
+    /* Prevent transparency overlap issues */
   }
 
   /* Fix potential global overflow issues blocking sticky */
