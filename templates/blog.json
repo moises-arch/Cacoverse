@@ -1,1 +1,97 @@
-{"sections":{"17606278860a0c5c54":{"type":"_blocks","blocks":{"ai_gen_block_573fe49_crgGMn":{"type":"ai_gen_block_573fe49","disabled":true,"settings":{"blog":"news","articles_to_show":6,"heading":"Latest from our blog","subheading":"<p>Discover tips, insights, and stories from our team<\/p>","heading_alignment":"center","container_width":1300,"columns_desktop":4,"columns_tablet":"2","columns_mobile":"1","grid_gap":30,"show_category":true,"show_date":true,"show_excerpt":true,"read_more_text":"Read more","show_view_all":true,"button_text":"View all articles","background_color":"#ffffff","heading_color":"#222222","subheading_color":"#666666","card_background":"#ffffff","card_title_color":"#222222","card_excerpt_color":"#666666","meta_color":"#999999","category_bg_color":"#242833","category_text_color":"#ffffff","link_color":"#242833","button_bg_color":"#242833","button_text_color":"#ffffff","button_hover_bg_color":"#1a1f28","heading_size":42,"subheading_size":16,"card_title_size":20,"card_excerpt_size":14,"card_border_radius":12,"button_border_radius":4,"card_shadow_horizontal":0,"card_shadow_vertical":4,"card_shadow_blur":15,"card_shadow_opacity":10,"section_padding_top":60,"section_padding_bottom":60},"blocks":{}}},"block_order":["ai_gen_block_573fe49_crgGMn"],"settings":{}},"blog_breadcrumb_GUcGJF":{"type":"blog-breadcrumb","settings":{"show_page_title":true,"show_breadcumb_title":true,"blog_title":"Blog","blog_sub_title":"Stay protected and stylish with the GE PP Safety Helmet—engineered for durability\u2028and comfort, perfect for any worksite.","padding_top_desktop":"80px","padding_bottom_desktop":"80px","padding_top_mobile":"40px","padding_bottom_mobile":"40px"}},"main":{"type":"main-blog","settings":{"padding_top_desktop":"0px","padding_bottom_desktop":"80px","padding_top_mobile":"0px","padding_bottom_mobile":"40px"}}},"order":["17606278860a0c5c54","blog_breadcrumb_GUcGJF","main"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "17606278860a0c5c54": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_573fe49_crgGMn": {
+          "type": "ai_gen_block_573fe49",
+          "disabled": true,
+          "settings": {
+            "blog": "news",
+            "articles_to_show": 6,
+            "heading": "Latest from our blog",
+            "subheading": "<p>Discover tips, insights, and stories from our team</p>",
+            "heading_alignment": "center",
+            "container_width": 1300,
+            "columns_desktop": 4,
+            "columns_tablet": "2",
+            "columns_mobile": "1",
+            "grid_gap": 30,
+            "show_category": true,
+            "show_date": true,
+            "show_excerpt": true,
+            "read_more_text": "Read more",
+            "show_view_all": true,
+            "button_text": "View all articles",
+            "background_color": "#ffffff",
+            "heading_color": "#222222",
+            "subheading_color": "#666666",
+            "card_background": "#ffffff",
+            "card_title_color": "#222222",
+            "card_excerpt_color": "#666666",
+            "meta_color": "#999999",
+            "category_bg_color": "#242833",
+            "category_text_color": "#ffffff",
+            "link_color": "#242833",
+            "button_bg_color": "#242833",
+            "button_text_color": "#ffffff",
+            "button_hover_bg_color": "#1a1f28",
+            "heading_size": 42,
+            "subheading_size": 16,
+            "card_title_size": 20,
+            "card_excerpt_size": 14,
+            "card_border_radius": 12,
+            "button_border_radius": 4,
+            "card_shadow_horizontal": 0,
+            "card_shadow_vertical": 4,
+            "card_shadow_blur": 15,
+            "card_shadow_opacity": 10,
+            "section_padding_top": 60,
+            "section_padding_bottom": 60
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_573fe49_crgGMn"
+      ],
+      "settings": {}
+    },
+    "blog_breadcrumb_GUcGJF": {
+      "type": "blog-breadcrumb",
+      "settings": {
+        "show_page_title": true,
+        "show_breadcumb_title": true,
+        "blog_title": "Blog",
+        "blog_sub_title": "Stay protected and stylish with the GE PP Safety Helmet—engineered for durability and comfort, perfect for any worksite.",
+        "padding_top_desktop": "80px",
+        "padding_bottom_desktop": "80px",
+        "padding_top_mobile": "40px",
+        "padding_bottom_mobile": "40px"
+      }
+    },
+    "main": {
+      "type": "main-blog",
+      "settings": {
+        "padding_top_desktop": "0px",
+        "padding_bottom_desktop": "80px",
+        "padding_top_mobile": "0px",
+        "padding_bottom_mobile": "40px"
+      }
+    }
+  },
+  "order": [
+    "17606278860a0c5c54",
+    "blog_breadcrumb_GUcGJF",
+    "main"
+  ]
+}

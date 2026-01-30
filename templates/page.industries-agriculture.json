@@ -1,1 +1,730 @@
-{"sections":{"main":{"type":"main-page","disabled":true,"settings":{"padding_top":28,"padding_bottom":28}},"page_breadcrumb_68QDPj":{"type":"page-breadcrumb","name":"Page Breadcrumb","settings":{"show_page_title":false,"show_breadcumb_title":true,"show_resources":false,"show_industries":true,"padding_top_desktop":"30px","padding_bottom_desktop":"0px","padding_top_mobile":"20px","padding_bottom_mobile":"0px"}},"industries_section_1_fBFchy":{"type":"industries-section-1","blocks":{"buttons_JAKKda":{"type":"buttons","settings":{"link":"#","link_label":"Request a Quote","is_outline":false}},"buttons_63jyFN":{"type":"buttons","settings":{"link":"shopify:\/\/collections\/all","link_label":"Shop Now","is_outline":true}},"buttons_GCYRwK":{"type":"buttons","settings":{"link":"shopify:\/\/pages\/contact","link_label":"Contact Us Today","is_outline":true}}},"block_order":["buttons_JAKKda","buttons_63jyFN","buttons_GCYRwK"],"name":"Industries Section 1","settings":{"heading":"PPE Built to Withstand","heading1":"the Demands of the Field","sub_heading":"Protect farmers, field workers, and agribusiness teams with rugged, weather-ready, and pesticide-safe PPE—designed for the diverse risks of agricultural operations across the U.S.","image_banner":"shopify:\/\/shop_images\/Image_16a67877-018a-4478-a857-53fc1722a3b5.png","image_banner_up":"shopify:\/\/shop_images\/image_3c9896b6-5ea9-4c70-8597-023274811337.png","col_8":true,"padding_top_desktop":"20px","padding_bottom_desktop":"50px","padding_top_mobile":"20px","padding_bottom_mobile":"20px"}},"industries_section_2_LtXMi7":{"type":"industries-section-2","name":"Industries Section 2","settings":{"heading":"U.S. Agriculture & Farming\u2028Industry Overview","description1":"The agriculture sector remains one of the most essential and labor-intensive industries in the U.S., employing over 2.6 million people across crop production, livestock, agribusiness, and food harvesting. From large commercial farms to family-run operations, agricultural work involves long hours, varied environments, and direct exposure to chemicals, machinery, and the elements.","description2":"According to OSHA and CDC reports, farming consistently ranks among the top three most hazardous industries in terms of injury and fatality rates. Workers face risks from tractor rollovers, chemical exposure, animal handling, and heat-related illnesses, often while in remote locations far from emergency services.","padding_top_desktop":"80px","padding_bottom_desktop":"80px","padding_top_mobile":"40px","padding_bottom_mobile":"40px"}},"industries_section_2_2_R676gm":{"type":"industries-section-2-2","disabled":true,"name":"Industries Section 2-2","settings":{"description1":"<h2>U.S. Mining\u2028Industry Overview<\/h2><p>The U.S. mining sector is a critical pillar of the economy—powering construction, energy, and manufacturing industries through the extraction of coal, metal ores, non-metallic minerals, and rare earths. With over <strong>400,000 workers<\/strong>, this industry spans underground tunnels, open-pit quarries, strip mines, and processing plants in all climates and terrains.<br\/><br\/>Mining jobs rank among the <strong>most dangerous occupations<\/strong> in the country. Workers face <strong>immediate physical hazards<\/strong> like falling rock, heavy equipment, and machinery, along with long-term health risks including lung damage from respirable dust and hearing loss from constant high-decibel noise.<\/p>","description2":"<h4>According to the U.S. Mine Safety and Health Administration (MSHA):<\/h4><ul><li>Over <strong>25,000 mining injuries<\/strong> occur annually in the U.S.<\/li><li>The most frequent incidents involve <strong>slips, trips, falls, and\u2028equipment-related trauma<\/strong><\/li><li><strong>Long-term exposure<\/strong> to noise and dust leads to irreversible\u2028occupational illnesses<br\/><\/li><\/ul><p>Mining environments are unforgiving—and that’s why reliable, rugged PPE isn’t optional—it’s a life-critical investment.<br\/><\/p>","padding_top_desktop":"80px","padding_bottom_desktop":"80px","padding_top_mobile":"40px","padding_bottom_mobile":"40px"}},"industries_section_2_3_kUrqUR":{"type":"industries-section-2-3","disabled":true,"name":"Industries Section 2-3","settings":{"description":"<h2>U.S. Oil & Gas Industry Overview<\/h2><p>The oil and gas industry is the lifeblood of the American economy—powering homes, vehicles, and businesses. It employs over <strong>600,000 workers<\/strong> across upstream exploration, midstream transportation, and downstream refining. From shale fields in Texas to deepwater operations in the Gulf of Mexico, this sector is driven by innovation—but defined by danger.<\/p><p>According to the <strong>U.S. Bureau of Labor Statistics<\/strong>, oil and gas consistently rank among the top industries for workplace fatalities, largely due to <strong>explosions, toxic chemical exposure, electrical hazards, and confined space entry<\/strong>. Even minor errors can lead to catastrophic results, making proper PPE not just a regulatory requirement—but a literal life-saver.<\/p><h4>Workforce realities in oil & gas:<\/h4><ul><li>High turnover and contract-based crews require fast onboarding and easy-to-use PPE<\/li><li>Harsh climates, remote locations, and flammable environments are standard<\/li><li>One PPE failure can result in site shutdowns, fines, or tragedy<\/li><\/ul>","padding_top_desktop":"80px","padding_bottom_desktop":"80px","padding_top_mobile":"40px","padding_bottom_mobile":"40px"}},"industries_section_2_4_jryADM":{"type":"industries-section-2-4","disabled":true,"name":"Industries Section 2-4","settings":{"description":"<h2>The Critical Role of PPE\u2028in Construction Safety<\/h2><p>PPE (Personal Protective Equipment) is the last line of defense between a worker and serious injury—or worse. From hard hats and steel-toe boots to fall arrest harnesses and high-vis apparel, PPE saves lives every single day.<\/p><h3>Some key stats that highlight the importance of PPE:<\/h3><ul><li>60% of workers involved in eye injuries were not wearing any eye protection at the time of the incident (CDC).<\/li><li>According to OSHA, 70% of hand injuries could be prevented with proper gloves.<\/li><li>In cases where PPE was used improperly, nearly 80% of the injuries were due to failure to wear it correctly or consistently.<\/li><\/ul><p>These numbers underscore one truth:|PPE only works if it’s high-quality, properly selected, and consistently used.<\/p>","padding_top_desktop":"40px","padding_bottom_desktop":"80px","padding_top_mobile":"20px","padding_bottom_mobile":"40px"}},"industries_section_3_HYwFwB":{"type":"industries-section-3","blocks":{"info_yyAHyK":{"type":"info","settings":{"image":"shopify:\/\/shop_images\/Frame_4ac78a94-f164-4ba7-9891-50e4b2545ac8.png","heading":"Pesticide and herbicide exposure during spraying\u2028and handling","sub_heading":""}},"info_n3Daa3":{"type":"info","settings":{"image":"shopify:\/\/shop_images\/Layer_1_fc21f6de-e5ec-463e-a4ff-2ddd87559f7b.png","heading":"Respiratory risks from dust, grain, animal dander, and fertilizers","sub_heading":""}},"info_XNLjdV":{"type":"info","settings":{"image":"shopify:\/\/shop_images\/Layer_1-1.png","heading":"Noise exposure from equipment like combines\u2028and tractors","sub_heading":""}},"info_4pAjqH":{"type":"info","settings":{"image":"shopify:\/\/shop_images\/Frame-1_bffaa52b-e62d-41b5-9f04-cc40196e6916.png","heading":"Cuts, scrapes, or crush injuries from tools or livestock","sub_heading":""}},"info_8rgjK6":{"type":"info","settings":{"image":"shopify:\/\/shop_images\/Frame-2_839e026f-597b-46c5-ab1a-c4cbb5b5633b.png","heading":"Sun and heat exposure\u2028during long outdoor shifts","sub_heading":""}},"info_8zXnC6":{"type":"info","disabled":true,"settings":{"image":"shopify:\/\/shop_images\/Layer_1-1.png","heading":"Low-visibility environments\u2028and shaft lighting failure","sub_heading":""}}},"block_order":["info_yyAHyK","info_n3Daa3","info_XNLjdV","info_4pAjqH","info_8rgjK6","info_8zXnC6"],"name":"Industries Section 3","settings":{"heading":"The Critical Role of PPE\u2028in Agriculture Safety","sub_heading":"<p>In agricultural environments, PPE is not only about injury prevention—it’s also a defense against long-term illness caused by pesticides, dust, UV exposure, and repetitive stress. Gear must be durable, lightweight, easy to clean, and adaptable to extreme weather.<\/p>","sub_heading1":"Risks commonly mitigated by PPE in agriculture:","col":true,"padding_top_desktop":"50px","padding_bottom_desktop":"50px","padding_top_mobile":"20px","padding_bottom_mobile":"20px"}},"featured_categories_new_bjfrFA":{"type":"featured-categories-new","blocks":{"category_99DAED":{"type":"category","settings":{"collection_id":"protective-clothing","custom_heading":"Protective Apparel","custom_description":"Coveralls, aprons, chemical-resistant sleeves"}},"category_pAEdcx":{"type":"category","settings":{"collection_id":"hand-protection","custom_heading":"Gloves","custom_description":"Puncture-resistant, waterproof, pesticide-safe, and leather options"}},"category_HEJe9n":{"type":"category","settings":{"collection_id":"head-protection","custom_heading":"Head & Eye Protection","custom_description":"Wide-brim hats, face shields, UV-rated goggles","custom_image":"shopify:\/\/shop_images\/Image_dbd6b6ff-7a26-48e5-bce6-4096bd51f0cb.png"}},"category_YfR7RT":{"type":"category","settings":{"collection_id":"hearing-protection","custom_heading":"Hearing Protection","custom_description":"Earplugs and earmuffs for tractor and engine noise"}},"category_iQRe3z":{"type":"category","disabled":true,"settings":{"collection_id":"ergonomics","custom_heading":"Back & Ergonomic Support","custom_description":"Lumbar belts, posture braces"}}},"block_order":["category_99DAED","category_pAEdcx","category_HEJe9n","category_YfR7RT","category_iQRe3z"],"name":"Featured Categories New","settings":{"heading":"Comprehensive PPE Categories\u2028for Agricultural Teams","sub_heading":"Equip your workforce with task-specific, certified protection across every hazard zone.","link":"#","link_label":"Browse Agriculture PPE","padding_top_desktop":"50px","padding_bottom_desktop":"50px","padding_top_mobile":"20px","padding_bottom_mobile":"20px"}},"industries_section_4_7qUtfe":{"type":"industries-section-4","blocks":{"info_YdJK9J":{"type":"info","settings":{"image":"shopify:\/\/shop_images\/WhatsApp_Image_2025-05-06_at_12.23.35_caa80d33-Photoroom.png","heading":"<p><strong>OSHA 1910 and 1928<\/strong> | Agricultural safety and health standards<\/p>"}},"info_Jgy8Bq":{"type":"info","settings":{"image":"shopify:\/\/shop_images\/ace_1-removebg-preview_855177c1-1c18-40ab-8aec-d338158dbd55.png","heading":"<p><strong>ANSI Z87.1, Z89.1, Z41 <\/strong>| Eye, head, and footwear protection<\/p>"}},"info_F8CBVc":{"type":"info","settings":{"image":"shopify:\/\/shop_images\/image_226b70c9-457b-43d0-ae02-af1066863815.png","heading":"<p><strong>EPA Worker Protection Standard (WPS)<\/strong> | For pesticide handlers and\u2028early-entry workers<\/p>"}},"info_CRJzRi":{"type":"info","settings":{"image":"shopify:\/\/shop_images\/image_004259a4-e736-4e37-892d-a2ee25ce6ffb.png","heading":"<p><strong>California DPR & State Ag Requirements<\/strong> | Compliance with stricter local standards<\/p>"}},"info_WDRMYq":{"type":"info","settings":{"image":"shopify:\/\/shop_images\/image_2-1.png","heading":"<p><strong>NIOSH Certifications<\/strong> | For respirators and air filtration used in pesticide applications<\/p>"}},"info_EghABd":{"type":"info","disabled":true,"settings":{"image":"shopify:\/\/shop_images\/5dc28de08a99183d9eedac92f2f0963473601848.png","heading":"<p><strong>NFPA\/ASTM FR Ratings<\/strong> | For welding, hot work, or blast\u2028zone operations<\/p>"}}},"block_order":["info_YdJK9J","info_Jgy8Bq","info_F8CBVc","info_CRJzRi","info_WDRMYq","info_EghABd"],"name":"Industries Section 4","settings":{"heading":"Compliance & Certification\u2028You Can Trust","sub_heading":"GE PPE is engineered to meet or exceed safety regulations from multiple U.S. federal and state agricultural bodies:","sub_heading1":"All PPE is supported by documentation to satisfy safety audits, WPS inspections,\u2028and cooperative extension program standards.","sub_heading2":"","padding_top_desktop":"50px","padding_bottom_desktop":"50px","padding_top_mobile":"20px","padding_bottom_mobile":"20px"}},"industries_section_5_5_pAxLLL":{"type":"industries-section-5-5","blocks":{"info_bVkGCW":{"type":"info","settings":{"heading":"<h2>Why a Trusted\u2028PPE Partner Matters<\/h2>"}},"info_EeerVh":{"type":"info","settings":{"image":"shopify:\/\/shop_images\/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png","heading":"<h4>Support for Fast-Changing Crews & Projects<\/h4><p>We understand oil & gas projects shift rapidly. We help you equip new hires quickly with standardized, compliant PPE kits.<\/p>"}},"info_gYdbQx":{"type":"info","settings":{"image":"shopify:\/\/shop_images\/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png","heading":"<h4>Meet Fire & Chemical Safety Regulations<\/h4><p>Our FR and chemical-resistant gear is certified for job-specific risks, whether it’s acidizing wells, hot tapping, or gas monitoring operations.<\/p>"}},"info_dqDtXk":{"type":"info","settings":{"image":"shopify:\/\/shop_images\/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png","heading":"<h4>Brand Visibility Without Compromising Safety<\/h4><p>Customize FR gear with site IDs, logos, or team color codes using safe, certified printing methods.<\/p>"}},"info_JTJ96B":{"type":"info","settings":{"image":"shopify:\/\/shop_images\/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png","heading":"<h4>Gear Built for Harsh, Remote Environments<\/h4><p>From Permian Basin heat to Arctic offshore rigs, we supply gear that performs in all climate extremes—waterproof, breathable, and\u2028heat-resistant.<\/p>"}},"info_QyYVRP":{"type":"info","settings":{"image":"shopify:\/\/shop_images\/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png","heading":"<h4>Reduce Downtime from Injury\u2028or Equipment Failure<\/h4><p>Every minute of downtime costs. Our PPE is field-tested for durability and backed by fast replacement programs.<\/p>"}},"info_fxWUdU":{"type":"info","settings":{"image":"shopify:\/\/shop_images\/ace_10-Photoroom.png","heading":""}}},"block_order":["info_bVkGCW","info_EeerVh","info_gYdbQx","info_dqDtXk","info_JTJ96B","info_QyYVRP","info_fxWUdU"],"disabled":true,"name":"Industries Section 5-5","settings":{"heading":"Why a Trusted\u2028PPE Partner Matters","padding_top_desktop":"80px","padding_bottom_desktop":"80px","padding_top_mobile":"40px","padding_bottom_mobile":"40px"}},"industries_section_5_nETFem":{"type":"industries-section-5","blocks":{"info_DHGcLk":{"type":"info","settings":{"image":"shopify:\/\/shop_images\/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png","heading":"<p>Designed for rugged field use, season\u2028after season<\/p>"}},"info_KqNDH6":{"type":"info","settings":{"image":"shopify:\/\/shop_images\/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png","heading":"<p>Built for comfort\u2028in extreme heat, humidity, or cold<\/p>"}},"info_inhEJe":{"type":"info","settings":{"image":"shopify:\/\/shop_images\/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png","heading":"<p>Easy-to-clean and reusable PPE for long-term cost savings<\/p>"}},"info_KwaUJW":{"type":"info","settings":{"image":"shopify:\/\/shop_images\/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png","heading":"<p>Available in sizing\u2028for seasonal workers, contract labor, and full-time crews<\/p>"}},"info_CVehE4":{"type":"info","settings":{"image":"shopify:\/\/shop_images\/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png","heading":"<p>Compliant with\u2028WPS, EPA, and state pesticide application laws<\/p>"}}},"block_order":["info_DHGcLk","info_KqNDH6","info_inhEJe","info_KwaUJW","info_CVehE4"],"name":"Industries Section 5","settings":{"heading":"Why GE PPE is Trusted\u2028by Farmers & Ag Operations","icon_left":false,"padding_top_desktop":"50px","padding_bottom_desktop":"50px","padding_top_mobile":"20px","padding_bottom_mobile":"20px"}},"industries_section_5_6_V3TrUP":{"type":"industries-section-5-6","blocks":{"info_APpjA8":{"type":"info","settings":{"image":"shopify:\/\/shop_images\/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png","heading":"<h4>Built for Harsh Climates<\/h4><p>From Nevada’s high heat to Alaska’s underground chills, we offer waterproof, insulated, and ventilated PPE options designed to help workers stay focused and safe.<\/p>"}},"info_cJrXcM":{"type":"info","settings":{"image":"shopify:\/\/shop_images\/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png","heading":"<h4>Reinforced for Abrasive, Heavy-Duty Use<\/h4><p>We understand mining sites eat gear fast. That’s why our PPE features extra-durable seams, triple-reinforced gloves, and shock-absorbing materials tested in real mine conditions.<\/p>"}},"info_fKKpVg":{"type":"info","settings":{"image":"shopify:\/\/shop_images\/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png","heading":"<h4>Custom Kits for Specific Zones<\/h4><p>We create zone-specific PPE kits for shaft work, surface blasting, material handling, and emergency response teams—ensuring the right protection for every job and role.<\/p>"}},"info_Jx4FJp":{"type":"info","settings":{"image":"shopify:\/\/shop_images\/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png","heading":"<h4>Protection from Respiratory & Auditory Illnesses<\/h4><p>Our NIOSH-certified respirators and high-decibel-rated hearing protection reduce the risk of long-term disability and meet MSHA health guidelines.<\/p>"}}},"block_order":["info_APpjA8","info_cJrXcM","info_fKKpVg","info_Jx4FJp"],"disabled":true,"name":"Industries Section 5-6","settings":{"heading":"Why GE PPE Is Trusted by Mining Operations","sub_heading":"","padding_top_desktop":"80px","padding_bottom_desktop":"80px","padding_top_mobile":"40px","padding_bottom_mobile":"40px"}},"industries_section_6_reDHUx":{"type":"industries-section-6","blocks":{"info_73PLHD":{"type":"info","settings":{"image":"shopify:\/\/shop_images\/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png","heading":"<p>Field-tested<\/p>"}},"info_bXafFe":{"type":"info","settings":{"image":"shopify:\/\/shop_images\/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png","heading":"<p>Chemical-resistant<\/p>"}},"info_tiqbAi":{"type":"info","settings":{"image":"shopify:\/\/shop_images\/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png","heading":"<p>Lightweight for mobility<\/p>"}},"info_fmVKW4":{"type":"info","settings":{"image":"shopify:\/\/shop_images\/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png","heading":"<p>Farm and ranch ready<\/p>"}}},"block_order":["info_73PLHD","info_bXafFe","info_tiqbAi","info_fmVKW4"],"name":"Industries Section 6","settings":{"heading":"Why GE PPE is Your Ideal PPE Partner","padding_top_desktop":"20px","padding_bottom_desktop":"50px","padding_top_mobile":"20px","padding_bottom_mobile":"20px"}},"faqs_W7dAza":{"type":"faqs","blocks":{"qa_YDLtyV":{"type":"QA","settings":{"question":"What PPE is required when applying pesticides or herbicides?","answer":"Per EPA’s Worker Protection Standard, pesticide handlers must wear chemical-resistant gloves, long sleeves, eye protection, respirators, and coveralls or aprons—all of which we supply in compliance-ready bundles."}},"qa_y4HaQ7":{"type":"QA","settings":{"question":"Do you carry PPE that meets the EPA Worker Protection Standard (WPS)?","answer":"Yes. Our PPE lineup includes WPS-compliant suits, gloves, goggles, and respirators approved for handling restricted-use pesticides and field re-entry tasks."}},"qa_gx38ej":{"type":"QA","settings":{"question":"What’s the best PPE for working in extreme heat during the summer season?","answer":"We offer moisture-wicking shirts, vented hats, cooling vests, and lightweight, breathable gloves—ideal for working under intense sun and high humidity."}},"qa_VDRrYt":{"type":"QA","settings":{"question":"Do you offer dust masks and respirators for grain, fertilizer, or barn dust?","answer":"Absolutely. We carry NIOSH-approved N95 and P100 masks along with replaceable-filter respirators suitable for handling feed, compost, fertilizers, and dusty harvest zones."}},"qa_CE66Ty":{"type":"QA","settings":{"question":"What PPE helps with livestock handling or animal care?","answer":"We supply puncture-resistant gloves, leather aprons, impact-resistant boots, and face shields—perfect for veterinarians, dairy hands, and livestock transporters."}},"qa_KYNNYR":{"type":"QA","settings":{"question":"Are your gloves and boots resistant to fertilizers and agricultural chemicals?","answer":"Yes. Our chemical-resistant gloves and boots are rated for ammonia, urea, glyphosate, and other common agricultural compounds."}},"qa_i6DWyE":{"type":"QA","settings":{"question":"Can we order PPE in bulk for farmhands or migrant workers?","answer":"Yes. We offer bulk ordering, bilingual user guides, and starter kits with sizing for male and female workers across seasonal workforces."}},"qa_Ai4nT7":{"type":"QA","settings":{"question":"Do you offer UV protection gear for outdoor tasks?","answer":"Yes. Our UPF-rated sun sleeves, wide-brim hats, and UV-blocking glasses help protect workers during long daylight exposure."}},"qa_8mkF7U":{"type":"QA","settings":{"question":"What are the best options for cold or early-morning harvesting conditions?","answer":"We carry thermal-insulated gear, waterproof jackets, fleece-lined gloves, and weatherproof boots for year-round agricultural operations."}},"qa_mDPhzF":{"type":"QA","settings":{"question":"Can you help us stay compliant with both federal and state ag safety regulations?","answer":"Yes. We assist in developing PPE programs aligned with federal OSHA, EPA WPS, and state-level ag department requirements, including DPR standards in California."}}},"block_order":["qa_YDLtyV","qa_y4HaQ7","qa_gx38ej","qa_VDRrYt","qa_CE66Ty","qa_KYNNYR","qa_i6DWyE","qa_Ai4nT7","qa_8mkF7U","qa_mDPhzF"],"name":"Faqs Section","settings":{"heading":"Frequently\u2028Asked Questions About PPE for Agriculture & Farming","padding_top_desktop":"80px","padding_bottom_desktop":"80px","padding_top_mobile":"40px","padding_bottom_mobile":"40px"}},"industries_section_7_Henqja":{"type":"industries-section-7","name":"Industries Section 7","settings":{"heading":"PPE That Works as Hard as You Do","description":"<p>From sunrise to sundown, rain or shine, farm work never stops. GE PPE helps ensure your crews are protected from chemical risks, equipment hazards, and environmental extremes—so they can focus on feeding the world. When your work is essential, so is your protection.<\/p>","padding_top_desktop":"80px","padding_bottom_desktop":"80px","padding_top_mobile":"40px","padding_bottom_mobile":"40px"}},"industries_section_8_p4GzgC":{"type":"industries-section-8","blocks":{"buttons_ih7mcx":{"type":"buttons","settings":{"link":"shopify:\/\/collections","link_label":"Shop Now","is_outline":false}},"buttons_jxPiqM":{"type":"buttons","settings":{"link":"#","link_label":"Request a Quote","is_outline":true}},"buttons_MUQ6de":{"type":"buttons","settings":{"link":"#","link_label":"Talk to an Expert","is_outline":true}}},"block_order":["buttons_ih7mcx","buttons_jxPiqM","buttons_MUQ6de"],"name":"Industries Section 8","settings":{"bg_image":"shopify:\/\/shop_images\/hero-banner.jpg","heading":"Protect Your Field Teams\u2028| with Farm-Ready PPE","sub_heading":"Secure checkout   |   Satisfaction Guaranteed   |   Free Shipping Over $500","padding_top_desktop":"80px","padding_bottom_desktop":"80px","padding_top_mobile":"40px","padding_bottom_mobile":"40px"}}},"order":["main","page_breadcrumb_68QDPj","industries_section_1_fBFchy","industries_section_2_LtXMi7","industries_section_2_2_R676gm","industries_section_2_3_kUrqUR","industries_section_2_4_jryADM","industries_section_3_HYwFwB","featured_categories_new_bjfrFA","industries_section_4_7qUtfe","industries_section_5_5_pAxLLL","industries_section_5_nETFem","industries_section_5_6_V3TrUP","industries_section_6_reDHUx","faqs_W7dAza","industries_section_7_Henqja","industries_section_8_p4GzgC"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "page_breadcrumb_68QDPj": {
+      "type": "page-breadcrumb",
+      "name": "Page Breadcrumb",
+      "settings": {
+        "show_page_title": false,
+        "show_breadcumb_title": true,
+        "show_resources": false,
+        "show_industries": true,
+        "padding_top_desktop": "30px",
+        "padding_bottom_desktop": "0px",
+        "padding_top_mobile": "20px",
+        "padding_bottom_mobile": "0px"
+      }
+    },
+    "industries_section_1_fBFchy": {
+      "type": "industries-section-1",
+      "blocks": {
+        "buttons_JAKKda": {
+          "type": "buttons",
+          "settings": {
+            "link": "#",
+            "link_label": "Request a Quote",
+            "is_outline": false
+          }
+        },
+        "buttons_63jyFN": {
+          "type": "buttons",
+          "settings": {
+            "link": "shopify://collections/all",
+            "link_label": "Shop Now",
+            "is_outline": true
+          }
+        },
+        "buttons_GCYRwK": {
+          "type": "buttons",
+          "settings": {
+            "link": "shopify://pages/contact",
+            "link_label": "Contact Us Today",
+            "is_outline": true
+          }
+        }
+      },
+      "block_order": [
+        "buttons_JAKKda",
+        "buttons_63jyFN",
+        "buttons_GCYRwK"
+      ],
+      "name": "Industries Section 1",
+      "settings": {
+        "heading": "PPE Built to Withstand",
+        "heading1": "the Demands of the Field",
+        "sub_heading": "Protect farmers, field workers, and agribusiness teams with rugged, weather-ready, and pesticide-safe PPE—designed for the diverse risks of agricultural operations across the U.S.",
+        "image_banner": "shopify://shop_images/Image_16a67877-018a-4478-a857-53fc1722a3b5.png",
+        "image_banner_up": "shopify://shop_images/image_3c9896b6-5ea9-4c70-8597-023274811337.png",
+        "col_8": true,
+        "padding_top_desktop": "20px",
+        "padding_bottom_desktop": "50px",
+        "padding_top_mobile": "20px",
+        "padding_bottom_mobile": "20px"
+      }
+    },
+    "industries_section_2_LtXMi7": {
+      "type": "industries-section-2",
+      "name": "Industries Section 2",
+      "settings": {
+        "heading": "U.S. Agriculture & Farming Industry Overview",
+        "description1": "The agriculture sector remains one of the most essential and labor-intensive industries in the U.S., employing over 2.6 million people across crop production, livestock, agribusiness, and food harvesting. From large commercial farms to family-run operations, agricultural work involves long hours, varied environments, and direct exposure to chemicals, machinery, and the elements.",
+        "description2": "According to OSHA and CDC reports, farming consistently ranks among the top three most hazardous industries in terms of injury and fatality rates. Workers face risks from tractor rollovers, chemical exposure, animal handling, and heat-related illnesses, often while in remote locations far from emergency services.",
+        "padding_top_desktop": "80px",
+        "padding_bottom_desktop": "80px",
+        "padding_top_mobile": "40px",
+        "padding_bottom_mobile": "40px"
+      }
+    },
+    "industries_section_2_2_R676gm": {
+      "type": "industries-section-2-2",
+      "disabled": true,
+      "name": "Industries Section 2-2",
+      "settings": {
+        "description1": "<h2>U.S. Mining Industry Overview</h2><p>The U.S. mining sector is a critical pillar of the economy—powering construction, energy, and manufacturing industries through the extraction of coal, metal ores, non-metallic minerals, and rare earths. With over <strong>400,000 workers</strong>, this industry spans underground tunnels, open-pit quarries, strip mines, and processing plants in all climates and terrains.<br/><br/>Mining jobs rank among the <strong>most dangerous occupations</strong> in the country. Workers face <strong>immediate physical hazards</strong> like falling rock, heavy equipment, and machinery, along with long-term health risks including lung damage from respirable dust and hearing loss from constant high-decibel noise.</p>",
+        "description2": "<h4>According to the U.S. Mine Safety and Health Administration (MSHA):</h4><ul><li>Over <strong>25,000 mining injuries</strong> occur annually in the U.S.</li><li>The most frequent incidents involve <strong>slips, trips, falls, and equipment-related trauma</strong></li><li><strong>Long-term exposure</strong> to noise and dust leads to irreversible occupational illnesses<br/></li></ul><p>Mining environments are unforgiving—and that’s why reliable, rugged PPE isn’t optional—it’s a life-critical investment.<br/></p>",
+        "padding_top_desktop": "80px",
+        "padding_bottom_desktop": "80px",
+        "padding_top_mobile": "40px",
+        "padding_bottom_mobile": "40px"
+      }
+    },
+    "industries_section_2_3_kUrqUR": {
+      "type": "industries-section-2-3",
+      "disabled": true,
+      "name": "Industries Section 2-3",
+      "settings": {
+        "description": "<h2>U.S. Oil & Gas Industry Overview</h2><p>The oil and gas industry is the lifeblood of the American economy—powering homes, vehicles, and businesses. It employs over <strong>600,000 workers</strong> across upstream exploration, midstream transportation, and downstream refining. From shale fields in Texas to deepwater operations in the Gulf of Mexico, this sector is driven by innovation—but defined by danger.</p><p>According to the <strong>U.S. Bureau of Labor Statistics</strong>, oil and gas consistently rank among the top industries for workplace fatalities, largely due to <strong>explosions, toxic chemical exposure, electrical hazards, and confined space entry</strong>. Even minor errors can lead to catastrophic results, making proper PPE not just a regulatory requirement—but a literal life-saver.</p><h4>Workforce realities in oil & gas:</h4><ul><li>High turnover and contract-based crews require fast onboarding and easy-to-use PPE</li><li>Harsh climates, remote locations, and flammable environments are standard</li><li>One PPE failure can result in site shutdowns, fines, or tragedy</li></ul>",
+        "padding_top_desktop": "80px",
+        "padding_bottom_desktop": "80px",
+        "padding_top_mobile": "40px",
+        "padding_bottom_mobile": "40px"
+      }
+    },
+    "industries_section_2_4_jryADM": {
+      "type": "industries-section-2-4",
+      "disabled": true,
+      "name": "Industries Section 2-4",
+      "settings": {
+        "description": "<h2>The Critical Role of PPE in Construction Safety</h2><p>PPE (Personal Protective Equipment) is the last line of defense between a worker and serious injury—or worse. From hard hats and steel-toe boots to fall arrest harnesses and high-vis apparel, PPE saves lives every single day.</p><h3>Some key stats that highlight the importance of PPE:</h3><ul><li>60% of workers involved in eye injuries were not wearing any eye protection at the time of the incident (CDC).</li><li>According to OSHA, 70% of hand injuries could be prevented with proper gloves.</li><li>In cases where PPE was used improperly, nearly 80% of the injuries were due to failure to wear it correctly or consistently.</li></ul><p>These numbers underscore one truth:|PPE only works if it’s high-quality, properly selected, and consistently used.</p>",
+        "padding_top_desktop": "40px",
+        "padding_bottom_desktop": "80px",
+        "padding_top_mobile": "20px",
+        "padding_bottom_mobile": "40px"
+      }
+    },
+    "industries_section_3_HYwFwB": {
+      "type": "industries-section-3",
+      "blocks": {
+        "info_yyAHyK": {
+          "type": "info",
+          "settings": {
+            "image": "shopify://shop_images/Frame_4ac78a94-f164-4ba7-9891-50e4b2545ac8.png",
+            "heading": "Pesticide and herbicide exposure during spraying and handling",
+            "sub_heading": ""
+          }
+        },
+        "info_n3Daa3": {
+          "type": "info",
+          "settings": {
+            "image": "shopify://shop_images/Layer_1_fc21f6de-e5ec-463e-a4ff-2ddd87559f7b.png",
+            "heading": "Respiratory risks from dust, grain, animal dander, and fertilizers",
+            "sub_heading": ""
+          }
+        },
+        "info_XNLjdV": {
+          "type": "info",
+          "settings": {
+            "image": "shopify://shop_images/Layer_1-1.png",
+            "heading": "Noise exposure from equipment like combines and tractors",
+            "sub_heading": ""
+          }
+        },
+        "info_4pAjqH": {
+          "type": "info",
+          "settings": {
+            "image": "shopify://shop_images/Frame-1_bffaa52b-e62d-41b5-9f04-cc40196e6916.png",
+            "heading": "Cuts, scrapes, or crush injuries from tools or livestock",
+            "sub_heading": ""
+          }
+        },
+        "info_8rgjK6": {
+          "type": "info",
+          "settings": {
+            "image": "shopify://shop_images/Frame-2_839e026f-597b-46c5-ab1a-c4cbb5b5633b.png",
+            "heading": "Sun and heat exposure during long outdoor shifts",
+            "sub_heading": ""
+          }
+        },
+        "info_8zXnC6": {
+          "type": "info",
+          "disabled": true,
+          "settings": {
+            "image": "shopify://shop_images/Layer_1-1.png",
+            "heading": "Low-visibility environments and shaft lighting failure",
+            "sub_heading": ""
+          }
+        }
+      },
+      "block_order": [
+        "info_yyAHyK",
+        "info_n3Daa3",
+        "info_XNLjdV",
+        "info_4pAjqH",
+        "info_8rgjK6",
+        "info_8zXnC6"
+      ],
+      "name": "Industries Section 3",
+      "settings": {
+        "heading": "The Critical Role of PPE in Agriculture Safety",
+        "sub_heading": "<p>In agricultural environments, PPE is not only about injury prevention—it’s also a defense against long-term illness caused by pesticides, dust, UV exposure, and repetitive stress. Gear must be durable, lightweight, easy to clean, and adaptable to extreme weather.</p>",
+        "sub_heading1": "Risks commonly mitigated by PPE in agriculture:",
+        "col": true,
+        "padding_top_desktop": "50px",
+        "padding_bottom_desktop": "50px",
+        "padding_top_mobile": "20px",
+        "padding_bottom_mobile": "20px"
+      }
+    },
+    "featured_categories_new_bjfrFA": {
+      "type": "featured-categories-new",
+      "blocks": {
+        "category_99DAED": {
+          "type": "category",
+          "settings": {
+            "collection_id": "protective-clothing",
+            "custom_heading": "Protective Apparel",
+            "custom_description": "Coveralls, aprons, chemical-resistant sleeves"
+          }
+        },
+        "category_pAEdcx": {
+          "type": "category",
+          "settings": {
+            "collection_id": "hand-protection",
+            "custom_heading": "Gloves",
+            "custom_description": "Puncture-resistant, waterproof, pesticide-safe, and leather options"
+          }
+        },
+        "category_HEJe9n": {
+          "type": "category",
+          "settings": {
+            "collection_id": "head-protection",
+            "custom_heading": "Head & Eye Protection",
+            "custom_description": "Wide-brim hats, face shields, UV-rated goggles",
+            "custom_image": "shopify://shop_images/Image_dbd6b6ff-7a26-48e5-bce6-4096bd51f0cb.png"
+          }
+        },
+        "category_YfR7RT": {
+          "type": "category",
+          "settings": {
+            "collection_id": "hearing-protection",
+            "custom_heading": "Hearing Protection",
+            "custom_description": "Earplugs and earmuffs for tractor and engine noise"
+          }
+        },
+        "category_iQRe3z": {
+          "type": "category",
+          "disabled": true,
+          "settings": {
+            "collection_id": "ergonomics",
+            "custom_heading": "Back & Ergonomic Support",
+            "custom_description": "Lumbar belts, posture braces"
+          }
+        }
+      },
+      "block_order": [
+        "category_99DAED",
+        "category_pAEdcx",
+        "category_HEJe9n",
+        "category_YfR7RT",
+        "category_iQRe3z"
+      ],
+      "name": "Featured Categories New",
+      "settings": {
+        "heading": "Comprehensive PPE Categories for Agricultural Teams",
+        "sub_heading": "Equip your workforce with task-specific, certified protection across every hazard zone.",
+        "link": "#",
+        "link_label": "Browse Agriculture PPE",
+        "padding_top_desktop": "50px",
+        "padding_bottom_desktop": "50px",
+        "padding_top_mobile": "20px",
+        "padding_bottom_mobile": "20px"
+      }
+    },
+    "industries_section_4_7qUtfe": {
+      "type": "industries-section-4",
+      "blocks": {
+        "info_YdJK9J": {
+          "type": "info",
+          "settings": {
+            "image": "shopify://shop_images/WhatsApp_Image_2025-05-06_at_12.23.35_caa80d33-Photoroom.png",
+            "heading": "<p><strong>OSHA 1910 and 1928</strong> | Agricultural safety and health standards</p>"
+          }
+        },
+        "info_Jgy8Bq": {
+          "type": "info",
+          "settings": {
+            "image": "shopify://shop_images/ace_1-removebg-preview_855177c1-1c18-40ab-8aec-d338158dbd55.png",
+            "heading": "<p><strong>ANSI Z87.1, Z89.1, Z41 </strong>| Eye, head, and footwear protection</p>"
+          }
+        },
+        "info_F8CBVc": {
+          "type": "info",
+          "settings": {
+            "image": "shopify://shop_images/image_226b70c9-457b-43d0-ae02-af1066863815.png",
+            "heading": "<p><strong>EPA Worker Protection Standard (WPS)</strong> | For pesticide handlers and early-entry workers</p>"
+          }
+        },
+        "info_CRJzRi": {
+          "type": "info",
+          "settings": {
+            "image": "shopify://shop_images/image_004259a4-e736-4e37-892d-a2ee25ce6ffb.png",
+            "heading": "<p><strong>California DPR & State Ag Requirements</strong> | Compliance with stricter local standards</p>"
+          }
+        },
+        "info_WDRMYq": {
+          "type": "info",
+          "settings": {
+            "image": "shopify://shop_images/image_2-1.png",
+            "heading": "<p><strong>NIOSH Certifications</strong> | For respirators and air filtration used in pesticide applications</p>"
+          }
+        },
+        "info_EghABd": {
+          "type": "info",
+          "disabled": true,
+          "settings": {
+            "image": "shopify://shop_images/5dc28de08a99183d9eedac92f2f0963473601848.png",
+            "heading": "<p><strong>NFPA/ASTM FR Ratings</strong> | For welding, hot work, or blast zone operations</p>"
+          }
+        }
+      },
+      "block_order": [
+        "info_YdJK9J",
+        "info_Jgy8Bq",
+        "info_F8CBVc",
+        "info_CRJzRi",
+        "info_WDRMYq",
+        "info_EghABd"
+      ],
+      "name": "Industries Section 4",
+      "settings": {
+        "heading": "Compliance & Certification You Can Trust",
+        "sub_heading": "GE PPE is engineered to meet or exceed safety regulations from multiple U.S. federal and state agricultural bodies:",
+        "sub_heading1": "All PPE is supported by documentation to satisfy safety audits, WPS inspections, and cooperative extension program standards.",
+        "sub_heading2": "",
+        "padding_top_desktop": "50px",
+        "padding_bottom_desktop": "50px",
+        "padding_top_mobile": "20px",
+        "padding_bottom_mobile": "20px"
+      }
+    },
+    "industries_section_5_5_pAxLLL": {
+      "type": "industries-section-5-5",
+      "blocks": {
+        "info_bVkGCW": {
+          "type": "info",
+          "settings": {
+            "heading": "<h2>Why a Trusted PPE Partner Matters</h2>"
+          }
+        },
+        "info_EeerVh": {
+          "type": "info",
+          "settings": {
+            "image": "shopify://shop_images/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png",
+            "heading": "<h4>Support for Fast-Changing Crews & Projects</h4><p>We understand oil & gas projects shift rapidly. We help you equip new hires quickly with standardized, compliant PPE kits.</p>"
+          }
+        },
+        "info_gYdbQx": {
+          "type": "info",
+          "settings": {
+            "image": "shopify://shop_images/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png",
+            "heading": "<h4>Meet Fire & Chemical Safety Regulations</h4><p>Our FR and chemical-resistant gear is certified for job-specific risks, whether it’s acidizing wells, hot tapping, or gas monitoring operations.</p>"
+          }
+        },
+        "info_dqDtXk": {
+          "type": "info",
+          "settings": {
+            "image": "shopify://shop_images/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png",
+            "heading": "<h4>Brand Visibility Without Compromising Safety</h4><p>Customize FR gear with site IDs, logos, or team color codes using safe, certified printing methods.</p>"
+          }
+        },
+        "info_JTJ96B": {
+          "type": "info",
+          "settings": {
+            "image": "shopify://shop_images/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png",
+            "heading": "<h4>Gear Built for Harsh, Remote Environments</h4><p>From Permian Basin heat to Arctic offshore rigs, we supply gear that performs in all climate extremes—waterproof, breathable, and heat-resistant.</p>"
+          }
+        },
+        "info_QyYVRP": {
+          "type": "info",
+          "settings": {
+            "image": "shopify://shop_images/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png",
+            "heading": "<h4>Reduce Downtime from Injury or Equipment Failure</h4><p>Every minute of downtime costs. Our PPE is field-tested for durability and backed by fast replacement programs.</p>"
+          }
+        },
+        "info_fxWUdU": {
+          "type": "info",
+          "settings": {
+            "image": "shopify://shop_images/ace_10-Photoroom.png",
+            "heading": ""
+          }
+        }
+      },
+      "block_order": [
+        "info_bVkGCW",
+        "info_EeerVh",
+        "info_gYdbQx",
+        "info_dqDtXk",
+        "info_JTJ96B",
+        "info_QyYVRP",
+        "info_fxWUdU"
+      ],
+      "disabled": true,
+      "name": "Industries Section 5-5",
+      "settings": {
+        "heading": "Why a Trusted PPE Partner Matters",
+        "padding_top_desktop": "80px",
+        "padding_bottom_desktop": "80px",
+        "padding_top_mobile": "40px",
+        "padding_bottom_mobile": "40px"
+      }
+    },
+    "industries_section_5_nETFem": {
+      "type": "industries-section-5",
+      "blocks": {
+        "info_DHGcLk": {
+          "type": "info",
+          "settings": {
+            "image": "shopify://shop_images/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png",
+            "heading": "<p>Designed for rugged field use, season after season</p>"
+          }
+        },
+        "info_KqNDH6": {
+          "type": "info",
+          "settings": {
+            "image": "shopify://shop_images/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png",
+            "heading": "<p>Built for comfort in extreme heat, humidity, or cold</p>"
+          }
+        },
+        "info_inhEJe": {
+          "type": "info",
+          "settings": {
+            "image": "shopify://shop_images/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png",
+            "heading": "<p>Easy-to-clean and reusable PPE for long-term cost savings</p>"
+          }
+        },
+        "info_KwaUJW": {
+          "type": "info",
+          "settings": {
+            "image": "shopify://shop_images/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png",
+            "heading": "<p>Available in sizing for seasonal workers, contract labor, and full-time crews</p>"
+          }
+        },
+        "info_CVehE4": {
+          "type": "info",
+          "settings": {
+            "image": "shopify://shop_images/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png",
+            "heading": "<p>Compliant with WPS, EPA, and state pesticide application laws</p>"
+          }
+        }
+      },
+      "block_order": [
+        "info_DHGcLk",
+        "info_KqNDH6",
+        "info_inhEJe",
+        "info_KwaUJW",
+        "info_CVehE4"
+      ],
+      "name": "Industries Section 5",
+      "settings": {
+        "heading": "Why GE PPE is Trusted by Farmers & Ag Operations",
+        "icon_left": false,
+        "padding_top_desktop": "50px",
+        "padding_bottom_desktop": "50px",
+        "padding_top_mobile": "20px",
+        "padding_bottom_mobile": "20px"
+      }
+    },
+    "industries_section_5_6_V3TrUP": {
+      "type": "industries-section-5-6",
+      "blocks": {
+        "info_APpjA8": {
+          "type": "info",
+          "settings": {
+            "image": "shopify://shop_images/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png",
+            "heading": "<h4>Built for Harsh Climates</h4><p>From Nevada’s high heat to Alaska’s underground chills, we offer waterproof, insulated, and ventilated PPE options designed to help workers stay focused and safe.</p>"
+          }
+        },
+        "info_cJrXcM": {
+          "type": "info",
+          "settings": {
+            "image": "shopify://shop_images/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png",
+            "heading": "<h4>Reinforced for Abrasive, Heavy-Duty Use</h4><p>We understand mining sites eat gear fast. That’s why our PPE features extra-durable seams, triple-reinforced gloves, and shock-absorbing materials tested in real mine conditions.</p>"
+          }
+        },
+        "info_fKKpVg": {
+          "type": "info",
+          "settings": {
+            "image": "shopify://shop_images/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png",
+            "heading": "<h4>Custom Kits for Specific Zones</h4><p>We create zone-specific PPE kits for shaft work, surface blasting, material handling, and emergency response teams—ensuring the right protection for every job and role.</p>"
+          }
+        },
+        "info_Jx4FJp": {
+          "type": "info",
+          "settings": {
+            "image": "shopify://shop_images/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png",
+            "heading": "<h4>Protection from Respiratory & Auditory Illnesses</h4><p>Our NIOSH-certified respirators and high-decibel-rated hearing protection reduce the risk of long-term disability and meet MSHA health guidelines.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "info_APpjA8",
+        "info_cJrXcM",
+        "info_fKKpVg",
+        "info_Jx4FJp"
+      ],
+      "disabled": true,
+      "name": "Industries Section 5-6",
+      "settings": {
+        "heading": "Why GE PPE Is Trusted by Mining Operations",
+        "sub_heading": "",
+        "padding_top_desktop": "80px",
+        "padding_bottom_desktop": "80px",
+        "padding_top_mobile": "40px",
+        "padding_bottom_mobile": "40px"
+      }
+    },
+    "industries_section_6_reDHUx": {
+      "type": "industries-section-6",
+      "blocks": {
+        "info_73PLHD": {
+          "type": "info",
+          "settings": {
+            "image": "shopify://shop_images/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png",
+            "heading": "<p>Field-tested</p>"
+          }
+        },
+        "info_bXafFe": {
+          "type": "info",
+          "settings": {
+            "image": "shopify://shop_images/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png",
+            "heading": "<p>Chemical-resistant</p>"
+          }
+        },
+        "info_tiqbAi": {
+          "type": "info",
+          "settings": {
+            "image": "shopify://shop_images/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png",
+            "heading": "<p>Lightweight for mobility</p>"
+          }
+        },
+        "info_fmVKW4": {
+          "type": "info",
+          "settings": {
+            "image": "shopify://shop_images/Frame_8f0e900b-45f3-49c9-9641-54df4ad42277.png",
+            "heading": "<p>Farm and ranch ready</p>"
+          }
+        }
+      },
+      "block_order": [
+        "info_73PLHD",
+        "info_bXafFe",
+        "info_tiqbAi",
+        "info_fmVKW4"
+      ],
+      "name": "Industries Section 6",
+      "settings": {
+        "heading": "Why GE PPE is Your Ideal PPE Partner",
+        "padding_top_desktop": "20px",
+        "padding_bottom_desktop": "50px",
+        "padding_top_mobile": "20px",
+        "padding_bottom_mobile": "20px"
+      }
+    },
+    "faqs_W7dAza": {
+      "type": "faqs",
+      "blocks": {
+        "qa_YDLtyV": {
+          "type": "QA",
+          "settings": {
+            "question": "What PPE is required when applying pesticides or herbicides?",
+            "answer": "Per EPA’s Worker Protection Standard, pesticide handlers must wear chemical-resistant gloves, long sleeves, eye protection, respirators, and coveralls or aprons—all of which we supply in compliance-ready bundles."
+          }
+        },
+        "qa_y4HaQ7": {
+          "type": "QA",
+          "settings": {
+            "question": "Do you carry PPE that meets the EPA Worker Protection Standard (WPS)?",
+            "answer": "Yes. Our PPE lineup includes WPS-compliant suits, gloves, goggles, and respirators approved for handling restricted-use pesticides and field re-entry tasks."
+          }
+        },
+        "qa_gx38ej": {
+          "type": "QA",
+          "settings": {
+            "question": "What’s the best PPE for working in extreme heat during the summer season?",
+            "answer": "We offer moisture-wicking shirts, vented hats, cooling vests, and lightweight, breathable gloves—ideal for working under intense sun and high humidity."
+          }
+        },
+        "qa_VDRrYt": {
+          "type": "QA",
+          "settings": {
+            "question": "Do you offer dust masks and respirators for grain, fertilizer, or barn dust?",
+            "answer": "Absolutely. We carry NIOSH-approved N95 and P100 masks along with replaceable-filter respirators suitable for handling feed, compost, fertilizers, and dusty harvest zones."
+          }
+        },
+        "qa_CE66Ty": {
+          "type": "QA",
+          "settings": {
+            "question": "What PPE helps with livestock handling or animal care?",
+            "answer": "We supply puncture-resistant gloves, leather aprons, impact-resistant boots, and face shields—perfect for veterinarians, dairy hands, and livestock transporters."
+          }
+        },
+        "qa_KYNNYR": {
+          "type": "QA",
+          "settings": {
+            "question": "Are your gloves and boots resistant to fertilizers and agricultural chemicals?",
+            "answer": "Yes. Our chemical-resistant gloves and boots are rated for ammonia, urea, glyphosate, and other common agricultural compounds."
+          }
+        },
+        "qa_i6DWyE": {
+          "type": "QA",
+          "settings": {
+            "question": "Can we order PPE in bulk for farmhands or migrant workers?",
+            "answer": "Yes. We offer bulk ordering, bilingual user guides, and starter kits with sizing for male and female workers across seasonal workforces."
+          }
+        },
+        "qa_Ai4nT7": {
+          "type": "QA",
+          "settings": {
+            "question": "Do you offer UV protection gear for outdoor tasks?",
+            "answer": "Yes. Our UPF-rated sun sleeves, wide-brim hats, and UV-blocking glasses help protect workers during long daylight exposure."
+          }
+        },
+        "qa_8mkF7U": {
+          "type": "QA",
+          "settings": {
+            "question": "What are the best options for cold or early-morning harvesting conditions?",
+            "answer": "We carry thermal-insulated gear, waterproof jackets, fleece-lined gloves, and weatherproof boots for year-round agricultural operations."
+          }
+        },
+        "qa_mDPhzF": {
+          "type": "QA",
+          "settings": {
+            "question": "Can you help us stay compliant with both federal and state ag safety regulations?",
+            "answer": "Yes. We assist in developing PPE programs aligned with federal OSHA, EPA WPS, and state-level ag department requirements, including DPR standards in California."
+          }
+        }
+      },
+      "block_order": [
+        "qa_YDLtyV",
+        "qa_y4HaQ7",
+        "qa_gx38ej",
+        "qa_VDRrYt",
+        "qa_CE66Ty",
+        "qa_KYNNYR",
+        "qa_i6DWyE",
+        "qa_Ai4nT7",
+        "qa_8mkF7U",
+        "qa_mDPhzF"
+      ],
+      "name": "Faqs Section",
+      "settings": {
+        "heading": "Frequently Asked Questions About PPE for Agriculture & Farming",
+        "padding_top_desktop": "80px",
+        "padding_bottom_desktop": "80px",
+        "padding_top_mobile": "40px",
+        "padding_bottom_mobile": "40px"
+      }
+    },
+    "industries_section_7_Henqja": {
+      "type": "industries-section-7",
+      "name": "Industries Section 7",
+      "settings": {
+        "heading": "PPE That Works as Hard as You Do",
+        "description": "<p>From sunrise to sundown, rain or shine, farm work never stops. GE PPE helps ensure your crews are protected from chemical risks, equipment hazards, and environmental extremes—so they can focus on feeding the world. When your work is essential, so is your protection.</p>",
+        "padding_top_desktop": "80px",
+        "padding_bottom_desktop": "80px",
+        "padding_top_mobile": "40px",
+        "padding_bottom_mobile": "40px"
+      }
+    },
+    "industries_section_8_p4GzgC": {
+      "type": "industries-section-8",
+      "blocks": {
+        "buttons_ih7mcx": {
+          "type": "buttons",
+          "settings": {
+            "link": "shopify://collections",
+            "link_label": "Shop Now",
+            "is_outline": false
+          }
+        },
+        "buttons_jxPiqM": {
+          "type": "buttons",
+          "settings": {
+            "link": "#",
+            "link_label": "Request a Quote",
+            "is_outline": true
+          }
+        },
+        "buttons_MUQ6de": {
+          "type": "buttons",
+          "settings": {
+            "link": "#",
+            "link_label": "Talk to an Expert",
+            "is_outline": true
+          }
+        }
+      },
+      "block_order": [
+        "buttons_ih7mcx",
+        "buttons_jxPiqM",
+        "buttons_MUQ6de"
+      ],
+      "name": "Industries Section 8",
+      "settings": {
+        "bg_image": "shopify://shop_images/hero-banner.jpg",
+        "heading": "Protect Your Field Teams | with Farm-Ready PPE",
+        "sub_heading": "Secure checkout   |   Satisfaction Guaranteed   |   Free Shipping Over $500",
+        "padding_top_desktop": "80px",
+        "padding_bottom_desktop": "80px",
+        "padding_top_mobile": "40px",
+        "padding_bottom_mobile": "40px"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "page_breadcrumb_68QDPj",
+    "industries_section_1_fBFchy",
+    "industries_section_2_LtXMi7",
+    "industries_section_2_2_R676gm",
+    "industries_section_2_3_kUrqUR",
+    "industries_section_2_4_jryADM",
+    "industries_section_3_HYwFwB",
+    "featured_categories_new_bjfrFA",
+    "industries_section_4_7qUtfe",
+    "industries_section_5_5_pAxLLL",
+    "industries_section_5_nETFem",
+    "industries_section_5_6_V3TrUP",
+    "industries_section_6_reDHUx",
+    "faqs_W7dAza",
+    "industries_section_7_Henqja",
+    "industries_section_8_p4GzgC"
+  ]
+}
