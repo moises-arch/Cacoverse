@@ -139,6 +139,7 @@ product-info {
     position: sticky;
     top: 2rem;
     align-self: flex-start;
+    overflow: visible !important;
   }
 
   .product--large:not(.product--no-media) .product__media-wrapper {
