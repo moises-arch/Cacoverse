@@ -135,6 +135,13 @@ product-info {
 }
 
 @media screen and (min-width: 990px) {
+  .product-info--pdp .product__media-wrapper {
+    position: sticky;
+    top: 2rem;
+    align-self: flex-start;
+    overflow: visible !important;
+  }
+
   .product--large:not(.product--no-media) .product__media-wrapper {
     max-width: 65%;
     width: calc(65% - var(--grid-desktop-horizontal-spacing) / 2);
