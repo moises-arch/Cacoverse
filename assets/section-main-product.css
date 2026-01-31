@@ -134,7 +134,28 @@ product-info {
   }
 }
 
+@media screen and (min-width: 750px) {
+  body.template-product .product-info--pdp,
+  body.template-product .product-info--pdp .product,
+  body.template-product .product-info--pdp .product__media-wrapper {
+    overflow: visible !important;
+  }
+
+  body.template-product .product-info--pdp .product__media-wrapper {
+    position: sticky;
+    top: 2rem;
+    align-self: flex-start;
+    height: fit-content;
+  }
+
+  body.template-product .product-info--pdp .product__media-wrapper .media-gallery-component {
+    border-radius: inherit;
+    overflow: hidden;
+  }
+}
+
 @media screen and (min-width: 990px) {
+
   .product--large:not(.product--no-media) .product__media-wrapper {
     max-width: 65%;
     width: calc(65% - var(--grid-desktop-horizontal-spacing) / 2);
