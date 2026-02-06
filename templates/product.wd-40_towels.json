@@ -180,19 +180,6 @@
     },
     "1758310866f3ce4031": {
       "type": "apps",
-      "blocks": {
-        "junip_junip_product_review_gPCpTG": {
-          "type": "shopify://apps/junip/blocks/junip-product-review/dc14f5a8-ed15-41b1-ad08-cfba23f9789b",
-          "settings": {
-            "product": "{{product}}",
-            "title": "",
-            "alignment": ""
-          }
-        }
-      },
-      "block_order": [
-        "junip_junip_product_review_gPCpTG"
-      ],
       "settings": {
         "include_margins": true
       }
@@ -256,12 +243,12 @@
             "bar_mid_color": "#1c3687",
             "bar_high_color": "#1c3687",
             "product_count": 8,
-            "product_1": "mc-206",
+            "product_1": "wd-40-extra-absorbent-multipurpose-microfiber-towel",
             "product_2": "microfiber-towels-multipurpose-durable-microfiber",
             "product_3": "mc-001",
             "product_4": "m-014",
             "product_5": "mc-005",
-            "product_6": "mc-016-glass",
+            "product_6": "multipurpose-glass-microfiber-towel",
             "product_7": "mc-184",
             "product_8": "heavy-dutty",
             "show_ventilation": true,
